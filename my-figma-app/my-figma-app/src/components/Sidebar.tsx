@@ -270,9 +270,9 @@ export function Sidebar() {
             <button className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" title="Help">
               <HelpIcon />
             </button>
-            <button className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" title="Settings">
+            <Link href="/settings" className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" title="Settings">
               <SettingsIcon />
-            </button>
+            </Link>
             <button
               onClick={logout}
               className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
@@ -283,15 +283,15 @@ export function Sidebar() {
           </div>
           {/* Hide collapse button on mobile */}
           {!isMobile && (
-            <button
-              onClick={toggleSidebar}
-              className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-all duration-300 flex-shrink-0 ${
+          <button
+            onClick={toggleSidebar}
+            className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-all duration-300 flex-shrink-0 ${
                 actualIsCollapsed ? 'rotate-180' : ''
-              }`}
+            }`}
               title={actualIsCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              <CollapseIcon />
-            </button>
+          >
+            <CollapseIcon />
+          </button>
           )}
         </div>
       </div>

@@ -83,39 +83,39 @@ export function TimeFilter() {
     <>
       <div className="overflow-x-auto mb-4 sm:mb-6">
         <div className="inline-flex border border-[#e9e9e9] rounded-[5px] bg-white overflow-hidden min-w-max">
-          {timeFilters.map((filter, index) => {
-            const isActive = activeFilter === filter.id;
-            const isFirst = index === 0;
-            const isLast = index === timeFilters.length - 1;
+        {timeFilters.map((filter, index) => {
+          const isActive = activeFilter === filter.id;
+          const isFirst = index === 0;
+          const isLast = index === timeFilters.length - 1;
 
-            return (
-              <button
-                key={filter.id}
-                ref={filter.id === "custom" ? customButtonRef : undefined}
-                onClick={() => handleFilterClick(filter.id)}
-                className={`
-                  h-10 px-3 border-r border-[#e9e9e9] last:border-r-0
-                  flex items-center justify-center gap-2
+          return (
+            <button
+              key={filter.id}
+              ref={filter.id === "custom" ? customButtonRef : undefined}
+              onClick={() => handleFilterClick(filter.id)}
+              className={`
+                h-10 px-3 border-r border-[#e9e9e9] last:border-r-0
+                flex items-center justify-center gap-2
                   transition-colors whitespace-nowrap
-                  ${isActive
-                    ? 'bg-[#2a2a2f] text-white hover:bg-[#1a1a1f]'
-                    : 'bg-white text-[#8f8f91] hover:bg-gray-50 hover:text-[#2a2a2f]'
-                  }
-                  ${isFirst ? 'rounded-l-[4px]' : ''}
-                  ${isLast ? 'rounded-r-[4px]' : ''}
-                `}
-              >
-                <span className="text-[13.5625px] font-medium leading-[19.6px] whitespace-nowrap">
-                  {filter.id === "custom" ? getCustomLabel() : filter.label}
-                </span>
-                {filter.hasIcon && (
+                ${isActive
+                  ? 'bg-[#2a2a2f] text-white hover:bg-[#1a1a1f]'
+                  : 'bg-white text-[#8f8f91] hover:bg-gray-50 hover:text-[#2a2a2f]'
+                }
+                ${isFirst ? 'rounded-l-[4px]' : ''}
+                ${isLast ? 'rounded-r-[4px]' : ''}
+              `}
+            >
+              <span className="text-[13.5625px] font-medium leading-[19.6px] whitespace-nowrap">
+                {filter.id === "custom" ? getCustomLabel() : filter.label}
+              </span>
+              {filter.hasIcon && (
                   <div className="w-[22px] h-[22px] flex items-center justify-center flex-shrink-0">
-                    <CalendarIcon />
-                  </div>
-                )}
-              </button>
-            );
-          })}
+                  <CalendarIcon />
+                </div>
+              )}
+            </button>
+          );
+        })}
         </div>
       </div>
 

@@ -88,7 +88,7 @@ export function CohortCard({ cohort }: CohortCardProps) {
     return num.toLocaleString();
   };
 
-  return (
+    return (
     <div className="cohort-card bg-white border border-[#e9e9e9] rounded-lg min-h-[117px] flex flex-col lg:flex-row overflow-hidden relative">
       {/* Name Section */}
       <div className="flex flex-col items-start justify-center min-h-12 sm:min-h-16 p-3 sm:p-4 lg:w-[360px] lg:border-r border-[#e9e9e9] order-1">
@@ -212,7 +212,7 @@ export function CohortCard({ cohort }: CohortCardProps) {
             </span>
           </div>
         </div>
-                <div className="flex lg:flex-1 items-center justify-end lg:justify-start">
+        <div className="flex lg:flex-1 items-center justify-end lg:justify-start">
           <div className="relative" ref={menuRef}>
             <button
               ref={buttonRef}
@@ -237,29 +237,29 @@ export function CohortCard({ cohort }: CohortCardProps) {
               left: menuPosition.left,
             }}
           >
-            <div className="py-1">
+                <div className="py-1">
               <button
                 onClick={() => setShowMoreMenu(false)}
                 className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                Edit
-              </button>
+                    Edit
+                  </button>
               <button
                 onClick={() => setShowMoreMenu(false)}
                 className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                Duplicate
-              </button>
+                    Duplicate
+                  </button>
               <button
                 onClick={() => setShowMoreMenu(false)}
                 className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
               >
-                Delete
-              </button>
-            </div>
+                    Delete
+                  </button>
+                </div>
           </div>,
           document.body
-        )}
+            )}
       </div>
     </div>
   );

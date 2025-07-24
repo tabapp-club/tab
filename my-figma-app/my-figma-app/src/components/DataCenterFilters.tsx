@@ -92,46 +92,46 @@ const DataCenterFilters = ({
               Filter by
             </span>
             <div className="flex flex-wrap items-center gap-1 sm:gap-2 min-w-0">
-              <FilterDropdown
-                title="Cohorts"
-                options={filters.cohorts}
-                onSelectionChange={(selectedIds) => handleFilterChange('cohorts', selectedIds)}
-                isOpen={openFilter === 'cohorts'}
-                onToggle={() => handleFilterToggle('cohorts')}
-                selectedCount={getSelectedCount('cohorts')}
-              />
-              <FilterDropdown
-                title="Category"
-                options={filters.category}
-                onSelectionChange={(selectedIds) => handleFilterChange('category', selectedIds)}
-                isOpen={openFilter === 'category'}
-                onToggle={() => handleFilterToggle('category')}
-                selectedCount={getSelectedCount('category')}
-              />
-              <FilterDropdown
-                title="User type"
-                options={filters.userType}
-                onSelectionChange={(selectedIds) => handleFilterChange('userType', selectedIds)}
-                isOpen={openFilter === 'userType'}
-                onToggle={() => handleFilterToggle('userType')}
-                selectedCount={getSelectedCount('userType')}
-              />
-              <FilterDropdown
-                title="No of visits"
-                options={filters.visits}
-                onSelectionChange={(selectedIds) => handleFilterChange('visits', selectedIds)}
-                isOpen={openFilter === 'visits'}
-                onToggle={() => handleFilterToggle('visits')}
-                selectedCount={getSelectedCount('visits')}
-              />
-              <FilterDropdown
-                title="Status"
-                options={filters.status}
-                onSelectionChange={(selectedIds) => handleFilterChange('status', selectedIds)}
-                isOpen={openFilter === 'status'}
-                onToggle={() => handleFilterToggle('status')}
-                selectedCount={getSelectedCount('status')}
-              />
+            <FilterDropdown
+              title="Cohorts"
+              options={filters.cohorts}
+              onSelectionChange={(selectedIds) => handleFilterChange('cohorts', selectedIds)}
+              isOpen={openFilter === 'cohorts'}
+              onToggle={() => handleFilterToggle('cohorts')}
+              selectedCount={getSelectedCount('cohorts')}
+            />
+            <FilterDropdown
+              title="Category"
+              options={filters.category}
+              onSelectionChange={(selectedIds) => handleFilterChange('category', selectedIds)}
+              isOpen={openFilter === 'category'}
+              onToggle={() => handleFilterToggle('category')}
+              selectedCount={getSelectedCount('category')}
+            />
+            <FilterDropdown
+              title="User type"
+              options={filters.userType}
+              onSelectionChange={(selectedIds) => handleFilterChange('userType', selectedIds)}
+              isOpen={openFilter === 'userType'}
+              onToggle={() => handleFilterToggle('userType')}
+              selectedCount={getSelectedCount('userType')}
+            />
+            <FilterDropdown
+              title="No of visits"
+              options={filters.visits}
+              onSelectionChange={(selectedIds) => handleFilterChange('visits', selectedIds)}
+              isOpen={openFilter === 'visits'}
+              onToggle={() => handleFilterToggle('visits')}
+              selectedCount={getSelectedCount('visits')}
+            />
+            <FilterDropdown
+              title="Status"
+              options={filters.status}
+              onSelectionChange={(selectedIds) => handleFilterChange('status', selectedIds)}
+              isOpen={openFilter === 'status'}
+              onToggle={() => handleFilterToggle('status')}
+              selectedCount={getSelectedCount('status')}
+            />
             </div>
           </div>
 

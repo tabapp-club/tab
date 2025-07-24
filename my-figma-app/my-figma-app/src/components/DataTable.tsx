@@ -24,16 +24,16 @@ interface DataTableProps {
   onDataChange?: (data: UserData[]) => void;
 }
 
-const userData: UserData[] = [
-  { id: 'user', mobile: '+91 9876543210', categories: ['Admin', 'Support', 'Editor', '+20'], userType: 'New', visits: 2, status: 'Active', addedOn: '6 Aug, 2024' },
-  { id: 'Esther Howard', mobile: '+91 9876543210', categories: ['Chat', 'Tester'], userType: 'Retained', visits: 25, status: 'Active', addedOn: '21 Apr, 2024' },
-  { id: 'Jacob Jones', mobile: '+91 9876543210', categories: ['Visitor', 'Developer'], userType: 'Retained', visits: 32, status: 'Active', addedOn: '14 Mar, 2024' },
-  { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 23, status: 'Active', addedOn: '20 Apr, 2024' },
-  { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 54, status: 'Active', addedOn: '20 Apr, 2024' },
-  { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 33, status: 'Active', addedOn: '20 Apr, 2024' },
-  { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 57, status: 'Active', addedOn: '20 Apr, 2024' },
-  { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'New', visits: 12, status: 'In Active', addedOn: '20 Apr, 2024' }
-];
+  const userData: UserData[] = [
+    { id: 'user', mobile: '+91 9876543210', categories: ['Admin', 'Support', 'Editor', '+20'], userType: 'New', visits: 2, status: 'Active', addedOn: '6 Aug, 2024' },
+    { id: 'Esther Howard', mobile: '+91 9876543210', categories: ['Chat', 'Tester'], userType: 'Retained', visits: 25, status: 'Active', addedOn: '21 Apr, 2024' },
+    { id: 'Jacob Jones', mobile: '+91 9876543210', categories: ['Visitor', 'Developer'], userType: 'Retained', visits: 32, status: 'Active', addedOn: '14 Mar, 2024' },
+    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 23, status: 'Active', addedOn: '20 Apr, 2024' },
+    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 54, status: 'Active', addedOn: '20 Apr, 2024' },
+    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 33, status: 'Active', addedOn: '20 Apr, 2024' },
+    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 57, status: 'Active', addedOn: '20 Apr, 2024' },
+    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'New', visits: 12, status: 'In Active', addedOn: '20 Apr, 2024' }
+  ];
 
 const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
@@ -54,23 +54,23 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
 
   const filteredData = useMemo(() => {
     return userData.filter(user => {
-      if (!searchTerm) return true;
-      const searchLower = searchTerm.toLowerCase();
-      return Object.values(user).some(value =>
-        String(value).toLowerCase().includes(searchLower)
-      );
-    });
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return Object.values(user).some(value =>
+      String(value).toLowerCase().includes(searchLower)
+    );
+  });
   }, [searchTerm]);
 
   const sortedData = useMemo(() => {
     return [...filteredData].sort((a, b) => {
-      if (!sortConfig.key) return 0;
-      const aValue = a[sortConfig.key as keyof UserData];
-      const bValue = b[sortConfig.key as keyof UserData];
-      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-      return 0;
-    });
+    if (!sortConfig.key) return 0;
+    const aValue = a[sortConfig.key as keyof UserData];
+    const bValue = b[sortConfig.key as keyof UserData];
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
   }, [filteredData, sortConfig]);
 
   // Call onDataChange whenever the filtered/sorted data changes

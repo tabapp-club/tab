@@ -95,7 +95,7 @@ export default function DataCenterClient() {
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-          <MobileMenuToggle />
+        <MobileMenuToggle />
           <h1 className="text-base sm:text-lg font-bold truncate">Data Center</h1>
         </header>
         <main
@@ -107,27 +107,27 @@ export default function DataCenterClient() {
             <div className="p-2 sm:p-3 lg:p-4 xl:p-6 space-y-3 sm:space-y-4 lg:space-y-6 flex-1 flex flex-col min-w-0">
               <DataCenterHeader onImportClick={handleImportClick} onExportClick={handleExportClick} />
 
-              <DataCenterStats />
+            <DataCenterStats />
               <div className="bg-white rounded-lg shadow-sm flex-1 flex flex-col min-h-0 min-w-0">
-                <DataCenterFilters
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
+            <DataCenterFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+            />
                 <div className="flex-1 min-h-0 min-w-0">
-                  <DataTable
-                    searchTerm={searchTerm}
+            <DataTable
+              searchTerm={searchTerm}
                     onDataChange={handleDataChange}
-                  />
+            />
                 </div>
-                <Pagination />
+            <Pagination />
               </div>
             </div>
           </div>
         </main>
       </div>
-      {isImportModalOpen && (
-        <ImportModal onClose={() => setIsImportModalOpen(false)} />
-      )}
-    </div>
+        {isImportModalOpen && (
+          <ImportModal onClose={() => setIsImportModalOpen(false)} />
+        )}
+      </div>
   );
 }

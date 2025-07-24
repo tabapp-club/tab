@@ -36,7 +36,7 @@ export function DashboardContent() {
               Campaigns to grow your business
             </h2>
             <div className="w-full max-w-full overflow-hidden">
-              <CampaignCards />
+                <CampaignCards />
             </div>
           </div>
         </section>
@@ -44,10 +44,10 @@ export function DashboardContent() {
         {/* Analytics Section */}
         <section className="pb-6 sm:pb-8">
           <div className="mb-4 sm:mb-6">
-            <TimeFilter />
+              <TimeFilter />
           </div>
           <div className="w-full max-w-full overflow-hidden">
-            <AnalyticsCards />
+              <AnalyticsCards />
           </div>
         </section>
       </div>
