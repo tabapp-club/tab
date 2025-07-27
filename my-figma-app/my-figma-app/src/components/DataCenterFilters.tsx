@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FilterDropdown from './FilterDropdown';
 
 interface FilterOption {
@@ -10,7 +10,6 @@ interface FilterOption {
 }
 
 interface FilterState {
-  cohorts: FilterOption[];
   category: FilterOption[];
   userType: FilterOption[];
   visits: FilterOption[];
@@ -20,30 +19,41 @@ interface FilterState {
 interface DataCenterFiltersProps {
   searchTerm?: string;
   onSearchChange?: (value: string) => void;
+  onFiltersChange?: (filters: {
+    category?: string[];
+    userType?: string;
+    no_of_visits_from?: number;
+    no_of_visits_to?: number;
+    status?: string;
+    search?: string;
+  }) => void;
+  totalUsers?: number;
+  visibleUsers?: number;
+  categories?: Array<{name: string, label: string}>;
 }
 
 const DataCenterFilters = ({
   searchTerm: externalSearchTerm,
-  onSearchChange
+  onSearchChange,
+  onFiltersChange,
+  totalUsers = 0,
+  visibleUsers = 0,
+  categories = []
 }: DataCenterFiltersProps = {}) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
-    cohorts: [
-      { id: 'cohort1', label: 'Cohort 1', checked: false },
-      { id: 'cohort2', label: 'Cohort 2', checked: false },
-    ],
-    category: [
-      { id: 'category1', label: 'Category 1', checked: false },
-      { id: 'category2', label: 'Category 2', checked: false },
-    ],
+    category: [],
     userType: [
-      { id: 'unique', label: 'Unique', checked: false },
       { id: 'retained', label: 'Retained', checked: false },
+      { id: 'new', label: 'New', checked: false },
     ],
     visits: [
-      { id: '1', label: '1-10', checked: false },
-      { id: '2', label: '11-20', checked: false },
+      { id: '1', label: '1', checked: false },
+      { id: '2-5', label: '2-5', checked: false },
+      { id: '6-10', label: '6-10', checked: false },
+      { id: '11-20', label: '11-20', checked: false },
+      { id: '21+', label: '21+', checked: false },
     ],
     status: [
       { id: 'active', label: 'Active', checked: false },
@@ -51,18 +61,107 @@ const DataCenterFilters = ({
     ],
   });
 
+  // Update category filter options when categories prop changes
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setFilters(prev => {
+        // Try to preserve checked state if possible
+        const prevChecked = prev.category.find(option => option.checked)?.id;
+        const categoryOptions = categories.map(cat => ({
+          id: cat.name,
+          label: cat.label,
+          checked: prevChecked === cat.name
+        }));
+        return {
+          ...prev,
+          category: categoryOptions
+        };
+      });
+    } else {
+      setFilters(prev => ({
+        ...prev,
+        category: [
+          { id: 'mobile', label: 'Mobile', checked: false },
+          { id: 'electronics', label: 'Electronics', checked: false },
+          { id: 'fashion', label: 'Fashion', checked: false },
+          { id: 'appliances', label: 'Appliances', checked: false },
+          { id: 'grocery', label: 'Grocery', checked: false },
+          { id: 'other', label: 'Other', checked: false },
+        ]
+      }));
+    }
+  }, [categories]);
+
+  // Helper to parse visit range
+  function parseVisitRange(id: string): { from?: number; to?: number } {
+    if (id === '1') return { from: 1, to: 1 };
+    if (id === '2-5') return { from: 2, to: 5 };
+    if (id === '6-10') return { from: 6, to: 10 };
+    if (id === '11-20') return { from: 11, to: 20 };
+    if (id === '21+') return { from: 21 };
+    return {};
+  }
+
   const handleFilterToggle = (filterType: string) => {
     setOpenFilter(openFilter === filterType ? null : filterType);
   };
 
   const handleFilterChange = (filterType: keyof FilterState, selectedIds: string[]) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: prev[filterType].map(option => ({
-        ...option,
-        checked: selectedIds.includes(option.id)
-      }))
-    }));
+    setFilters(prev => {
+      let newOptions;
+      if (filterType === 'category' || filterType === 'userType' || filterType === 'visits') {
+        // Single-select toggle: if already selected, unselect; else select only the clicked one
+        const prevChecked = prev[filterType].find(option => option.checked)?.id;
+        const clickedId = selectedIds[0];
+        newOptions = prev[filterType].map(option => {
+          if (option.id === clickedId) {
+            // If already checked, uncheck; else check
+            return { ...option, checked: prevChecked === clickedId ? false : true };
+          } else {
+            return { ...option, checked: false };
+          }
+        });
+      } else {
+        // Multi-select
+        newOptions = prev[filterType].map(option => ({
+          ...option,
+          checked: selectedIds.includes(option.id)
+        }));
+      }
+
+      // Notify parent of filter change using the updated options
+      if (onFiltersChange) {
+        const filterObj: any = {};
+        if (filterType === 'category') {
+          // Only one can be selected
+          const selected = newOptions.find(option => option.checked);
+          filterObj.category = selected ? [selected.label] : [];
+        }
+        if (filterType === 'userType') {
+          const selected = newOptions.find(option => option.checked);
+          filterObj.userType = selected ? selected.id : undefined;
+        }
+        if (filterType === 'visits') {
+          const selected = newOptions.find(option => option.checked);
+          if (selected) {
+            const range = parseVisitRange(selected.id);
+            if (range.from !== undefined) filterObj.no_of_visits_from = range.from;
+            if (range.to !== undefined) filterObj.no_of_visits_to = range.to;
+          } else {
+            // No visits selected, clear the filter
+            filterObj.no_of_visits_from = undefined;
+            filterObj.no_of_visits_to = undefined;
+          }
+        }
+        if (filterType === 'status') filterObj.status = selectedIds[0] || undefined;
+        onFiltersChange(filterObj);
+      }
+
+      return {
+        ...prev,
+        [filterType]: newOptions
+      };
+    });
   };
 
   const getSelectedCount = (filterType: keyof FilterState) => {
@@ -77,13 +176,36 @@ const DataCenterFilters = ({
     } else {
       setInternalSearchTerm(value);
     }
+    if (onFiltersChange) {
+      onFiltersChange({ search: value });
+    }
+  };
+
+  // Add a function to clear all filters
+  const handleClearFilters = () => {
+    setFilters({
+      category: filters.category.map(option => ({ ...option, checked: false })),
+      userType: filters.userType.map(option => ({ ...option, checked: false })),
+      visits: filters.visits.map(option => ({ ...option, checked: false })),
+      status: filters.status.map(option => ({ ...option, checked: false })),
+    });
+    if (onFiltersChange) {
+      onFiltersChange({
+        category: [],
+        userType: undefined,
+        no_of_visits_from: undefined,
+        no_of_visits_to: undefined,
+        status: undefined,
+        search: currentSearchTerm || undefined,
+      });
+    }
   };
 
   return (
     <div className="bg-white sticky top-0 z-10 border-b border-t border-gray-200 min-w-0">
       <div className="flex flex-col gap-2 sm:gap-3 lg:gap-0 lg:flex-row lg:items-center lg:justify-between p-2 sm:p-3 lg:px-4 lg:py-0 lg:h-[60px] min-w-0">
         <div className="flex-shrink-0 text-xs sm:text-sm font-medium text-gray-700 truncate">
-          Showing 10 of 49,053 users
+          Showing {visibleUsers} of {totalUsers} users
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
@@ -91,15 +213,7 @@ const DataCenterFilters = ({
             <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">
               Filter by
             </span>
-            <div className="flex flex-wrap items-center gap-1 sm:gap-2 min-w-0">
-            <FilterDropdown
-              title="Cohorts"
-              options={filters.cohorts}
-              onSelectionChange={(selectedIds) => handleFilterChange('cohorts', selectedIds)}
-              isOpen={openFilter === 'cohorts'}
-              onToggle={() => handleFilterToggle('cohorts')}
-              selectedCount={getSelectedCount('cohorts')}
-            />
+            <div className="flex flex-wrap gap-2 items-center mb-2">
             <FilterDropdown
               title="Category"
               options={filters.category}
@@ -107,14 +221,16 @@ const DataCenterFilters = ({
               isOpen={openFilter === 'category'}
               onToggle={() => handleFilterToggle('category')}
               selectedCount={getSelectedCount('category')}
+              singleSelect={true}
             />
             <FilterDropdown
-              title="User type"
+              title="User Type"
               options={filters.userType}
               onSelectionChange={(selectedIds) => handleFilterChange('userType', selectedIds)}
               isOpen={openFilter === 'userType'}
               onToggle={() => handleFilterToggle('userType')}
               selectedCount={getSelectedCount('userType')}
+              singleSelect={true}
             />
             <FilterDropdown
               title="No of visits"
@@ -134,7 +250,14 @@ const DataCenterFilters = ({
             />
             </div>
           </div>
-
+          {/* Add Clear Filters button */}
+          <button
+            type="button"
+            onClick={handleClearFilters}
+            className="text-xs sm:text-sm text-[#7856ff] hover:underline ml-0 sm:ml-4 mt-2 sm:mt-0 font-medium"
+          >
+            Clear filters
+          </button>
           <div className="relative flex-shrink-0 min-w-0">
             <div className="bg-[#f6f6f6] rounded-md flex items-center h-8 w-full min-w-0 max-w-full sm:max-w-[200px]">
               <div className="pl-2 pr-1 flex-shrink-0">

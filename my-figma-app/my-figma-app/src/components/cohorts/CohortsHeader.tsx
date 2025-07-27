@@ -42,7 +42,7 @@ export function CohortsHeader({ onImportClick, onExportClick, onCreateCohort }: 
         {/* Action buttons */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-3.5">
           {/* Create Cohort Button */}
-          <button
+          {/* <button
             onClick={onCreateCohort}
             className="w-full sm:w-auto h-8 sm:h-8 bg-white border border-[#e9e9e9] rounded-md px-3 sm:px-[13px] py-1 sm:py-px flex items-center justify-center sm:justify-start gap-1 sm:gap-0 hover:bg-gray-50 transition-colors group"
           >
@@ -52,12 +52,12 @@ export function CohortsHeader({ onImportClick, onExportClick, onCreateCohort }: 
             <div className="w-5 h-5 sm:w-[22px] sm:h-[22px] flex items-center justify-center ml-0 sm:ml-[-4px]">
               <PlusIcon />
             </div>
-          </button>
+          </button> */}
 
           {/* Import/Export buttons */}
           <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             {/* Import Button */}
-            <button
+            {/* <button
               onClick={onImportClick}
               className="flex-1 sm:flex-none h-8 bg-white border border-[#e9e9e9] rounded px-2 sm:px-2 py-0.5 flex items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
             >
@@ -65,10 +65,10 @@ export function CohortsHeader({ onImportClick, onExportClick, onCreateCohort }: 
               <span className="text-sm sm:text-[14px] font-medium text-[#2a2a2f] leading-[1.4] whitespace-nowrap">
                 Import
               </span>
-            </button>
+            </button> */}
 
             {/* Export Button */}
-            <button
+            {/* <button
               onClick={onExportClick}
               className="flex-1 sm:flex-none h-8 bg-white border border-[#e9e9e9] rounded px-2 sm:px-2 py-0.5 flex items-center justify-center gap-1 hover:bg-gray-50 transition-colors"
             >
@@ -76,7 +76,7 @@ export function CohortsHeader({ onImportClick, onExportClick, onCreateCohort }: 
               <span className="text-sm sm:text-[14px] font-medium text-[#2a2a2f] leading-[1.4] whitespace-nowrap">
                 Export
               </span>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -15,27 +15,16 @@ interface UserData {
   categories: string[];
   userType: string;
   visits: number;
-  status: 'Active' | 'In Active';
+  status: string;
   addedOn: string;
 }
 
 interface DataTableProps {
   searchTerm?: string;
-  onDataChange?: (data: UserData[]) => void;
+  data?: UserData[];
 }
 
-  const userData: UserData[] = [
-    { id: 'user', mobile: '+91 9876543210', categories: ['Admin', 'Support', 'Editor', '+20'], userType: 'New', visits: 2, status: 'Active', addedOn: '6 Aug, 2024' },
-    { id: 'Esther Howard', mobile: '+91 9876543210', categories: ['Chat', 'Tester'], userType: 'Retained', visits: 25, status: 'Active', addedOn: '21 Apr, 2024' },
-    { id: 'Jacob Jones', mobile: '+91 9876543210', categories: ['Visitor', 'Developer'], userType: 'Retained', visits: 32, status: 'Active', addedOn: '14 Mar, 2024' },
-    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 23, status: 'Active', addedOn: '20 Apr, 2024' },
-    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 54, status: 'Active', addedOn: '20 Apr, 2024' },
-    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 33, status: 'Active', addedOn: '20 Apr, 2024' },
-    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'Retained', visits: 57, status: 'Active', addedOn: '20 Apr, 2024' },
-    { id: 'Cody Fisher', mobile: '+91 9876543210', categories: ['Designer', 'Analyst'], userType: 'New', visits: 12, status: 'In Active', addedOn: '20 Apr, 2024' }
-  ];
-
-const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
+const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [activeActionMenu, setActiveActionMenu] = useState<number | null>(null);
@@ -53,14 +42,14 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
   };
 
   const filteredData = useMemo(() => {
-    return userData.filter(user => {
+    return data.filter(user => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return Object.values(user).some(value =>
       String(value).toLowerCase().includes(searchLower)
     );
   });
-  }, [searchTerm]);
+  }, [searchTerm, data]);
 
   const sortedData = useMemo(() => {
     return [...filteredData].sort((a, b) => {
@@ -73,12 +62,7 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
   });
   }, [filteredData, sortConfig]);
 
-  // Call onDataChange whenever the filtered/sorted data changes
-  React.useEffect(() => {
-    if (onDataChange) {
-      onDataChange(sortedData);
-    }
-  }, [sortedData, onDataChange]);
+  // Remove useEffect for onDataChange
 
   const getSortIcon = (columnKey: string) => {
     if (sortConfig.key !== columnKey) return <SortIcon />;
@@ -86,11 +70,11 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
   };
 
   const columns = [
-    { key: 'id', label: 'User ID', width: 'w-24 sm:w-32 lg:w-40', flex: 'flex-shrink-0' },
+    { key: 'id', label: 'User ID', width: 'w-60 sm:w-68 lg:w-76', flex: 'flex-shrink-0' },
     { key: 'mobile', label: 'Mobile number', width: 'w-32 sm:w-40 lg:w-44', flex: 'flex-shrink-0' },
-    { key: 'categories', label: 'Category', width: 'w-40 sm:w-48 lg:w-56', flex: 'flex-grow' },
+    { key: 'categories', label: 'Category', width: 'w-24 sm:w-32 lg:w-36', flex: 'flex-grow' },
     { key: 'userType', label: 'User type', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
-    { key: 'visits', label: 'No of visits', width: 'w-16 sm:w-20 lg:w-24', flex: 'flex-shrink-0', centered: true },
+    { key: 'visits', label: 'No of visits', width: 'w-30 sm:w-34 lg:w-38', flex: 'flex-shrink-0', centered: true },
     { key: 'status', label: 'Status', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
     { key: 'addedOn', label: 'Added on', width: 'w-24 sm:w-28 lg:w-32', flex: 'flex-shrink-0' },
     { key: 'actions', label: '', width: 'w-12 sm:w-16', flex: 'flex-shrink-0' }
@@ -116,13 +100,16 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
 
           {/* Table Body */}
           <div>
-            {sortedData.map((user, index) => (
+            {sortedData.length === 0 ? (
+              <div className="text-center py-8 text-[#a1a1a1]">No data available.</div>
+            ) : (
+              sortedData.map((user, index) => (
               <div key={index} onMouseEnter={() => setHoveredRow(index)} onMouseLeave={() => setHoveredRow(null)} className={`flex border-b border-[#e9e9e9] transition-colors min-w-max ${hoveredRow === index ? 'bg-gray-50' : 'bg-white'}`}>
                 {columns.map(col => (
                   <div key={col.key} className={`${col.width} ${col.flex || ''} flex items-center px-2 sm:px-3 lg:px-4 h-[50px] sm:h-[60px] lg:h-[66px] ${col.key !== 'actions' ? 'border-r border-[#e9e9e9]' : ''} ${col.centered ? 'justify-center' : ''}`}>
                     {col.key === 'categories' ? (
                       <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full">
-                        {user.categories.map(cat => <span key={cat} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs text-[#a1a1a1] font-medium whitespace-nowrap">{cat}</span>)}
+                          {user.categories.map((cat, idx) => <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs text-[#a1a1a1] font-medium whitespace-nowrap">{cat}</span>)}
                       </div>
                     ) : col.key === 'status' ? (
                       <span className={`px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium rounded whitespace-nowrap ${user.status === 'Active' ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'}`}>
@@ -148,7 +135,8 @@ const DataTable = ({ searchTerm = '', onDataChange }: DataTableProps) => {
                   </div>
                 ))}
               </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

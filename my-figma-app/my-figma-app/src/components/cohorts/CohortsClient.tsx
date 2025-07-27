@@ -9,6 +9,8 @@ import { CohortsList } from './CohortsList';
 import ImportModal from '../ImportModal';
 import { useSidebar } from '../SidebarContext';
 import { CohortData } from './CohortsList';
+import { useAuth } from '@/contexts/AuthContext';
+import React from 'react';
 
 // CSV Export Utility Function for Cohorts
 const exportCohortsToCSV = (data: CohortData[], filename: string = 'cohorts-export.csv') => {
@@ -59,8 +61,62 @@ const exportCohortsToCSV = (data: CohortData[], filename: string = 'cohorts-expo
 export function CohortsClient() {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCohorts, setFilteredCohorts] = useState<CohortData[]>([]);
+  const [cohorts, setCohorts] = useState<CohortData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
+  const { user } = useAuth();
+
+  // Fetch cohorts from API
+  const fetchCohorts = useCallback(async () => {
+    if (!user?.accessToken) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('http://74.225.174.33:8080/v1/cohort-analysis', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      });
+      if (!response.ok) throw new Error('Failed to fetch cohorts');
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'API error');
+      // Map API data to CohortData[]
+      const apiCohorts = (result.data || []).map((item: any) => ({
+        id: item.name + '-' + item.category + '-' + item.first_invoice_date,
+        name: item.category,
+        count: item.count,
+        category: item.category,
+        createdBy: item.name || 'Rahul',
+        createdDate: item.first_invoice_date,
+        description: item.description || '',
+      }));
+      setCohorts(apiCohorts);
+    } catch (err: any) {
+      setError(err.message || 'Unknown error');
+      setCohorts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.accessToken]);
+
+  // Fetch on mount and when user changes
+  React.useEffect(() => {
+    fetchCohorts();
+  }, [fetchCohorts]);
+
+  // Filter cohorts by search term
+  const filteredCohorts = React.useMemo(() => {
+    if (!searchTerm) return cohorts;
+    const searchLower = searchTerm.toLowerCase();
+    return cohorts.filter(cohort =>
+      Object.values(cohort).some(value =>
+        String(value).toLowerCase().includes(searchLower)
+      )
+    );
+  }, [searchTerm, cohorts]);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -80,10 +136,6 @@ export function CohortsClient() {
 
   const handleSearchChange = useCallback((query: string) => {
     setSearchTerm(query);
-  }, []);
-
-  const handleCohortsUpdate = useCallback((cohorts: CohortData[]) => {
-    setFilteredCohorts(cohorts);
   }, []);
 
   return (
@@ -117,17 +169,22 @@ export function CohortsClient() {
             <div className="sticky top-0 z-10 bg-white px-2 sm:px-4 lg:px-6">
               <CohortsFilterBar
                 onSearch={handleSearchChange}
-                totalCohorts={filteredCohorts.length}
+                totalCohorts={cohorts.length}
                 visibleCohorts={filteredCohorts.length}
               />
             </div>
 
             {/* Cohorts List */}
             <div className="flex-1 px-2 sm:px-4 lg:px-6 pb-6">
-              <CohortsList
-                searchTerm={searchTerm}
-                onCohortsUpdate={handleCohortsUpdate}
-              />
+              {loading ? (
+                <div className="text-center py-10 text-[#a1a1a1]">Loading cohorts...</div>
+              ) : error ? (
+                <div className="text-center py-10 text-red-500">{error}</div>
+              ) : (
+                <CohortsList
+                  cohorts={filteredCohorts}
+                />
+              )}
             </div>
           </div>
         </main>

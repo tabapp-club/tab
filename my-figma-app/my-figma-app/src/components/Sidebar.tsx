@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from 'react';
 
 // SVG Icons as React components
 const DashboardIcon = () => (
@@ -145,10 +146,10 @@ const CollapseIcon = () => (
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: DashboardIcon, href: "/dashboard", active: true },
   { id: "data-center", label: "Data centre", icon: DataCenterIcon, href: "/data-center" },
+  { id: "ai-services", label: "AI services", icon: AIServicesIcon, href: "/ai-services" },
   { id: "cohorts", label: "Cohorts", icon: CohortsIcon, href: "/cohorts" },
   { id: "campaigns", label: "Campaigns", icon: CampaignsIcon, href: "/campaigns" },
-  { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
-  { id: "ai-services", label: "AI services", icon: AIServicesIcon, href: "/ai-services" },
+  // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   { id: "business-services", label: "Business services", icon: BusinessServicesIcon, href: "/business-services" },
   { id: "achievements", label: "Achievements", icon: AchievementsIcon, href: "/achievements" },
 ];
@@ -157,6 +158,19 @@ export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
   const { logout } = useAuth();
+  const [user, setUser] = useState<{ name: string; phoneNumber: string } | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        setUser({ name: userData.name, phoneNumber: userData.phoneNumber });
+      }
+    } catch {
+      setUser(null);
+    }
+  }, []);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -190,10 +204,7 @@ export function Sidebar() {
             actualIsCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
           }`}>
             <div className="text-sm sm:text-[16px] font-medium text-[#2a2a2f] leading-[20px] tracking-[-0.1px] whitespace-nowrap">
-              user name
-            </div>
-            <div className="text-[10px] sm:text-[11.4375px] font-medium text-[#2a2a2f] leading-[16.8px] tracking-[-0.1px] whitespace-nowrap">
-              user ID - 2646228
+              {user?.name || 'Guest'}
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 interface User {
   phoneNumber: string;
   isAuthenticated: boolean;
+  accessToken: string;
+  name: string;
 }
 
 interface AuthContextType {
@@ -45,18 +47,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const sendOTP = async (phoneNumber: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Simulate occasional network errors (5% chance)
-      if (Math.random() < 0.05) {
-        throw new Error('Network error');
-      }
-
-      // In a real app, you would make an API call here
-      console.log('OTP sent to:', phoneNumber);
-
+      const response = await fetch('http://74.225.174.33:8080/v1/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phoneNumber, country_code: '+91' })
+      });
+      if (!response.ok) throw new Error('Failed to send OTP');
+      const data = await response.json();
+      // Optionally check data for success
       return true;
     } catch (error) {
       console.error('Error sending OTP:', error);
@@ -66,26 +64,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Helper to decode JWT (for extracting user info if needed)
+  function decodeJWT(token: string) {
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload));
+    } catch {
+      return null;
+    }
+  }
+
+  // Prompt for name if missing
+  async function promptForNameAndCreateCustomer(token: string): Promise<string> {
+    let name = '';
+    // eslint-disable-next-line no-alert
+    while (!name) {
+      name = window.prompt('Please enter your name to complete registration:') || '';
+      name = name.trim();
+    }
+    const resp = await fetch('http://74.225.174.33:8080/v1/customers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name })
+    });
+    if (!resp.ok) throw new Error('Failed to save name');
+    return name;
+  }
+
   const login = async (phoneNumber: string, otp: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-
-      // Simulate OTP verification API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // For demo purposes, accept any 6-digit OTP except '999999' (which we'll use for error state)
-      if (otp.length === 6 && otp !== '999999') {
-        const userData: User = {
-          phoneNumber,
-          isAuthenticated: true,
-        };
-
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
+      const response = await fetch('http://74.225.174.33:8080/v1/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phoneNumber, otp, userType: 'business' })
+      });
+      if (!response.ok) return false;
+      const data = await response.json();
+      const { access_token, name } = data;
+      let finalName = name;
+      if (!access_token) return false;
+      // If name is missing, prompt and call /v1/customers
+      if (!finalName) {
+        finalName = await promptForNameAndCreateCustomer(access_token);
       }
-
-      return false;
+      // Optionally decode token for more info
+      // const decoded = decodeJWT(access_token);
+      const userData: User = {
+        phoneNumber,
+        isAuthenticated: true,
+        accessToken: access_token,
+        name: finalName,
+      };
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('access_token', access_token);
+      return true;
     } catch (error) {
       console.error('Login error:', error);
       return false;

@@ -8,6 +8,10 @@ interface DateRange {
   to: Date | null;
 }
 
+interface TimeFilterProps {
+  onFilterChange?: (filter: { type: string; days?: number; dateRange?: DateRange }) => void;
+}
+
 const CalendarIcon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="3" y="4" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
@@ -29,11 +33,21 @@ const timeFilters = [
   { id: "custom", label: "custom", active: false, hasIcon: true }
 ];
 
-export function TimeFilter() {
+export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
   const [activeFilter, setActiveFilter] = useState("today");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDateRange, setSelectedDateRange] = useState<DateRange>({ from: null, to: null });
   const customButtonRef = useRef<HTMLButtonElement>(null!);
+
+  const filterDaysMap: Record<string, number | undefined> = {
+    today: 1,
+    yesterday: 1,
+    "7d": 7,
+    "30d": 30,
+    "3m": 90,
+    "6m": 180,
+    "12m": 365,
+  };
 
   const handleFilterClick = (filterId: string) => {
     if (filterId === "custom") {
@@ -41,6 +55,9 @@ export function TimeFilter() {
     } else {
       setActiveFilter(filterId);
       setSelectedDateRange({ from: null, to: null });
+      if (onFilterChange) {
+        onFilterChange({ type: filterId, days: filterDaysMap[filterId] });
+      }
     }
   };
 
@@ -48,6 +65,9 @@ export function TimeFilter() {
     setSelectedDateRange(range);
     setActiveFilter("custom");
     setIsCalendarOpen(false);
+    if (onFilterChange) {
+      onFilterChange({ type: "custom", dateRange: range });
+    }
   };
 
   const getCustomLabel = () => {

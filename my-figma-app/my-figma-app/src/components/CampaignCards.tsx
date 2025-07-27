@@ -36,6 +36,7 @@ const campaigns = [
     title: "Feedback and survey",
     icon: FeedbackIcon,
     bgColor: "bg-gradient-to-br from-teal-400 to-teal-600",
+    background: "/feedbackAndSurvey.png",
     iconBg: "bg-teal-100",
     iconColor: "text-teal-700"
   },
@@ -44,6 +45,7 @@ const campaigns = [
     title: "Retention",
     icon: RetentionIcon,
     bgColor: "bg-gradient-to-br from-gray-700 to-gray-900",
+    background: "/retention.png",
     iconBg: "bg-gray-100",
     iconColor: "text-gray-700"
   },
@@ -52,6 +54,7 @@ const campaigns = [
     title: "Engagement",
     icon: EngagementIcon,
     bgColor: "bg-gradient-to-br from-purple-500 to-purple-700",
+    background: "/engagement.png",
     iconBg: "bg-purple-100",
     iconColor: "text-purple-700"
   },
@@ -60,6 +63,7 @@ const campaigns = [
     title: "Advertise",
     icon: AdvertiseIcon,
     bgColor: "bg-gradient-to-br from-orange-400 to-orange-600",
+    background: "/advertise.png",
     iconBg: "bg-orange-100",
     iconColor: "text-orange-700"
   }
@@ -76,7 +80,7 @@ export function CampaignCards() {
                 className="min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-md transition-shadow cursor-pointer group overflow-hidden"
             >
                 {/* Header with gradient background */}
-                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden`}>
+                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
                 {/* Icon */}

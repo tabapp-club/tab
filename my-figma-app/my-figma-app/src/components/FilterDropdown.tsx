@@ -15,6 +15,7 @@ interface FilterDropdownProps {
   isOpen: boolean;
   onToggle: () => void;
   selectedCount: number;
+  singleSelect?: boolean;
 }
 
 const FilterDropdown = ({
@@ -23,7 +24,8 @@ const FilterDropdown = ({
   onSelectionChange,
   isOpen,
   onToggle,
-  selectedCount
+  selectedCount,
+  singleSelect = false
 }: FilterDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -70,15 +72,22 @@ const FilterDropdown = ({
   }, [isOpen, options.length]);
 
   const handleOptionChange = (optionId: string) => {
-    const newSelectedIds = options
-      .map(option =>
-        option.id === optionId
-          ? { ...option, checked: !option.checked }
-          : option
-      )
-      .filter(option => option.checked)
-      .map(option => option.id);
-
+    let newSelectedIds;
+    if (singleSelect) {
+      newSelectedIds = [optionId];
+    } else if (title === 'No of visits') {
+      // Single select for visits
+      newSelectedIds = [optionId];
+    } else {
+      newSelectedIds = options
+        .map(option =>
+          option.id === optionId
+            ? { ...option, checked: !option.checked }
+            : option
+        )
+        .filter(option => option.checked)
+        .map(option => option.id);
+    }
     onSelectionChange(newSelectedIds);
   };
 
