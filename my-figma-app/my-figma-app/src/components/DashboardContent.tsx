@@ -160,7 +160,7 @@ export function DashboardContent() {
     setLoading(true);
     setError(null);
     try {
-      const url = "http://74.225.174.33:8080/v1/business-data";
+      const url = "https://api.tabapp.club/v1/business-data";
       let params = '';
       if (range && range.from && range.to) {
         const start_date = format(range.from, 'yyyy-MM-dd');

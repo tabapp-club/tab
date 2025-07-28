@@ -156,7 +156,7 @@ export default function DataCenterClient() {
       if (filters.no_of_visits_to !== undefined) params.append('no_of_visits_to', String(filters.no_of_visits_to));
       if (filters.status) params.append('status', filters.status);
       if (filters.search) params.append('search', filters.search);
-      const url = `http://74.225.174.33:8080/v1/dashboard-data-centre?${params.toString()}`;
+      const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
       const response = await fetch(url, {
         method: 'GET',
         headers: {

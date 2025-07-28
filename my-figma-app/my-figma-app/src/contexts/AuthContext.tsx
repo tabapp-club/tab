@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const sendOTP = async (phoneNumber: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://74.225.174.33:8080/v1/auth/send-otp', {
+      const response = await fetch('https://api.tabapp.club/v1/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phoneNumber, country_code: '+91' })
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name = window.prompt('Please enter your name to complete registration:') || '';
       name = name.trim();
     }
-    const resp = await fetch('http://74.225.174.33:8080/v1/customers', {
+    const resp = await fetch('https://api.tabapp.club/v1/customers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (phoneNumber: string, otp: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://74.225.174.33:8080/v1/auth/verify-otp', {
+      const response = await fetch('https://api.tabapp.club/v1/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phoneNumber, otp, userType: 'business' })

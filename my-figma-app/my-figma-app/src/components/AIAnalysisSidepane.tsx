@@ -488,7 +488,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
     setStartTime(Date.now());
 
     try {
-      const url = "http://74.225.174.33:8080/v1/ai-analysis";
+      const url = "https://api.tabapp.club/v1/ai-analysis";
       const params = new URLSearchParams();
 
       params.append('type_', getTypeParam(cardType));

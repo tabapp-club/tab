@@ -73,7 +73,7 @@ export function CohortsClient() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://74.225.174.33:8080/v1/cohort-analysis', {
+      const response = await fetch('https://api.tabapp.club/v1/cohort-analysis', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
