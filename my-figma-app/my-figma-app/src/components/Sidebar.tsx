@@ -212,13 +212,13 @@ export function Sidebar() {
         {/* New Campaign Button */}
         <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10' : 'w-full max-w-48'}`}>
           {!actualIsCollapsed && (
-            <button className={`w-full h-10 bg-white border border-[#e9e9e9] rounded px-2 flex items-center justify-between group hover:bg-gray-50 transition-all duration-300 ${
+            <button className={`w-full h-10 bg-white border border-[#e9e9e9] rounded px-2 flex items-center justify-center gap-2 group hover:bg-gray-50 transition-all duration-300 ${
               actualIsCollapsed ? 'opacity-0' : 'opacity-100'
             }`}>
               <div className="flex items-center">
                 <PlusIcon />
               </div>
-              <span className="text-[13.3438px] font-medium text-[#2a2a2f] leading-[19.6px] flex-1 pr-2 whitespace-nowrap">
+              <span className="text-[13.3438px] font-medium text-[#2a2a2f] leading-[19.6px] whitespace-nowrap">
                 New campaign
               </span>
             </button>

@@ -70,7 +70,7 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
   };
 
   const columns = [
-    { key: 'id', label: 'User ID', width: 'w-60 sm:w-68 lg:w-76', flex: 'flex-shrink-0' },
+    { key: 'id', label: 'User ID', width: 'w-24 sm:w-32 lg:w-36', flex: 'flex-shrink-0' },
     { key: 'mobile', label: 'Mobile number', width: 'w-32 sm:w-40 lg:w-44', flex: 'flex-shrink-0' },
     { key: 'categories', label: 'Category', width: 'w-24 sm:w-32 lg:w-36', flex: 'flex-grow' },
     { key: 'userType', label: 'User type', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
@@ -109,7 +109,16 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
                   <div key={col.key} className={`${col.width} ${col.flex || ''} flex items-center px-2 sm:px-3 lg:px-4 h-[50px] sm:h-[60px] lg:h-[66px] ${col.key !== 'actions' ? 'border-r border-[#e9e9e9]' : ''} ${col.centered ? 'justify-center' : ''}`}>
                     {col.key === 'categories' ? (
                       <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full">
-                          {user.categories.map((cat, idx) => <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs text-[#a1a1a1] font-medium whitespace-nowrap">{cat}</span>)}
+                        {user.categories.slice(0, 2).map((cat, idx) => (
+                          <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium whitespace-nowrap">
+                            {cat}
+                          </span>
+                        ))}
+                        {user.categories.length > 2 && (
+                          <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium whitespace-nowrap">
+                            +{user.categories.length - 2}
+                          </span>
+                        )}
                       </div>
                     ) : col.key === 'status' ? (
                       <span className={`px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium rounded whitespace-nowrap ${user.status === 'Active' ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'}`}>
