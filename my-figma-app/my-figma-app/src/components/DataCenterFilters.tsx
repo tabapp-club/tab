@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FilterDropdown from './FilterDropdown';
 
 interface FilterOption {
@@ -60,6 +60,17 @@ const DataCenterFilters = ({
       { id: 'inactive', label: 'Inactive', checked: false },
     ],
   });
+
+  // Use ref to store pending filter changes
+  const pendingFilterChange = useRef<any>(null);
+
+  // Effect to handle filter change notifications
+  useEffect(() => {
+    if (pendingFilterChange.current && onFiltersChange) {
+      onFiltersChange(pendingFilterChange.current);
+      pendingFilterChange.current = null;
+    }
+  }, [filters, onFiltersChange]);
 
   // Update category filter options when categories prop changes
   useEffect(() => {
@@ -129,33 +140,33 @@ const DataCenterFilters = ({
         }));
       }
 
-      // Notify parent of filter change using the updated options
-      if (onFiltersChange) {
-        const filterObj: any = {};
-        if (filterType === 'category') {
-          // Only one can be selected
-          const selected = newOptions.find(option => option.checked);
-          filterObj.category = selected ? [selected.label] : [];
-        }
-        if (filterType === 'userType') {
-          const selected = newOptions.find(option => option.checked);
-          filterObj.userType = selected ? selected.id : undefined;
-        }
-        if (filterType === 'visits') {
-          const selected = newOptions.find(option => option.checked);
-          if (selected) {
-            const range = parseVisitRange(selected.id);
-            if (range.from !== undefined) filterObj.no_of_visits_from = range.from;
-            if (range.to !== undefined) filterObj.no_of_visits_to = range.to;
-          } else {
-            // No visits selected, clear the filter
-            filterObj.no_of_visits_from = undefined;
-            filterObj.no_of_visits_to = undefined;
-          }
-        }
-        if (filterType === 'status') filterObj.status = selectedIds[0] || undefined;
-        onFiltersChange(filterObj);
+      // Store filter change in ref to be handled by useEffect
+      const filterObj: any = {};
+      if (filterType === 'category') {
+        // Only one can be selected
+        const selected = newOptions.find(option => option.checked);
+        filterObj.category = selected ? [selected.label] : [];
       }
+      if (filterType === 'userType') {
+        const selected = newOptions.find(option => option.checked);
+        filterObj.userType = selected ? selected.id : undefined;
+      }
+      if (filterType === 'visits') {
+        const selected = newOptions.find(option => option.checked);
+        if (selected) {
+          const range = parseVisitRange(selected.id);
+          if (range.from !== undefined) filterObj.no_of_visits_from = range.from;
+          if (range.to !== undefined) filterObj.no_of_visits_to = range.to;
+        } else {
+          // No visits selected, clear the filter
+          filterObj.no_of_visits_from = undefined;
+          filterObj.no_of_visits_to = undefined;
+        }
+      }
+      if (filterType === 'status') filterObj.status = selectedIds[0] || undefined;
+
+      // Store in ref to be handled by useEffect
+      pendingFilterChange.current = filterObj;
 
       return {
         ...prev,
@@ -176,9 +187,9 @@ const DataCenterFilters = ({
     } else {
       setInternalSearchTerm(value);
     }
-    if (onFiltersChange) {
-      onFiltersChange({ search: value });
-    }
+
+    // Store search filter change in ref
+    pendingFilterChange.current = { search: value };
   };
 
   // Add a function to clear all filters
@@ -189,16 +200,16 @@ const DataCenterFilters = ({
       visits: filters.visits.map(option => ({ ...option, checked: false })),
       status: filters.status.map(option => ({ ...option, checked: false })),
     });
-    if (onFiltersChange) {
-      onFiltersChange({
-        category: [],
-        userType: undefined,
-        no_of_visits_from: undefined,
-        no_of_visits_to: undefined,
-        status: undefined,
-        search: currentSearchTerm || undefined,
-      });
-    }
+
+    // Store clear filters action in ref
+    pendingFilterChange.current = {
+      category: [],
+      userType: undefined,
+      no_of_visits_from: undefined,
+      no_of_visits_to: undefined,
+      status: undefined,
+      search: currentSearchTerm || undefined,
+    };
   };
 
   return (
@@ -213,7 +224,7 @@ const DataCenterFilters = ({
             <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">
               Filter by
             </span>
-            <div className="flex flex-wrap gap-2 items-center mb-2">
+            <div className="flex flex-wrap gap-2 items-center mb-2 relative">
             <FilterDropdown
               title="Category"
               options={filters.category}

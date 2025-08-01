@@ -17,32 +17,48 @@ export function DashboardContent() {
   const [staticCardStructure] = useState([
     {
       id: 1,
-      title: "All customers",
-      legendLabel: "Unique + Retained customers",
-      unit: "users",
-      bgColor: "bg-[#7856ff]"
+      title: "Total Sales",
+      legendLabel: "Sales",
+      unit: "Users",
+      bgColor: "bg-[#17c653]"
     },
     {
       id: 2,
-      title: "New customers",
-      legendLabel: "New customers",
-      unit: "users",
-      bgColor: "bg-[#7856ff]"
+      title: "Purchase Value",
+      legendLabel: "Purchase value",
+      unit: "Rupees",
+      bgColor: "bg-[#17c653]"
     },
+
     {
       id: 3,
-      title: "Retained customers",
-      legendLabel: "Retained customers",
-      unit: "users",
+      title: "New customers",
+      legendLabel: "New customers",
+      unit: "Users",
       bgColor: "bg-[#7856ff]"
     },
     {
       id: 4,
+      title: "Retained customers",
+      legendLabel: "Retained customers",
+      unit: "Users",
+      bgColor: "bg-[#7856ff]"
+    },
+    {
+      id: 5,
       title: "Active customers",
       legendLabel: "Active customers",
-      unit: "users",
+      unit: "Users",
       bgColor: "bg-[#7856ff]"
-    }
+    },
+    {
+      id: 6,
+      title: "Inactive customers",
+      legendLabel: "Inactive customers",
+      unit: "Users",
+      bgColor: "bg-[#ff6b6b]"
+    },
+
   ]);
 
   const [analyticsData, setAnalyticsData] = useState<any[]>(() =>
@@ -123,6 +139,16 @@ export function DashboardContent() {
       let trendValue = "0%";
 
       switch (card.title) {
+        case "Total Sales":
+          value = apiData.all_customers?.toLocaleString() ?? "-";
+          trend = apiData.all_customers_change >= 0 ? "up" : "down";
+          trendValue = (apiData.all_customers_change ?? 0) + "%";
+          break;
+        case "Purchase Value":
+          value = apiData.total_revenue?.toLocaleString() ?? "-";
+          trend = apiData.total_revenue_change >= 0 ? "up" : "down";
+          trendValue = (apiData.total_revenue_change ?? 0) + "%";
+          break;
         case "All customers":
           value = apiData.all_customers?.toLocaleString() ?? "-";
           trend = apiData.all_customers_change >= 0 ? "up" : "down";
@@ -142,6 +168,11 @@ export function DashboardContent() {
           value = apiData.active_customers?.toLocaleString() ?? "-";
           trend = apiData.active_customers_change >= 0 ? "up" : "down";
           trendValue = (apiData.active_customers_change ?? 0) + "%";
+          break;
+        case "Inactive customers":
+          value = apiData.inactive_customers?.toLocaleString() ?? "-";
+          trend = apiData.inactive_customers_change >= 0 ? "up" : "down";
+          trendValue = (apiData.inactive_customers_change ?? 0) + "%";
           break;
       }
 

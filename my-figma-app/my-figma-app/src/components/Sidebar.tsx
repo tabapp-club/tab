@@ -212,7 +212,7 @@ export function Sidebar() {
         {/* New Campaign Button */}
         <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10' : 'w-full max-w-48'}`}>
           {!actualIsCollapsed && (
-            <button className={`w-full h-10 bg-white border border-[#e9e9e9] rounded px-2 flex items-center justify-center gap-2 group hover:bg-gray-50 transition-all duration-300 ${
+            <Link href="/new-campaign" className={`w-full h-10 bg-white border border-[#e9e9e9] rounded px-2 flex items-center justify-center gap-2 group hover:bg-gray-50 transition-all duration-300 ${
               actualIsCollapsed ? 'opacity-0' : 'opacity-100'
             }`}>
               <div className="flex items-center">
@@ -221,14 +221,14 @@ export function Sidebar() {
               <span className="text-[13.3438px] font-medium text-[#2a2a2f] leading-[19.6px] whitespace-nowrap">
                 New campaign
               </span>
-            </button>
+            </Link>
           )}
           {actualIsCollapsed && (
-            <button className={`w-10 h-10 bg-white border border-[#e9e9e9] rounded flex items-center justify-center group hover:bg-gray-50 transition-all duration-300 ${
+            <Link href="/new-campaign" className={`w-10 h-10 bg-white border border-[#e9e9e9] rounded flex items-center justify-center group hover:bg-gray-50 transition-all duration-300 ${
               !actualIsCollapsed ? 'opacity-0' : 'opacity-100'
             }`}>
               <PlusIcon />
-            </button>
+            </Link>
           )}
         </div>
       </div>

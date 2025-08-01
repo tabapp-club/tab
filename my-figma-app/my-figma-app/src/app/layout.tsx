@@ -3,6 +3,8 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/SidebarContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PopupProvider } from "@/contexts/PopupContext";
+import { GlobalPopup } from "@/components/GlobalPopup";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -32,9 +34,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${manrope.variable} antialiased`}>
         <AuthProvider>
-          <SidebarProvider>
-            {children}
-          </SidebarProvider>
+          <PopupProvider>
+            <SidebarProvider>
+              {children}
+              <GlobalPopup />
+            </SidebarProvider>
+          </PopupProvider>
         </AuthProvider>
       </body>
     </html>

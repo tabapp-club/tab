@@ -35,7 +35,7 @@ const CampaignsStats = () => {
       bgColor: 'bg-orange-100'
     },
     {
-      value: '$42.5K',
+      value: '₹42.5K',
       label: 'Total Budget',
       labelColor: 'text-[#a1a1a1]',
       insights: '+15.3%',

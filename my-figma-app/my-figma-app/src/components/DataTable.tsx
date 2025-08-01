@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import RowActionsMenu from './RowActionsMenu';
 import React from 'react'; // Added missing import for React.useEffect
 
 interface SortConfig {
@@ -27,19 +26,12 @@ interface DataTableProps {
 const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
-  const [activeActionMenu, setActiveActionMenu] = useState<number | null>(null);
 
   const handleSort = (key: keyof UserData) => {
     setSortConfig(prev => ({ key, direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc' }));
   };
 
-  const handleActionMenuToggle = (index: number) => {
-    setActiveActionMenu(activeActionMenu === index ? null : index);
-  };
 
-  const handleViewCustomerDetails = (user: UserData) => {
-    console.log('Viewing customer details for:', user);
-  };
 
   const filteredData = useMemo(() => {
     return data.filter(user => {
@@ -76,8 +68,7 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
     { key: 'userType', label: 'User type', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
     { key: 'visits', label: 'No of visits', width: 'w-30 sm:w-34 lg:w-38', flex: 'flex-shrink-0', centered: true },
     { key: 'status', label: 'Status', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
-    { key: 'addedOn', label: 'Added on', width: 'w-24 sm:w-28 lg:w-32', flex: 'flex-shrink-0' },
-    { key: 'actions', label: '', width: 'w-12 sm:w-16', flex: 'flex-shrink-0' }
+    { key: 'addedOn', label: 'Added on', width: 'w-24 sm:w-28 lg:w-32', flex: 'flex-shrink-0' }
   ];
 
   return (
@@ -124,20 +115,6 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
                       <span className={`px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium rounded whitespace-nowrap ${user.status === 'Active' ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'}`}>
                         {user.status}
                       </span>
-                    ) : col.key === 'actions' ? (
-                      <div className="relative">
-                        <button onClick={() => handleActionMenuToggle(index)} className="p-1 sm:p-1.5 rounded-md hover:bg-gray-200">
-                          <DotsVerticalIcon />
-                        </button>
-                        {activeActionMenu === index && (
-                          <RowActionsMenu
-                            isOpen={activeActionMenu === index}
-                            onClose={() => setActiveActionMenu(null)}
-                            onViewDetails={() => handleViewCustomerDetails(user)}
-                            rowData={user}
-                          />
-                        )}
-                      </div>
                     ) : (
                       <span className="text-xs sm:text-sm font-medium text-[#2a2a2f] truncate max-w-full">{user[col.key as keyof UserData]}</span>
                     )}
@@ -157,6 +134,5 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
 const SortIcon = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L7 3L10 6" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 8L7 11L10 8" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const SortUpIcon = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L7 3L10 6" stroke="#2a2a2f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 8L7 11L10 8" stroke="#e0e0e0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const SortDownIcon = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L7 3L10 6" stroke="#e0e0e0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 8L7 11L10 8" stroke="#2a2a2f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-const DotsVerticalIcon = () => <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 4.5C9.62132 4.5 10.125 3.99632 10.125 3.375C10.125 2.75368 9.62132 2.25 9 2.25C8.37868 2.25 7.875 2.75368 7.875 3.375C7.875 3.99632 8.37868 4.5 9 4.5Z" fill="#a1a1a1"/><path d="M9 9C9.62132 9 10.125 8.49632 10.125 7.875C10.125 7.25368 9.62132 6.75 9 6.75C8.37868 6.75 7.875 7.25368 7.875 7.875C7.875 8.49632 8.37868 9 9 9Z" fill="#a1a1a1"/><path d="M9 13.5C9.62132 13.5 10.125 12.9963 10.125 12.375C10.125 11.7537 9.62132 11.25 9 11.25C8.37868 11.25 7.875 11.7537 7.875 12.375C7.875 12.9963 8.37868 13.5 9 13.5Z" fill="#a1a1a1"/></svg>;
 
 export default DataTable;

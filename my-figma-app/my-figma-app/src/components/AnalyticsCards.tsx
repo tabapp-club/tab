@@ -7,6 +7,28 @@ const UserIcon = () => (
 
 );
 
+const SalesIcon = () => (
+  <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 3L9 9L15 3L21 9" stroke="#17c653" strokeWidth="2" fill="none"/>
+    <path d="M3 15L9 9L15 15L21 9" stroke="#17c653" strokeWidth="2" fill="none"/>
+    <path d="M3 3V19H21" stroke="#17c653" strokeWidth="2" fill="none"/>
+  </svg>
+);
+
+const PurchaseIcon = () => (
+  <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="#17c653" strokeWidth="2" fill="none"/>
+    <path d="M3 6H21" stroke="#17c653" strokeWidth="2" fill="none"/>
+    <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="#17c653" strokeWidth="2" fill="none"/>
+  </svg>
+);
+
+const RupeeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="text-[#2a2a2f]">
+    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z"/>
+  </svg>
+);
+
 const TrendUpIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 4l-5 5-3-3-3 3" stroke="#e34f2f" strokeWidth="1.5" fill="none"/>
@@ -82,7 +104,7 @@ const AnimatedNumber = ({ value, loading = false }: { value: string; loading?: b
     </div>
   );
 };
-
+    
 // Animated Percentage Component
 const AnimatedPercentage = ({ value, loading = false }: { value: string; loading?: boolean }) => {
   const [displayValue, setDisplayValue] = useState(value);
@@ -143,44 +165,66 @@ const AnimatedPercentage = ({ value, loading = false }: { value: string; loading
 const analyticsData = [
   {
     id: 1,
+    title: "Total Sales",
+    subtitle: "5 July, 2025",
+    legendLabel: "Sales",
+    value: "₹1,25,000",
+    unit: "Users",
+    trend: "up",
+    trendValue: "12.5%",
+    bgColor: "bg-[#17c653]"
+  },
+  {
+    id: 2,
+    title: "Purchase Value",
+    subtitle: "5 July, 2025",
+    legendLabel: "Purchase value",
+    value: "₹85,000",
+    unit: "Rupees",
+    trend: "down",
+    trendValue: "8.2%",
+    bgColor: "bg-[#17c653]"
+  },
+  {
+    id: 3,
     title: "All customers",
     subtitle: "5 July, 2025",
     legendLabel: "New + Retained customers",
     value: "1,258",
-    unit: "users",
+    unit: "Users",
     trend: "down",
-    trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
-  },
-  {
-    id: 2,
-    title: "Unique customers",
-    subtitle: "5 July, 2025",
-    legendLabel: "Unique customers",
-    value: "958",
-    unit: "users",
-    trend: "down",
-    trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
-  },
-  {
-    id: 3,
-    title: "Retained customers",
-    subtitle: "5 July, 2025",
-    legendLabel: "Retained customers",
-    value: "300",
-    unit: "users",
-    trend: "up",
     trendValue: "11.49%",
     bgColor: "bg-[#7856ff]"
   },
   {
     id: 4,
-    title: "Inactive customers",
+    title: "New customers",
+    subtitle: "5 July, 2025",
+    legendLabel: "New customers",
+    value: "958",
+    unit: "Users",
+    trend: "down",
+    trendValue: "11.49%",
+    bgColor: "bg-[#7856ff]"
+  },
+  {
+    id: 5,
+    title: "Retained customers",
     subtitle: "5 July, 2025",
     legendLabel: "Retained customers",
+    value: "300",
+    unit: "Users",
+    trend: "up",
+    trendValue: "11.49%",
+    bgColor: "bg-[#7856ff]"
+  },
+  {
+    id: 6,
+    title: "Active customers",
+    subtitle: "5 July, 2025",
+    legendLabel: "Active customers",
     value: "1,200",
-    unit: "users",
+    unit: "Users",
     trend: "down",
     trendValue: "11.49%",
     bgColor: "bg-[#7856ff]"
@@ -189,23 +233,41 @@ const analyticsData = [
 
 export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: typeof analyticsData; onAskReason?: (cardType: string, cardData: any) => void; loading?: boolean }) {
   const displayData = data && data.length > 0 ? data : analyticsData;
+
+  const getCardIcon = (cardTitle: string) => {
+    switch (cardTitle) {
+      case "Total Sales":
+        return <SalesIcon />;
+      case "Purchase Value":
+        return <PurchaseIcon />;
+      default:
+        return <UserIcon />;
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full">
       {displayData.map((card) => {
         const isPositiveTrend = card.trend === "up";
         const trendBgColor = isPositiveTrend ? "bg-[rgba(23,198,83,0.1)]" : "bg-[rgba(227,79,47,0.1)]";
         const trendTextColor = isPositiveTrend ? "text-[#17c653]" : "text-[#e34f2f]";
 
+        // Special styling for the first two cards (Total Sales and Purchase Value)
+        const isTopCard = card.title === "Total Sales" || card.title === "Purchase Value";
+        const cardClassName = isTopCard
+          ? "min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden col-span-1 sm:col-span-2 lg:col-span-2 xl:col-span-2"
+          : "min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden";
+
         return (
           <div
             key={card.id}
-            className="min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden"
+            className={cardClassName}
           >
             {/* Header */}
             <div className="min-h-16 border-b border-[#e9e9e9] px-4 py-2">
               <div className="flex gap-2 items-start">
                 <div className="w-[21px] h-[21px] flex items-center justify-center flex-shrink-0">
-                  <UserIcon />
+                  {<UserIcon />} {/* TODO: Can get logo from getCardIcon function */}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[14px] font-bold text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
@@ -224,7 +286,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                 {/* Legend */}
                 <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-1">
                   <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
-                    <div className={`w-2.5 h-2.5 rounded-sm ${card.bgColor} flex-shrink-0`}></div>
+                    <div className={`w-2.5 h-2.5 rounded-sm bg-[#7856ff] flex-shrink-0`}></div>
                     <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
                       {card.legendLabel}
                     </div>
@@ -235,8 +297,8 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                 <div className="w-full max-w-[163px] flex flex-col items-center">
                   <div className="w-full px-0 py-1 flex items-center justify-center">
                     <div className="w-full flex flex-col items-center">
-                      <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words">
-                        <AnimatedNumber value={card.value} loading={loading} />
+                      <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">
+                        { card.title === "Purchase Value" ? (<div className="text-xl sm:text-2xl md:text-3xl lg:text-[48px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">₹</div>): null }<AnimatedNumber value={card.value} loading={loading} />
                       </div>
                     </div>
                   </div>

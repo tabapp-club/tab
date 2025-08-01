@@ -74,11 +74,15 @@ const FilterDropdown = ({
   const handleOptionChange = (optionId: string) => {
     let newSelectedIds;
     if (singleSelect) {
-      newSelectedIds = [optionId];
+      // For single select, toggle between selected and none
+      const isCurrentlySelected = options.find(opt => opt.id === optionId)?.checked;
+      newSelectedIds = isCurrentlySelected ? [] : [optionId];
     } else if (title === 'No of visits') {
-      // Single select for visits
-      newSelectedIds = [optionId];
+      // Single select for visits - toggle between selected and none
+      const isCurrentlySelected = options.find(opt => opt.id === optionId)?.checked;
+      newSelectedIds = isCurrentlySelected ? [] : [optionId];
     } else {
+      // For multi-select, toggle the specific option
       newSelectedIds = options
         .map(option =>
           option.id === optionId
@@ -97,12 +101,21 @@ const FilterDropdown = ({
       <button
         ref={buttonRef}
         onClick={onToggle}
-        className="bg-white h-8 px-3 py-0.5 border border-[#e9e9e9] rounded flex items-center gap-1 hover:bg-gray-50 transition-colors"
+        className={`bg-white h-8 px-3 py-0.5 border rounded flex items-center gap-1 hover:bg-gray-50 transition-colors ${
+          selectedCount > 0
+            ? 'border-[#7856ff] bg-[#7856ff]/5'
+            : 'border-[#e9e9e9]'
+        }`}
       >
-        <span className="text-[14px] font-medium text-[#2a2a2f]">{title}</span>
+        <span className="text-[14px] font-medium text-[#2a2a2f] truncate max-w-[120px]">
+          {selectedCount > 0
+            ? options.find(opt => opt.checked)?.label || title
+            : title
+          }
+        </span>
         {selectedCount > 0 && (
-          <span className="bg-[#0f60ff] text-white text-[10px] font-normal px-2 py-1 rounded-full min-w-[16px] h-4 flex items-center justify-center">
-            {selectedCount}
+          <span className="text-[10px] text-[#7856ff] font-medium">
+            {options.filter(opt => opt.checked).length > 1 ? `+${options.filter(opt => opt.checked).length - 1}` : ''}
           </span>
         )}
         <ChevronDownIcon />
@@ -141,14 +154,14 @@ const FilterDropdown = ({
                     onChange={() => handleOptionChange(option.id)}
                     className="sr-only"
                   />
-                  <div className={`w-[18px] h-[18px] border rounded flex items-center justify-center ${
+                  <div className={`w-[18px] h-[18px] flex items-center justify-center ${
                     option.checked
-                      ? 'bg-[#0f60ff] border-[#0f60ff]'
-                      : 'border-[#e9e9e9] bg-white'
+                      ? 'text-[#7856ff]'
+                      : 'text-[#e9e9e9]'
                   }`}>
                     {option.checked && (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6L4.5 8.5L10 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     )}
                   </div>

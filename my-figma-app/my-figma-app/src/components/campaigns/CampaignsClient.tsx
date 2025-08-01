@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Sidebar } from '../Sidebar';
 import { MobileMenuToggle } from '../MobileMenuToggle';
 import { useSidebar } from '../SidebarContext';
@@ -8,7 +9,6 @@ import { CampaignsHeader } from './CampaignsHeader';
 import { CampaignsStats } from './CampaignsStats';
 import { CampaignsFilters } from './CampaignsFilters';
 import { CampaignsList } from './CampaignsList';
-import { CreateCampaignModal } from './CreateCampaignModal';
 
 export interface CampaignData {
   id: string;
@@ -88,17 +88,17 @@ const exportCampaignsToCSV = (data: CampaignData[], filename: string = 'campaign
 };
 
 export function CampaignsClient() {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignData[]>([]);
   const { isCollapsed, isMobile } = useSidebar();
+  const router = useRouter();
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   const handleCreateCampaign = useCallback(() => {
-    setIsCreateModalOpen(true);
-  }, []);
+    router.push('/new-campaign');
+  }, [router]);
 
   const handleImportClick = useCallback(() => {
     // Handle import functionality
@@ -162,10 +162,7 @@ export function CampaignsClient() {
         </main>
       </div>
 
-      {/* Create Campaign Modal */}
-      {isCreateModalOpen && (
-        <CreateCampaignModal onClose={() => setIsCreateModalOpen(false)} />
-      )}
+
     </div>
   );
 }
