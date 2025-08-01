@@ -350,6 +350,7 @@ export function CreateCampaignContent() {
 
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [selectedFiles, setSelectedFiles] = useState<Record<string, File | null>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -362,7 +363,7 @@ export function CreateCampaignContent() {
     setSelectedFiles(prev => ({ ...prev, [fieldId]: file }));
   };
 
-    const handleProceed = () => {
+    const handleProceed = async () => {
     const requiredFields = template.fields.filter(field => field.required);
     const missingFields = requiredFields.filter(field => !formData[field.id]);
 
@@ -374,6 +375,9 @@ export function CreateCampaignContent() {
       return;
     }
 
+    setIsLoading(true);
+    // Simulate loading delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
     router.push(`/new-campaign/audience?type=${campaignType}`);
   };
 
@@ -467,9 +471,21 @@ export function CreateCampaignContent() {
             <div className="flex justify-end">
               <button
                 onClick={handleProceed}
-                className="px-6 py-3 bg-[#7856ff] text-white rounded-lg font-medium hover:bg-[#6a4fd8] transition-all duration-200 shadow-lg hover:shadow-xl"
+                disabled={isLoading}
+                className={`px-6 py-3 text-white rounded-lg font-medium transition-all duration-200 shadow-lg ${
+                  isLoading
+                    ? 'bg-[#7856ff] cursor-not-allowed opacity-75'
+                    : 'bg-[#7856ff] hover:bg-[#6a4fd8] hover:shadow-xl'
+                }`}
               >
-                Continue to Audience Selection
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Preparing...</span>
+                  </div>
+                ) : (
+                  'Continue to Audience Selection'
+                )}
               </button>
             </div>
           </div>

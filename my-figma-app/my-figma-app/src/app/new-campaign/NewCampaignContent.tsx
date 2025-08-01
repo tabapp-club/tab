@@ -129,6 +129,7 @@ export function NewCampaignContent() {
   const { isCollapsed, isMobile } = useSidebar();
   const router = useRouter();
   const [selectedCampaignType, setSelectedCampaignType] = useState<CampaignType | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -137,8 +138,11 @@ export function NewCampaignContent() {
     setSelectedCampaignType(campaignType);
   };
 
-  const handleProceedToNextStep = () => {
+  const handleProceedToNextStep = async () => {
     if (selectedCampaignType) {
+      setIsLoading(true);
+      // Simulate loading delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
       router.push(`/new-campaign/create?type=${selectedCampaignType.type}`);
     }
   };
@@ -177,17 +181,25 @@ export function NewCampaignContent() {
             <div className="flex justify-end">
               <button
                 onClick={handleProceedToNextStep}
-                disabled={!selectedCampaignType}
+                disabled={!selectedCampaignType || isLoading}
                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                  selectedCampaignType
+                  selectedCampaignType && !isLoading
                     ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-lg hover:shadow-xl'
+                    : isLoading
+                    ? 'bg-[#7856ff] text-white cursor-not-allowed opacity-75'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {selectedCampaignType
-                  ? `Create ${selectedCampaignType.title.split(' ')[0]} Campaign`
-                  : 'Select a campaign type'
-                }
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Creating...</span>
+                  </div>
+                ) : selectedCampaignType ? (
+                  `Create ${selectedCampaignType.title.split(' ')[0]} Campaign`
+                ) : (
+                  'Select a campaign type'
+                )}
               </button>
             </div>
           </div>

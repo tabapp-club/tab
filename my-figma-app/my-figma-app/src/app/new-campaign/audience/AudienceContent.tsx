@@ -182,6 +182,7 @@ export function AudienceContent() {
     visits: [] as string[],
     status: [] as string[]
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   // Helper to map API response to UserData[]
   const mapApiDataToTable = (apiData: any[]): UserData[] => {
@@ -342,25 +343,28 @@ export function AudienceContent() {
     return count.toString();
   };
 
-    const handleProceed = () => {
-    if (selectedMediums.length === 0) {
-      showWarning(
-        'No Campaign Medium Selected',
-        'Please select at least one campaign medium before proceeding.'
-      );
-      return;
-    }
+        const handleProceed = async () => {
+      if (selectedMediums.length === 0) {
+        showWarning(
+          'No Campaign Medium Selected',
+          'Please select at least one campaign medium before proceeding.'
+        );
+        return;
+      }
 
-    if (!allUsersEnabled && Object.keys(filters).length === 0) {
-      showWarning(
-        'No Audience Selected',
-        'Please either enable "All users" or select specific filters for your audience.'
-      );
-      return;
-    }
+      if (!allUsersEnabled && Object.keys(filters).length === 0) {
+        showWarning(
+          'No Audience Selected',
+          'Please either enable "All users" or select specific filters for your audience.'
+        );
+        return;
+      }
 
-    router.push(`/new-campaign/schedule?type=${campaignType}&medium=${selectedMediums.join(',')}`);
-  };
+      setIsLoading(true);
+      // Simulate loading delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      router.push(`/new-campaign/schedule?type=${campaignType}&medium=${selectedMediums.join(',')}`);
+    };
 
   return (
     <main className={`flex-1 transition-sidebar ${
@@ -386,9 +390,21 @@ export function AudienceContent() {
             <div className="flex justify-end">
                               <button
                   onClick={handleProceed}
-                  className="px-6 py-3 bg-[#7856ff] text-white rounded-lg font-medium hover:bg-[#6a4fd8] transition-all duration-200 shadow-lg hover:shadow-xl"
+                  disabled={isLoading}
+                  className={`px-6 py-3 text-white rounded-lg font-medium transition-all duration-200 shadow-lg ${
+                    isLoading
+                      ? 'bg-[#7856ff] cursor-not-allowed opacity-75'
+                      : 'bg-[#7856ff] hover:bg-[#6a4fd8] hover:shadow-xl'
+                  }`}
                 >
-                  Proceed to Schedule Campaign
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Scheduling...</span>
+                    </div>
+                  ) : (
+                    'Proceed to Schedule Campaign'
+                  )}
                 </button>
             </div>
           </div>
