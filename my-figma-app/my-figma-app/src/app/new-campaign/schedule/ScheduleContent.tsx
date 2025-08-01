@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSidebar } from "@/components/SidebarContext";
 import { usePopup } from "@/contexts/PopupContext";
+import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 
 const CheckIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,6 +23,7 @@ const progressSteps = [
 const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLast: boolean }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Stagger animation for each step
@@ -37,6 +39,17 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
       const timer = setTimeout(() => {
         setIsCompleted(true);
       }, 300 + index * 150);
+      return () => clearTimeout(timer);
+    }
+  }, [step.completed, index]);
+
+  // Simulate loading animation for current step
+  useEffect(() => {
+    if (!step.completed && index === 3) { // Current step (Schedule)
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [step.completed, index]);
@@ -57,6 +70,10 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
                 <CheckIcon />
               </div>
             </div>
+          ) : isLoading ? (
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#7856ff] flex items-center justify-center transition-all duration-300">
+              <div className="w-4 h-4 border-2 border-[#7856ff] border-t-transparent rounded-full animate-spin"></div>
+            </div>
           ) : (
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#e9e9e9] flex items-center justify-center transition-all duration-300">
               <span className="text-sm font-medium text-[#626266]">{step.id}</span>
@@ -64,7 +81,7 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
           )}
         </div>
         <span className={`text-sm sm:text-base font-semibold text-[#2a2a2f] tracking-tight transition-all duration-300 ${
-          step.completed ? 'text-[#7856ff]' : 'text-[#2a2a2f]'
+          step.completed ? 'text-[#7856ff]' : isLoading ? 'text-[#7856ff]' : 'text-[#2a2a2f]'
         }`}>
           {step.title}
         </span>
@@ -76,6 +93,11 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
             <div className={`absolute top-0 left-0 h-full bg-[#7856ff] transition-all duration-1000 ease-out ${
               isCompleted ? 'w-full' : 'w-0'
             }`}></div>
+          )}
+          {isLoading && (
+            <div className="absolute top-0 left-0 h-full bg-[#7856ff] animate-pulse">
+              <div className="h-full bg-gradient-to-r from-[#7856ff] via-[#9b7cff] to-[#7856ff] animate-shimmer"></div>
+            </div>
           )}
         </div>
       )}
@@ -152,57 +174,62 @@ export function ScheduleContent() {
   };
 
   return (
-    <main className={`flex-1 flex flex-col transition-all duration-300 min-w-0 ${
-      actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'
+    <main className={`flex-1 transition-sidebar ${
+      actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Header */}
-      <div className="flex-shrink-0 bg-white border-b border-[#e9e9e9] px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">
-              Schedule Campaign
-            </h1>
-            <p className="text-sm sm:text-base text-[#626266] mt-2 sm:mt-3">
-              Set when your campaign will start and end
-            </p>
-          </div>
-          <button
-            onClick={handlePublishCampaign}
-            disabled={isPublishing || isPublished}
-            className={`px-6 py-3 text-white rounded-lg font-medium transition-all duration-500 shadow-lg ${
-              isPublishing
-                ? 'bg-[#7856ff] opacity-75 cursor-not-allowed scale-95'
-                : isPublished
-                ? 'bg-green-500 cursor-not-allowed scale-105'
-                : 'bg-[#7856ff] hover:bg-[#6a4fd8] hover:scale-105 active:scale-95'
-            }`}
-          >
-            {isPublishing ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Publishing...</span>
-              </div>
-            ) : isPublished ? (
-              <div className="flex items-center gap-2">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white">
-                  <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span>Published!</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform duration-200 group-hover:translate-x-1">
-                  <path d="M8 1L15 8L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span>Publish Campaign</span>
-              </div>
-            )}
-          </button>
-        </div>
+      {/* Mobile Menu Toggle */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <MobileMenuToggle />
       </div>
 
-      {/* Main Content */}
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
+        {/* Header */}
+        <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">
+                Schedule Campaign
+              </h1>
+              <p className="text-sm sm:text-base text-[#626266] mt-2 sm:mt-3">
+                Set when your campaign will start and end
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handlePublishCampaign}
+                disabled={isPublishing || isPublished}
+                className={`px-6 py-3 text-white rounded-lg font-medium transition-all duration-500 shadow-lg ${
+                  isPublishing
+                    ? 'bg-[#7856ff] opacity-75 cursor-not-allowed scale-95'
+                    : isPublished
+                    ? 'bg-green-500 cursor-not-allowed scale-105'
+                    : 'bg-[#7856ff] hover:bg-[#6a4fd8] hover:scale-105 active:scale-95'
+                }`}
+              >
+                {isPublishing ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Publishing...</span>
+                  </div>
+                ) : isPublished ? (
+                  <div className="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white">
+                      <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Published!</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform duration-200 group-hover:translate-x-1">
+                      <path d="M8 1L15 8L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Publish Campaign</span>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
         {/* Progress Indicator */}
         <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#fff] border border-[#fff] box-border overflow-hidden">
           <div className="p-3 sm:p-4 lg:p-6 lg:pl-[35px]">

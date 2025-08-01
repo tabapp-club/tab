@@ -258,6 +258,7 @@ const CheckIcon = () => (
 const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLast: boolean }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Stagger animation for each step
@@ -273,6 +274,17 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
       const timer = setTimeout(() => {
         setIsCompleted(true);
       }, 300 + index * 150);
+      return () => clearTimeout(timer);
+    }
+  }, [step.completed, index]);
+
+  // Simulate loading animation for current step
+  useEffect(() => {
+    if (!step.completed && index === 1) { // Current step (Create)
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [step.completed, index]);
@@ -293,6 +305,10 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
                 <CheckIcon />
               </div>
             </div>
+          ) : isLoading ? (
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#7856ff] flex items-center justify-center transition-all duration-300">
+              <div className="w-4 h-4 border-2 border-[#7856ff] border-t-transparent rounded-full animate-spin"></div>
+            </div>
           ) : (
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#e9e9e9] flex items-center justify-center transition-all duration-300">
               <span className="text-sm font-medium text-[#626266]">{step.id}</span>
@@ -300,7 +316,7 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
           )}
         </div>
         <span className={`text-sm sm:text-base font-semibold text-[#2a2a2f] tracking-tight transition-all duration-300 ${
-          step.completed ? 'text-[#7856ff]' : 'text-[#2a2a2f]'
+          step.completed ? 'text-[#7856ff]' : isLoading ? 'text-[#7856ff]' : 'text-[#2a2a2f]'
         }`}>
           {step.title}
         </span>
@@ -312,6 +328,11 @@ const AnimatedStep = ({ step, index, isLast }: { step: any; index: number; isLas
             <div className={`absolute top-0 left-0 h-full bg-[#7856ff] transition-all duration-1000 ease-out ${
               isCompleted ? 'w-full' : 'w-0'
             }`}></div>
+          )}
+          {isLoading && (
+            <div className="absolute top-0 left-0 h-full bg-[#7856ff] animate-pulse">
+              <div className="h-full bg-gradient-to-r from-[#7856ff] via-[#9b7cff] to-[#7856ff] animate-shimmer"></div>
+            </div>
           )}
         </div>
       )}
