@@ -30,6 +30,7 @@ interface DataCenterFiltersProps {
   totalUsers?: number;
   visibleUsers?: number;
   categories?: Array<{name: string, label: string}>;
+  clearFilters?: boolean;
 }
 
 const DataCenterFilters = ({
@@ -38,7 +39,8 @@ const DataCenterFilters = ({
   onFiltersChange,
   totalUsers = 0,
   visibleUsers = 0,
-  categories = []
+  categories = [],
+  clearFilters = false
 }: DataCenterFiltersProps = {}) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [openFilter, setOpenFilter] = useState<string | null>(null);
@@ -71,6 +73,35 @@ const DataCenterFilters = ({
       pendingFilterChange.current = null;
     }
   }, [filters, onFiltersChange]);
+
+  // Clear filters when clearFilters prop is true
+  useEffect(() => {
+    if (clearFilters) {
+      setFilters({
+        category: filters.category.map(option => ({ ...option, checked: false })),
+        userType: filters.userType.map(option => ({ ...option, checked: false })),
+        visits: filters.visits.map(option => ({ ...option, checked: false })),
+        status: filters.status.map(option => ({ ...option, checked: false })),
+      });
+      setInternalSearchTerm('');
+      setOpenFilter(null);
+
+      // Notify parent about cleared filters
+      if (onFiltersChange) {
+        onFiltersChange({
+          category: [],
+          userType: undefined,
+          no_of_visits_from: undefined,
+          no_of_visits_to: undefined,
+          status: undefined,
+          search: ''
+        });
+      }
+      if (onSearchChange) {
+        onSearchChange('');
+      }
+    }
+  }, [clearFilters, onFiltersChange, onSearchChange]);
 
   // Update category filter options when categories prop changes
   useEffect(() => {
@@ -192,39 +223,16 @@ const DataCenterFilters = ({
     pendingFilterChange.current = { search: value };
   };
 
-  // Add a function to clear all filters
-  const handleClearFilters = () => {
-    setFilters({
-      category: filters.category.map(option => ({ ...option, checked: false })),
-      userType: filters.userType.map(option => ({ ...option, checked: false })),
-      visits: filters.visits.map(option => ({ ...option, checked: false })),
-      status: filters.status.map(option => ({ ...option, checked: false })),
-    });
 
-    // Store clear filters action in ref
-    pendingFilterChange.current = {
-      category: [],
-      userType: undefined,
-      no_of_visits_from: undefined,
-      no_of_visits_to: undefined,
-      status: undefined,
-      search: currentSearchTerm || undefined,
-    };
-  };
 
   return (
-    <div className="bg-white sticky top-0 z-10 border-b border-t border-gray-200 min-w-0">
-      <div className="flex flex-col gap-2 sm:gap-3 lg:gap-0 lg:flex-row lg:items-center lg:justify-between p-2 sm:p-3 lg:px-4 lg:py-0 lg:h-[60px] min-w-0">
-        <div className="flex-shrink-0 text-xs sm:text-sm font-medium text-gray-700 truncate">
-          Showing {visibleUsers} of {totalUsers} users
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
-            <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">
-              Filter by
-            </span>
-            <div className="flex flex-wrap gap-2 items-center mb-2 relative">
+    <div className="bg-transparent min-w-0">
+      <div className="flex flex-row items-center justify-end min-w-0">
+        <div className="flex flex-row items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
+          <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0">
+            Filter by
+          </span>
+          <div className="flex flex-row gap-2 items-center">
             <FilterDropdown
               title="Category"
               options={filters.category}
@@ -259,16 +267,7 @@ const DataCenterFilters = ({
               onToggle={() => handleFilterToggle('status')}
               selectedCount={getSelectedCount('status')}
             />
-            </div>
           </div>
-          {/* Add Clear Filters button */}
-          <button
-            type="button"
-            onClick={handleClearFilters}
-            className="text-xs sm:text-sm text-[#7856ff] hover:underline ml-0 sm:ml-4 mt-2 sm:mt-0 font-medium"
-          >
-            Clear filters
-          </button>
           <div className="relative flex-shrink-0 min-w-0">
             <div className="bg-[#f6f6f6] rounded-md flex items-center h-8 w-full min-w-0 max-w-full sm:max-w-[200px]">
               <div className="pl-2 pr-1 flex-shrink-0">

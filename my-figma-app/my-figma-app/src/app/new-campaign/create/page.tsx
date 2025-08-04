@@ -1,35 +1,35 @@
-import React from 'react';
-import type { Metadata } from "next";
-import { Sidebar } from "@/components/Sidebar";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { CreateCampaignContent } from "./CreateCampaignContent";
+import { Sidebar } from '@/components/Sidebar';
+import { CreateCampaignContent } from './CreateCampaignContent';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Create Campaign - Business Dashboard",
-  description: "Create your campaign with customized settings and content.",
-  keywords: ["campaign creation", "marketing", "advertising", "engagement", "retention"],
-  authors: [{ name: "Your Company" }],
-  creator: "Your Company",
-  publisher: "Your Company",
+  title: 'Create Campaign | Business Dashboard',
+  description: 'Create your campaign with custom templates, images, and call-to-action text. Design professional advertisements for your business.',
+  keywords: 'campaign creation, ad templates, marketing, business growth, advertising',
   openGraph: {
-    title: "Create Campaign - Business Dashboard",
-    description: "Create your campaign with customized settings and content.",
-    type: "website",
+    title: 'Create Campaign | Business Dashboard',
+    description: 'Create your campaign with custom templates, images, and call-to-action text. Design professional advertisements for your business.',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Create Campaign | Business Dashboard',
+    description: 'Create your campaign with custom templates, images, and call-to-action text.',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
 export default function CreateCampaignPage() {
   return (
-    <ProtectedRoute>
-      <div className="bg-white">
-        <div className="flex relative">
-          {/* Sidebar */}
-          <Sidebar />
-
-          {/* Main Content */}
-          <CreateCampaignContent />
-        </div>
+    <div className="flex h-screen bg-white">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <CreateCampaignContent />
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }
