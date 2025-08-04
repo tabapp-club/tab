@@ -72,7 +72,7 @@ const DataCenterFilters = ({
       onFiltersChange(pendingFilterChange.current);
       pendingFilterChange.current = null;
     }
-  }, [filters, onFiltersChange]);
+  }, [filters.category, filters.status, filters.userType, filters.visits, onFiltersChange]);
 
   // Clear filters when clearFilters prop is true
   useEffect(() => {

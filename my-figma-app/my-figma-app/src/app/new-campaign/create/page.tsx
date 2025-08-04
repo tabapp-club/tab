@@ -1,6 +1,7 @@
 import { Sidebar } from '@/components/Sidebar';
 import { CreateCampaignContent } from './CreateCampaignContent';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Create Campaign | Business Dashboard',
@@ -28,7 +29,9 @@ export default function CreateCampaignPage() {
     <div className="flex h-screen bg-white">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <CreateCampaignContent />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CreateCampaignContent />
+        </Suspense>
       </div>
     </div>
   );

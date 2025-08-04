@@ -129,63 +129,6 @@ export function DashboardContent() {
 
 
 
-  // Helper to update only the dynamic data
-  const updateCardData = (apiData: any, dateLabel: string) => {
-    if (!apiData) return staticCardStructure.map(card => ({ ...card, subtitle: dateLabel, value: "-", trend: "down", trendValue: "0%" }));
-
-    return staticCardStructure.map(card => {
-      let value = "-";
-      let trend = "down";
-      let trendValue = "0%";
-
-      switch (card.title) {
-        case "Total Sales":
-          value = apiData.all_customers?.toLocaleString() ?? "-";
-          trend = apiData.all_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.all_customers_change ?? 0) + "%";
-          break;
-        case "Purchase Value":
-          value = apiData.total_revenue?.toLocaleString() ?? "-";
-          trend = apiData.total_revenue_change >= 0 ? "up" : "down";
-          trendValue = (apiData.total_revenue_change ?? 0) + "%";
-          break;
-        case "All customers":
-          value = apiData.all_customers?.toLocaleString() ?? "-";
-          trend = apiData.all_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.all_customers_change ?? 0) + "%";
-          break;
-        case "New customers":
-          value = apiData.new_customers?.toLocaleString() ?? "-";
-          trend = apiData.new_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.new_customers_change ?? 0) + "%";
-          break;
-        case "Retained customers":
-          value = apiData.retained_customers?.toLocaleString() ?? "-";
-          trend = apiData.retained_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.retained_customers_change ?? 0) + "%";
-          break;
-        case "Active customers":
-          value = apiData.active_customers?.toLocaleString() ?? "-";
-          trend = apiData.active_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.active_customers_change ?? 0) + "%";
-          break;
-        case "Inactive customers":
-          value = apiData.inactive_customers?.toLocaleString() ?? "-";
-          trend = apiData.inactive_customers_change >= 0 ? "up" : "down";
-          trendValue = (apiData.inactive_customers_change ?? 0) + "%";
-          break;
-      }
-
-      return {
-        ...card,
-        subtitle: dateLabel,
-        value,
-        trend,
-        trendValue
-      };
-    });
-  };
-
   const fetchDashboardData = useCallback(async (days?: number, range?: { from: Date | null; to: Date | null }) => {
     if (!user?.accessToken) return;
     setLoading(true);
@@ -213,6 +156,64 @@ export function DashboardContent() {
 
       // Generate date label based on current filter
       const dateLabel = generateDateLabel(currentFilterType, days, range);
+
+      // Helper to update only the dynamic data
+      const updateCardData = (apiData: any, dateLabel: string) => {
+        if (!apiData) return staticCardStructure.map(card => ({ ...card, subtitle: dateLabel, value: "-", trend: "down", trendValue: "0%" }));
+
+        return staticCardStructure.map(card => {
+          let value = "-";
+          let trend = "down";
+          let trendValue = "0%";
+
+          switch (card.title) {
+            case "Total Sales":
+              value = apiData.all_customers?.toLocaleString() ?? "-";
+              trend = apiData.all_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.all_customers_change ?? 0) + "%";
+              break;
+            case "Purchase Value":
+              value = apiData.total_revenue?.toLocaleString() ?? "-";
+              trend = apiData.total_revenue_change >= 0 ? "up" : "down";
+              trendValue = (apiData.total_revenue_change ?? 0) + "%";
+              break;
+            case "All customers":
+              value = apiData.all_customers?.toLocaleString() ?? "-";
+              trend = apiData.all_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.all_customers_change ?? 0) + "%";
+              break;
+            case "New customers":
+              value = apiData.new_customers?.toLocaleString() ?? "-";
+              trend = apiData.new_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.new_customers_change ?? 0) + "%";
+              break;
+            case "Retained customers":
+              value = apiData.retained_customers?.toLocaleString() ?? "-";
+              trend = apiData.retained_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.retained_customers_change ?? 0) + "%";
+              break;
+            case "Active customers":
+              value = apiData.active_customers?.toLocaleString() ?? "-";
+              trend = apiData.active_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.active_customers_change ?? 0) + "%";
+              break;
+            case "Inactive customers":
+              value = apiData.inactive_customers?.toLocaleString() ?? "-";
+              trend = apiData.inactive_customers_change >= 0 ? "up" : "down";
+              trendValue = (apiData.inactive_customers_change ?? 0) + "%";
+              break;
+          }
+
+          return {
+            ...card,
+            subtitle: dateLabel,
+            value,
+            trend,
+            trendValue
+          };
+        });
+      };
+
       setAnalyticsData(updateCardData(result.data, dateLabel));
     } catch (err: any) {
       setError(err.message || "Unknown error");
