@@ -641,36 +641,36 @@ export function AudienceContent() {
         </section>
 
         {/* Navigation Bar */}
-        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-2 lg:px-12 py-2 z-50 ${
-          actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
+        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
+          isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
         }`}>
-          <div className="flex flex-col sm:flex-row gap-2 lg:gap-4 items-center justify-between">
-            <div className="flex flex-row gap-2 lg:gap-4 items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={() => router.push('/campaigns')}
-                className="h-8 px-2 lg:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >
                 Close
               </button>
-
             </div>
-            <div className="flex flex-row gap-2 lg:gap-4 items-center">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={() => router.push(`/new-campaign/create?type=${campaignType}`)}
-                className="h-8 px-2 lg:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >
                 Back
               </button>
               <button
                 onClick={handleProceed}
                 disabled={isLoading}
-                className={`h-8 px-2 lg:px-4 py-1 rounded font-medium text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+                className={`h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
                   !isLoading
                     ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {isLoading ? 'Processing...' : 'Proceed to next step'}
+                <span className="hidden sm:inline">{isLoading ? 'Processing...' : 'Proceed to next step'}</span>
+                <span className="sm:hidden">{isLoading ? 'Processing...' : 'Next'}</span>
               </button>
             </div>
           </div>

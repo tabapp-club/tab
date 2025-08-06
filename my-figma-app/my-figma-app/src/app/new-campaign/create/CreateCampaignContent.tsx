@@ -1325,38 +1325,40 @@ export function CreateCampaignContent() {
 
       <div className="w-full max-w-full overflow-x-hidden h-full flex flex-col">
         {/* Navigation Bar */}
-        <div className={`fixed bottom-0 box-border flex flex-row gap-2 lg:gap-4 items-center justify-start px-2 lg:px-12 py-2 border-t border-[#e9e9e9] bg-white z-50 ${
-          actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
-        } lg:left-[232px] lg:right-0`}>
-          <div className="flex flex-row gap-2 lg:gap-4 grow items-center justify-start">
-            <button
-              onClick={handleClose}
-              className="h-8 px-2 lg:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-            >
-              Close
-            </button>
-            </div>
-          <div className="flex flex-row gap-2 lg:gap-4 items-center justify-start">
-            <button
-              onClick={handleBack}
-              className="h-8 px-2 lg:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-            >
-              Back
-            </button>
+        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
+          isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
+        }`}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
-              onClick={handleProceedToNextStep}
-              disabled={!formData.campaignTitle.trim()}
-              className={`h-8 px-2 lg:px-4 py-1 rounded font-medium text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
-                formData.campaignTitle.trim()
-                  ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              <span className="hidden lg:inline">Proceed to next step</span>
-              <span className="lg:hidden">Next</span>
+                onClick={handleClose}
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
+              <button
+                onClick={handleBack}
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleProceedToNextStep}
+                disabled={!formData.campaignTitle.trim()}
+                className={`h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+                  formData.campaignTitle.trim()
+                    ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <span className="hidden sm:inline">Proceed to next step</span>
+                <span className="sm:hidden">Next</span>
               </button>
             </div>
           </div>
+        </div>
 
         {/* Main Content */}
         <div className="px-4 py-4 lg:px-8 lg:py-8 pb-64 flex-1 overflow-y-auto">

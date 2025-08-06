@@ -272,7 +272,10 @@ export default function DataCenterClient() {
         <div className="fixed inset-0 z-40 backdrop-blur-sm bg-white/30 transition-all duration-300"></div>
       )}
         {isImportModalOpen && (
-          <ImportModal onClose={() => setIsImportModalOpen(false)} />
+          <ImportModal
+            onClose={() => setIsImportModalOpen(false)}
+            onUploadSuccess={fetchData}
+          />
         )}
       </div>
   );

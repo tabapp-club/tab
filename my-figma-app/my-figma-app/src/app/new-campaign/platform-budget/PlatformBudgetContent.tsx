@@ -193,7 +193,7 @@ const platforms: PlatformCard[] = [
 ];
 
 export function PlatformBudgetContent() {
-  const { isCollapsed, toggleSidebar } = useSidebar();
+  const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
   const { showPopup } = usePopup();
   const { user } = useAuth();
   const router = useRouter();
@@ -724,30 +724,31 @@ export function PlatformBudgetContent() {
         </div>
 
         {/* Navigation Bar */}
-        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-12 py-2 z-50 ${
-          isCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
+        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
+          isMobile ? 'left-0 right-0' : isCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
         }`}>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-row gap-4 items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={() => router.push('/campaigns')}
-                className="h-8 px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[12px] sm:text-[14px] font-medium hover:bg-gray-50 transition-colors"
               >
                 Close
               </button>
             </div>
-            <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={handleBack}
-                className="h-8 px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[12px] sm:text-[14px] font-medium hover:bg-gray-50 transition-colors"
               >
                 Back
               </button>
               <button
                 onClick={handleNext}
-                className="h-8 px-4 py-1 bg-[#7856ff] text-white text-[14px] font-medium rounded hover:bg-[#6a4de8] transition-colors"
+                className="h-9 px-3 sm:px-4 py-1 bg-[#7856ff] text-white text-[12px] sm:text-[14px] font-medium rounded hover:bg-[#6a4de8] transition-colors"
               >
-                Proceed to next step
+                <span className="hidden sm:inline">Proceed to next step</span>
+                <span className="sm:hidden">Next</span>
               </button>
             </div>
           </div>

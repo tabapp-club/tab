@@ -282,7 +282,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
         <div className="grid grid-cols-7 gap-0 mb-1">
           {daysOfWeek.map((day) => (
             <div key={day} className="h-9 flex items-center justify-center">
-              <span className="font-['Inter:Regular',sans-serif] font-normal text-[15px] text-[#a1a1a1] leading-[1.4]">
+              <span className="font-['Manrope:Regular',sans-serif] font-normal text-[15px] text-[#a1a1a1] leading-[1.4]">
                 {day}
               </span>
             </div>

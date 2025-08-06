@@ -321,43 +321,45 @@ export function NewCampaignContent() {
 
       <div className="w-full max-w-full overflow-x-hidden">
         {/* Navigation Bar */}
-        <div className={`fixed bottom-0 box-border flex flex-row gap-2 lg:gap-4 items-center justify-start px-2 lg:px-12 py-2 border-t border-[#e9e9e9] bg-white z-50 ${
-          actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
-        } lg:left-[232px] lg:right-0`}>
-          <div className="flex flex-row gap-2 lg:gap-4 grow items-center justify-start">
-            <button
-              onClick={handleClose}
-              className="h-8 px-2 lg:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[11px] lg:text-[14px]"
-            >
-              Close
-            </button>
-          </div>
-          <div className="flex flex-row gap-2 lg:gap-4 items-center justify-start">
-            <button
-              onClick={handleProceedToNextStep}
-              disabled={!selectedCampaignType || isNavigating}
-              className={`h-8 px-2 lg:px-4 py-1 rounded font-medium text-[11px] lg:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
-                selectedCampaignType && !isNavigating
-                  ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {isNavigating ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                  </svg>
-                  <span className="hidden lg:inline">Navigating...</span>
-                  <span className="lg:hidden">Loading...</span>
-                </span>
-              ) : (
-                <>
-                  <span className="hidden lg:inline">Proceed to next step</span>
-                  <span className="lg:hidden">Next</span>
-                </>
-              )}
-            </button>
+        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
+          isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
+        }`}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
+              <button
+                onClick={handleClose}
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px]"
+              >
+                Close
+              </button>
+            </div>
+            <div className="flex flex-row gap-2 sm:gap-4 items-center">
+              <button
+                onClick={handleProceedToNextStep}
+                disabled={!selectedCampaignType || isNavigating}
+                className={`h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+                  selectedCampaignType && !isNavigating
+                    ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {isNavigating ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                    </svg>
+                    <span className="hidden sm:inline">Navigating...</span>
+                    <span className="sm:hidden">Loading...</span>
+                  </span>
+                ) : (
+                  <>
+                    <span className="hidden sm:inline">Proceed to next step</span>
+                    <span className="sm:hidden">Next</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
