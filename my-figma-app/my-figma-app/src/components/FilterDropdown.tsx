@@ -101,24 +101,27 @@ const FilterDropdown = ({
       <button
         ref={buttonRef}
         onClick={onToggle}
-        className={`bg-white h-8 px-3 py-0.5 border rounded flex items-center gap-1 hover:bg-gray-50 transition-colors ${
+        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button ${
           selectedCount > 0
             ? 'border-[#7856ff] bg-[#7856ff]/5'
             : 'border-[#e9e9e9]'
         }`}
       >
-        <span className="text-[14px] font-medium text-[#2a2a2f] truncate max-w-[120px]">
-          {selectedCount > 0
-            ? options.find(opt => opt.checked)?.label || title
-            : title
-          }
-        </span>
-        {selectedCount > 0 && (
-          <span className="text-[10px] text-[#7856ff] font-medium">
-            {options.filter(opt => opt.checked).length > 1 ? `+${options.filter(opt => opt.checked).length - 1}` : ''}
-          </span>
-        )}
-        <ChevronDownIcon />
+        <div className="flex flex-row gap-1 h-[22px] items-center justify-end relative shrink-0">
+          <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.453px] text-left text-nowrap">
+            <p className="block leading-[19.6px] whitespace-pre">
+              {selectedCount > 0
+                ? options.find(opt => opt.checked)?.label || title
+                : title
+              }
+            </p>
+          </div>
+          <div className="h-full relative shrink-0 w-[22px]">
+            <div className="absolute h-[4.518px] left-[7px] top-[9px] w-[7.5px]">
+              <ChevronDownIcon />
+            </div>
+          </div>
+        </div>
       </button>
 
       {/* Dropdown Panel */}
@@ -179,8 +182,8 @@ const FilterDropdown = ({
 };
 
 const ChevronDownIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M7 9L11 13L15 9" stroke="#2A2A2F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg width="7.5" height="4.518" viewBox="0 0 7.5 4.518" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1L3.75 3.518L6.5 1" stroke="#2A2A2F" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 

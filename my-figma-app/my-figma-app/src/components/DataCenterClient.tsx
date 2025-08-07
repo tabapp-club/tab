@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Sidebar } from './Sidebar';
 import { MobileMenuToggle } from './MobileMenuToggle';
 import DataCenterStats from './DataCenterStats';
@@ -86,6 +86,9 @@ export default function DataCenterClient() {
   const [selectedCard, setSelectedCard] = useState<string>('total');
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
+
+  // Debounce timer ref
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper to map API response to UserData[]
   const mapApiDataToTable = (apiData: any[]): UserData[] => {
@@ -182,8 +185,24 @@ export default function DataCenterClient() {
     }
   }, [user?.accessToken, page, pageSize, filters]);
 
+  // Debounced fetch data effect
   useEffect(() => {
-    fetchData();
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(() => {
+      fetchData();
+    }, 500); // 500ms debounce
+
+    // Cleanup function
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, [fetchData]);
 
   // Handle filter/search changes

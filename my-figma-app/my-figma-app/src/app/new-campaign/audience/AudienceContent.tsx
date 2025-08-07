@@ -6,7 +6,7 @@ import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { usePopup } from "@/contexts/PopupContext";
 import { useAuth } from "@/contexts/AuthContext";
-import DataTable from "@/components/DataTable";
+import AudienceTable from "./AudienceTable";
 import Pagination from "@/components/Pagination";
 import DataCenterFilters from "@/components/DataCenterFilters";
 import FilterDropdown from "@/components/FilterDropdown";
@@ -229,6 +229,9 @@ export function AudienceContent() {
   const [clearFilters, setClearFilters] = useState(false);
   const [isDataLoadedFromStorage, setIsDataLoadedFromStorage] = useState(false);
 
+  // Debounce timer ref
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Load data from session storage on component mount
   useEffect(() => {
     const savedData = sessionStorage.getItem('audienceData');
@@ -304,11 +307,13 @@ export function AudienceContent() {
     });
   };
 
-  // Fetch data from API with debouncing
+  // Fetch data from API with proper debouncing
   const fetchData = useCallback(async () => {
     if (!user?.accessToken) return;
+
     setLoading(true);
     setError(null);
+
     try {
       const params = new URLSearchParams();
       params.append('page', String(page));
@@ -321,6 +326,7 @@ export function AudienceContent() {
       if (filters.no_of_visits_to !== undefined) params.append('no_of_visits_to', String(filters.no_of_visits_to));
       if (filters.status) params.append('status', filters.status);
       if (filters.search) params.append('search', filters.search);
+
       const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
       const response = await fetch(url, {
         method: 'GET',
@@ -329,8 +335,10 @@ export function AudienceContent() {
           'Authorization': `Bearer ${user.accessToken}`
         }
       });
+
       if (!response.ok) throw new Error('Failed to fetch data center data');
       const result = await response.json();
+
       setCurrentTableData(mapApiDataToTable(result.data));
       setTotal(result.total);
 
@@ -356,17 +364,25 @@ export function AudienceContent() {
     } finally {
       setLoading(false);
     }
-  }, [user?.accessToken, page, pageSize, filters, isDataLoadedFromStorage, userCount]);
+  }, [user?.accessToken, page, pageSize, filters, isDataLoadedFromStorage]); // Removed userCount from dependencies
 
-  // Fetch data on component mount and when filters change
+  // Debounced fetch data effect
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(() => {
       fetchData();
-    }, 300);
+    }, 500); // Increased debounce time to 500ms
 
     // Cleanup function
     return () => {
-      clearTimeout(timeoutId);
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
     };
   }, [fetchData]);
 
@@ -579,10 +595,10 @@ export function AudienceContent() {
         </section>
 
         {/* Filter Bar */}
-        <section className="mb-8 bg-white sticky top-0 z-10 border border-[#e9e9e9] rounded-lg">
-          <div className="flex flex-row items-center justify-between p-4 h-[60px]">
+        <section className="mb-8 bg-white sticky top-0 z-10 border border-[#e9e9e9] rounded-lg audience-filter-section">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-end p-4 gap-4">
             {/* All Users Toggle */}
-            <div className="flex flex-row gap-2.5 items-center">
+            <div className="flex flex-row gap-2.5 items-center shrink-0 order-2 lg:order-1">
               <div className="font-medium text-[#a1a1a1] text-[14px] leading-[16px] tracking-[-0.13px]">
                 All users
               </div>
@@ -603,7 +619,7 @@ export function AudienceContent() {
             </div>
 
             {/* DataCenterFilters Component */}
-            <div className="flex-1">
+            <div className="flex-1 w-full lg:w-auto order-1 lg:order-2">
               <DataCenterFilters
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
@@ -612,6 +628,9 @@ export function AudienceContent() {
                 visibleUsers={currentTableData.length}
                 categories={categories}
                 clearFilters={clearFilters}
+                showUserCount={false}
+                showSearchBar={false}
+                alignRight={true}
               />
             </div>
           </div>
@@ -625,7 +644,7 @@ export function AudienceContent() {
             ) : error ? (
               <div className="text-center py-10 text-red-500">{error}</div>
             ) : (
-              <DataTable
+              <AudienceTable
                 searchTerm={searchTerm}
                 data={currentTableData}
               />

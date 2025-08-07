@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import React from 'react'; // Added missing import for React.useEffect
+import React from 'react';
 
 interface SortConfig {
   key: string | null;
@@ -18,12 +18,12 @@ interface UserData {
   addedOn: string;
 }
 
-interface DataTableProps {
+interface AudienceTableProps {
   searchTerm?: string;
   data?: UserData[];
 }
 
-const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
+const AudienceTable = ({ searchTerm = '', data = [] }: AudienceTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -261,4 +261,4 @@ const DeleteIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default DataTable;
+export default AudienceTable;
