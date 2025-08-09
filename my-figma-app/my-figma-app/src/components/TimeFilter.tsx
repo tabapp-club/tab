@@ -40,7 +40,7 @@ export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
   const customButtonRef = useRef<HTMLButtonElement>(null!);
 
   const filterDaysMap: Record<string, number | undefined> = {
-    today: 1,
+    today: undefined, // Don't send days parameter for today
     yesterday: 1,
     "7d": 7,
     "30d": 30,
@@ -56,7 +56,12 @@ export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
       setActiveFilter(filterId);
       setSelectedDateRange({ from: null, to: null });
       if (onFilterChange) {
-        onFilterChange({ type: filterId, days: filterDaysMap[filterId] });
+        const filterConfig: { type: string; days?: number } = { type: filterId };
+        // Only add days if it's defined (not undefined)
+        if (filterDaysMap[filterId] !== undefined) {
+          filterConfig.days = filterDaysMap[filterId];
+        }
+        onFilterChange(filterConfig);
       }
     }
   };
@@ -118,8 +123,8 @@ export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
                 flex items-center justify-center gap-2
                   transition-colors whitespace-nowrap
                 ${isActive
-                  ? 'bg-[#2a2a2f] text-white hover:bg-[#1a1a1f]'
-                  : 'bg-white text-[#8f8f91] hover:bg-gray-50 hover:text-[#2a2a2f]'
+                  ? 'bg-[#6E4EFF] text-white'
+                  : 'bg-white text-[#8f8f91] hover:bg-[#6E4EFF]/5 hover:text-[#6E4EFF]'
                 }
                 ${isFirst ? 'rounded-l-[4px]' : ''}
                 ${isLast ? 'rounded-r-[4px]' : ''}

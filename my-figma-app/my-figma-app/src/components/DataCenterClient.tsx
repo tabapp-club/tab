@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { MobileMenuToggle } from './MobileMenuToggle';
 import DataCenterStats from './DataCenterStats';
@@ -11,17 +11,7 @@ import ImportModal from './ImportModal';
 import { useSidebar } from './SidebarContext';
 import DataCenterHeader from './data-center/DataCenterHeader';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
-
-interface UserData {
-  id: string;
-  mobile: string;
-  categories: string[];
-  userType: string;
-  visits: number;
-  status: string;
-  addedOn: string;
-}
+import { useDataCenterData, mapApiDataToTable, UserData } from '@/hooks/useDataCenterData';
 
 // CSV Export Utility Function
 const exportToCSV = (data: UserData[], filename: string = 'data-center-export.csv') => {
@@ -73,39 +63,59 @@ const exportToCSV = (data: UserData[], filename: string = 'data-center-export.cs
 
 export default function DataCenterClient() {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentTableData, setCurrentTableData] = useState<UserData[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState(''); // For UI display (immediate)
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // For API calls (debounced)
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState<any>({});
-  const [metrics, setMetrics] = useState<any>(null);
-  const [categories, setCategories] = useState<Array<{name: string, label: string}>>([]);
   const [selectedCard, setSelectedCard] = useState<string>('total');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
 
   // Debounce timer ref
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Helper to map API response to UserData[]
-  const mapApiDataToTable = (apiData: any[]): UserData[] => {
-    return apiData.map((r: any) => {
-      let status: 'Active' | 'In Active' = 'In Active';
-      if (typeof r.status === 'string' && r.status.toLowerCase() === 'active') status = 'Active';
-      return {
-        id: r.user_id,
-        mobile: r.mobile_number,
-        categories: Array.isArray(r.category) ? r.category : [r.category],
-        userType: r.user_type,
-        visits: r.no_of_visits,
-        status,
-        addedOn: r.added_on,
-      };
-    });
-  };
+  // Debounce search term to avoid excessive API calls while keeping UI responsive
+  useEffect(() => {
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer for debounced search
+    debounceTimerRef.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to first page when search changes
+      if (searchTerm !== debouncedSearchTerm) {
+        setPage(1);
+      }
+    }, 300); // Reduced to 300ms for better responsiveness
+
+    // Cleanup function
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [searchTerm, debouncedSearchTerm]);
+
+  // Use React Query to fetch data center data
+  const { data: dataCenterResponse, isLoading: loading, error } = useDataCenterData({
+    page,
+    pageSize,
+    filters: { ...filters, search: debouncedSearchTerm, refreshTrigger }
+  });
+
+  // Process the API response data
+  const currentTableData = useMemo(() => {
+    if (!dataCenterResponse?.data) return [];
+    return mapApiDataToTable(dataCenterResponse.data);
+  }, [dataCenterResponse]);
+
+  const total = dataCenterResponse?.total || 0;
+  const metrics = dataCenterResponse?.metrics || null;
+  const categories = dataCenterResponse?.categories || [];
 
   // Handle stats card click
   const handleCardClick = (cardType: string) => {
@@ -142,68 +152,7 @@ export default function DataCenterClient() {
     setFilters(newFilters);
   };
 
-  // Fetch data from API
-  const fetchData = useCallback(async () => {
-    if (!user?.accessToken) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      params.append('page', String(page));
-      params.append('page_size', String(pageSize));
-      if (filters.category && filters.category.length > 0) {
-        filters.category.forEach((cat: string) => params.append('category', cat));
-      }
-      if (filters.userType) params.append('user_type', filters.userType);
-      if (filters.no_of_visits_from !== undefined) params.append('no_of_visits_from', String(filters.no_of_visits_from));
-      if (filters.no_of_visits_to !== undefined) params.append('no_of_visits_to', String(filters.no_of_visits_to));
-      if (filters.status) params.append('status', filters.status);
-      if (filters.search) params.append('search', filters.search);
-      const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      });
-      if (!response.ok) throw new Error('Failed to fetch data center data');
-      const result = await response.json();
-      setCurrentTableData(mapApiDataToTable(result.data));
-      setTotal(result.total);
-      if (result.metrics) setMetrics(result.metrics);
-      // Set categories from API response if available
-      if (result.categories && Array.isArray(result.categories)) {
-        setCategories(result.categories);
-      }
-    } catch (err: any) {
-      setError(err.message || 'Unknown error');
-      setCurrentTableData([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.accessToken, page, pageSize, filters]);
 
-  // Debounced fetch data effect
-  useEffect(() => {
-    // Clear existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Set new timer
-    debounceTimerRef.current = setTimeout(() => {
-      fetchData();
-    }, 500); // 500ms debounce
-
-    // Cleanup function
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, [fetchData]);
 
   // Handle filter/search changes
   const handleFiltersChange = (newFilters: any) => {
@@ -232,7 +181,7 @@ export default function DataCenterClient() {
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   return (
-    <div className="data-center-container flex bg-gray-50 font-sans min-h-screen overflow-hidden">
+    <div className="data-center-container flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
@@ -261,12 +210,13 @@ export default function DataCenterClient() {
               totalUsers={total}
               visibleUsers={currentTableData.length}
               categories={categories}
+              isLoading={loading && searchTerm !== debouncedSearchTerm}
             />
                 <div className="flex-1 min-h-0 min-w-0">
-            {loading ? (
+            {loading && currentTableData.length === 0 ? (
               <div className="text-center py-10 text-[#a1a1a1]">Loading data...</div>
             ) : error ? (
-              <div className="text-center py-10 text-red-500">{error}</div>
+              <div className="text-center py-10 text-red-500">{error.message}</div>
             ) : (
             <DataTable
               searchTerm={searchTerm}
@@ -293,7 +243,7 @@ export default function DataCenterClient() {
         {isImportModalOpen && (
           <ImportModal
             onClose={() => setIsImportModalOpen(false)}
-            onUploadSuccess={fetchData}
+            onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)}
           />
         )}
       </div>

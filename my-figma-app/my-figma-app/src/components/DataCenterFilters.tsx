@@ -34,6 +34,7 @@ interface DataCenterFiltersProps {
   showUserCount?: boolean;
   showSearchBar?: boolean;
   alignRight?: boolean;
+  isLoading?: boolean;
 }
 
 const DataCenterFilters = ({
@@ -46,7 +47,8 @@ const DataCenterFilters = ({
   clearFilters = false,
   showUserCount = true,
   showSearchBar = true,
-  alignRight = false
+  alignRight = false,
+  isLoading = false
 }: DataCenterFiltersProps = {}) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [openFilter, setOpenFilter] = useState<string | null>(null);
@@ -78,6 +80,7 @@ const DataCenterFilters = ({
   // Effect to handle filter change notifications
   useEffect(() => {
     if (pendingFilterChange.current && onFiltersChange) {
+      console.log('Sending filter changes to parent:', pendingFilterChange.current);
       onFiltersChange(pendingFilterChange.current);
       pendingFilterChange.current = null;
     }
@@ -116,12 +119,12 @@ const DataCenterFilters = ({
   useEffect(() => {
     if (categories && categories.length > 0) {
       setFilters(prev => {
-        // Try to preserve checked state if possible
-        const prevChecked = prev.category.find(option => option.checked)?.id;
+        // Try to preserve checked state for all selected options
+        const prevCheckedIds = prev.category.filter(option => option.checked).map(option => option.id);
         const categoryOptions = categories.map(cat => ({
           id: cat.name,
           label: cat.label,
-          checked: prevChecked === cat.name
+          checked: prevCheckedIds.includes(cat.name)
         }));
         return {
           ...prev,
@@ -167,9 +170,20 @@ const DataCenterFilters = ({
   };
 
   const handleFilterChange = (filterType: keyof FilterState, selectedIds: string[]) => {
+    console.log('DataCenterFilters handleFilterChange called:', { filterType, selectedIds });
+
     setFilters(prev => {
+      console.log('Previous filters state:', prev[filterType]);
+
       let newOptions;
-      if (filterType === 'category' || filterType === 'userType' || filterType === 'visits') {
+      if (filterType === 'category') {
+        // Multi-select for categories
+        newOptions = prev[filterType].map(option => ({
+          ...option,
+          checked: selectedIds.includes(option.id)
+        }));
+        console.log('New category options:', newOptions);
+      } else if (filterType === 'userType' || filterType === 'visits') {
         // Single-select toggle: if already selected, unselect; else select only the clicked one
         const prevChecked = prev[filterType].find(option => option.checked)?.id;
         const clickedId = selectedIds[0];
@@ -182,7 +196,7 @@ const DataCenterFilters = ({
           }
         });
       } else {
-        // Multi-select
+        // Multi-select for other filters
         newOptions = prev[filterType].map(option => ({
           ...option,
           checked: selectedIds.includes(option.id)
@@ -192,9 +206,9 @@ const DataCenterFilters = ({
       // Store filter change in ref to be handled by useEffect
       const filterObj: any = {};
       if (filterType === 'category') {
-        // Only one can be selected
-        const selected = newOptions.find(option => option.checked);
-        filterObj.category = selected ? [selected.label] : [];
+        // Multiple categories can be selected
+        const selectedOptions = newOptions.filter(option => option.checked);
+        filterObj.category = selectedOptions.map(option => option.label);
       }
       if (filterType === 'userType') {
         const selected = newOptions.find(option => option.checked);
@@ -234,25 +248,18 @@ const DataCenterFilters = ({
     // Update internal state immediately for UI responsiveness
     setInternalSearchTerm(value);
 
-    // Clear existing timer
-    if (searchDebounceTimer.current) {
-      clearTimeout(searchDebounceTimer.current);
+    // Call parent immediately for responsive UI
+    if (onSearchChange) {
+      onSearchChange(value);
     }
 
-    // Set new timer for debounced search
-    searchDebounceTimer.current = setTimeout(() => {
-      if (onSearchChange) {
-        onSearchChange(value);
-      }
-
-      // Store search filter change in ref
-      pendingFilterChange.current = { search: value };
-    }, 500); // 500ms debounce for search
+    // Store search filter change in ref
+    pendingFilterChange.current = { search: value };
   };
 
   return (
-    <div className="bg-transparent min-w-0 data-center-filters py-4 px-4">
-      <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 ${alignRight ? 'justify-end' : 'justify-between'}`}>
+    <div className="bg-transparent min-w-0 data-center-filters py-3 px-3 sm:py-4 sm:px-4">
+      <div className={`flex flex-col lg:flex-row items-start lg:items-center gap-4 min-w-0 ${alignRight ? 'justify-end' : 'justify-between'}`}>
         {/* Left side - User count */}
         {showUserCount && (
           <div className="flex flex-row items-center gap-2 min-w-0 user-count">
@@ -265,11 +272,11 @@ const DataCenterFilters = ({
         )}
 
         {/* Right side - Filters and Search */}
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 min-w-0 ${alignRight ? 'justify-end' : ''}`}>
+        <div className={`flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 lg:gap-6 min-w-0 w-full md:w-auto ${alignRight ? 'justify-end' : ''}`}>
           {/* Filter section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 min-w-0 filter-section">
-            {/* Filter by label with vertical border */}
-            <div className="flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 min-w-0 filter-section w-full md:w-auto">
+            {/* Filter by label with vertical border - hidden on mobile */}
+            <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
               <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.891px] text-left text-nowrap tracking-[-0.1px]">
                 <p className="adjustLetterSpacing block leading-[19.6px] whitespace-pre">
                   Filter by
@@ -278,7 +285,7 @@ const DataCenterFilters = ({
             </div>
 
             {/* Filter buttons */}
-            <div className="flex flex-row gap-2 items-start justify-start min-w-0 filter-buttons">
+            <div className="flex flex-wrap sm:flex-row gap-2 items-start justify-start min-w-0 filter-buttons w-full sm:w-auto">
               <FilterDropdown
                 title="Category"
                 options={filters.category}
@@ -286,7 +293,7 @@ const DataCenterFilters = ({
                 isOpen={openFilter === 'category'}
                 onToggle={() => handleFilterToggle('category')}
                 selectedCount={getSelectedCount('category')}
-                singleSelect={true}
+                singleSelect={false}
               />
               <FilterDropdown
                 title="User Type"
@@ -352,27 +359,25 @@ const DataCenterFilters = ({
 
           {/* Search input */}
           {showSearchBar && (
-            <div className="flex flex-row items-center justify-start min-w-[168px] relative shrink-0 search-input">
-              <div className="flex flex-col items-start justify-start relative self-stretch shrink-0">
-                <div className="bg-[#f6f6f6] flex flex-row h-8 items-start justify-start p-px relative rounded-md shrink-0 w-[168px] min-w-[168px]">
-                  <div className="flex flex-row h-full items-center justify-start relative shrink-0">
-                    <div className="flex flex-row items-start justify-start pl-1 pr-0 py-0 relative shrink-0">
-                      <div className="relative shrink-0 size-[22px]">
-                        <SearchIcon />
-                      </div>
-                    </div>
+            <div className="flex flex-row items-center justify-start w-full sm:w-auto sm:min-w-[168px] relative shrink-0 search-input">
+              <div className="flex flex-col items-start justify-start relative w-full sm:w-auto">
+                <div className="bg-[#f6f6f6] flex flex-row h-8 items-center justify-start p-px relative rounded-md shrink-0 w-full sm:w-[168px] sm:min-w-[168px]">
+                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1">
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#6E4EFF] border-t-transparent"></div>
+                    ) : (
+                      <SearchIcon />
+                    )}
                   </div>
-                  <div className="basis-0 flex flex-row grow h-full items-center justify-center min-h-px min-w-px relative shrink-0">
-                    <div className="basis-0 flex flex-col grow h-[30px] items-start justify-start min-h-px min-w-px overflow-clip px-2 py-[6.5px] relative rounded-md shrink-0">
-                      <div className="flex flex-col items-start justify-start overflow-clip relative shrink-0 w-full">
-                        <input
-                          type="text"
-                          placeholder="Search customers"
-                          value={currentSearchTerm}
-                          onChange={(e) => handleSearchChange(e.target.value)}
-                          className="flex flex-col font-normal justify-center leading-[0] relative shrink-0 text-[#757575] text-[13.344px] text-left w-full bg-transparent border-none outline-none placeholder:text-[#757575]"
-                        />
-                      </div>
+                  <div className="flex-1 flex items-center h-full min-w-0">
+                    <div className="flex-1 flex items-center h-full px-1 py-0">
+                      <input
+                        type="text"
+                        placeholder="Search customers"
+                        value={currentSearchTerm}
+                        onChange={(e) => handleSearchChange(e.target.value)}
+                        className="w-full h-full bg-transparent border-none outline-none text-[#757575] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px]"
+                      />
                     </div>
                   </div>
                 </div>
@@ -387,8 +392,8 @@ const DataCenterFilters = ({
 
 const SearchIcon = () => (
   <svg
-    width="22"
-    height="22"
+    width="18"
+    height="18"
     viewBox="0 0 22 22"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -403,7 +408,7 @@ const SearchIcon = () => (
     <circle
       cx="7"
       cy="7"
-      r="5.75"
+      r="5"
       stroke="#757575"
       strokeWidth="1.5"
     />

@@ -44,6 +44,54 @@ const TrendDownIcon = () => (
   </svg>
 );
 
+const NumbersIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 3h12M2 8h12M2 13h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M6 1v14M10 1v14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const ChartIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="8" width="2" height="6" fill="currentColor" rx="1"/>
+    <rect x="7" y="6" width="2" height="8" fill="currentColor" rx="1"/>
+    <rect x="11" y="4" width="2" height="10" fill="currentColor" rx="1"/>
+  </svg>
+);
+
+// Toggle Slider Component
+const ToggleSlider = ({ isChart, onToggle }: { isChart: boolean; onToggle: () => void }) => {
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className={`text-xs font-medium transition-colors duration-200 ${
+        !isChart ? 'text-[#6E4EFF]' : 'text-[#626266]'
+      }`}>
+        Numbers
+      </div>
+      <button
+        onClick={onToggle}
+        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#6E4EFF] focus:ring-opacity-50 ${
+          isChart
+            ? 'bg-[#6E4EFF] hover:bg-[#5D3EE8]'
+            : 'bg-[#e9e9e9] hover:bg-[#d1d1d1]'
+        }`}
+        type="button"
+      >
+        <span
+          className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-300 shadow-sm ${
+            isChart ? 'translate-x-3.5' : 'translate-x-0.5'
+          }`}
+        />
+      </button>
+      <div className={`text-xs font-medium transition-colors duration-200 ${
+        isChart ? 'text-[#6E4EFF]' : 'text-[#626266]'
+      }`}>
+        Graph
+      </div>
+    </div>
+  );
+};
+
 // Animated Number Component
 const AnimatedNumber = ({ value, loading = false }: { value: string; loading?: boolean }) => {
   const [displayValue, setDisplayValue] = useState(value);
@@ -104,7 +152,54 @@ const AnimatedNumber = ({ value, loading = false }: { value: string; loading?: b
     </div>
   );
 };
-    
+
+// Bar Chart Component
+const BarChart = ({ currentValue, previousValue, title, trend }: {
+  currentValue: string;
+  previousValue: string;
+  title: string;
+  trend: string;
+}) => {
+  // Parse numeric values from strings
+  const current = parseInt(currentValue.replace(/[^\d]/g, '')) || 0;
+  const previous = parseInt(previousValue.replace(/[^\d]/g, '')) || Math.floor(current * 0.8); // Fallback to 80% of current
+
+  // Calculate max value for scaling
+  const maxValue = Math.max(current, previous);
+  const currentHeight = maxValue > 0 ? (current / maxValue) * 100 : 0;
+  const previousHeight = maxValue > 0 ? (previous / maxValue) * 100 : 0;
+
+  const isPositiveTrend = trend === "up";
+  const currentBarColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
+  const previousBarColor = "bg-[#e9e9e9]";
+
+  return (
+    <div className="w-full h-32 flex items-end justify-center gap-4 px-4">
+      {/* Previous Value Bar */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="h-24 w-8 bg-gray-100 rounded-sm flex items-end">
+          <div
+            className={`w-full ${previousBarColor} rounded-sm transition-all duration-1000 ease-out`}
+            style={{ height: `${previousHeight}%` }}
+          ></div>
+        </div>
+        <div className="text-xs text-[#626266] font-medium">Previous</div>
+      </div>
+
+      {/* Current Value Bar */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="h-24 w-8 bg-gray-100 rounded-sm flex items-end">
+          <div
+            className={`w-full ${currentBarColor} rounded-sm transition-all duration-1000 ease-out`}
+            style={{ height: `${currentHeight}%` }}
+          ></div>
+        </div>
+        <div className="text-xs text-[#626266] font-medium">Current</div>
+      </div>
+    </div>
+  );
+};
+
 // Animated Percentage Component
 const AnimatedPercentage = ({ value, loading = false }: { value: string; loading?: boolean }) => {
   const [displayValue, setDisplayValue] = useState(value);
@@ -169,6 +264,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "Sales",
     value: "₹1,25,000",
+    previousValue: "₹1,11,000",
     unit: "Users",
     trend: "up",
     trendValue: "12.5%",
@@ -180,6 +276,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "Purchase value",
     value: "₹85,000",
+    previousValue: "₹92,500",
     unit: "Rupees",
     trend: "down",
     trendValue: "8.2%",
@@ -191,6 +288,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "New + Retained customers",
     value: "1,258",
+    previousValue: "1,422",
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
@@ -202,6 +300,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "New customers",
     value: "958",
+    previousValue: "1,082",
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
@@ -213,6 +312,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "Retained customers",
     value: "300",
+    previousValue: "269",
     unit: "Users",
     trend: "up",
     trendValue: "11.49%",
@@ -224,6 +324,7 @@ const analyticsData = [
     subtitle: "5 July, 2025",
     legendLabel: "Active customers",
     value: "1,200",
+    previousValue: "1,356",
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
@@ -233,6 +334,16 @@ const analyticsData = [
 
 export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: typeof analyticsData; onAskReason?: (cardType: string, cardData: any) => void; loading?: boolean }) {
   const displayData = data && data.length > 0 ? data : analyticsData;
+
+  // State to track view mode for each card (numbers or chart)
+  const [cardViewModes, setCardViewModes] = useState<{ [key: number]: 'numbers' | 'chart' }>({});
+
+  const toggleCardView = (cardId: number) => {
+    setCardViewModes(prev => ({
+      ...prev,
+      [cardId]: prev[cardId] === 'chart' ? 'numbers' : 'chart'
+    }));
+  };
 
   const getCardIcon = (cardTitle: string) => {
     switch (cardTitle) {
@@ -251,6 +362,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
         const isPositiveTrend = card.trend === "up";
         const trendBgColor = isPositiveTrend ? "bg-[rgba(23,198,83,0.1)]" : "bg-[rgba(227,79,47,0.1)]";
         const trendTextColor = isPositiveTrend ? "text-[#17c653]" : "text-[#e34f2f]";
+        const trendIndicatorColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
 
         // Special styling for the first two cards (Total Sales and Purchase Value)
         const isTopCard = card.title === "Total Sales" || card.title === "Purchase Value";
@@ -277,67 +389,118 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                     {card.subtitle}
                   </div>
                 </div>
+                                {/* Toggle Slider - Only show for Total Sales and Purchase Value */}
+                {(card.title === "Total Sales" || card.title === "Purchase Value") && (
+                  <ToggleSlider
+                    isChart={cardViewModes[card.id] === 'chart'}
+                    onToggle={() => toggleCardView(card.id)}
+                  />
+                )}
               </div>
             </div>
 
-            {/* Content */}
-            <div className="h-[263.8px] min-h-[250px] flex flex-col items-center justify-center gap-4 p-4">
-              <div className="w-full flex flex-col items-center">
-                {/* Legend */}
-                <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-1">
-                  <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
-                    <div className={`w-2.5 h-2.5 rounded-sm bg-[#7856ff] flex-shrink-0`}></div>
-                    <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
-                      {card.legendLabel}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Main Value */}
-                <div className="w-full max-w-[163px] flex flex-col items-center">
-                  <div className="w-full px-0 py-1 flex items-center justify-center">
-                    <div className="w-full flex flex-col items-center">
-                      <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">
-                        { card.title === "Purchase Value" ? (<div className="text-xl sm:text-2xl md:text-3xl lg:text-[48px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">₹</div>): null }<AnimatedNumber value={card.value} loading={loading} />
+                                    {/* Content */}
+            <div className="h-[263.8px] min-h-[250px] flex flex-col items-center justify-center gap-4 p-4 relative overflow-hidden">
+              {/* Numbers View */}
+              <div className={`absolute inset-0 p-4 flex flex-col items-center justify-center gap-4 transition-all duration-500 ease-in-out ${
+                (cardViewModes[card.id] === 'chart' && (card.title === "Total Sales" || card.title === "Purchase Value"))
+                  ? 'opacity-0 transform translate-x-[-100%] pointer-events-none'
+                  : 'opacity-100 transform translate-x-0'
+              }`}>
+                <div className="w-full flex flex-col items-center">
+                  {/* Legend */}
+                  <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-1">
+                    <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
+                      <div className={`w-2.5 h-2.5 rounded-sm ${trendIndicatorColor} flex-shrink-0`}></div>
+                      <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
+                        {card.legendLabel}
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-start">
-                    <div className="text-[10.875px] font-normal text-[#626266] leading-[16.8px] tracking-[-0.1px] whitespace-nowrap">
-                      {card.unit}
+
+                  {/* Main Value */}
+                  <div className="w-full max-w-[163px] flex flex-col items-center">
+                    <div className="w-full px-0 py-1 flex items-center justify-center">
+                      <div className="w-full flex flex-col items-center">
+                        <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">
+                          { card.title === "Purchase Value" ? (<div className="text-xl sm:text-2xl md:text-3xl lg:text-[48px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">₹</div>): null }<AnimatedNumber value={card.value} loading={loading} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <div className="text-[10.875px] font-normal text-[#626266] leading-[16.8px] tracking-[-0.1px] whitespace-nowrap">
+                        {card.unit}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trend Indicator */}
+                  <div className={`px-2 py-0.5 rounded-[3px] flex items-start gap-0 ${trendBgColor} mt-4`}>
+                    <div className="w-4 h-3.5 flex items-center justify-center flex-shrink-0">
+                      <div className="w-3.5 h-3.5 flex items-center justify-center">
+                        {isPositiveTrend ? (
+                          <div className="rotate-180">
+                            <TrendDownIcon />
+                          </div>
+                        ) : (
+                          <div className="scale-y-[-1]">
+                            <TrendUpIcon />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center self-stretch">
+                      <div className="flex flex-col items-start justify-start h-full">
+                        <div className={`text-[12px] font-normal leading-[16.8px] tracking-[-0.1px] max-h-[16.8px] whitespace-nowrap ${trendTextColor}`}>
+                          <AnimatedPercentage value={card.trendValue} loading={loading} />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Trend Indicator */}
-              <div className={`px-2 py-0.5 rounded-[3px] flex items-start gap-0 ${trendBgColor}`}>
-                <div className="w-4 h-3.5 flex items-center justify-center flex-shrink-0">
-                  <div className="w-3.5 h-3.5 flex items-center justify-center">
-                    {isPositiveTrend ? (
-                      <div className="rotate-180">
-                        <TrendDownIcon />
+                            {/* Chart View - Only for Total Sales and Purchase Value */}
+              {(card.title === "Total Sales" || card.title === "Purchase Value") && (
+                <div className={`absolute inset-0 p-4 flex flex-col transition-all duration-500 ease-in-out ${
+                  cardViewModes[card.id] === 'chart'
+                    ? 'opacity-100 transform translate-x-0'
+                    : 'opacity-0 transform translate-x-[100%] pointer-events-none'
+                }`}>
+                <div className="w-full h-full flex flex-col">
+                  {/* Legend */}
+                  <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-4">
+                    <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
+                      <div className={`w-2.5 h-2.5 rounded-sm ${trendIndicatorColor} flex-shrink-0`}></div>
+                      <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
+                        {card.legendLabel}
                       </div>
-                    ) : (
-                      <div className="scale-y-[-1]">
-                        <TrendUpIcon />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center self-stretch">
-                  <div className="flex flex-col items-start justify-start h-full">
-                    <div className={`text-[12px] font-normal leading-[16.8px] tracking-[-0.1px] max-h-[16.8px] whitespace-nowrap ${trendTextColor}`}>
-                      <AnimatedPercentage value={card.trendValue} loading={loading} />
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Ask Reason Button */}
+                  {/* Bar Chart */}
+                  <div className="flex-1 flex items-center justify-center">
+                    <BarChart
+                      currentValue={card.value}
+                      previousValue={card.previousValue || card.value}
+                      title={card.title}
+                      trend={card.trend}
+                    />
+                  </div>
+
+                  {/* Values Display */}
+                  <div className="flex justify-between items-center text-xs text-[#626266] mt-2">
+                    <div>Previous: {card.previousValue || "N/A"}</div>
+                    <div>Current: {card.value}</div>
+                  </div>
+                </div>
+                </div>
+              )}
+
+              {/* Ask Reason Button - Always visible */}
               <button
                 onClick={() => onAskReason?.(card.title, card)}
-                className="mt-2 px-3 py-1.5 bg-[#7856ff] hover:bg-[#6a4de8] text-white text-xs font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-3 py-1.5 bg-[#6E4EFF] hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] hover:cursor-pointer text-white text-xs font-medium rounded-[2px] transition-colors duration-200 shadow-sm hover:shadow-md z-10"
               >
                 Get Analysis
               </button>

@@ -115,7 +115,7 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
   ];
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
+    <div className="bg-white overflow-hidden">
       <div className="overflow-x-auto">
         <div className="min-w-full">
           {/* Table Header */}
@@ -163,28 +163,6 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
                               >
                                 <ViewIcon />
                                 <span>View Details</span>
-                              </button>
-                              <button
-                                onClick={() => handleAction('edit', user)}
-                                className="w-full px-3 py-2 text-left text-sm text-[#2a2a2f] hover:bg-gray-50 flex items-center gap-2 menu-item"
-                              >
-                                <EditIcon />
-                                <span>Edit User</span>
-                              </button>
-                              <button
-                                onClick={() => handleAction('export', user)}
-                                className="w-full px-3 py-2 text-left text-sm text-[#2a2a2f] hover:bg-gray-50 flex items-center gap-2 menu-item"
-                              >
-                                <ExportIcon />
-                                <span>Export Data</span>
-                              </button>
-                              <div className="border-t border-[#e9e9e9] my-1"></div>
-                              <button
-                                onClick={() => handleAction('delete', user)}
-                                className="w-full px-3 py-2 text-left text-sm text-[#f04646] hover:bg-red-50 flex items-center gap-2 menu-item"
-                              >
-                                <DeleteIcon />
-                                <span>Delete User</span>
                               </button>
                             </div>
                           </div>
@@ -237,8 +215,8 @@ const KebabMenuIcon = () => (
 
 const ViewIcon = ({ className }: { className?: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M8 4C4.5 4 1.5 6.5 1.5 9.5C1.5 12.5 4.5 15 8 15C11.5 15 14.5 12.5 14.5 9.5C14.5 6.5 11.5 4 8 4Z" stroke="#626266" strokeWidth="1.5"/>
-    <path d="M8 11.5C9.65685 11.5 11 10.1569 11 8.5C11 6.84315 9.65685 5.5 8 5.5C6.34315 5.5 5 6.84315 5 8.5C5 10.1569 6.34315 11.5 8 11.5Z" stroke="#626266" strokeWidth="1.5"/>
+    <path d="M8 3C4.5 3 1.73 5.61 1 8C1.73 10.39 4.5 13 8 13C11.5 13 14.27 10.39 15 8C14.27 5.61 11.5 3 8 3Z" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="8" cy="8" r="2" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 

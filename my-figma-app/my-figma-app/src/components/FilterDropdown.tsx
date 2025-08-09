@@ -72,6 +72,8 @@ const FilterDropdown = ({
   }, [isOpen, options.length]);
 
   const handleOptionChange = (optionId: string) => {
+    console.log('FilterDropdown handleOptionChange called:', { optionId, title, singleSelect, currentOptions: options });
+
     let newSelectedIds;
     if (singleSelect) {
       // For single select, toggle between selected and none
@@ -83,15 +85,21 @@ const FilterDropdown = ({
       newSelectedIds = isCurrentlySelected ? [] : [optionId];
     } else {
       // For multi-select, toggle the specific option
-      newSelectedIds = options
-        .map(option =>
-          option.id === optionId
-            ? { ...option, checked: !option.checked }
-            : option
-        )
-        .filter(option => option.checked)
-        .map(option => option.id);
+      const currentlySelected = options.filter(opt => opt.checked).map(opt => opt.id);
+      console.log('Multi-select mode - currently selected:', currentlySelected);
+
+      if (currentlySelected.includes(optionId)) {
+        // Remove if currently selected
+        newSelectedIds = currentlySelected.filter(id => id !== optionId);
+        console.log('Removing option:', optionId, 'new selection:', newSelectedIds);
+      } else {
+        // Add if not currently selected
+        newSelectedIds = [...currentlySelected, optionId];
+        console.log('Adding option:', optionId, 'new selection:', newSelectedIds);
+      }
     }
+
+    console.log('Calling onSelectionChange with:', newSelectedIds);
     onSelectionChange(newSelectedIds);
   };
 
@@ -101,33 +109,31 @@ const FilterDropdown = ({
       <button
         ref={buttonRef}
         onClick={onToggle}
-        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button ${
+        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 ${
           selectedCount > 0
             ? 'border-[#7856ff] bg-[#7856ff]/5'
             : 'border-[#e9e9e9]'
         }`}
       >
-        <div className="flex flex-row gap-1 h-[22px] items-center justify-end relative shrink-0">
-          <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.453px] text-left text-nowrap">
-            <p className="block leading-[19.6px] whitespace-pre">
-              {selectedCount > 0
-                ? options.find(opt => opt.checked)?.label || title
-                : title
-              }
-            </p>
-          </div>
-          <div className="h-full relative shrink-0 w-[22px]">
-            <div className="absolute h-[4.518px] left-[7px] top-[9px] w-[7.5px]">
-              <ChevronDownIcon />
-            </div>
-          </div>
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="text-[13.453px] font-medium text-[#2a2a2f] truncate">
+            {title}
+          </span>
+          {selectedCount > 0 && (
+            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#7856ff] rounded-full flex-shrink-0">
+              {selectedCount}
+            </span>
+          )}
+        </div>
+        <div className="flex-shrink-0 w-[22px] h-full flex items-center justify-center">
+          <ChevronDownIcon />
         </div>
       </button>
 
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded shadow-lg z-50 min-w-[180px] max-h-[300px] overflow-y-auto`}
+          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded shadow-lg z-50 w-[180px] sm:min-w-[180px] max-h-[300px] overflow-y-auto`}
           style={{
             position: 'absolute',
             zIndex: 9999

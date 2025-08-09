@@ -6,9 +6,10 @@ import { TimeFilter } from "./TimeFilter";
 import { MobileMenuToggle } from "./MobileMenuToggle";
 import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
-import { useEffect, useState, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { format, subDays, subMonths, subYears } from 'date-fns';
+import { useDashboardData } from "@/hooks/useDashboardData";
 
 export function DashboardContent() {
   const { isCollapsed, isMobile } = useSidebar();
@@ -61,17 +62,18 @@ export function DashboardContent() {
 
   ]);
 
-  const [analyticsData, setAnalyticsData] = useState<any[]>(() =>
-    staticCardStructure.map(card => ({ ...card, subtitle: "Loading...", value: "-", trend: "down", trendValue: "0%" }))
-  );
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [filterDays, setFilterDays] = useState<number | undefined>(0); // default to today
+  const [filterDays, setFilterDays] = useState<number | undefined>(undefined); // default to today (no filter_days)
   const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
   const [currentFilterType, setCurrentFilterType] = useState<string>("today");
   const [sidePaneOpen, setSidePaneOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] = useState<string>("");
   const [selectedCardData, setSelectedCardData] = useState<any>(null);
+
+  // Use React Query to fetch dashboard data
+  const { data: dashboardData, isLoading: loading, error } = useDashboardData({
+    days: filterDays,
+    dateRange
+  });
 
   // Helper to generate date label based on filter
   const generateDateLabel = (filterType: string, days?: number, range?: { from: Date | null; to: Date | null }) => {
@@ -129,104 +131,79 @@ export function DashboardContent() {
 
 
 
-  const fetchDashboardData = useCallback(async (days?: number, range?: { from: Date | null; to: Date | null }) => {
-    if (!user?.accessToken) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const url = "https://api.tabapp.club/v1/business-data";
-      let params = '';
-      if (range && range.from && range.to) {
-        const start_date = format(range.from, 'yyyy-MM-dd');
-        const end_date = format(range.to, 'yyyy-MM-dd');
-        params = `?start_date=${start_date}&end_date=${end_date}`;
-      } else if (days) {
-        params = `?filter_days=${days}`;
-      }
-      const response = await fetch(url + params, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user.accessToken}`
+  // Process the dashboard data into analytics cards format
+  const analyticsData = useMemo(() => {
+    const dateLabel = generateDateLabel(currentFilterType, filterDays, dateRange);
+
+    const updateCardData = (apiData: any, dateLabel: string) => {
+      if (!apiData) return staticCardStructure.map(card => ({ ...card, subtitle: dateLabel, value: "-", previousValue: "-", trend: "down", trendValue: "0%" }));
+
+      return staticCardStructure.map(card => {
+        let value = "-";
+        let previousValue = "-";
+        let trend = "down";
+        let trendValue = "0%";
+
+        switch (card.title) {
+          case "Total Sales":
+            value = apiData.all_customers?.toLocaleString() ?? "-";
+            previousValue = apiData.all_customers_prev?.toLocaleString() ?? "-";
+            trend = apiData.all_customers_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.all_customers_change ?? 0).toFixed(2) + "%";
+            break;
+          case "Purchase Value":
+            value = (apiData.total_revenue?.toLocaleString() ?? "-");
+            previousValue = (apiData.total_revenue_prev?.toLocaleString() ?? "-");
+            trend = apiData.total_revenue_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.total_revenue_change ?? 0).toFixed(2) + "%";
+            break;
+          case "New customers":
+            value = apiData.new_customers?.toLocaleString() ?? "-";
+            previousValue = apiData.new_customers_prev?.toLocaleString() ?? "-";
+            trend = apiData.new_customers_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.new_customers_change ?? 0).toFixed(2) + "%";
+            break;
+          case "Retained customers":
+            value = apiData.retained_customers?.toLocaleString() ?? "-";
+            previousValue = apiData.retained_customers_prev?.toLocaleString() ?? "-";
+            trend = apiData.retained_customers_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.retained_customers_change ?? 0).toFixed(2) + "%";
+            break;
+          case "Active customers":
+            value = apiData.active_customers?.toLocaleString() ?? "-";
+            previousValue = apiData.active_customers_prev?.toLocaleString() ?? "-";
+            trend = apiData.active_customers_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.active_customers_change ?? 0).toFixed(2) + "%";
+            break;
+          case "Inactive customers":
+            value = apiData.inactive_customers?.toLocaleString() ?? "-";
+            previousValue = apiData.inactive_customers_prev?.toLocaleString() ?? "-";
+            trend = apiData.inactive_customers_change >= 0 ? "up" : "down";
+            trendValue = Math.abs(apiData.inactive_customers_change ?? 0).toFixed(2) + "%";
+            break;
         }
+
+        return {
+          ...card,
+          subtitle: dateLabel,
+          value,
+          previousValue,
+          trend,
+          trendValue
+        };
       });
-      if (!response.ok) throw new Error("Failed to fetch dashboard data");
-      const result = await response.json();
-      if (!result.success) throw new Error(result.message || "API error");
+    };
 
-      // Generate date label based on current filter
-      const dateLabel = generateDateLabel(currentFilterType, days, range);
-
-      // Helper to update only the dynamic data
-      const updateCardData = (apiData: any, dateLabel: string) => {
-        if (!apiData) return staticCardStructure.map(card => ({ ...card, subtitle: dateLabel, value: "-", trend: "down", trendValue: "0%" }));
-
-        return staticCardStructure.map(card => {
-          let value = "-";
-          let trend = "down";
-          let trendValue = "0%";
-
-          switch (card.title) {
-            case "Total Sales":
-              value = apiData.all_customers?.toLocaleString() ?? "-";
-              trend = apiData.all_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.all_customers_change ?? 0) + "%";
-              break;
-            case "Purchase Value":
-              value = apiData.total_revenue?.toLocaleString() ?? "-";
-              trend = apiData.total_revenue_change >= 0 ? "up" : "down";
-              trendValue = (apiData.total_revenue_change ?? 0) + "%";
-              break;
-            case "All customers":
-              value = apiData.all_customers?.toLocaleString() ?? "-";
-              trend = apiData.all_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.all_customers_change ?? 0) + "%";
-              break;
-            case "New customers":
-              value = apiData.new_customers?.toLocaleString() ?? "-";
-              trend = apiData.new_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.new_customers_change ?? 0) + "%";
-              break;
-            case "Retained customers":
-              value = apiData.retained_customers?.toLocaleString() ?? "-";
-              trend = apiData.retained_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.retained_customers_change ?? 0) + "%";
-              break;
-            case "Active customers":
-              value = apiData.active_customers?.toLocaleString() ?? "-";
-              trend = apiData.active_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.active_customers_change ?? 0) + "%";
-              break;
-            case "Inactive customers":
-              value = apiData.inactive_customers?.toLocaleString() ?? "-";
-              trend = apiData.inactive_customers_change >= 0 ? "up" : "down";
-              trendValue = (apiData.inactive_customers_change ?? 0) + "%";
-              break;
-          }
-
-          return {
-            ...card,
-            subtitle: dateLabel,
-            value,
-            trend,
-            trendValue
-          };
-        });
-      };
-
-      setAnalyticsData(updateCardData(result.data, dateLabel));
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
-      // Keep the cards visible with error state instead of clearing them
-      setAnalyticsData(staticCardStructure.map(card => ({ ...card, subtitle: "Error", value: "-", trend: "down", trendValue: "0%" })));
-    } finally {
-      setLoading(false);
+    if (error) {
+      return staticCardStructure.map(card => ({ ...card, subtitle: "Error", value: "-", previousValue: "-", trend: "down", trendValue: "0%" }));
     }
-  }, [user?.accessToken, currentFilterType, staticCardStructure]);
 
-  useEffect(() => {
-    fetchDashboardData(filterDays, dateRange.from && dateRange.to ? dateRange : undefined);
-  }, [fetchDashboardData, filterDays, dateRange]);
+    if (loading || !dashboardData) {
+      return staticCardStructure.map(card => ({ ...card, subtitle: "Loading...", value: "-", previousValue: "-", trend: "down", trendValue: "0%" }));
+    }
+
+    return updateCardData(dashboardData.data, dateLabel);
+  }, [dashboardData, loading, error, currentFilterType, filterDays, dateRange, staticCardStructure]);
 
   // Handle filter change from TimeFilter
   const handleFilterChange = (filter: { type: string; days?: number; dateRange?: { from: Date | null; to: Date | null } }) => {
@@ -279,10 +256,13 @@ export function DashboardContent() {
           <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">
             {getGreeting()}
           </h1>
+          <p className="text-sm sm:text-base text-[#2A2A2F] font-medium mt-2">
+            🔒 Your data stays private. Always.
+          </p>
         </header>
 
         {/* Campaign Cards Section */}
-        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#f6f6f6] border border-[#dbdbdb] box-border overflow-hidden">
+        {/* <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#f6f6f6] border border-[#dbdbdb] box-border overflow-hidden">
           <div className="p-3 sm:p-4 lg:p-6 lg:pl-[35px]">
             <h2 className="text-sm sm:text-[16px] font-semibold text-[#696969] leading-[1.4] sm:leading-[22.4px] tracking-[-0.1px] mb-3 sm:mb-4 lg:mb-[17px]">
               Campaigns to grow your business
@@ -291,7 +271,7 @@ export function DashboardContent() {
                 <CampaignCards />
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Analytics Section */}
         <section className="pb-6 sm:pb-8">
@@ -300,7 +280,7 @@ export function DashboardContent() {
           </div>
           <div className="w-full max-w-full overflow-hidden">
             {error && (
-              <div className="text-center py-2 text-red-500 text-sm mb-4">{error}</div>
+              <div className="text-center py-2 text-red-500 text-sm mb-4">{error.message}</div>
             )}
             <AnalyticsCards data={analyticsData} onAskReason={handleAskReason} loading={loading} />
           </div>

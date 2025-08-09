@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/SidebarContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PopupProvider } from "@/contexts/PopupContext";
 import { GlobalPopup } from "@/components/GlobalPopup";
+import { QueryProvider } from "@/components/QueryProvider";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -33,14 +34,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} antialiased`}>
-        <AuthProvider>
-          <PopupProvider>
-            <SidebarProvider>
-              {children}
-              <GlobalPopup />
-            </SidebarProvider>
-          </PopupProvider>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <PopupProvider>
+              <SidebarProvider>
+                {children}
+                <GlobalPopup />
+              </SidebarProvider>
+            </PopupProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

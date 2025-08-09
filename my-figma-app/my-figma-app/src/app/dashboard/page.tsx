@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <ProtectedRoute>
-      <div className="bg-white">
+      <div className="bg-[#f6f6f6]">
         <div className="flex relative">
           {/* Sidebar */}
           <Sidebar />

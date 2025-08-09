@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { format } from 'date-fns';
+import { useAIAnalysis } from "@/hooks/useAIAnalysis";
 
 interface AnalysisData {
   business_summary: {
@@ -433,13 +434,21 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
   const { user } = useAuth();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [apiResponseReceived, setApiResponseReceived] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [step3MinTimeReached, setStep3MinTimeReached] = useState(false);
   const [step3Completed, setStep3Completed] = useState(false);
+
+  // Use React Query for AI analysis
+  const { data: aiResponse, isLoading, error, refetch } = useAIAnalysis({
+    cardType,
+    filterDays,
+    dateRange,
+    enabled: isOpen && !isAnalyzing // Only fetch when sidepane is open and not already analyzing
+  });
+
+  const analysis = aiResponse?.data || null;
 
 
 
@@ -459,91 +468,18 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
     }
   }, [step3Completed, isAnalyzing]);
 
-  // Map card type to API type parameter
-  const getTypeParam = (cardType: string): string => {
-    switch (cardType.toLowerCase()) {
-      case 'all customers':
-        return 'all-customers';
-      case 'new customers':
-        return 'new-customers';
-      case 'retained customers':
-        return 'retained-customers';
-      case 'active customers':
-        return 'active-customers';
-      default:
-        return 'all-customers';
-    }
-  };
-
-  // Fetch AI analysis data
-  const fetchAIAnalysis = useCallback(async () => {
-    if (!user?.accessToken) {
-      setError('Authentication required');
-      return;
-    }
-
-    setIsAnalyzing(true);
-    setError(null);
-    setAnalysis(null);
-    setStartTime(Date.now());
-
-    try {
-      const url = "https://api.tabapp.club/v1/ai-analysis";
-      const params = new URLSearchParams();
-
-      params.append('type_', getTypeParam(cardType));
-
-      if (dateRange?.from && dateRange?.to) {
-        params.append('start_date', format(dateRange.from, 'yyyy-MM-dd'));
-        params.append('end_date', format(dateRange.to, 'yyyy-MM-dd'));
-      } else if (filterDays) {
-        params.append('filter_days', filterDays.toString());
-      }
-
-      const response = await fetch(`${url}?${params.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user.accessToken}`
-        }
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || `HTTP error! status: ${response.status}`);
-      }
-
-      // if (result.message && result.message !== "") {
-      //   throw new Error(result.message);
-      // }
-
-      // Validate that the response has the expected structure
-      if (!result.data || typeof result.data !== 'object') {
-        throw new Error('Invalid response format from AI analysis API');
-      }
-
-      setAnalysis(result.data);
-      setApiResponseReceived(true);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch AI analysis");
-      console.error('AI Analysis error:', err);
-      setIsAnalyzing(false);
-    }
-  }, [user?.accessToken, cardType, filterDays, dateRange]);
-
-  // Fetch analysis when sidepane opens
+  // Handle starting analysis when sidepane opens and data is available
   useEffect(() => {
-    if (isOpen && !analysis && !isAnalyzing) {
-      fetchAIAnalysis();
+    if (isOpen && aiResponse && !isAnalyzing) {
+      setIsAnalyzing(true);
+      setStartTime(Date.now());
+      setApiResponseReceived(true);
     }
-  }, [isOpen, analysis, isAnalyzing, fetchAIAnalysis]);
+  }, [isOpen, aiResponse, isAnalyzing]);
 
   // Reset state when sidepane closes
   useEffect(() => {
     if (!isOpen) {
-      setAnalysis(null);
-      setError(null);
       setIsAnalyzing(false);
       setIsComplete(false);
       setApiResponseReceived(false);
@@ -559,11 +495,11 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
         side="right"
         className="w-full max-w-full sm:w-[480px] sm:max-w-xl md:w-[600px] md:max-w-2xl lg:w-1/2 lg:max-w-none p-0 overflow-y-auto"
       >
-        <SheetTitle className="sr-only">AI Analysis Results</SheetTitle>
+        <SheetTitle className="sr-only">Tab AI Analysis</SheetTitle>
         <div className="flex flex-col h-full">
           <div className="flex-1 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-800">AI Analysis Results</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Tab AI Analysis</h2>
             <div className="flex items-center">
               {/* Language Selector */}
               <div className="relative mr-6">
@@ -600,9 +536,9 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               <div className="text-red-500 text-center">
                 <AlertCircle className="w-12 h-12 mx-auto mb-4" />
                 <p className="text-lg font-medium mb-2">Analysis Failed</p>
-                <p className="text-sm text-gray-600">{error}</p>
+                <p className="text-sm text-gray-600">{error.message}</p>
                                 <button
-                  onClick={fetchAIAnalysis}
+                  onClick={() => refetch()}
                   className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                   aria-label="Retry AI analysis"
                 >
@@ -648,7 +584,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                 <div className="mb-4">
                   <p className="font-semibold text-[#2a2a2f]">Key Factors:</p>
                   <div>
-                    {analysis.business_summary.key_factors.map((factor, index) => (
+                    {analysis.business_summary.key_factors.map((factor: string, index: number) => (
                       <div key={index} className="p-2 rounded-lg">
                         <span className="text-sm text-[#2a2a2f] leading-relaxed">
                           {factor}
@@ -684,7 +620,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                   </div>
                   <div className="space-y-1">
                     <p className="font-semibold text-[#2a2a2f]">Secondary Factors:</p>
-                    {analysis.reason_identified.secondary_factors.map((factor, index) => (
+                    {analysis.reason_identified.secondary_factors.map((factor: string, index: number) => (
                       <div key={index} className="p-2 rounded-xl">
                         <span className="text-sm text-[#2a2a2f] leading-relaxed">
                           {factor}
@@ -757,7 +693,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                   <h3 className="font-bold text-[#2a2a2f] text-[16px]">{translations[selectedLanguage as keyof typeof translations].smartActions}</h3>
                 </div>
                 <div className="space-y-4">
-                  {analysis.smart_actions.map((action, index) => (
+                  {analysis.smart_actions.map((action: any, index: number) => (
                     <div key={index} className="border border-gray-100 rounded-xl p-4 bg-white hover:bg-gray-50 transition-colors">
                       <div className="flex items-start justify-between mb-6">
                         <span className="font-semibold text-[#2a2a2f] pr-2 text-[14px]">
@@ -780,7 +716,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                           </p>
                         </div>
                         <p className="text-sm text-[#2a2a2f] leading-relaxed mb-4">
-                          {action.implementation.map((item, index) => (
+                          {action.implementation.map((item: string, index: number) => (
                             <span key={index} className="text-[14px] block p-2">
                               {item}
                             </span>

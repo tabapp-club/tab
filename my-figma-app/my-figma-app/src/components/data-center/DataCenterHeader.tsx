@@ -7,27 +7,29 @@ interface DataCenterHeaderProps {
 
 const DataCenterHeader = ({ onImportClick, onExportClick }: DataCenterHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
-      <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 truncate">
-        Data centre
-      </h1>
-      <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
-        <button
-          onClick={onImportClick}
-          className="flex-1 sm:flex-none px-2 sm:px-3 h-8 bg-white border border-gray-200 rounded-md flex items-center justify-center sm:justify-start gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
-        >
-          <ImportIcon />
-          <span>Import</span>
-        </button>
-        <button
-          onClick={onExportClick}
-          className="flex-1 sm:flex-none px-2 sm:px-3 h-8 bg-white border border-gray-200 rounded-md flex items-center justify-center sm:justify-start gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
-        >
-          <ExportIcon />
-          <span>Export</span>
-        </button>
+    <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 min-w-0">
+        <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">
+          Data centre
+        </h1>
+        <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
+          <button
+            onClick={onImportClick}
+            className="flex-1 sm:flex-none px-2 sm:px-3 h-8 bg-white border border-gray-200 rounded-md flex items-center justify-center sm:justify-start gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
+          >
+            <ImportIcon />
+            <span>Import</span>
+          </button>
+          <button
+            onClick={onExportClick}
+            className="flex-1 sm:flex-none px-2 sm:px-3 h-8 bg-white border border-gray-200 rounded-md flex items-center justify-center sm:justify-start gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
+          >
+            <ExportIcon />
+            <span>Export</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 
