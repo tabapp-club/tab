@@ -146,7 +146,7 @@ const CollapseIcon = () => (
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: DashboardIcon, href: "/dashboard", active: true },
   { id: "data-center", label: "Data centre", icon: DataCenterIcon, href: "/data-center" },
-  { id: "ai-services", label: "Tab AI services", icon: AIServicesIcon, href: "/ai-services" },
+  { id: "ai-services", label: "Tab AI", icon: AIServicesIcon, href: "/ai-services" },
   { id: "cohorts", label: "Cohorts", icon: CohortsIcon, href: "/cohorts" },
   { id: "campaigns", label: "Campaigns", icon: CampaignsIcon, href: "/campaigns" },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
