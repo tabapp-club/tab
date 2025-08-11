@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -96,6 +96,13 @@ const TrendingDown = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const ClockIcon = () => (
+  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" strokeWidth="1.5"/>
+    <path d="M12 6v6l4 2" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
 const translations = {
   English: {
     analyzing: 'Analyzing your data...',
@@ -113,41 +120,41 @@ const translations = {
     implementation: 'Implementation',
     expectedResult: 'Expected Result',
   },
-  Spanish: {
-    analyzing: 'Analizando tus datos...',
-    businessSummary: 'Resumen del Negocio',
-    rootCause: 'Causas Identificadas',
-    suggestions: 'Sugerencias Estratégicas',
-    actions: 'Acciones Recomendadas',
-    smartActions: 'Acciones Inteligentes',
-    high: 'Alto',
-    medium: 'Medio',
-    low: 'Bajo',
-    timeline: 'Cronograma',
-    effort: 'Esfuerzo',
-    impact: 'Impacto Esperado',
-    implementation: 'Implementación',
-    expectedResult: 'Resultado Esperado',
+  Hindi: {
+    analyzing: 'आपका डेटा विश्लेषण कर रहा है...',
+    businessSummary: 'व्यवसाय सारांश',
+    rootCause: 'पहचाने गए कारण',
+    suggestions: 'रणनीतिक सुझाव',
+    actions: 'अनुशंसित कार्य',
+    smartActions: 'स्मार्ट कार्य',
+    high: 'उच्च',
+    medium: 'मध्यम',
+    low: 'कम',
+    timeline: 'समय सीमा',
+    effort: 'प्रयास',
+    impact: 'अपेक्षित प्रभाव',
+    implementation: 'कार्यान्वयन',
+    expectedResult: 'अपेक्षित परिणाम',
   },
-  French: {
-    analyzing: 'Analyse de vos données...',
-    businessSummary: 'Résumé de l\'Entreprise',
-    rootCause: 'Causes Identifiées',
-    suggestions: 'Suggestions Stratégiques',
-    actions: 'Actions Recommandées',
-    smartActions: 'Actions Intelligentes',
-    high: 'Élevé',
-    medium: 'Moyen',
-    low: 'Faible',
-    timeline: 'Calendrier',
-    effort: 'Effort',
-    impact: 'Impact Attendu',
-    implementation: 'Implémentation',
-    expectedResult: 'Résultat Attendu',
+  Telugu: {
+    analyzing: 'మీ డేటాను విశ్లేషిస్తోంది...',
+    businessSummary: 'వ్యాపార సారాంశం',
+    rootCause: 'గుర్తించబడిన కారణాలు',
+    suggestions: 'వ్యూహాత్మక సూచనలు',
+    actions: 'అనుశంసించిన చర్యలు',
+    smartActions: 'స్మార్ట్ చర్యలు',
+    high: 'అధికం',
+    medium: 'మధ్యస్థం',
+    low: 'తక్కువ',
+    timeline: 'కాలపరిమితి',
+    effort: 'ప్రయత్నం',
+    impact: 'అంచనా ప్రభావం',
+    implementation: 'అమలు',
+    expectedResult: 'అంచనా ఫలితం',
   },
 };
 
-const languages = ['English', 'Spanish', 'French'];
+const languages = ['English', 'Hindi', 'Telugu'];
 
 // Typing effect component
 const TypingText = ({ text, speed = 30 }: { text: string; speed?: number }) => {
@@ -184,17 +191,7 @@ const TypingText = ({ text, speed = 30 }: { text: string; speed?: number }) => {
 };
 
 // Modern cascading task loader component
-const TaskLoader = ({
-  isComplete = false,
-  apiResponseReceived = false,
-  onStep3MinTimeReached,
-  onStep3Completed
-}: {
-  isComplete?: boolean;
-  apiResponseReceived?: boolean;
-  onStep3MinTimeReached?: (reached: boolean) => void;
-  onStep3Completed?: (completed: boolean) => void;
-}) => {
+const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [elapsedTimes, setElapsedTimes] = useState([0, 0, 0]);
   const [startTime] = useState(Date.now());
@@ -203,13 +200,14 @@ const TaskLoader = ({
     Math.floor(Math.random() * 3) + 3  // Random 3-5 seconds for step 2
   ]);
   const [stepStartTimes, setStepStartTimes] = useState<number[]>([0, 0, 0]);
-  const [step3Started, setStep3Started] = useState(false);
-  const [step3MinTimeReached, setStep3MinTimeReached] = useState(false);
-  const [step3Completed, setStep3Completed] = useState(false);
-  const step3MinTimeReachedRef = useRef(false);
-  const shouldTriggerCallbackRef = useRef(false);
-  const shouldTriggerCompletionRef = useRef(false);
+  const [isComplete, setIsComplete] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const onCompleteRef = useRef(onComplete);
+
+  // Update the ref when onComplete changes
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   const tasks = [
     {
@@ -229,7 +227,7 @@ const TaskLoader = ({
     }
   ];
 
-    useEffect(() => {
+  useEffect(() => {
     // Initialize step start times
     const now = Date.now();
     const step1Start = now;
@@ -238,10 +236,7 @@ const TaskLoader = ({
 
     setStepStartTimes([step1Start, step2Start, step3Start]);
     setCurrentStep(0);
-    step3MinTimeReachedRef.current = false;
-    shouldTriggerCallbackRef.current = false;
-    shouldTriggerCompletionRef.current = false;
-    setStep3Completed(false);
+    setIsComplete(false); // Reset completion state
 
     // Step 1 timer
     const step1Timer = setTimeout(() => {
@@ -251,55 +246,47 @@ const TaskLoader = ({
     // Step 2 timer (with delay)
     const step2Timer = setTimeout(() => {
       setCurrentStep(2);
-      setStep3Started(true);
     }, (stepDurations[0] * 1000) + 1000 + (stepDurations[1] * 1000));
+
+    // Step 3 completion timer - ensure minimum time for step 3
+    const step3Timer = setTimeout(() => {
+      setIsComplete(true);
+      // Call the completion callback after a short delay for smooth transition
+      setTimeout(() => {
+        onCompleteRef.current?.();
+      }, 500);
+    }, (stepDurations[0] * 1000) + 1000 + (stepDurations[1] * 1000) + 2000); // Add 2 seconds for step 3
 
     return () => {
       clearTimeout(step1Timer);
       clearTimeout(step2Timer);
+      clearTimeout(step3Timer);
     };
-  }, [stepDurations]);
+  }, [stepDurations]); // Removed onComplete dependency
 
-        useEffect(() => {
+  useEffect(() => {
     intervalRef.current = setInterval(() => {
       const now = Date.now();
 
       setElapsedTimes(prev => {
         const newTimes = [...prev];
 
-                // Step 1: Count from 0s to duration
+        // Step 1: Count from 0s to duration
         if (currentStep >= 0 && currentStep < 1) {
           const step1Elapsed = Math.floor((now - stepStartTimes[0]) / 1000);
           newTimes[0] = Math.min(Math.max(0, step1Elapsed), stepDurations[0]);
-
         }
 
         // Step 2: Count from 0s to duration (only when step 2 is active)
         if (currentStep >= 1 && currentStep < 2) {
           const step2Elapsed = Math.floor((now - stepStartTimes[1]) / 1000);
           newTimes[1] = Math.min(Math.max(0, step2Elapsed), stepDurations[1]);
-
         }
 
-        // Step 3: Continue counting dynamically until API response (minimum 2s)
+        // Step 3: Continue counting dynamically
         if (currentStep >= 2) {
           const step3Elapsed = Math.floor((now - stepStartTimes[2]) / 1000);
           newTimes[2] = Math.max(0, step3Elapsed);
-
-          if (step3Elapsed >= 3 && !step3MinTimeReachedRef.current) {
-            setStep3MinTimeReached(true);
-            step3MinTimeReachedRef.current = true;
-            shouldTriggerCallbackRef.current = true;
-          }
-
-          if (apiResponseReceived && step3MinTimeReachedRef.current) {
-            shouldTriggerCompletionRef.current = true;
-            if (intervalRef.current) {
-              clearInterval(intervalRef.current);
-              intervalRef.current = null;
-            }
-            return prev;
-          }
         }
 
         return newTimes;
@@ -312,44 +299,12 @@ const TaskLoader = ({
         intervalRef.current = null;
       }
     };
-  }, [currentStep, stepStartTimes, stepDurations, apiResponseReceived]);
-
-  // Handle step 3 minimum time reached callback
-  useEffect(() => {
-    if (shouldTriggerCallbackRef.current) {
-      onStep3MinTimeReached?.(true);
-      shouldTriggerCallbackRef.current = false;
-    }
-  }, [step3MinTimeReached, onStep3MinTimeReached]);
-
-  // Additional effect to ensure callback is triggered
-  useEffect(() => {
-    if (step3MinTimeReached && shouldTriggerCallbackRef.current) {
-      onStep3MinTimeReached?.(true);
-      shouldTriggerCallbackRef.current = false;
-    }
-  }, [step3MinTimeReached, onStep3MinTimeReached]);
-
-  // Handle step 3 completion trigger
-  useEffect(() => {
-    if (shouldTriggerCompletionRef.current) {
-      setStep3Completed(true);
-      onStep3Completed?.(true);
-      shouldTriggerCompletionRef.current = false;
-    }
-  }, [onStep3Completed]);
-
-  const ClockIcon = () => (
-    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" strokeWidth="1.5"/>
-      <path d="M12 6v6l4 2" strokeWidth="1.5" strokeLinecap="round"/>
-    </svg>
-  );
+  }, [currentStep, stepStartTimes, stepDurations]);
 
   return (
     <div className="w-full max-w-md mx-auto">
       <div className={`bg-white rounded-2xl border border-gray-100 shadow-lg p-8 transition-all duration-500 ${
-        isComplete && step3Started ? 'scale-105 shadow-xl' : 'scale-100'
+        isComplete ? 'scale-105 shadow-xl' : 'scale-100'
       }`}>
         {/* Header */}
         <div className="text-center mb-8">
@@ -371,7 +326,7 @@ const TaskLoader = ({
                 {/* Circular dot indicator */}
                 <div className="flex-shrink-0">
                   <div className={`w-4 h-4 rounded-full border-2 transition-all duration-500 ${
-                    (currentStep > index) || (index === 2 && step3Completed)
+                    (currentStep > index) || (index === 2 && isComplete)
                       ? 'bg-green-500 border-green-500 shadow-sm'
                       : currentStep === index
                         ? 'bg-blue-500 border-blue-500 animate-pulse shadow-md'
@@ -416,7 +371,7 @@ const TaskLoader = ({
               {index < tasks.length - 1 && (
                 <div className="absolute left-2 top-4 w-px h-12 bg-gray-200 transform -translate-x-1/2">
                   <div className={`w-full h-full bg-gradient-to-b from-blue-500 to-transparent transition-all duration-1000 ${
-                    (currentStep > index) || (index === 1 && step3Completed) ? 'opacity-100' : 'opacity-0'
+                    (currentStep > index) || (index === 1 && isComplete) ? 'opacity-100' : 'opacity-0'
                   }`} />
                 </div>
               )}
@@ -433,80 +388,63 @@ const TaskLoader = ({
 export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filterDays, dateRange }: AIAnalysisSidepaneProps) {
   const { user } = useAuth();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [apiResponseReceived, setApiResponseReceived] = useState(false);
-  const [startTime, setStartTime] = useState<number>(0);
-  const [step3MinTimeReached, setStep3MinTimeReached] = useState(false);
-  const [step3Completed, setStep3Completed] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const [loaderCompleted, setLoaderCompleted] = useState(false);
 
   // Use React Query for AI analysis
   const { data: aiResponse, isLoading, error, refetch } = useAIAnalysis({
     cardType,
     filterDays,
     dateRange,
-    enabled: isOpen && !isAnalyzing // Only fetch when sidepane is open and not already analyzing
+    enabled: isOpen && !!cardType // Only fetch when sidepane is open and we have a valid cardType
   });
 
   const analysis = aiResponse?.data || null;
 
-
-
-  // Handle completion when step 3 is completed
+  // Show loader immediately when sidepane opens
   useEffect(() => {
-    if (step3Completed && isAnalyzing) {
-      setIsComplete(true);
-      setTimeout(() => {
-        setIsAnalyzing(false);
-        setTimeout(() => {
-          setIsComplete(false);
-          setApiResponseReceived(false);
-          setStep3MinTimeReached(false);
-          setStep3Completed(false);
-        }, 500);
-      }, 1000);
-    }
-  }, [step3Completed, isAnalyzing]);
-
-  // Handle starting analysis when sidepane opens and data is available
-  useEffect(() => {
-    if (isOpen && aiResponse && !isAnalyzing) {
-      setIsAnalyzing(true);
-      setStartTime(Date.now());
-      setApiResponseReceived(true);
-    }
-  }, [isOpen, aiResponse, isAnalyzing]);
-
-  // Reset state when sidepane closes
-  useEffect(() => {
-    if (!isOpen) {
-      setIsAnalyzing(false);
-      setIsComplete(false);
-      setApiResponseReceived(false);
-      setStartTime(0);
-      setStep3MinTimeReached(false);
-      setStep3Completed(false);
+    if (isOpen) {
+      setShowLoader(true);
+      setLoaderCompleted(false);
+    } else {
+      setShowLoader(false);
+      setLoaderCompleted(false);
     }
   }, [isOpen]);
+
+  // Hide loader when it completes
+  useEffect(() => {
+    if (loaderCompleted) {
+      setShowLoader(false);
+    }
+  }, [loaderCompleted]);
+
+  // Stable callback for TaskLoader completion
+  const handleLoaderComplete = useCallback(() => {
+    setLoaderCompleted(true);
+  }, []);
+
+  // Determine when to show results - only after both API responds AND loader completes
+  const shouldShowResults = (aiResponse || error) && loaderCompleted;
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <SheetContent
         side="right"
-        className="w-full max-w-full sm:w-[480px] sm:max-w-xl md:w-[600px] md:max-w-2xl lg:w-1/2 lg:max-w-none p-0 overflow-y-auto"
+        className="w-full max-w-full sm:w-[480px] sm:max-w-xl md:w-[600px] md:max-w-2xl lg:w-1/2 lg:max-w-none p-0 overflow-y-auto [&>button]:hidden"
       >
         <SheetTitle className="sr-only">Tab AI Analysis</SheetTitle>
         <div className="flex flex-col h-full">
           <div className="flex-1 p-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
             <h2 className="text-xl font-semibold text-gray-800">Tab AI Analysis</h2>
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
               {/* Language Selector */}
-              <div className="relative mr-6">
+              <div className="relative">
                 <select
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
-                  className="appearance-none bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 pr-8 text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                  className="appearance-none bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 pr-8 text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent hover:bg-gray-50 transition-colors"
                   aria-label="Select language for analysis results"
                 >
                   {languages.map((lang) => (
@@ -515,23 +453,25 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                 </select>
                 <Languages className="absolute right-2 top-1.5 w-4 h-4 text-gray-500 pointer-events-none" />
               </div>
+
+              {/* Close Button */}
+              <button
+                onClick={onClose}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Close analysis sidepane"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
 
-          {isAnalyzing ? (
+          {showLoader ? (
             <div className="flex flex-col items-center justify-center py-12">
-                                <TaskLoader
-                  isComplete={isComplete}
-                  apiResponseReceived={apiResponseReceived}
-                  onStep3MinTimeReached={(reached) => {
-                    setStep3MinTimeReached(reached);
-                  }}
-                  onStep3Completed={(completed) => {
-                    setStep3Completed(completed);
-                  }}
-                />
+              <TaskLoader onComplete={handleLoaderComplete} />
             </div>
-          ) : error ? (
+          ) : shouldShowResults && error ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="text-red-500 text-center">
                 <AlertCircle className="w-12 h-12 mx-auto mb-4" />
@@ -546,7 +486,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
                 </button>
               </div>
             </div>
-          ) : analysis && (
+          ) : shouldShowResults && analysis && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out">
             <div className="space-y-5">
               {/* Business Summary */}

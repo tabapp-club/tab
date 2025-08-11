@@ -1,3 +1,18 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+// Loading Spinner Component
+const LoadingSpinner = () => (
+  <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center rounded z-20">
+    <div className="flex flex-col items-center gap-3">
+      <div className="animate-spin rounded-full h-10 w-10 border-3 border-[#6E4EFF] border-t-transparent"></div>
+      <div className="text-sm font-medium text-[#6E4EFF]">Loading...</div>
+    </div>
+  </div>
+);
+
 // Campaign Icons
 const FeedbackIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +53,8 @@ const campaigns = [
     bgColor: "bg-gradient-to-br from-teal-400 to-teal-600",
     background: "/feedbackAndSurvey.png",
     iconBg: "bg-teal-100",
-    iconColor: "text-teal-700"
+    iconColor: "text-teal-700",
+    type: "feedback"
   },
   {
     id: 2,
@@ -47,7 +63,8 @@ const campaigns = [
     bgColor: "bg-gradient-to-br from-gray-700 to-gray-900",
     background: "/retention.png",
     iconBg: "bg-gray-100",
-    iconColor: "text-gray-700"
+    iconColor: "text-gray-700",
+    type: "retention"
   },
   {
     id: 3,
@@ -56,7 +73,8 @@ const campaigns = [
     bgColor: "bg-gradient-to-br from-purple-500 to-purple-700",
     background: "/engagement.png",
     iconBg: "bg-purple-100",
-    iconColor: "text-purple-700"
+    iconColor: "text-purple-700",
+    type: "engagement"
   },
   {
     id: 4,
@@ -65,28 +83,52 @@ const campaigns = [
     bgColor: "bg-gradient-to-br from-orange-400 to-orange-600",
     background: "/advertise.png",
     iconBg: "bg-orange-100",
-    iconColor: "text-orange-700"
+    iconColor: "text-orange-700",
+    type: "advertise"
   }
 ];
 
 export function CampaignCards() {
+    const router = useRouter();
+    const [loadingCardId, setLoadingCardId] = useState<number | null>(null);
+
+    const handleCampaignClick = async (campaignType: string, campaignId: number) => {
+        setLoadingCardId(campaignId);
+
+        // Add a small delay to show the loading animation
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        try {
+            await router.push(`/new-campaign/create?type=${campaignType}`);
+        } catch (error) {
+            console.error('Navigation error:', error);
+            setLoadingCardId(null);
+        }
+    };
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full">
         {campaigns.map((campaign) => {
             const Icon = campaign.icon;
+            const isLoading = loadingCardId === campaign.id;
+
             return (
             <div
                 key={campaign.id}
-                className="min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-md transition-shadow cursor-pointer group overflow-hidden"
+                className="relative min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-out cursor-pointer group overflow-hidden transform"
+                onClick={() => !isLoading && handleCampaignClick(campaign.type, campaign.id)}
             >
+                {/* Loading Overlay */}
+                {isLoading && <LoadingSpinner />}
+
                 {/* Header with gradient background */}
-                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden transition-transform duration-300 group-hover:scale-105`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-20"></div>
 
                 {/* Icon */}
-                <div className="absolute -bottom-[5px] left-4 w-[26px] h-[26px] bg-white border border-[#e9e9e9] rounded flex items-center justify-center">
-                    <div className={`w-5 h-5 rounded-sm ${campaign.iconBg} flex items-center justify-center`}>
-                    <div className={`w-[10.909px] h-[10.909px] ${campaign.iconColor} flex items-center justify-center`}>
+                <div className="absolute -bottom-[5px] left-4 w-[26px] h-[26px] bg-white border border-[#e9e9e9] rounded flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <div className={`w-5 h-5 rounded-sm ${campaign.iconBg} flex items-center justify-center transition-colors duration-300`}>
+                    <div className={`w-[10.909px] h-[10.909px] ${campaign.iconColor} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                         <Icon />
                     </div>
                     </div>
@@ -94,11 +136,14 @@ export function CampaignCards() {
                 </div>
 
                 {/* Content */}
-                <div className="h-[50px] px-4 py-4 flex items-center">
-                <span className="text-[14px] font-medium text-[#2a2a2f] leading-[19.6px] tracking-[-0.1px]">
+                <div className="h-[50px] px-4 py-4 flex items-center transition-colors duration-300 group-hover:bg-gray-50">
+                <span className="text-[14px] font-medium text-[#2a2a2f] leading-[19.6px] tracking-[-0.1px] transition-colors duration-300 group-hover:text-[#6E4EFF]">
                     {campaign.title}
                 </span>
                 </div>
+
+                {/* Hover Effect Border */}
+                <div className="absolute inset-0 border-2 border-transparent rounded transition-all duration-300 group-hover:border-[#6E4EFF]/20 pointer-events-none"></div>
             </div>
             );
         })}

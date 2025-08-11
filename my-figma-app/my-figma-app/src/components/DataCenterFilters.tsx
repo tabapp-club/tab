@@ -80,7 +80,6 @@ const DataCenterFilters = ({
   // Effect to handle filter change notifications
   useEffect(() => {
     if (pendingFilterChange.current && onFiltersChange) {
-      console.log('Sending filter changes to parent:', pendingFilterChange.current);
       onFiltersChange(pendingFilterChange.current);
       pendingFilterChange.current = null;
     }
@@ -169,12 +168,8 @@ const DataCenterFilters = ({
     setOpenFilter(openFilter === filterType ? null : filterType);
   };
 
-  const handleFilterChange = (filterType: keyof FilterState, selectedIds: string[]) => {
-    console.log('DataCenterFilters handleFilterChange called:', { filterType, selectedIds });
-
+    const handleFilterChange = (filterType: keyof FilterState, selectedIds: string[]) => {
     setFilters(prev => {
-      console.log('Previous filters state:', prev[filterType]);
-
       let newOptions;
       if (filterType === 'category') {
         // Multi-select for categories
@@ -182,7 +177,6 @@ const DataCenterFilters = ({
           ...option,
           checked: selectedIds.includes(option.id)
         }));
-        console.log('New category options:', newOptions);
       } else if (filterType === 'userType' || filterType === 'visits') {
         // Single-select toggle: if already selected, unselect; else select only the clicked one
         const prevChecked = prev[filterType].find(option => option.checked)?.id;

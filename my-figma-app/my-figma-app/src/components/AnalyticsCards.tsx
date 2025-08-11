@@ -29,18 +29,18 @@ const RupeeIcon = () => (
   </svg>
 );
 
-const TrendUpIcon = () => (
+const TrendUpIcon = ({ color }: { color: string }) => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 4l-5 5-3-3-3 3" stroke="#e34f2f" strokeWidth="1.5" fill="none"/>
-    <path d="M8 4h4v4" stroke="#e34f2f" strokeWidth="1.5" fill="none"/>
+    <path d="M12 4l-5 5-3-3-3 3" stroke={color} strokeWidth="1.5" fill="none"/>
+    <path d="M8 4h4v4" stroke={color} strokeWidth="1.5" fill="none"/>
   </svg>
 );
 
 
-const TrendDownIcon = () => (
+const TrendDownIcon = ({ color }: { color: string }) => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 10l-5-5-3 3-3-3" stroke="#17c653" strokeWidth="1.5" fill="none"/>
-    <path d="M8 10h4V6" stroke="#17c653" strokeWidth="1.5" fill="none"/>
+    <path d="M12 10l-5-5-3 3-3-3" stroke={color} strokeWidth="1.5" fill="none"/>
+    <path d="M8 10h4V6" stroke={color} strokeWidth="1.5" fill="none"/>
   </svg>
 );
 
@@ -170,31 +170,45 @@ const BarChart = ({ currentValue, previousValue, title, trend }: {
   const previousHeight = maxValue > 0 ? (previous / maxValue) * 100 : 0;
 
   const isPositiveTrend = trend === "up";
-  const currentBarColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
-  const previousBarColor = "bg-[#e9e9e9]";
+  const currentBarColor = "bg-[#6e4eff]";
+  const previousBarColor = "bg-[#6e4eff]";
 
   return (
     <div className="w-full h-32 flex items-end justify-center gap-4 px-4">
       {/* Previous Value Bar */}
-      <div className="flex flex-col items-center gap-2">
-        <div className="h-24 w-8 bg-gray-100 rounded-sm flex items-end">
+      <div className="flex flex-col items-center gap-2 relative group">
+        <div className="h-32 w-16 bg-[#6e4eff]/15 rounded-[2px] flex items-end">
           <div
-            className={`w-full ${previousBarColor} rounded-sm transition-all duration-1000 ease-out`}
+            className={`w-full ${previousBarColor} rounded-[2px] transition-all duration-1000 ease-out cursor-pointer hover:scale-105 hover:shadow-lg`}
             style={{ height: `${previousHeight}%` }}
           ></div>
         </div>
         <div className="text-xs text-[#626266] font-medium">Previous</div>
+
+        {/* Tooltip for Previous Value */}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999] pointer-events-none" style={{ position: 'absolute', zIndex: 9999 }}>
+          <div className="font-semibold text-white mb-1">{title}</div>
+          <div className="text-gray-200">Previous: {previousValue}</div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+        </div>
       </div>
 
       {/* Current Value Bar */}
-      <div className="flex flex-col items-center gap-2">
-        <div className="h-24 w-8 bg-gray-100 rounded-sm flex items-end">
+      <div className="flex flex-col items-center gap-2 relative group">
+        <div className="h-32 w-16 bg-[#6e4eff]/15 rounded-[2px] flex items-end">
           <div
-            className={`w-full ${currentBarColor} rounded-sm transition-all duration-1000 ease-out`}
+            className={`w-full ${currentBarColor} rounded-[2px] transition-all duration-1000 ease-out cursor-pointer hover:scale-105 hover:shadow-lg`}
             style={{ height: `${currentHeight}%` }}
           ></div>
         </div>
         <div className="text-xs text-[#626266] font-medium">Current</div>
+
+        {/* Tooltip for Current Value */}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999] pointer-events-none" style={{ position: 'absolute', zIndex: 9999 }}>
+          <div className="font-semibold text-white mb-1">{title}</div>
+          <div className="text-gray-200">Current: {currentValue}</div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+        </div>
       </div>
     </div>
   );
@@ -356,30 +370,37 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
     }
   };
 
+  // Separate data into business metrics and customer metrics
+  const businessMetrics = displayData.filter(card =>
+    card.title === "Total Sales" || card.title === "Purchase Value"
+  );
+  const customerMetrics = displayData.filter(card =>
+    card.title !== "Total Sales" && card.title !== "Purchase Value"
+  );
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full">
-      {displayData.map((card) => {
+    <div className="space-y-6">
+      {/* Business Metrics Section */}
+      <div className="bg-white rounded-lg border border-[#e9e9e9] p-6">
+        <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Business Metrics</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {businessMetrics.map((card) => {
         const isPositiveTrend = card.trend === "up";
         const trendBgColor = isPositiveTrend ? "bg-[rgba(23,198,83,0.1)]" : "bg-[rgba(227,79,47,0.1)]";
         const trendTextColor = isPositiveTrend ? "text-[#17c653]" : "text-[#e34f2f]";
         const trendIndicatorColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
-
-        // Special styling for the first two cards (Total Sales and Purchase Value)
-        const isTopCard = card.title === "Total Sales" || card.title === "Purchase Value";
-        const cardClassName = isTopCard
-          ? "min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden col-span-1 sm:col-span-2 lg:col-span-2 xl:col-span-2"
-          : "min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden";
+            const trendIconColor = isPositiveTrend ? "#17c653" : "#e34f2f";
 
         return (
           <div
             key={card.id}
-            className={cardClassName}
+                className="bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden"
           >
             {/* Header */}
             <div className="min-h-16 border-b border-[#e9e9e9] px-4 py-2">
               <div className="flex gap-2 items-start">
                 <div className="w-[21px] h-[21px] flex items-center justify-center flex-shrink-0">
-                  {<UserIcon />} {/* TODO: Can get logo from getCardIcon function */}
+                      {<UserIcon />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[14px] font-bold text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
@@ -390,20 +411,18 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                   </div>
                 </div>
                                 {/* Toggle Slider - Only show for Total Sales and Purchase Value */}
-                {(card.title === "Total Sales" || card.title === "Purchase Value") && (
                   <ToggleSlider
                     isChart={cardViewModes[card.id] === 'chart'}
                     onToggle={() => toggleCardView(card.id)}
                   />
-                )}
               </div>
             </div>
 
                                     {/* Content */}
-            <div className="h-[263.8px] min-h-[250px] flex flex-col items-center justify-center gap-4 p-4 relative overflow-hidden">
+            <div className="h-[263.8px] min-h-[250px] flex flex-col items-center justify-center gap-4 p-4 relative">
               {/* Numbers View */}
-              <div className={`absolute inset-0 p-4 flex flex-col items-center justify-center gap-4 transition-all duration-500 ease-in-out ${
-                (cardViewModes[card.id] === 'chart' && (card.title === "Total Sales" || card.title === "Purchase Value"))
+              <div className={`absolute inset-0 p-4 flex flex-col items-center justify-center gap-4 mb-10 transition-all duration-500 ease-in-out ${
+                    cardViewModes[card.id] === 'chart'
                   ? 'opacity-0 transform translate-x-[-100%] pointer-events-none'
                   : 'opacity-100 transform translate-x-0'
               }`}>
@@ -440,11 +459,11 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                       <div className="w-3.5 h-3.5 flex items-center justify-center">
                         {isPositiveTrend ? (
                           <div className="rotate-180">
-                            <TrendDownIcon />
+                                <TrendDownIcon color={trendIconColor} />
                           </div>
                         ) : (
                           <div className="scale-y-[-1]">
-                            <TrendUpIcon />
+                                <TrendUpIcon color={trendIconColor} />
                           </div>
                         )}
                       </div>
@@ -460,9 +479,8 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                 </div>
               </div>
 
-                            {/* Chart View - Only for Total Sales and Purchase Value */}
-              {(card.title === "Total Sales" || card.title === "Purchase Value") && (
-                <div className={`absolute inset-0 p-4 flex flex-col transition-all duration-500 ease-in-out ${
+                  {/* Chart View */}
+                <div className={`absolute inset-0 p-4 flex flex-col mb-10 transition-all duration-500 ease-in-out ${
                   cardViewModes[card.id] === 'chart'
                     ? 'opacity-100 transform translate-x-0'
                     : 'opacity-0 transform translate-x-[100%] pointer-events-none'
@@ -471,10 +489,10 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                   {/* Legend */}
                   <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-4">
                     <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
-                      <div className={`w-2.5 h-2.5 rounded-sm ${trendIndicatorColor} flex-shrink-0`}></div>
+                      {/* <div className={`w-2.5 h-2.5 rounded-sm ${trendIndicatorColor} flex-shrink-0`}></div>
                       <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
                         {card.legendLabel}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
@@ -489,13 +507,120 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                   </div>
 
                   {/* Values Display */}
-                  <div className="flex justify-between items-center text-xs text-[#626266] mt-2">
+                  {/* <div className="flex justify-between items-center text-xs text-[#626266] mt-2">
                     <div>Previous: {card.previousValue || "N/A"}</div>
                     <div>Current: {card.value}</div>
+                  </div> */}
+                </div>
+                  </div>
+
+                  {/* Ask Reason Button - Always visible */}
+                  <button
+                    onClick={() => onAskReason?.(card.title, card)}
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-3 py-1.5 bg-[#6E4EFF] hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] hover:cursor-pointer text-white text-xs font-medium rounded-[2px] transition-colors duration-200 shadow-sm hover:shadow-md z-10"
+                  >
+                    Get Analysis
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Customer Metrics Section */}
+      <div className="bg-white rounded-lg border border-[#e9e9e9] p-6">
+        <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Customer Metrics</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {customerMetrics.map((card) => {
+            const isPositiveTrend = card.trend === "up";
+            let trendBgColor = isPositiveTrend ? "bg-[rgba(23,198,83,0.1)]" : "bg-[rgba(227,79,47,0.1)]";
+            let trendTextColor = isPositiveTrend ? "text-[#17c653]" : "text-[#e34f2f]";
+            let trendIndicatorColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
+            let trendIconColor = isPositiveTrend ? "#17c653" : "#e34f2f";
+            if (card.title === "Inactive customers") {
+              trendIndicatorColor = isPositiveTrend ? "bg-[#e34f2f]" : "bg-[#17c653]";
+              trendBgColor = isPositiveTrend ? "bg-[rgba(227,79,47,0.1)]" : "bg-[rgba(23,198,83,0.1)]";
+              trendTextColor = isPositiveTrend ? "text-[#e34f2f]" : "text-[#17c653]";
+              trendIconColor = isPositiveTrend ? "#e34f2f" : "#17c653";
+            }
+
+            return (
+              <div
+                key={card.id}
+                className="bg-white border border-[#e9e9e9] rounded-lg p-px overflow-hidden"
+              >
+                {/* Header */}
+                <div className="min-h-16 border-b border-[#e9e9e9] px-4 py-2">
+                  <div className="flex gap-2 items-start">
+                    <div className="w-[21px] h-[21px] flex items-center justify-center flex-shrink-0">
+                      {getCardIcon(card.title)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-bold text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
+                        {card.title}
+                      </div>
+                      <div className="text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px]">
+                        {card.subtitle}
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Content */}
+                <div className="h-[263.8px] min-h-[250px] flex flex-col items-center justify-center gap-4 p-4 relative overflow-hidden">
+                  {/* Numbers View */}
+                  <div className="w-full flex flex-col items-center mb-10">
+                    {/* Legend */}
+                    <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-1">
+                      <div className="flex items-center gap-[5px] max-w-full overflow-hidden">
+                        <div className={`w-2.5 h-2.5 rounded-sm ${trendIndicatorColor} flex-shrink-0`}></div>
+                        <div className="text-[11.0625px] font-medium text-[#626266] leading-[12px] truncate">
+                          {card.legendLabel}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Main Value */}
+                    <div className="w-full max-w-[163px] flex flex-col items-center">
+                      <div className="w-full px-0 py-1 flex items-center justify-center">
+                        <div className="w-full flex flex-col items-center">
+                          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">
+                            <AnimatedNumber value={card.value} loading={loading} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <div className="text-[10.875px] font-normal text-[#626266] leading-[16.8px] tracking-[-0.1px] whitespace-nowrap">
+                          {card.unit}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Trend Indicator */}
+                    <div className={`px-2 py-0.5 rounded-[3px] flex items-start gap-0 ${trendBgColor} mt-4`}>
+                      <div className="w-4 h-3.5 flex items-center justify-center flex-shrink-0">
+                        <div className="w-3.5 h-3.5 flex items-center justify-center">
+                          {isPositiveTrend ? (
+                            <div className="rotate-180">
+                              <TrendDownIcon color={trendIconColor} />
+                            </div>
+                          ) : (
+                            <div className="scale-y-[-1]">
+                              <TrendUpIcon color={trendIconColor} />
                 </div>
               )}
+                        </div>
+                      </div>
+                      <div className="flex items-center self-stretch">
+                        <div className="flex flex-col items-start justify-start h-full">
+                          <div className={`text-[12px] font-normal leading-[16.8px] tracking-[-0.1px] max-h-[16.8px] whitespace-nowrap ${trendTextColor}`}>
+                            <AnimatedPercentage value={card.trendValue} loading={loading} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
               {/* Ask Reason Button - Always visible */}
               <button
@@ -508,6 +633,8 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
           </div>
         );
       })}
+        </div>
+      </div>
     </div>
   );
 }

@@ -71,9 +71,7 @@ const FilterDropdown = ({
     }
   }, [isOpen, options.length]);
 
-  const handleOptionChange = (optionId: string) => {
-    console.log('FilterDropdown handleOptionChange called:', { optionId, title, singleSelect, currentOptions: options });
-
+    const handleOptionChange = (optionId: string) => {
     let newSelectedIds;
     if (singleSelect) {
       // For single select, toggle between selected and none
@@ -86,20 +84,16 @@ const FilterDropdown = ({
     } else {
       // For multi-select, toggle the specific option
       const currentlySelected = options.filter(opt => opt.checked).map(opt => opt.id);
-      console.log('Multi-select mode - currently selected:', currentlySelected);
 
       if (currentlySelected.includes(optionId)) {
         // Remove if currently selected
         newSelectedIds = currentlySelected.filter(id => id !== optionId);
-        console.log('Removing option:', optionId, 'new selection:', newSelectedIds);
       } else {
         // Add if not currently selected
         newSelectedIds = [...currentlySelected, optionId];
-        console.log('Adding option:', optionId, 'new selection:', newSelectedIds);
       }
     }
 
-    console.log('Calling onSelectionChange with:', newSelectedIds);
     onSelectionChange(newSelectedIds);
   };
 

@@ -262,7 +262,7 @@ export function DashboardContent() {
         </header>
 
         {/* Campaign Cards Section */}
-        {/* <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#f6f6f6] border border-[#dbdbdb] box-border overflow-hidden">
+        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#ffffff] border border-[#dbdbdb] box-border overflow-hidden">
           <div className="p-3 sm:p-4 lg:p-6 lg:pl-[35px]">
             <h2 className="text-sm sm:text-[16px] font-semibold text-[#696969] leading-[1.4] sm:leading-[22.4px] tracking-[-0.1px] mb-3 sm:mb-4 lg:mb-[17px]">
               Campaigns to grow your business
@@ -271,7 +271,7 @@ export function DashboardContent() {
                 <CampaignCards />
             </div>
           </div>
-        </section> */}
+        </section>
 
         {/* Analytics Section */}
         <section className="pb-6 sm:pb-8">
