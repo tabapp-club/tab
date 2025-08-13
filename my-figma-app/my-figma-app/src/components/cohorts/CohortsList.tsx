@@ -94,7 +94,7 @@ export function CohortsList({
   }, [searchTerm, cohorts, onCohortsUpdate]);
 
   return (
-    <div className="space-y-3 sm:space-y-4 mt-2">
+    <div className="space-y-3 sm:space-y-4 mt-2 bg-white border border-[#e9e9e9] rounded-lg p-6">
       {filteredCohorts.length > 0 ? (
         filteredCohorts.map((cohort) => (
           <CohortCard key={cohort.id} cohort={cohort} />

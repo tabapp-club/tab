@@ -114,7 +114,7 @@ export function CampaignsClient() {
   }, []);
 
   return (
-    <div className="campaigns-container flex bg-gray-50 font-sans min-h-screen overflow-hidden">
+    <div className="campaigns-container flex bg-[#F6F6F6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
@@ -142,7 +142,7 @@ export function CampaignsClient() {
               <CampaignsStats />
 
               {/* Main Content Area */}
-              <div className="bg-white rounded-lg shadow-sm flex-1 flex flex-col min-h-0 min-w-0">
+              <div className="bg-white rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
                 {/* Filters */}
                 <CampaignsFilters
                   searchTerm={searchTerm}

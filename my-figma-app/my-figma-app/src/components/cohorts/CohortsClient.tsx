@@ -139,7 +139,7 @@ export function CohortsClient() {
   }, []);
 
   return (
-    <div className="cohorts-page-container flex min-h-screen bg-white">
+    <div className="cohorts-page-container flex min-h-screen bg-[#F6F6F6]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -166,7 +166,7 @@ export function CohortsClient() {
             </div>
 
             {/* Filter Bar - Sticky */}
-            <div className="sticky top-0 z-10 bg-white px-2 sm:px-4 lg:px-6">
+            <div className="sticky top-0 z-10 px-2 sm:px-4 lg:px-6">
               <CohortsFilterBar
                 onSearch={handleSearchChange}
                 totalCohorts={cohorts.length}

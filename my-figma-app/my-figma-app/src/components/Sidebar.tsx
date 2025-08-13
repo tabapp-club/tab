@@ -103,12 +103,10 @@ const AchievementsIcon = ({colorCode}: {colorCode: string}) => (
 );
 
 const HelpIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10 18.75C5.175 18.75 1.25 14.825 1.25 10C1.25 5.175 5.175 1.25 10 1.25C14.825 1.25 18.75 5.175 18.75 10C18.75 14.825 14.825 18.75 10 18.75ZM10 2.5C5.8625 2.5 2.5 5.8625 2.5 10C2.5 14.1375 5.8625 17.5 10 17.5C14.1375 17.5 17.5 14.1375 17.5 10C17.5 5.8625 14.1375 2.5 10 2.5Z" fill="#2A2A2F"/>
-<path d="M10 5.625C8.6125 5.625 7.5 6.7375 7.5 8.125H8.75C8.75 7.4375 9.3125 6.875 10 6.875C10.6875 6.875 11.25 7.4375 11.25 8.125C11.25 9.375 9.375 9.225 9.375 11.25H10.625C10.625 9.85 12.5 9.6875 12.5 8.125C12.5 6.7375 11.3875 5.625 10 5.625Z" fill="#2A2A2F"/>
-<path d="M10 14.525C10.428 14.525 10.775 14.178 10.775 13.75C10.775 13.322 10.428 12.975 10 12.975C9.57198 12.975 9.225 13.322 9.225 13.75C9.225 14.178 9.57198 14.525 10 14.525Z" fill="#2A2A2F"/>
-<path d="M8.125 8.75C8.47018 8.75 8.75 8.47018 8.75 8.125C8.75 7.77982 8.47018 7.5 8.125 7.5C7.77982 7.5 7.5 7.77982 7.5 8.125C7.5 8.47018 7.77982 8.75 8.125 8.75Z" fill="#2A2A2F"/>
-<path d="M10 11.875C10.3452 11.875 10.625 11.5952 10.625 11.25C10.625 10.9048 10.3452 10.625 10 10.625C9.65482 10.625 9.375 10.9048 9.375 11.25C9.375 11.5952 9.65482 11.875 10 11.875Z" fill="#2A2A2F"/>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 15C4.14 15 1 11.86 1 8C1 4.14 4.14 1 8 1C11.86 1 15 4.14 15 8C15 11.86 11.86 15 8 15ZM8 2C4.69 2 2 4.69 2 8C2 11.31 4.69 14 8 14C11.31 14 14 11.31 14 8C14 4.69 11.31 2 8 2Z" fill="#2A2A2F"/>
+<path d="M8 4.5C6.89 4.5 6 5.39 6 6.5H7C7 5.95 7.45 5.5 8 5.5C8.55 5.5 9 5.95 9 6.5C9 7.5 7.5 7.38 7.5 9H8.5C8.5 7.88 10 7.75 10 6.5C10 5.39 9.11 4.5 8 4.5Z" fill="#2A2A2F"/>
+<path d="M8 11.62C8.342 11.62 8.62 11.342 8.62 11C8.62 10.658 8.342 10.38 8 10.38C7.658 10.38 7.38 10.658 7.38 11C7.38 11.342 7.658 11.62 8 11.62Z" fill="#2A2A2F"/>
 </svg>
 
 );
@@ -129,8 +127,10 @@ const LogoutIcon = () => (
 );
 
 const BugIcon = ({colorCode}: {colorCode: string}) => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C10.34 2 9 3.34 9 5C9 6.66 10.34 8 12 8C13.66 8 15 6.66 15 5C15 3.34 13.66 2 12 2ZM8 6L6 8V10L8 9V6ZM18 6V9L20 10V8L18 6ZM16 11C15.45 11 15 11.45 15 12V14C15 16.21 13.21 18 11 18C8.79 18 7 16.21 7 14V12C7 11.45 6.55 11 6 11C5.45 11 5 11.45 5 12V14C5 17.31 7.69 20 11 20C14.31 20 17 17.31 17 14V12C17 11.45 16.55 11 16 11ZM6 16L4 18V20L6 19V16ZM18 16V19L20 20V18L18 16ZM11 10C9.9 10 9 10.9 9 12V14C9 15.1 9.9 16 11 16C12.1 16 13 15.1 13 14V12C13 10.9 12.1 10 11 10Z" fill={colorCode}/>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M8 2C6.89543 2 6 2.89543 6 4V4.5C6 4.77614 5.77614 5 5.5 5H4.5C4.22386 5 4 5.22386 4 5.5V6.5C4 6.77614 4.22386 7 4.5 7H5.5C5.77614 7 6 7.22386 6 7.5V8C6 9.10457 6.89543 10 8 10C9.10457 10 10 9.10457 10 8V7.5C10 7.22386 10.2239 7 10.5 7H11.5C11.7761 7 12 6.77614 12 6.5V5.5C12 5.22386 11.7761 5 11.5 5H10.5C10.2239 5 10 4.77614 10 4.5V4C10 2.89543 9.10457 2 8 2ZM7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4V4.5C9 5.32843 9.67157 6 10.5 6H11.5C12.3284 6 13 6.67157 13 7.5V8.5C13 9.32843 12.3284 10 11.5 10H10.5C9.67157 10 9 10.6716 9 11.5V12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12V11.5C7 10.6716 6.32843 10 5.5 10H4.5C3.67157 10 3 9.32843 3 8.5V7.5C3 6.67157 3.67157 6 4.5 6H5.5C6.32843 6 7 5.32843 7 4.5V4Z" fill={colorCode}/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M8 6C7.44772 6 7 6.44772 7 7V9C7 9.55228 7.44772 10 8 10C8.55228 10 9 9.55228 9 9V7C9 6.44772 8.55228 6 8 6ZM6 7C6 5.89543 6.89543 5 8 5C9.10457 5 10 5.89543 10 7V9C10 10.1046 9.10457 11 8 11C6.89543 11 6 10.1046 6 9V7Z" fill={colorCode}/>
+    <circle cx="8" cy="8" r="1" fill={colorCode}/>
   </svg>
 );
 
@@ -211,11 +211,11 @@ export function Sidebar() {
           <div className={`flex-1 min-w-0 transition-all duration-300 overflow-hidden ${
             actualIsCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
           }`}>
-            <div className="text-sm sm:text-[16px] font-medium text-[#2a2a2f] leading-[20px] tracking-[-0.1px] whitespace-nowrap">
+            <div className="text-sm sm:text-[16px] font-medium font-manrope text-[#2a2a2f] leading-[20px] tracking-[-0.1px] whitespace-nowrap">
               {user?.name || 'Guest'}
             </div>
             {user?.phoneNumber && (
-              <div className="text-xs text-[#8f8f91] font-normal leading-[16px] tracking-[-0.1px] whitespace-nowrap mt-0.5">
+              <div className="text-xs text-[#8f8f91] font-normal font-manrope leading-[16px] tracking-[-0.1px] whitespace-nowrap mt-0.5">
                 {user.phoneNumber}
               </div>
             )}
@@ -227,25 +227,25 @@ export function Sidebar() {
           {!actualIsCollapsed && (
             <Link
               href="/new-campaign"
-              className={`w-full h-10 bg-[#6E4EFF] border border-[#6E4EFF0D] rounded px-2 flex items-center justify-center gap-2 text-[#FFFFFF] hover:text-[#6E4EFF] group hover:bg-[#6E4EFF0D] hover:border hover:border-[#6E4EFF]  transition-all duration-300 ${
+              className={`w-full h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] border border-[#6E4EFF0D] rounded px-2 flex items-center justify-center gap-2 text-[#FFFFFF] font-semibold text-[14px] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] ${
                 actualIsCollapsed ? 'opacity-0' : 'opacity-100'
               }`}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
               <div className="flex items-center">
-                <PlusIcon colorCode={isHovered ? "#6E4EFF" : "#FFFFFF"}/>
+                <PlusIcon colorCode="#FFFFFF"/>
               </div>
-              <span className="text-[13.3438px] font-medium leading-[19.6px] whitespace-nowrap">
+              <span className="text-[14px] font-semibold font-manrope leading-[1.4] whitespace-nowrap">
                 New campaign
               </span>
             </Link>
           )}
           {actualIsCollapsed && (
-            <Link href="/new-campaign" className={`w-10 h-10 bg-white border border-[#e9e9e9] rounded flex items-center justify-center group hover:bg-gray-50 transition-all duration-300 ${
+            <Link href="/new-campaign" className={`w-9 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] border border-[#6E4EFF0D] rounded flex items-center justify-center group hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] ${
               !actualIsCollapsed ? 'opacity-0' : 'opacity-100'
             }`}>
-              <PlusIcon colorCode="#6E4EFF"/>
+              <PlusIcon colorCode="#FFFFFF"/>
             </Link>
           )}
         </div>
@@ -281,7 +281,7 @@ export function Sidebar() {
                 <div className="flex-shrink-0">
                   <Icon colorCode={isActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
                 </div>
-                <span className={`text-sm sm:text-[16px] leading-[1.4] transition-all duration-300 whitespace-nowrap ${
+                <span className={`text-[14px] font-medium font-manrope leading-[1.4] transition-all duration-300 whitespace-nowrap ${
                   actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
                 }`}>
                   {item.label}
@@ -300,9 +300,17 @@ export function Sidebar() {
           <div className={`flex items-center gap-0.5 transition-all duration-300 ${
             actualIsCollapsed ? 'flex-col' : ''
           }`}>
-            <button className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" title="Help">
+            <Link
+              href="/help"
+              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${
+                pathname === '/help'
+                  ? "bg-[#6E4EFF0D] hover:bg-[#6E4EFF]/10"
+                  : "hover:bg-gray-100"
+              }`}
+              title="Help"
+            >
               <HelpIcon />
-            </button>
+            </Link>
             <Link
               href="/report-bug"
               className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${

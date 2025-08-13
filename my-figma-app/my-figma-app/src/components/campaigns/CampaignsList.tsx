@@ -170,7 +170,7 @@ export function CampaignsList({
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Campaigns Grid */}
-      <div className="flex-1 p-2 sm:p-3 lg:p-4 xl:p-6 min-h-0">
+      <div className="flex-1 p-3 lg:p-4 min-h-0">
         {filteredCampaigns.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -187,7 +187,7 @@ export function CampaignsList({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 w-full min-w-0">
+          <div className="space-y-4 w-full min-w-0">
             {filteredCampaigns.map((campaign) => (
               <CampaignCard key={campaign.id} campaign={campaign} />
             ))}

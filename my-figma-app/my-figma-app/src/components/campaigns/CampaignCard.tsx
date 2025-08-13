@@ -188,91 +188,103 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 hover:shadow-md transition-all duration-200 min-w-0 relative">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-              <div className={getTypeColor(campaign.type)}>
-                {getTypeIcon(campaign.type)}
+      <div className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-all duration-200 min-w-0 relative">
+        <div className="flex items-start gap-4">
+          {/* Left Side - Campaign Information */}
+          <div className="flex-1 min-w-0">
+            {/* Header */}
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="flex-shrink-0 w-7 h-7 bg-gray-100 rounded flex items-center justify-center">
+                <div className={getTypeColor(campaign.type)}>
+                  {getTypeIcon(campaign.type)}
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-semibold text-gray-900 truncate">
+                  {campaign.name}
+                </h3>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <p className="text-xs text-gray-500 capitalize">
+                    {campaign.type.replace(/([A-Z])/g, ' $1')}
+                  </p>
+                  <span className={`px-1 py-0.5 text-xs font-medium rounded border ${getStatusColor(campaign.status)}`}>
+                    {campaign.status}
+                  </span>
+                </div>
+                {/* Dates under the status tag */}
+                <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                  <span>Created: {campaign.createdDate}</span>
+                  <span>Ends: {campaign.endDate}</span>
+                </div>
               </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-sm font-semibold text-gray-900 truncate">
-                {campaign.name}
-              </h3>
-              <p className="text-xs text-gray-500 capitalize">
-                {campaign.type.replace(/([A-Z])/g, ' $1')}
-              </p>
+          </div>
+
+          {/* Center - All Metrics in Single Line */}
+          <div className="flex items-center gap-2">
+            {/* Audience */}
+            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
+              <div className="text-xs font-bold text-gray-900">
+                {formatNumber(campaign.audience)}
+              </div>
+              <div className="text-xs text-gray-500">Audience</div>
+            </div>
+            
+            {/* Conversion */}
+            <div className="text-center p-1 bg-gray-50 rounded min-w-[50px]">
+              <div className="text-xs font-bold text-gray-900">
+                {campaign.conversion.toFixed(1)}%
+              </div>
+              <div className="text-xs text-gray-500">Conv.</div>
+            </div>
+            
+            {/* Budget */}
+            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
+              <div className="text-xs font-bold text-gray-900">
+                {formatCurrency(campaign.budget)}
+              </div>
+              <div className="text-xs text-gray-500">Budget</div>
+            </div>
+            
+            {/* Spent */}
+            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
+              <div className="text-xs font-bold text-gray-900">
+                {formatCurrency(campaign.spent)}
+              </div>
+              <div className="text-xs text-gray-500">Spent</div>
+            </div>
+            
+            {/* Sent */}
+            <div className="text-center p-1 bg-blue-50 rounded min-w-[50px]">
+              <div className="text-xs font-medium text-blue-900">{formatNumber(campaign.sent)}</div>
+              <div className="text-xs text-blue-600">Sent</div>
+            </div>
+            
+            {/* Opened */}
+            <div className="text-center p-1 bg-green-50 rounded min-w-[50px]">
+              <div className="text-xs font-medium text-green-900">{formatNumber(campaign.opened)}</div>
+              <div className="text-xs text-green-600">Opened</div>
+            </div>
+            
+            {/* Clicked */}
+            <div className="text-center p-1 bg-purple-50 rounded min-w-[50px]">
+              <div className="text-xs font-medium text-purple-900">{formatNumber(campaign.clicked)}</div>
+              <div className="text-xs text-purple-600">Clicked</div>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className={`px-2 py-1 text-xs font-medium rounded-md border ${getStatusColor(campaign.status)}`}>
-              {campaign.status}
-            </span>
+
+
+
+          {/* Kebab Menu - Fixed Position */}
+          <div className="flex-shrink-0">
             <button
               ref={moreButtonRef}
               onClick={handleMoreClick}
-              className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+              className="p-0.5 hover:bg-gray-100 rounded transition-colors"
             >
               <MoreIcon />
             </button>
           </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-xs text-gray-600 mb-4 line-clamp-2">
-          {campaign.description}
-        </p>
-
-        {/* Metrics */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="text-center p-2 bg-gray-50 rounded-md">
-            <div className="text-lg font-bold text-gray-900">
-              {formatNumber(campaign.audience)}
-            </div>
-            <div className="text-xs text-gray-500">Audience</div>
-          </div>
-          <div className="text-center p-2 bg-gray-50 rounded-md">
-            <div className="text-lg font-bold text-gray-900">
-              {campaign.conversion.toFixed(1)}%
-            </div>
-            <div className="text-xs text-gray-500">Conversion</div>
-          </div>
-          <div className="text-center p-2 bg-gray-50 rounded-md">
-            <div className="text-lg font-bold text-gray-900">
-              {formatCurrency(campaign.budget)}
-            </div>
-            <div className="text-xs text-gray-500">Budget</div>
-          </div>
-          <div className="text-center p-2 bg-gray-50 rounded-md">
-            <div className="text-lg font-bold text-gray-900">
-              {formatCurrency(campaign.spent)}
-            </div>
-            <div className="text-xs text-gray-500">Spent</div>
-          </div>
-        </div>
-
-        {/* Performance Stats */}
-        <div className="space-y-2 mb-4">
-          <div className="flex justify-between items-center text-xs">
-            <span className="text-gray-500">Sent</span>
-            <span className="font-medium">{formatNumber(campaign.sent)}</span>
-          </div>
-          <div className="flex justify-between items-center text-xs">
-            <span className="text-gray-500">Opened</span>
-            <span className="font-medium">{formatNumber(campaign.opened)} ({campaign.sent > 0 ? ((campaign.opened / campaign.sent) * 100).toFixed(1) : '0'}%)</span>
-          </div>
-          <div className="flex justify-between items-center text-xs">
-            <span className="text-gray-500">Clicked</span>
-            <span className="font-medium">{formatNumber(campaign.clicked)} ({campaign.opened > 0 ? ((campaign.clicked / campaign.opened) * 100).toFixed(1) : '0'}%)</span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex justify-between items-center text-xs text-gray-500 pt-3 border-t border-gray-100">
-          <span>Created: {campaign.createdDate}</span>
-          <span>Ends: {campaign.endDate}</span>
         </div>
       </div>
 

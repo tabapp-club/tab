@@ -261,12 +261,6 @@ export function AIServicesContent() {
       {/* Main Content */}
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden h-screen ai-services-content lg:pr-[282px]">
         <div className="pt-12 lg:pt-0 h-full flex flex-col">
-          {/* Greeting */}
-          <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-light text-[#2a2a2f] leading-[1.4]">
-              {getGreeting()}
-            </h1>
-          </div>
 
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full">
@@ -431,9 +425,39 @@ export function AIServicesContent() {
           <div className="p-4 border-b border-[#e9e9e9]">
             <button
               onClick={createNewChat}
-              className="w-full bg-white border border-[#e9e9e9] rounded-lg p-3 flex items-center gap-3 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors duration-200 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 rounded px-2 py-1"
               aria-label="Start new chat"
             >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="font-semibold text-[14px]">New chat</span>
+            </button>
+          </div>
+
+          {/* Chat History */}
+          <div className="flex-1 p-4 overflow-y-auto">
+            <div className="flex items-center gap-2 mb-6">
               <svg
                 width="20"
                 height="20"
@@ -443,37 +467,14 @@ export function AIServicesContent() {
                 aria-hidden="true"
               >
                 <path
-                  d="M12 5v14M5 12h14"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="font-semibold text-[#2a2a2f] text-base">New chat</span>
-            </button>
-          </div>
-
-          {/* Chat History */}
-          <div className="flex-1 p-4 overflow-y-auto">
-            <div className="flex items-center gap-2 mb-6">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                   stroke="#a1a1a1"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="font-semibold text-[#a1a1a1] text-base">Chat history</span>
+              <span className="font-semibold text-[#a1a1a1] text-[14px]">Chat history</span>
             </div>
 
             {chatSessions.length === 0 ? (
@@ -492,7 +493,7 @@ export function AIServicesContent() {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium truncate ${
+                        <p className={`text-[14px] font-medium truncate ${
                           currentSessionId === session.id ? 'text-[#2a2a2f]' : 'text-[#a1a1a1]'
                         }`}>
                           {session.title}
@@ -515,7 +516,7 @@ export function AIServicesContent() {
                           className="text-red-500"
                         >
                           <path
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
@@ -538,15 +539,15 @@ export function AIServicesContent() {
               aria-label="Clear all conversations"
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
               >
                 <path
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
                   stroke="#a1a1a1"
                   strokeWidth="2"
                   strokeLinecap="round"

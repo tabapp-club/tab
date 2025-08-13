@@ -47,7 +47,7 @@ const CampaignsStats = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
       {stats.map((stat) => (
-        <div key={stat.label} className="bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg shadow-sm border border-gray-200 min-w-0">
+        <div key={stat.label} className="bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border border-gray-200 min-w-0">
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1">
               <h3 className={`text-xs sm:text-sm font-medium ${stat.labelColor} truncate`}>{stat.label}</h3>

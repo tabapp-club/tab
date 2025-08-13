@@ -30,8 +30,8 @@ export function CohortsFilterBar({
   };
 
   return (
-    <div className="bg-white sticky top-0 z-10">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 py-3 sm:py-2 min-h-[60px]">
+    <div className="bg-white sticky top-0 z-10 rounded-lg border border-[#e9e9e9]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 py-3 sm:py-2 min-h-[60px] px-6">
         {/* Cohorts count */}
         <div className="flex items-center px-1 sm:px-2">
           <span className="text-sm sm:text-[14px] font-medium text-[#071437] leading-[14px] whitespace-nowrap">

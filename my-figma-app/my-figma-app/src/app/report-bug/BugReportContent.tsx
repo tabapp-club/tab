@@ -7,14 +7,6 @@ import { MobileMenuToggle } from '@/components/MobileMenuToggle';
 interface BugReportData {
   title: string;
   description: string;
-  category: string;
-  priority: string;
-  steps: string;
-  expected: string;
-  actual: string;
-  browser: string;
-  device: string;
-  screenshot?: File | null;
 }
 
 export function BugReportContent() {
@@ -23,31 +15,12 @@ export function BugReportContent() {
   const [formData, setFormData] = useState<BugReportData>({
     title: '',
     description: '',
-    category: 'ui',
-    priority: 'medium',
-    steps: '',
-    expected: '',
-    actual: '',
-    browser: '',
-    device: '',
-    screenshot: null,
   });
 
   const [errors, setErrors] = useState<Partial<BugReportData>>({});
 
   const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      category: 'ui',
-      priority: 'medium',
-      steps: '',
-      expected: '',
-      actual: '',
-      browser: '',
-      device: '',
-      screenshot: null,
-    });
+    setFormData({ title: '', description: '' });
     setErrors({});
   };
 
@@ -60,15 +33,7 @@ export function BugReportContent() {
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    if (!formData.steps.trim()) {
-      newErrors.steps = 'Steps to reproduce are required';
-    }
-    if (!formData.expected.trim()) {
-      newErrors.expected = 'Expected behavior is required';
-    }
-    if (!formData.actual.trim()) {
-      newErrors.actual = 'Actual behavior is required';
-    }
+    // Only title and description are required now
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -109,17 +74,10 @@ export function BugReportContent() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    if (file && file.size > 5 * 1024 * 1024) { // 5MB limit
-      alert('File size must be less than 5MB');
-      return;
-    }
-    setFormData(prev => ({ ...prev, screenshot: file }));
-  };
 
   const { isCollapsed, isMobile } = useSidebar();
   const actualIsCollapsed = isMobile ? false : isCollapsed;
+  const isFormValid = formData.title.trim().length > 0 && formData.description.trim().length > 0;
 
   if (showSuccess) {
     return (
@@ -132,7 +90,7 @@ export function BugReportContent() {
         </div>
 
         <div className="h-full flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -168,199 +126,42 @@ export function BugReportContent() {
         </header>
 
         {/* Bug Report Form */}
-        <div className="bg-white rounded-lg shadow-sm border border-[#e9e9e9] p-6 sm:p-8">
+        <div className="bg-white rounded-lg border border-[#e9e9e9] p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Information */}
             <div>
-              <h2 className="text-lg font-semibold text-[#2a2a2f] mb-4">Basic Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Bug Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${
-                      errors.title ? 'border-red-500' : 'border-[#e9e9e9]'
-                    }`}
-                    placeholder="Brief description of the issue"
-                  />
-                  {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => handleInputChange('category', e.target.value)}
-                    className="w-full px-3 py-2 border border-[#e9e9e9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
-                  >
-                    <option value="ui">UI/UX Issue</option>
-                    <option value="functionality">Functionality</option>
-                    <option value="performance">Performance</option>
-                    <option value="data">Data Issue</option>
-                    <option value="security">Security</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Priority
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) => handleInputChange('priority', e.target.value)}
-                    className="w-full px-3 py-2 border border-[#e9e9e9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="critical">Critical</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Screenshot (Optional)
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="w-full px-3 py-2 border border-[#e9e9e9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-sm file:bg-[#6E4EFF] file:text-white hover:file:bg-[#5D3EE8]"
-                  />
-                  <p className="text-xs text-[#8f8f91] mt-1">Max file size: 5MB</p>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                  Bug Description *
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  rows={4}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${
-                    errors.description ? 'border-red-500' : 'border-[#e9e9e9]'
-                  }`}
-                  placeholder="Provide a detailed description of the bug..."
-                />
-                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-              </div>
+              <label className="block text-sm font-medium text-[#2a2a2f] mb-2">Bug Title *</label>
+              <input
+                type="text"
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${errors.title ? 'border-red-500' : 'border-[#e9e9e9]'}`}
+                placeholder="Brief description of the issue"
+              />
+              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
             </div>
 
-            {/* Reproduction Details */}
             <div>
-              <h2 className="text-lg font-semibold text-[#2a2a2f] mb-4">Reproduction Details</h2>
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Steps to Reproduce *
-                  </label>
-                  <textarea
-                    value={formData.steps}
-                    onChange={(e) => handleInputChange('steps', e.target.value)}
-                    rows={4}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${
-                      errors.steps ? 'border-red-500' : 'border-[#e9e9e9]'
-                    }`}
-                    placeholder="1. Go to... &#10;2. Click on... &#10;3. Observe that..."
-                  />
-                  {errors.steps && <p className="text-red-500 text-sm mt-1">{errors.steps}</p>}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                      Expected Behavior *
-                    </label>
-                    <textarea
-                      value={formData.expected}
-                      onChange={(e) => handleInputChange('expected', e.target.value)}
-                      rows={3}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${
-                        errors.expected ? 'border-red-500' : 'border-[#e9e9e9]'
-                      }`}
-                      placeholder="What should happen?"
-                    />
-                    {errors.expected && <p className="text-red-500 text-sm mt-1">{errors.expected}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                      Actual Behavior *
-                    </label>
-                    <textarea
-                      value={formData.actual}
-                      onChange={(e) => handleInputChange('actual', e.target.value)}
-                      rows={3}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${
-                        errors.actual ? 'border-red-500' : 'border-[#e9e9e9]'
-                      }`}
-                      placeholder="What actually happens?"
-                    />
-                    {errors.actual && <p className="text-red-500 text-sm mt-1">{errors.actual}</p>}
-                  </div>
-                </div>
-              </div>
+              <label className="block text-sm font-medium text-[#2a2a2f] mb-2">Bug Description *</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                rows={6}
+                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${errors.description ? 'border-red-500' : 'border-[#e9e9e9]'}`}
+                placeholder="Provide a detailed description of the bug..."
+              />
+              {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
             </div>
 
-            {/* Environment Information */}
-            <div>
-              <h2 className="text-lg font-semibold text-[#2a2a2f] mb-4">Environment Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Browser & Version
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.browser}
-                    onChange={(e) => handleInputChange('browser', e.target.value)}
-                    className="w-full px-3 py-2 border border-[#e9e9e9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
-                    placeholder="e.g., Chrome 121.0.6167.139"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#2a2a2f] mb-2">
-                    Device & OS
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.device}
-                    onChange={(e) => handleInputChange('device', e.target.value)}
-                    className="w-full px-3 py-2 border border-[#e9e9e9] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
-                    placeholder="e.g., MacBook Pro M1, macOS 14.2"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-[#e9e9e9]">
-              <button
-                type="button"
-                onClick={resetForm}
-                className="flex-1 sm:flex-none px-6 py-3 border border-[#e9e9e9] text-[#626266] rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Clear Form
-              </button>
+            <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="flex-1 sm:flex-none px-6 py-3 bg-[#6E4EFF] text-white rounded-lg hover:bg-[#5D3EE8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                disabled={isSubmitting || !isFormValid}
+                className="px-5 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-300 ease-in-out active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 {isSubmitting && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 )}
-                {isSubmitting ? 'Submitting...' : 'Submit Bug Report'}
+                {isSubmitting ? 'Submitting...' : 'Submit Bug'}
               </button>
             </div>
           </form>

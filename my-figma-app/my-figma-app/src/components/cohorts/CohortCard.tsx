@@ -31,9 +31,25 @@ export function CohortCard({ cohort }: CohortCardProps) {
   const handleMoreClick = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const menuWidth = 120; // Menu width
+      const viewportWidth = window.innerWidth;
+      
+      // Calculate left position to keep menu within viewport
+      let leftPosition = rect.right + window.scrollX - menuWidth;
+      
+      // If menu would go outside right edge, align it to the right of the button
+      if (leftPosition + menuWidth > viewportWidth) {
+        leftPosition = rect.left + window.scrollX - menuWidth;
+      }
+      
+      // Ensure menu doesn't go outside left edge
+      if (leftPosition < 0) {
+        leftPosition = 0;
+      }
+      
       setMenuPosition({
         top: rect.bottom + window.scrollY + 4,
-        left: rect.right + window.scrollX - 120 // Adjust for menu width
+        left: leftPosition
       });
     }
     setShowMoreMenu(!showMoreMenu);
@@ -66,9 +82,25 @@ export function CohortCard({ cohort }: CohortCardProps) {
     const handleScroll = () => {
       if (showMoreMenu && buttonRef.current) {
         const rect = buttonRef.current.getBoundingClientRect();
+        const menuWidth = 120; // Menu width
+        const viewportWidth = window.innerWidth;
+        
+        // Calculate left position to keep menu within viewport
+        let leftPosition = rect.right + window.scrollX - menuWidth;
+        
+        // If menu would go outside right edge, align it to the right of the button
+        if (leftPosition + menuWidth > viewportWidth) {
+          leftPosition = rect.left + window.scrollX - menuWidth;
+        }
+        
+        // Ensure menu doesn't go outside left edge
+        if (leftPosition < 0) {
+          leftPosition = 0;
+        }
+        
         setMenuPosition({
           top: rect.bottom + window.scrollY + 4,
-          left: rect.right + window.scrollX - 120
+          left: leftPosition
         });
       }
     };
