@@ -9,27 +9,28 @@ const DataCenterHeader = ({ onImportClick, onExportClick }: DataCenterHeaderProp
   return (
     <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 min-w-0">
-        <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">
-          Data centre
-        </h1>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-[20px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
+            Data centre
+          </h1>
+          <p className="text-[14px] font-normal text-[#626266] leading-tight">
+            Manage and analyze your user data
+          </p>
+        </div>
         <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
           <button
             onClick={onImportClick}
-            className="flex-1 sm:flex-none px-4 h-9 relative text-[#6E4EFF] bg-white rounded-sm font-semibold text-[14px] leading-[1.4] hover:text-white hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap before:absolute before:inset-0 before:rounded-sm before:p-[1px] before:bg-gradient-to-r before:from-[#6E4EFF] before:to-[#8B6AFF] after:absolute after:inset-[1px] after:rounded-sm after:bg-white after:transition-colors after:duration-300 hover:after:bg-gradient-to-r hover:after:from-[#6E4EFF] hover:after:to-[#8B6AFF]"
+            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded-md font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
           >
-            <div className="relative z-10 flex items-center gap-2">
-              <ImportIcon />
-              <span>Import</span>
-            </div>
+            <ImportIcon />
+            <span>Import</span>
           </button>
           <button
             onClick={onExportClick}
-            className="flex-1 sm:flex-none px-4 h-9 relative text-[#6E4EFF] bg-white rounded-sm font-semibold text-[14px] leading-[1.4] hover:text-white hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap before:absolute before:inset-0 before:rounded-sm before:p-[1px] before:bg-gradient-to-r before:from-[#6E4EFF] before:to-[#8B6AFF] after:absolute after:inset-[1px] after:rounded-sm after:bg-white after:transition-colors after:duration-300 hover:after:bg-gradient-to-r hover:after:from-[#6E4EFF] hover:after:to-[#8B6AFF]"
+            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded-md font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
           >
-            <div className="relative z-10 flex items-center gap-2">
-              <ExportIcon />
-              <span>Export</span>
-            </div>
+            <ExportIcon />
+            <span>Export</span>
           </button>
         </div>
       </div>

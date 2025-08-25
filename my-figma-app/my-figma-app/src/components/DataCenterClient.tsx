@@ -110,7 +110,10 @@ export default function DataCenterClient() {
   // Process the API response data
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
-    return mapApiDataToTable(dataCenterResponse.data);
+    const mappedData = mapApiDataToTable(dataCenterResponse.data);
+    console.log('Data Center - Original API data:', dataCenterResponse.data);
+    console.log('Data Center - Mapped table data:', mappedData);
+    return mappedData;
   }, [dataCenterResponse]);
 
   const total = dataCenterResponse?.total || 0;
@@ -202,7 +205,7 @@ export default function DataCenterClient() {
               onCardClick={handleCardClick}
               selectedCard={selectedCard}
             />
-              <div className="bg-white rounded-lg shadow-sm flex-1 flex flex-col min-h-0 min-w-0">
+              <div className="bg-white rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
             <DataCenterFilters
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}

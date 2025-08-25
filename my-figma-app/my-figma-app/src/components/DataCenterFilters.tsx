@@ -257,7 +257,7 @@ const DataCenterFilters = ({
         {/* Left side - User count */}
         {showUserCount && (
           <div className="flex flex-row items-center gap-2 min-w-0 user-count">
-            <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap">
+            <div className="flex flex-col font-normal justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap">
               <p className="block leading-[14px] whitespace-pre">
                 Showing {visibleUsers} of {totalUsers.toLocaleString()} users
               </p>
@@ -344,7 +344,7 @@ const DataCenterFilters = ({
                     onSearchChange('');
                   }
                 }}
-                className="bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button text-[#2a2a2f] text-[13.453px] font-medium"
+                className="bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button text-[#2a2a2f] text-[13.453px] font-normal"
               >
                 Clear filters
               </button>

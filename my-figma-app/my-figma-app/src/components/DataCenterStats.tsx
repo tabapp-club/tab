@@ -86,9 +86,9 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStats
         return (
         <div
           key={stat.label}
-          className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg shadow-sm border min-w-0 cursor-pointer transition-all duration-200 hover:shadow-md ${
+          className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 ${
             isSelected
-              ? 'border-[#7856ff] shadow-md bg-blue-50'
+              ? 'border-[#7856ff] bg-blue-50'
               : 'border-gray-200 hover:border-gray-300'
           }`}
           onClick={() => onCardClick?.(stat.filterType)}
