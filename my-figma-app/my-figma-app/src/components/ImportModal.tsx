@@ -291,7 +291,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
             <>
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-[14px] font-normal text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>

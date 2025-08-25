@@ -170,7 +170,7 @@ export function CampaignsList({
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Campaigns Grid */}
-      <div className="flex-1 p-3 lg:p-4 min-h-0">
+      <div className="flex-1 min-h-0">
         {filteredCampaigns.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -197,7 +197,7 @@ export function CampaignsList({
 
       {/* Pagination */}
       {filteredCampaigns.length > 0 && (
-        <div className="border-t border-gray-200 bg-white">
+        <div className="border border-gray-200 bg-white rounded-lg mt-4">
           <Pagination
             currentPage={1}
             itemsPerPage={12}

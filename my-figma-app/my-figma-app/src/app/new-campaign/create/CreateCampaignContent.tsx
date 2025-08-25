@@ -93,13 +93,21 @@ const StepperStep = ({
   icon,
   isActive = false,
   isCompleted = false,
-  isCurrent = false
+  isCurrent = false,
+  stepIndex = 0,
+  totalSteps = 5,
+  timeEstimate = "",
+  description = ""
 }: {
   title: string;
   icon: React.ReactNode;
   isActive?: boolean;
   isCompleted?: boolean;
   isCurrent?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
+  timeEstimate?: string;
+  description?: string;
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
@@ -121,6 +129,16 @@ const StepperStep = ({
     return "text-[#a1a1a1]";
   };
 
+  const getSubTextColor = () => {
+    if (isCurrent) {
+      return "text-[#7856ff]/70";
+    }
+    if (isCompleted) {
+      return "text-[#04b440]/70";
+    }
+    return "text-[#a1a1a1]/70";
+  };
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-2 grow items-center justify-center min-h-px min-w-px p-[8px] relative shrink-0">
       <div className="box-border content-stretch flex flex-row gap-4 items-center justify-start p-0 relative shrink-0 w-full">
@@ -131,24 +149,33 @@ const StepperStep = ({
         </div>
         <div className="box-border content-stretch flex flex-col gap-1 items-start justify-center p-0 relative self-stretch shrink-0">
           <div className="box-border content-stretch flex flex-row gap-2 items-center justify-center p-0 relative shrink-0">
-            <div className={`flex flex-col font-['Manrope:Medium',_sans-serif] font-medium justify-center leading-[0] relative shrink-0 text-[14px] text-center text-nowrap ${getTextColor()}`}>
-              <p className="block leading-[20px] whitespace-pre">{title}</p>
-            </div>
-            {isCompleted && (
-              <div className="relative shrink-0 size-[15px] bg-[#04b440] rounded-full flex items-center justify-center">
-                <CheckIcon />
-              </div>
-            )}
-            {isCurrent && (
-              <div className="relative shrink-0 size-[15px]">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2"/>
-                </svg>
-              </div>
-            )}
           </div>
+          {(timeEstimate || description) && (
+            <div className={`flex flex-col items-center justify-center text-[12px] font-semibold leading-[14px] ${getSubTextColor()}`}>
+              {description && (
+                <span className="text-center">{description}</span>
+              )}
+              {timeEstimate && (
+                <span className="text-center mt-1">⏱️ {timeEstimate}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Progress Bar Component
+const StepperProgressBar = ({ currentStep = 2, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
+  const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
+  
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
+      <div 
+        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        style={{ width: `${progressPercentage}%` }}
+      />
     </div>
   );
 };
@@ -442,9 +469,6 @@ const FeedbackSurveyForm = ({
 
   return (
     <div className="flex flex-col gap-6 items-start justify-start w-full">
-      <div className="font-bold text-[#2a2a2f] text-[16px] leading-[1.4] tracking-[-0.1px]">
-        Creating survey template
-      </div>
 
       {/* Type Selection Cards */}
       <div className="flex flex-row gap-2 items-start justify-start w-full">
@@ -1370,31 +1394,52 @@ export function CreateCampaignContent() {
           </div>
 
           {/* Stepper */}
-          <div className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto">
+          <div className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
             <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
               <StepperStep
                 title="campaign type"
                 icon={<CampaignIcon />}
                 isCompleted={true}
+                stepIndex={1}
+                totalSteps={5}
+                timeEstimate="2-3 min"
+                description="Choose campaign type"
               />
               <StepperStep
                 title="Create campaign"
                 icon={<MoneyIcon />}
                 isCurrent={true}
+                stepIndex={2}
+                totalSteps={5}
+                timeEstimate="5-8 min"
+                description="Design your campaign"
               />
               <StepperStep
                 title="Choose audience"
                 icon={<UsersIcon />}
+                stepIndex={3}
+                totalSteps={5}
+                timeEstimate="3-5 min"
+                description="Select target users"
               />
               <StepperStep
                 title="Platform & Budget"
                 icon={<BagIcon />}
+                stepIndex={4}
+                totalSteps={5}
+                timeEstimate="2-4 min"
+                description="Set budget & platforms"
               />
               <StepperStep
                 title="Schedule"
                 icon={<CalendarIcon />}
+                stepIndex={5}
+                totalSteps={5}
+                timeEstimate="1-2 min"
+                description="Set timing"
               />
             </div>
+            <StepperProgressBar currentStep={2} totalSteps={5} />
           </div>
 
           {/* Content Layout */}

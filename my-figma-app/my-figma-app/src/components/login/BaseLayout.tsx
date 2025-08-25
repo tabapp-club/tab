@@ -59,18 +59,6 @@ export function BaseLayout({
                 <div className="md:hidden mt-6 pt-4 border-t border-[#f0f0f0]">
                   <div className="flex gap-2 justify-center">
                     <Link
-                      href="/help"
-                      className="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border border-[#e9e9e9] rounded text-xs font-medium text-[#2a2a2f] hover:bg-gray-100 transition-colors"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2C14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
-                        <path d="M9.09 9C9.3251 8.33167 9.78915 7.76811 10.4 7.40913C11.0108 7.05016 11.7289 6.91894 12.4272 7.03871C13.1255 7.15849 13.7588 7.52152 14.2151 8.06353C14.6713 8.60553 14.9211 9.29152 14.92 10C14.92 10 14.92 11.5 12.42 11.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M10 15H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      Help
-                    </Link>
-
-                    <Link
                       href="/contact"
                       className="flex items-center gap-1.5 px-2.5 py-2 bg-gray-50 border border-[#e9e9e9] rounded text-xs font-medium text-[#2a2a2f] hover:bg-gray-100 transition-colors"
                     >
@@ -98,20 +86,8 @@ export function BaseLayout({
       {showHelpButtons && (
         <div className="hidden md:flex absolute bottom-6 left-6 gap-2">
           <Link
-            href="/help"
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-[#e9e9e9] rounded text-sm font-medium text-[#2a2a2f] hover:bg-gray-50 transition-colors"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2C14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
-              <path d="M9.09 9C9.3251 8.33167 9.78915 7.76811 10.4 7.40913C11.0108 7.05016 11.7289 6.91894 12.4272 7.03871C13.1255 7.15849 13.7588 7.52152 14.2151 8.06353C14.6713 8.60553 14.9211 9.29152 14.92 10C14.92 10 14.92 11.5 12.42 11.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M10 15H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Need Help?
-          </Link>
-
-          <Link
             href="/contact"
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-[#e9e9e9] rounded text-sm font-medium text-[#2a2a2f] hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-[#e9e9e9] rounded-md text-sm font-normal text-[#2a2a2f] hover:bg-gray-50 transition-colors"
           >
             Contact tab sales
           </Link>

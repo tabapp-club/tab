@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import ConfirmationDialog from "./ui/ConfirmationDialog";
 
 // SVG Icons as React components
 const DashboardIcon = ({colorCode}: {colorCode: string}) => (
@@ -102,16 +104,7 @@ const AchievementsIcon = ({colorCode}: {colorCode: string}) => (
 </svg>
 );
 
-const HelpIcon = ({colorCode}: {colorCode: string}) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10 18.75C5.175 18.75 1.25 14.825 1.25 10C1.25 5.175 5.175 1.25 10 1.25C14.825 1.25 18.75 5.175 18.75 10C18.75 14.825 14.825 18.75 10 18.75ZM10 2.5C5.8625 2.5 2.5 5.8625 2.5 10C2.5 14.1375 5.8625 17.5 10 17.5C14.1375 17.5 17.5 14.1375 17.5 10C17.5 5.8625 14.1375 2.5 10 2.5Z" fill={colorCode}/>
-<path d="M10 5.625C8.6125 5.625 7.5 6.7375 7.5 8.125H8.75C8.75 7.4375 9.3125 6.875 10 6.875C10.6875 6.875 11.25 7.4375 11.25 8.125C11.25 9.375 9.375 9.225 9.375 11.25H10.625C10.625 9.85 12.5 9.6875 12.5 8.125C12.5 6.7375 11.3875 5.625 10 5.625Z" fill={colorCode}/>
-<path d="M10.0001 14.525C10.4281 14.525 10.7751 14.178 10.7751 13.75C10.7751 13.322 10.4281 12.975 10.0001 12.975C9.57208 12.975 9.2251 13.322 9.2251 13.75C9.2251 14.178 9.57208 14.525 10.0001 14.525Z" fill={colorCode}/>
-<path d="M8.125 8.75C8.47018 8.75 8.75 8.47018 8.75 8.125C8.75 7.77982 8.47018 7.5 8.125 7.5C7.77982 7.5 7.5 7.77982 7.5 8.125C7.5 8.47018 7.77982 8.75 8.125 8.75Z" fill={colorCode}/>
-<path d="M10 11.875C10.3452 11.875 10.625 11.5952 10.625 11.25C10.625 10.9048 10.3452 10.625 10 10.625C9.65482 10.625 9.375 10.9048 9.375 11.25C9.375 11.5952 9.65482 11.875 10 11.875Z" fill={colorCode}/>
-</svg>
 
-);
 
 const SettingsIcon = ({colorCode}: {colorCode: string}) => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,36 +142,89 @@ const CollapseIcon = () => (
 
 );
 
+// Notification Badge Component
+const NotificationBadge = ({ count, isActive }: { count: number; isActive: boolean }) => {
+  if (count === 0) return null;
+  
+  return (
+    <div className={`ml-auto flex-shrink-0 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold font-manrope ${
+      isActive 
+        ? 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white' 
+        : 'bg-gradient-to-r from-[#ff4757] to-[#ff6b7a] text-white hover:from-[#ff3742] hover:to-[#ff4757]'
+    }`}>
+      {count > 99 ? '99+' : count}
+    </div>
+  );
+};
+
 const menuItems = [
-  { id: "dashboard", label: "Dashboard", icon: DashboardIcon, href: "/dashboard", active: true },
-  { id: "data-center", label: "Data centre", icon: DataCenterIcon, href: "/data-center" },
-  { id: "ai-services", label: "Tab AI", icon: AIServicesIcon, href: "/ai-services" },
-  { id: "cohorts", label: "Cohorts", icon: CohortsIcon, href: "/cohorts" },
-  { id: "campaigns", label: "Campaigns", icon: CampaignsIcon, href: "/campaigns" },
+  { 
+    id: "dashboard", 
+    label: "Dashboard", 
+    description: "Overview & analytics",
+    icon: DashboardIcon, 
+    href: "/dashboard", 
+    active: true,
+    notificationCount: 0
+  },
+  { 
+    id: "data-center", 
+    label: "Data centre", 
+    description: "Manage your data",
+    icon: DataCenterIcon, 
+    href: "/data-center",
+    notificationCount: 4
+  },
+  { 
+    id: "ai-services", 
+    label: "Tab AI", 
+    description: "AI-powered insights",
+    icon: AIServicesIcon, 
+    href: "/ai-services",
+    notificationCount: 0
+  },
+  { 
+    id: "cohorts", 
+    label: "Cohorts", 
+    description: "User segmentation",
+    icon: CohortsIcon, 
+    href: "/cohorts",
+    notificationCount: 0
+  },
+  { 
+    id: "campaigns", 
+    label: "Campaigns", 
+    description: "Marketing campaigns",
+    icon: CampaignsIcon, 
+    href: "/campaigns",
+    notificationCount: 7
+  },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
-  { id: "business-services", label: "Business services", icon: BusinessServicesIcon, href: "/business-services" },
-  { id: "achievements", label: "Achievements", icon: AchievementsIcon, href: "/achievements" },
+  { 
+    id: "business-services", 
+    label: "Business services", 
+    description: "Enterprise solutions",
+    icon: BusinessServicesIcon, 
+    href: "/business-services",
+    notificationCount: 0
+  },
+  { 
+    id: "achievements", 
+    label: "Achievements", 
+    description: "Goals & milestones",
+    icon: AchievementsIcon, 
+    href: "/achievements",
+    notificationCount: 2
+  },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
   const { logout } = useAuth();
-  const [user, setUser] = useState<{ name: string; phoneNumber: string } | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem('user');
-      if (savedUser) {
-        const userData = JSON.parse(savedUser);
-        setUser({ name: userData.name, phoneNumber: userData.phoneNumber });
-      }
-    } catch {
-      setUser(null);
-    }
-  }, []);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -188,41 +234,39 @@ export function Sidebar() {
       actualIsCollapsed ? 'w-16' : 'w-[232px]'
     }`}>
       {/* User Profile Section */}
-      <div className={`p-3 pt-6 sm:p-4 sm:pt-10 lg:pt-10 md:pt-16 transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className={`flex items-center gap-2 mb-6 sm:mb-8 transition-all duration-300 ${actualIsCollapsed ? 'justify-center' : ''}`}>
-          <div className="flex-shrink-0">
-            <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-[40px] sm:h-[40px]">
-              <rect x="0.833333" y="0.833333" width="38.3333" height="38.3333" rx="19.1667" fill="#151515"/>
-              <rect x="0.833333" y="0.833333" width="38.3333" height="38.3333" rx="19.1667" stroke="#151515" strokeWidth="1.66667"/>
-              <path d="M9.2006 15.2403L9.64079 17.3112L11.728 16.8676L12.1653 18.9251L10.0781 19.3688L10.8939 23.2068C10.9564 23.5009 11.0578 23.7381 11.1964 23.9203L11.3154 24.0437C11.4431 24.1558 11.5952 24.2342 11.772 24.2801L11.7711 24.2804C12.0184 24.3396 12.317 24.334 12.6682 24.2594C12.7437 24.2433 12.8298 24.2185 12.9262 24.1866C13.035 24.1518 13.1387 24.1181 13.2363 24.0857L13.2924 24.0678L13.7118 26.0413L13.6693 26.0573C13.5177 26.1129 13.3435 26.1732 13.1476 26.2381C12.9506 26.3034 12.767 26.3539 12.5979 26.3899C11.5642 26.6096 10.6937 26.5004 9.9928 26.0551L9.99185 26.0553C9.29995 25.5961 8.84611 24.8451 8.62639 23.8116L7.7856 19.856L6.21617 20.1896L5.77883 18.1321L5.99853 18.0854C6.43462 17.9927 6.74098 17.808 6.92622 17.5368C7.11081 17.2665 7.16087 16.9169 7.06827 16.4812L6.90807 15.7276L9.2006 15.2403Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M9.60794 15.2302L9.9026 17.3268L12.0156 17.0299L12.3084 19.1129L10.1954 19.4099L10.7414 23.2955C10.7833 23.5932 10.8678 23.8369 10.9933 24.0283L11.1035 24.1598C11.223 24.2804 11.3693 24.3692 11.5425 24.4275L11.5416 24.4276C11.7842 24.5039 12.0824 24.5192 12.4379 24.4693C12.5144 24.4585 12.602 24.4398 12.7004 24.4146C12.8114 24.3876 12.9171 24.3611 13.0167 24.3356L13.074 24.3217L13.3547 26.3196L13.3112 26.3327C13.1561 26.3775 12.9781 26.4255 12.7782 26.4766C12.5771 26.528 12.3904 26.5656 12.2192 26.5897C11.1727 26.7367 10.3119 26.5671 9.64381 26.0739L9.64284 26.0741C8.98466 25.5678 8.58432 24.787 8.43722 23.7406L7.87441 19.7361L6.28553 19.9594L5.99278 17.8763L6.2152 17.845C6.6567 17.783 6.97519 17.6201 7.17891 17.3625C7.3819 17.1057 7.45623 16.7605 7.39424 16.3194L7.287 15.5564L9.60794 15.2302Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M10.0209 15.2499L10.1686 17.362L12.2972 17.2131L12.444 19.3115L10.3154 19.4604L10.5891 23.3746C10.6101 23.6745 10.6774 23.9235 10.7892 24.1232L10.89 24.2621C11.0008 24.3908 11.1405 24.4896 11.3092 24.5597L11.3083 24.5598C11.545 24.6528 11.8414 24.6889 12.1995 24.6639C12.2766 24.6585 12.3653 24.6459 12.4652 24.6277C12.5778 24.6084 12.6851 24.5894 12.7863 24.571L12.8443 24.561L12.9851 26.5737L12.9407 26.5836C12.7828 26.6176 12.602 26.653 12.399 26.6901C12.1948 26.7273 12.0059 26.7518 11.8334 26.7639C10.7793 26.8376 9.93241 26.6083 9.30031 26.0697L9.29933 26.0698C8.67807 25.5189 8.33317 24.712 8.25942 23.658L7.97733 19.6239L6.37674 19.7358L6.23001 17.6374L6.45407 17.6217C6.89882 17.5906 7.2279 17.4504 7.44909 17.2076C7.6695 16.9656 7.76772 16.6264 7.73665 16.1821L7.68291 15.4134L10.0209 15.2499Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M11.4342 26.857C10.3873 26.857 9.57362 26.5725 8.99324 26.0035C8.42424 25.4231 8.13974 24.6094 8.13974 23.5625V19.4657H6.53516V17.4685H6.70586C7.16106 17.4685 7.51384 17.349 7.7642 17.11C8.01456 16.871 8.13974 16.5239 8.13974 16.0687V15.3518H10.3759V17.4685H12.5097V19.4657H10.3759V23.443C10.3759 23.7503 10.4271 24.012 10.5295 24.2282C10.6433 24.4444 10.814 24.6094 11.0416 24.7232C11.2806 24.837 11.5822 24.8939 11.9463 24.8939C12.026 24.8939 12.117 24.8883 12.2195 24.8769C12.3333 24.8655 12.4414 24.8541 12.5438 24.8427V26.7546C12.3845 26.7773 12.2024 26.8001 11.9976 26.8229C11.7927 26.8456 11.6049 26.857 11.4342 26.857Z" fill="white"/>
-              <path d="M17.5783 17.1629C18.3306 17.003 19.0257 17.0024 19.6618 17.1623L19.6608 17.1625C20.2938 17.311 20.8228 17.5999 21.2461 18.0306C21.6791 18.4489 21.9645 18.9867 22.1036 19.6414L23.3994 25.7376L21.2253 26.1998L21.0389 25.3229C20.9682 25.4351 20.8949 25.5445 20.8134 25.6473L20.8124 25.6476C20.5401 25.977 20.2102 26.2594 19.8244 26.4945L19.8236 26.4957C19.4347 26.72 18.987 26.8852 18.4816 26.9926C17.8415 27.1287 17.26 27.1407 16.7387 27.0266C16.2825 26.9268 15.8925 26.7394 15.5699 26.4644L15.4349 26.3413C15.0859 25.9871 14.8549 25.543 14.7418 25.011C14.6336 24.5021 14.6503 24.0232 14.7933 23.5764C14.9341 23.1178 15.2143 22.7028 15.6308 22.3311C16.0476 21.9592 16.6034 21.6414 17.296 21.3771L19.865 20.3778L19.812 20.1285C19.7327 19.7552 19.5192 19.478 19.1667 19.2952L19.1646 19.2947C18.8213 19.0994 18.4062 19.0506 17.9149 19.155C17.5146 19.2401 17.1734 19.4132 16.8899 19.6734L16.772 19.7903C16.4752 20.1031 16.288 20.4777 16.2103 20.915L16.2003 20.9711L16.1453 20.9568L14.1736 20.4684L14.1273 20.4573L14.134 20.4089C14.2116 19.884 14.4052 19.4049 14.7152 18.9725C15.0332 18.5277 15.4359 18.1484 15.9217 17.8335C16.4082 17.5181 16.9604 17.2943 17.5783 17.1629ZM18.0969 23.008L18.0957 23.0072C17.6842 23.1752 17.4022 23.3781 17.2417 23.6111C17.082 23.8429 17.0337 24.1119 17.0995 24.422C17.1626 24.7186 17.323 24.9303 17.5821 25.0623L17.5811 25.0625C17.8513 25.1824 18.1585 25.2073 18.5048 25.1337C18.9537 25.0383 19.3255 24.8614 19.6225 24.6056C19.9287 24.336 20.1379 24.0144 20.2508 23.6394L20.2514 23.6373C20.3753 23.2589 20.3945 22.8688 20.3089 22.4659L20.2429 22.1555L18.0969 23.008Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M17.9131 17.1208C18.6747 17.0138 19.3682 17.0617 19.9915 17.2656L19.9906 17.2657C20.6116 17.458 21.1192 17.7831 21.5114 18.2423C21.9142 18.6897 22.1613 19.2462 22.2545 19.909L23.1219 26.0808L20.9208 26.3901L20.7961 25.5023C20.7176 25.6094 20.6369 25.7134 20.5484 25.8103L20.5475 25.8104C20.2528 26.1201 19.904 26.3788 19.5027 26.5864L19.5019 26.5876C19.0983 26.7841 18.6402 26.9177 18.1285 26.9896C17.4804 27.0807 16.8995 27.0521 16.3874 26.902C15.9393 26.7706 15.5634 26.5564 15.2607 26.2596L15.1346 26.1274C14.8112 25.7497 14.6117 25.2905 14.536 24.752C14.4636 24.2368 14.5136 23.7602 14.6874 23.3245C14.8599 22.8768 15.1684 22.4823 15.6098 22.1406C16.0515 21.7987 16.6281 21.5205 17.3375 21.3051L19.97 20.4875L19.9345 20.2351C19.8814 19.8571 19.6877 19.5657 19.3488 19.3588L19.3468 19.3581C19.0179 19.1394 18.6072 19.0617 18.1099 19.1316C17.7046 19.1885 17.3522 19.3374 17.0512 19.5772L16.9254 19.6856C16.6076 19.9769 16.3947 20.3376 16.2867 20.7684L16.2728 20.8236L16.219 20.8056L14.286 20.1808L14.2406 20.1665L14.2507 20.1187C14.3647 19.6005 14.5913 19.136 14.9307 18.7263C15.279 18.3048 15.7072 17.9546 16.2138 17.6742C16.7211 17.3936 17.2875 17.2088 17.9131 17.1208ZM18.0227 22.9879L18.0215 22.9871C17.5993 23.1259 17.3038 23.3086 17.1275 23.5299C16.9521 23.75 16.885 24.015 16.9291 24.3289C16.9713 24.6292 17.1166 24.8515 17.3658 25.0012L17.3648 25.0014C17.626 25.1399 17.9307 25.1861 18.2813 25.1369C18.7358 25.073 19.119 24.9224 19.4331 24.688C19.7573 24.4404 19.9885 24.1342 20.1273 23.768L20.128 23.7659C20.278 23.3972 20.3244 23.0093 20.2671 22.6014L20.2229 22.2871L18.0227 22.9879Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M18.2562 17.1028C19.0234 17.0491 19.7119 17.1453 20.3195 17.3922L20.3185 17.3922C20.9246 17.6273 21.4083 17.9871 21.7675 18.4725C22.1381 18.947 22.3458 19.5193 22.3925 20.187L22.8273 26.4042L20.61 26.5593L20.5475 25.665C20.4618 25.7663 20.3739 25.8644 20.279 25.9549L20.278 25.955C19.9624 26.2433 19.5965 26.477 19.1817 26.6562L19.1808 26.6572C18.7644 26.8252 18.2981 26.9265 17.7826 26.9625C17.1298 27.0082 16.5523 26.9391 16.0519 26.7537C15.6141 26.5913 15.254 26.3515 14.9727 26.0342L14.8562 25.8936C14.5599 25.4943 14.393 25.0223 14.355 24.4798C14.3187 23.9608 14.4019 23.4888 14.6056 23.0663C14.8089 22.6318 15.1442 22.2597 15.6083 21.9497C16.0728 21.6394 16.6675 21.402 17.3901 21.2367L20.0732 20.6047L20.0554 20.3504C20.0288 19.9697 19.856 19.6654 19.5323 19.4354L19.5303 19.4346C19.2175 19.1935 18.8133 19.0873 18.3122 19.1223C17.904 19.1509 17.542 19.2748 17.2251 19.493L17.092 19.5924C16.7547 19.8608 16.5171 20.2057 16.3793 20.628L16.3616 20.6821L16.3091 20.6603L14.4245 19.9023L14.3802 19.8848L14.3936 19.8378C14.5435 19.3289 14.8019 18.8813 15.1691 18.4963C15.5459 18.1001 15.9975 17.7806 16.5224 17.5363C17.048 17.2917 17.626 17.1469 18.2562 17.1028ZM17.9562 22.9632L17.9552 22.9623C17.5242 23.0713 17.2168 23.233 17.0254 23.4414C16.8351 23.6487 16.7497 23.9084 16.7718 24.2246C16.793 24.5271 16.9224 24.7591 17.1605 24.9258L17.1596 24.9259C17.4104 25.0823 17.7111 25.1496 18.0643 25.1249C18.5222 25.0929 18.915 24.9695 19.2447 24.7575C19.5854 24.5332 19.8373 24.2439 20.0013 23.8882L20.0022 23.8862C20.1775 23.5288 20.2509 23.1451 20.2221 22.7342L20.2 22.4176L17.9562 22.9632Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M17.4421 26.8579C16.7934 26.8579 16.2301 26.7498 15.7522 26.5335C15.2742 26.3173 14.9044 26.0101 14.6426 25.6118C14.3809 25.2021 14.25 24.7298 14.25 24.195C14.25 23.6829 14.3638 23.2277 14.5914 22.8294C14.819 22.4197 15.1718 22.0783 15.6497 21.8052C16.1277 21.532 16.7308 21.3386 17.4592 21.2248L20.4976 20.7297V22.4367L17.8859 22.8806C17.4421 22.9602 17.1121 23.1025 16.8959 23.3073C16.6796 23.5122 16.5715 23.7796 16.5715 24.1096C16.5715 24.4282 16.691 24.6843 16.93 24.8778C17.1804 25.0598 17.4876 25.1509 17.8518 25.1509C18.3184 25.1509 18.728 25.0541 19.0808 24.8607C19.445 24.6558 19.7238 24.377 19.9172 24.0243C20.1221 23.6715 20.2245 23.2846 20.2245 22.8635V20.4737C20.2245 20.0754 20.0652 19.7454 19.7465 19.4836C19.4393 19.2105 19.0296 19.074 18.5175 19.074C18.0395 19.074 17.6128 19.2048 17.2373 19.4666C16.8731 19.7169 16.6057 20.0526 16.435 20.4737L14.6085 19.5861C14.7906 19.0967 15.0751 18.6757 15.462 18.3229C15.8603 17.9587 16.3269 17.6742 16.8617 17.4694C17.3966 17.2645 17.977 17.1621 18.6029 17.1621C19.3653 17.1621 20.0367 17.3044 20.6171 17.5889C21.1975 17.862 21.647 18.2489 21.9656 18.7496C22.2957 19.239 22.4607 19.8137 22.4607 20.4737V26.653H20.344V25.0655L20.822 25.0314C20.583 25.4297 20.2985 25.7654 19.9685 26.0385C19.6384 26.3003 19.2629 26.5051 18.8418 26.653C18.4208 26.7896 17.9542 26.8579 17.4421 26.8579Z" fill="white"/>
-              <path d="M25.1351 14.3595L26.0695 18.7554C26.2624 18.4567 26.5047 18.1902 26.7973 17.9568L26.9844 17.8132C27.4316 17.4921 27.9656 17.2661 28.5853 17.1344C29.4514 16.9503 30.2799 16.9975 31.0697 17.2773C31.858 17.5565 32.5311 18.0136 33.089 18.6471C33.6591 19.2795 34.0404 20.0463 34.2314 20.9452C34.42 21.8326 34.3899 22.6857 34.1402 23.5034C33.8907 24.3207 33.4625 25.0184 32.8555 25.5946L32.8546 25.5948C32.2443 26.1604 31.4941 26.5379 30.6062 26.7266C29.9426 26.8676 29.3006 26.8678 28.6817 26.7283L28.6807 26.7285C28.2457 26.6193 27.8565 26.4388 27.5111 26.1904L27.7113 27.1323L25.5525 27.5911L22.8435 14.8466L25.1351 14.3595ZM28.7659 19.2995C28.2965 19.3993 27.8957 19.6031 27.5634 19.9125C27.2424 20.2193 27.016 20.6027 26.8856 21.0639L26.8868 21.0647C26.7653 21.5123 26.758 21.9944 26.8676 22.5104C26.9797 23.0375 27.1836 23.4793 27.4764 23.8386C27.7804 24.1956 28.1406 24.449 28.5586 24.599C28.9881 24.7466 29.4382 24.7714 29.9078 24.6716C30.4003 24.5669 30.8122 24.3587 31.1443 24.0494C31.4766 23.7398 31.7033 23.3616 31.8246 22.9144L31.8244 22.9134C31.9566 22.464 31.9687 21.9766 31.8568 21.4499C31.7448 20.9231 31.5372 20.4876 31.2363 20.1421L31.235 20.1404C30.9422 19.7812 30.5814 19.5279 30.1519 19.3802L30.1509 19.3805C29.7195 19.2221 29.2579 19.1949 28.7659 19.2995Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M25.5572 14.1011L26.1826 18.5515C26.3959 18.2671 26.6562 18.0181 26.9643 17.8056L27.161 17.6754C27.6296 17.3863 28.178 17.1982 28.8054 17.11C29.6822 16.9868 30.5054 17.0917 31.2737 17.4258C32.0407 17.7593 32.6802 18.2623 33.1926 18.9332C33.7172 19.6038 34.0441 20.3953 34.1719 21.3053C34.2982 22.2037 34.2086 23.0526 33.9025 23.851C33.5966 24.6489 33.1208 25.315 32.4751 25.8474L32.4741 25.8475C31.8258 26.3693 31.0511 26.6935 30.1522 26.8198C29.4805 26.9141 28.84 26.8696 28.2323 26.6873L28.2313 26.6874C27.805 26.5481 27.4293 26.3409 27.1021 26.069L27.2361 27.0225L25.0505 27.3297L23.2372 14.4272L25.5572 14.1011ZM28.8346 19.2823C28.3593 19.3492 27.9453 19.5246 27.5922 19.81C27.2506 20.0937 26.998 20.4604 26.8358 20.9113L26.8369 20.9122C26.6845 21.3502 26.6435 21.8307 26.7169 22.353C26.7919 22.8867 26.9645 23.3417 27.2316 23.7205C27.5098 24.0978 27.8515 24.3758 28.258 24.5545C28.6762 24.7317 29.1235 24.7879 29.5989 24.7211C30.0975 24.651 30.5229 24.472 30.8758 24.1866C31.2289 23.901 31.4814 23.5395 31.6336 23.1018L31.6335 23.1009C31.7967 22.6618 31.8427 22.1764 31.7678 21.6432C31.6929 21.1098 31.5162 20.6609 31.2402 20.2953L31.2389 20.2935C30.9719 19.9148 30.6297 19.6369 30.2115 19.4596L30.2105 19.4598C29.7912 19.2717 29.3326 19.2123 28.8346 19.2823Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M26.0024 13.8727L26.3159 18.3559C26.5485 18.087 26.8255 17.8567 27.1477 17.6663L27.353 17.5501C27.8406 17.2944 28.4009 17.145 29.0328 17.1008C29.9161 17.039 30.7299 17.2011 31.4731 17.588C32.2149 17.9742 32.8179 18.5206 33.2822 19.2256C33.7587 19.9311 34.0296 20.7435 34.0937 21.6602C34.1569 22.5653 34.0083 23.4059 33.6473 24.1809C33.2864 24.9555 32.7654 25.5868 32.0841 26.0729L32.0831 26.073C31.4 26.5482 30.6046 26.8176 29.6991 26.8809C29.0224 26.9281 28.3865 26.839 27.7931 26.6147L27.7921 26.6148C27.3765 26.4461 27.0162 26.2132 26.7087 25.9192L26.7759 26.8797L24.5742 27.0337L23.6653 14.0361L26.0024 13.8727ZM28.9104 19.2699C28.4316 19.3034 28.0064 19.4495 27.6342 19.7096C27.2737 19.9687 26.9961 20.317 26.8028 20.7555L26.8039 20.7564C26.6213 21.1828 26.6435 21.6592 26.7169 22.1854C26.7919 22.8867 26.9645 23.3417 27.2316 23.7205C27.5098 24.0978 27.8515 24.3758 28.258 24.5545C28.6762 24.7317 29.1235 24.7879 29.5989 24.7211C30.0975 24.651 30.5229 24.472 30.8758 24.1866C31.2289 23.901 31.4814 23.5395 31.6336 23.1018L31.6335 23.1009C31.7967 22.6618 31.8427 22.1764 31.7678 21.6432C31.6929 21.1098 31.5162 20.6609 31.2402 20.2953L31.2389 20.2935C30.9719 19.9148 30.6297 19.6369 30.2115 19.4596L30.2105 19.4598C29.7912 19.2717 29.3326 19.2123 28.8346 19.2823Z" fill="#151515" stroke="white" strokeWidth="0.106688"/>
-              <path d="M29.2368 26.8575C28.5654 26.8575 27.9452 26.7267 27.3762 26.4649C26.8185 26.1918 26.3747 25.8049 26.0447 25.3042L26.2666 24.8604V26.6527H24.167V13.7307H26.4032V19.2102L26.0618 18.7493C26.3804 18.2486 26.8128 17.8617 27.3591 17.5885C27.9053 17.304 28.5369 17.1618 29.2539 17.1618C30.1301 17.1618 30.921 17.378 31.6266 17.8104C32.3321 18.2429 32.8898 18.8233 33.2994 19.5516C33.7205 20.2799 33.931 21.0993 33.931 22.0097C33.931 22.9087 33.7262 23.728 33.3165 24.4677C32.9068 25.2074 32.3492 25.7935 31.6437 26.226C30.9381 26.647 30.1358 26.8575 29.2368 26.8575ZM28.9807 24.8091C29.4928 24.8091 29.948 24.6897 30.3463 24.4507C30.7446 24.2117 31.0519 23.8817 31.2681 23.4606C31.4957 23.0396 31.6095 22.5559 31.6095 22.0097C31.6095 21.4634 31.4957 20.9855 31.2681 20.5758C31.0519 20.1547 30.7446 19.8247 30.3463 19.5857C29.948 19.3354 29.4928 19.2102 28.9807 19.2102C28.4914 19.2102 28.0476 19.3297 27.6493 19.5687C27.2624 19.8076 26.9551 20.1433 26.7275 20.5758C26.5113 20.9968 26.4032 21.4748 26.4032 22.0097C26.4032 22.5559 26.5113 23.0396 26.7275 23.4606C26.9551 23.8817 27.2624 24.2117 27.6493 24.4507C28.0476 24.6897 28.4914 24.8091 28.9807 24.8091Z" fill="white"/>
-            </svg>
+      <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
+        <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
+          {!actualIsCollapsed && (
+                        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f8f9fa] transition-all duration-200">
+              <div className="relative">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  A
+                </div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold text-[#2a2a2f] font-manrope leading-tight truncate">
+                  Aditya Kumar
+                </div>
+                <div className="text-xs text-[#6b7280] font-manrope leading-tight">
+                  Business Manager
+                </div>
           </div>
-          <div className={`flex-1 min-w-0 transition-all duration-300 overflow-hidden ${
-            actualIsCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
-          }`}>
-            <div className="text-sm sm:text-[16px] font-medium font-manrope text-[#2a2a2f] leading-[20px] tracking-[-0.1px] whitespace-nowrap">
-              {user?.name || 'Guest'}
             </div>
-            {user?.phoneNumber && (
-              <div className="text-xs text-[#8f8f91] font-normal font-manrope leading-[16px] tracking-[-0.1px] whitespace-nowrap mt-0.5">
-                {user.phoneNumber}
+          )}
+          {actualIsCollapsed && (
+            <div className="relative">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm hover:scale-105 transition-all duration-200 cursor-pointer">
+                A
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
               </div>
             )}
           </div>
         </div>
 
         {/* New Campaign Button */}
+      <div className={`p-3 pt-3 pb-2 sm:p-4 sm:pt-4 sm:pb-3 lg:pt-4 lg:pb-3 transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10' : 'w-full max-w-48'}`}>
           {!actualIsCollapsed && (
             <Link
@@ -252,7 +296,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation Menu */}
-      <nav className={`flex-1 px-2 sm:px-3 py-4 overflow-y-auto transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
+      <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className="space-y-2 sm:space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -264,33 +308,73 @@ export function Sidebar() {
               <Link
                 key={item.id}
                 href={item.href}
-                className={`h-8 rounded px-2 flex items-center transition-all duration-300 overflow-hidden ${
-                  actualIsCollapsed ? 'w-10 justify-center' : 'w-full gap-3'
+                className={`group rounded flex items-center overflow-hidden cursor-pointer relative ${
+                  actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
                 } ${
                   isActive
-                    ? "bg-[#6E4EFF0D] text-[#6E4EFF] font-bold"
-                    : "text-[#2a2a2f] font-medium hover:bg-[#6E4EFF]/5 hover:text-[#6E4EFF]"
+                    ? "bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
+                    : "text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
                 }`}
-                title={actualIsCollapsed ? item.label : undefined}
+                title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
               >
-                <div className="flex-shrink-0">
+                {/* Left-side indicator for selected state */}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6E4EFF] rounded-r-full"></div>
+                )}
+                <div className="flex-shrink-0 relative">
+                  <div className={`p-1 rounded-md ${
+                    isActive ? 'bg-[#6E4EFF]/10' : 'group-hover:bg-[#6E4EFF]/10'
+                  }`}>
                   <Icon colorCode={isActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
+                  </div>
+                  {actualIsCollapsed && item.notificationCount > 0 && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff4757] rounded-full animate-pulse"></div>
+                  )}
                 </div>
-                <span className={`text-[14px] font-medium font-manrope leading-[1.4] transition-all duration-300 whitespace-nowrap ${
+                                <div className={`flex flex-col flex-1 ${
                   actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                } ${
+                  isActive || hoveredItem === item.id ? 'justify-center' : 'justify-start'
+                }`}>
+                  <span className={`text-[14px] font-manrope leading-[1.2] whitespace-nowrap ${
+                    isActive ? 'font-semibold' : 'font-medium group-hover:font-semibold'
                 }`}>
                   {item.label}
                 </span>
+                  {!(isActive || hoveredItem === item.id) && (
+                    <span className="text-[11px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-[#8f8f91]">
+                      {item.description}
+                    </span>
+                  )}
+                </div>
+                <div className={`${
+                  actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                }`}>
+                  <NotificationBadge count={item.notificationCount} isActive={isActive} />
+                </div>
               </Link>
             );
           })}
         </div>
       </nav>
+
+      {/* Privacy Message */}
+      <div className={`px-3 py-1 transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
+        <div className={`transition-all duration-300 ${
+          actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+        }`}>
+          <div className="text-center bg-[#f8f9fa] border border-[#e9ecef] rounded px-2 py-1">
+            <span className="text-xs font-medium text-[#6c757d] font-manrope whitespace-nowrap">
+              🔒 Your data stays private. Always.
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Bottom Actions */}
       <div className="border-t border-[#e9e9e9] p-1 mt-auto">
@@ -300,17 +384,7 @@ export function Sidebar() {
           <div className={`flex items-center gap-0.5 transition-all duration-300 ${
             actualIsCollapsed ? 'flex-col' : ''
           }`}>
-            <Link
-              href="/help"
-              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${
-                pathname === '/help'
-                  ? "bg-[#6E4EFF0D] hover:bg-[#6E4EFF]/10"
-                  : "hover:bg-gray-100"
-              }`}
-              title="Help"
-            >
-              <HelpIcon colorCode={pathname === '/help' ? "#6E4EFF" : "#2A2A2F"} />
-            </Link>
+
             <Link
               href="/report-bug"
               className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${
@@ -334,8 +408,8 @@ export function Sidebar() {
               <SettingsIcon colorCode={pathname === '/settings' ? "#6E4EFF" : "#2A2A2F"} />
             </Link>
             <button
-              onClick={logout}
-              className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
+              onClick={() => setShowLogoutConfirm(true)}
+              className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0 relative"
               title="Logout"
             >
               <LogoutIcon />
@@ -355,6 +429,26 @@ export function Sidebar() {
           )}
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={logout}
+        title="Confirm Logout"
+        message="You're about to sign out of your account. Any unsaved changes will be lost. Are you sure you want to continue?"
+        confirmText="Yes, Logout"
+        cancelText="Stay Logged In"
+        variant="warning"
+        customPosition={{ bottom: 100, left: 20 }}
+        icon={
+          <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        }
+      />
     </div>
   );
 }

@@ -2,7 +2,8 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  output: 'export',
+  // Removed static export to allow dynamic customer pages
+  // output: 'export',
 
   images: {
     unoptimized: true,

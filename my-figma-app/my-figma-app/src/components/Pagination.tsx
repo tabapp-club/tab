@@ -171,7 +171,7 @@ const Pagination = ({
           {/* Dropdown */}
           {showPerPageDropdown && (
             <div
-              className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#dbdfe9] rounded-md shadow-lg z-50 min-w-full max-h-[200px] overflow-y-auto`}
+              className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#dbdfe9] rounded-md z-50 min-w-full max-h-[200px] overflow-y-auto`}
               style={{
                 position: 'absolute',
                 zIndex: 9999

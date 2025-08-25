@@ -326,7 +326,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
           <div className="flex items-center justify-end gap-1.5">
             <button
               onClick={onClose}
-              className="h-8 px-2 bg-white border border-[#dce0e5] rounded flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] transition-colors"
+              className="h-8 px-2 bg-white border border-[#dce0e5] rounded-md flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] transition-colors"
             >
               <span className="font-['Manrope:Medium',sans-serif] font-medium text-[15px] text-[#2a2a2f] leading-[1.4]">
                 Cancel

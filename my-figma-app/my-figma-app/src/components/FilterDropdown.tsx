@@ -110,7 +110,7 @@ const FilterDropdown = ({
         }`}
       >
         <div className="flex items-center gap-1 min-w-0">
-          <span className="text-[13.453px] font-medium text-[#2a2a2f] truncate">
+          <span className="text-[13.453px] font-normal text-[#2a2a2f] truncate">
             {title}
           </span>
           {selectedCount > 0 && (
@@ -127,7 +127,7 @@ const FilterDropdown = ({
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded shadow-lg z-50 w-[180px] sm:min-w-[180px] max-h-[300px] overflow-y-auto`}
+          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded z-50 w-[180px] sm:min-w-[180px] max-h-[300px] overflow-y-auto`}
           style={{
             position: 'absolute',
             zIndex: 9999

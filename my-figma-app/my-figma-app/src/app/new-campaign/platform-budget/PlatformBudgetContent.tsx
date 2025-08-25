@@ -81,13 +81,21 @@ const StepperStep = ({
   icon,
   isActive = false,
   isCompleted = false,
-  isCurrent = false
+  isCurrent = false,
+  stepIndex = 0,
+  totalSteps = 5,
+  timeEstimate = "",
+  description = ""
 }: {
   title: string;
   icon: React.ReactNode;
   isActive?: boolean;
   isCompleted?: boolean;
   isCurrent?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
+  timeEstimate?: string;
+  description?: string;
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
@@ -109,6 +117,16 @@ const StepperStep = ({
     return "text-[#a1a1a1]";
   };
 
+  const getSubTextColor = () => {
+    if (isCurrent) {
+      return "text-[#7856ff]/70";
+    }
+    if (isCompleted) {
+      return "text-[#04b440]/70";
+    }
+    return "text-[#a1a1a1]/70";
+  };
+
   return (
     <div className="flex flex-col gap-2 grow items-center justify-center p-2">
       <div className={`flex flex-row gap-4 items-start justify-start relative shrink-0 w-full`}>
@@ -119,17 +137,33 @@ const StepperStep = ({
         </div>
         <div className="box-border content-stretch flex flex-col gap-1 items-start justify-center p-0 relative self-stretch shrink-0">
           <div className="box-border content-stretch flex flex-row gap-2 items-center justify-center p-0 relative shrink-0">
-            <div className={`flex flex-col font-['Manrope:Medium',_sans-serif] font-medium justify-center leading-[0] relative shrink-0 text-[14px] text-center text-nowrap ${getTextColor()}`}>
-              <p className="block leading-[20px] whitespace-pre">{title}</p>
-            </div>
-            {(isCompleted || isCurrent) && (
-              <div className="overflow-clip relative shrink-0 size-[15px]">
-                <CheckIcon />
-              </div>
-            )}
           </div>
+          {(timeEstimate || description) && (
+            <div className={`flex flex-col items-center justify-center text-[12px] font-semibold leading-[14px] ${getSubTextColor()}`}>
+              {description && (
+                <span className="text-center">{description}</span>
+              )}
+              {timeEstimate && (
+                <span className="text-center mt-1">⏱️ {timeEstimate}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Progress Bar Component
+const StepperProgressBar = ({ currentStep = 4, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
+  const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
+  
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
+      <div 
+        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        style={{ width: `${progressPercentage}%` }}
+      />
     </div>
   );
 };
@@ -308,47 +342,59 @@ export function PlatformBudgetContent() {
       </div>
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 h-screen pb-20">
-                  {/* Header */}
-          <header className="mb-4 sm:mb-6 lg:mb-8 pt-8 lg:pt-0">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-[24px] font-medium text-[#2a2a2f] leading-tight tracking-[-0.1px]">
-                Campaigns
-              </h1>
-            </div>
-          </div>
-        </header>
+
 
         {/* Stepper */}
-        <section className="mb-4 sm:mb-6 lg:mb-8 rounded-md bg-white border border-[#e9e9e9] box-border overflow-hidden">
+        <section className="mb-4 sm:mb-6 lg:mb-8 rounded-md bg-white border border-[#e9e9e9] box-border overflow-hidden relative">
           <div className="p-2">
             <div className="flex flex-col sm:flex-row gap-2 items-center justify-between overflow-x-auto">
               <StepperStep
                 title="campaign type"
                 icon={<CampaignIcon />}
                 isCompleted={true}
+                stepIndex={1}
+                totalSteps={5}
+                timeEstimate="2-3 min"
+                description="Choose campaign type"
               />
               <StepperStep
                 title="Create campaign"
                 icon={<MoneyIcon />}
                 isCompleted={true}
+                stepIndex={2}
+                totalSteps={5}
+                timeEstimate="5-8 min"
+                description="Design your campaign"
               />
               <StepperStep
                 title="Choose audience"
                 icon={<UsersIcon />}
                 isCompleted={true}
+                stepIndex={3}
+                totalSteps={5}
+                timeEstimate="3-5 min"
+                description="Select target users"
               />
               <StepperStep
                 title="Platform & Budget"
                 icon={<BagIcon />}
                 isCurrent={true}
+                stepIndex={4}
+                totalSteps={5}
+                timeEstimate="2-4 min"
+                description="Set budget & platforms"
               />
               <StepperStep
                 title="Schedule"
                 icon={<CalendarIcon />}
+                stepIndex={5}
+                totalSteps={5}
+                timeEstimate="1-2 min"
+                description="Set timing"
               />
             </div>
           </div>
+          <StepperProgressBar currentStep={4} totalSteps={5} />
         </section>
 
         {/* Content */}

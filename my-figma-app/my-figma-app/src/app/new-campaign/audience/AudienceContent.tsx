@@ -6,12 +6,7 @@ import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { usePopup } from "@/contexts/PopupContext";
 import { useAuth } from "@/contexts/AuthContext";
-import AudienceTable from "./AudienceTable";
-import Pagination from "@/components/Pagination";
-import DataCenterFilters from "@/components/DataCenterFilters";
-import FilterDropdown from "@/components/FilterDropdown";
-
-
+import { useDataCenterData, mapApiDataToTable, UserData } from '@/hooks/useDataCenterData';
 
 // Icons for the stepper
 const CampaignIcon = () => (
@@ -32,8 +27,8 @@ const UsersIcon = () => (
 <path opacity="0.3" d="M17.1201 3.90039C17.7777 3.89668 18.4265 4.05279 19.0098 4.35645C19.5931 4.66014 20.0937 5.10171 20.4678 5.64258C20.8418 6.18349 21.078 6.80795 21.1562 7.46094C21.2345 8.11396 21.1527 8.7766 20.917 9.39062C20.6813 10.0046 20.2987 10.5514 19.8037 10.9844C19.3086 11.4174 18.7151 11.7232 18.0752 11.875C17.4354 12.0266 16.7684 12.0199 16.1318 11.8555C15.4952 11.6909 14.9081 11.3734 14.4219 10.9307C15.1713 10.0159 15.6589 8.91479 15.833 7.74512C16.0071 6.57547 15.8607 5.38045 15.4102 4.28711C15.9442 4.03298 16.5287 3.90107 17.1201 3.90039ZM9.20801 1.75C12.0221 1.75012 14.3037 4.0124 14.3037 6.80273C14.3036 9.59294 12.022 11.8544 9.20801 11.8545C6.39394 11.8545 4.11245 9.59302 4.1123 6.80273C4.1123 4.01233 6.39385 1.75 9.20801 1.75Z" fill="currentColor"/>
 <path d="M9.20801 13.1445C13.3816 13.1447 16.7646 15.407 16.7646 18.1973C16.7643 20.9874 13.3814 23.2489 9.20801 23.249C5.03447 23.249 1.65071 20.9875 1.65039 18.1973C1.65039 15.4069 5.03427 13.1445 9.20801 13.1445ZM17.1191 13.0371C20.4516 13.0371 23.1504 14.9291 23.1504 17.0791C23.1502 19.2289 20.6349 20.9813 17.4746 21.0996C18.0516 20.2413 18.3614 19.2314 18.3662 18.1973C18.3235 17.1777 18.0224 16.1852 17.4902 15.3145C16.958 14.4437 16.2122 13.7227 15.3242 13.2197C15.9147 13.0977 16.5162 13.0366 17.1191 13.0371Z" fill="currentColor"/>
 </svg>
-
 );
+
 const BagIcon = () => (
   <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clipPath="url(#clip0_719_7542)">
@@ -45,7 +40,6 @@ const BagIcon = () => (
 </clipPath>
 </defs>
 </svg>
-
 );
 
 const CalendarIcon = () => (
@@ -53,81 +47,114 @@ const CalendarIcon = () => (
 <path d="M8.54991 3C8.54991 2.80109 8.47089 2.61032 8.33024 2.46967C8.18958 2.32902 7.99882 2.25 7.79991 2.25C7.60099 2.25 7.41023 2.32902 7.26958 2.46967C7.12892 2.61032 7.04991 2.80109 7.04991 3V4.58C5.60991 4.695 4.66591 4.977 3.97191 5.672C3.27691 6.366 2.99491 7.311 2.87891 8.75H22.7209C22.6049 7.31 22.3229 6.366 21.6279 5.672C20.9339 4.977 19.9889 4.695 18.5499 4.579V3C18.5499 2.80109 18.4709 2.61032 18.3302 2.46967C18.1896 2.32902 17.9988 2.25 17.7999 2.25C17.601 2.25 17.4102 2.32902 17.2696 2.46967C17.1289 2.61032 17.0499 2.80109 17.0499 3V4.513C16.3849 4.5 15.6389 4.5 14.7999 4.5H10.7999C9.96091 4.5 9.21491 4.5 8.54991 4.513V3Z" fill="#A1A1A1"/>
 <path fillRule="evenodd" clipRule="evenodd" d="M2.7998 12.5C2.7998 11.661 2.7998 10.915 2.8128 10.25H22.7868C22.7998 10.915 22.7998 11.661 22.7998 12.5V14.5C22.7998 18.271 22.7998 20.157 21.6278 21.328C20.4558 22.499 18.5708 22.5 14.7998 22.5H10.7998C7.0288 22.5 5.1428 22.5 3.9718 21.328C2.8008 20.156 2.7998 18.271 2.7998 14.5V12.5ZM17.7998 14.5C18.065 14.5 18.3194 14.3946 18.5069 14.2071C18.6944 14.0196 18.7998 13.7652 18.7998 13.5C18.7998 13.2348 18.6944 12.9804 18.5069 12.7929C18.3194 12.6054 18.065 12.5 17.7998 12.5C17.5346 12.5 17.2802 12.6054 17.0927 12.7929C16.9052 12.9804 16.7998 13.2348 16.7998 13.5C16.7998 13.7652 16.9052 14.0196 17.0927 14.2071C17.2802 14.3946 17.5346 14.5 17.7998 14.5ZM17.7998 18.5C18.065 18.5 18.3194 18.3946 18.5069 18.2071C18.6944 18.0196 18.7998 17.7652 18.7998 17.5C18.7998 17.2348 18.6944 16.9804 18.5069 16.7929C18.3194 16.6054 18.065 16.5 17.7998 16.5C17.5346 16.5 17.2802 16.6054 17.0927 16.7929C16.9052 16.9804 16.7998 17.2348 16.7998 17.5C16.7998 17.7652 16.9052 18.0196 17.0927 18.2071C17.2802 18.3946 17.5346 18.5 17.7998 18.5ZM13.7998 13.5C13.7998 13.7652 13.6944 14.0196 13.5069 14.2071C13.3194 14.3946 13.065 14.5 12.7998 14.5C12.5346 14.5 12.2802 14.3946 12.0927 14.2071C11.9052 14.0196 11.7998 13.7652 11.7998 13.5C11.7998 13.2348 11.9052 12.9804 12.0927 12.7929C12.2802 12.6054 12.5346 12.5 12.7998 12.5C13.065 12.5 13.3194 12.6054 13.5069 12.7929C13.6944 12.9804 13.7998 13.2348 13.7998 13.5ZM13.7998 17.5C13.7998 17.7652 13.6944 18.0196 13.5069 18.2071C13.3194 18.3946 13.065 18.5 12.7998 18.5C12.5346 18.5 12.2802 18.3946 12.0927 18.2071C11.9052 18.0196 11.7998 17.7652 11.7998 17.5C11.7998 17.2348 11.9052 16.9804 12.0927 16.7929C12.2802 16.6054 12.5346 16.5 12.7998 16.5C13.065 16.5 13.3194 16.6054 13.5069 16.7929C13.6944 16.9804 13.7998 17.2348 13.7998 17.5ZM7.7998 14.5C8.06502 14.5 8.31938 14.3946 8.50691 14.2071C8.69445 14.0196 8.7998 13.7652 8.7998 13.5C8.7998 13.2348 8.69445 12.9804 8.50691 12.7929C8.31938 12.6054 8.06502 12.5 7.7998 12.5C7.53459 12.5 7.28023 12.6054 7.0927 12.7929C6.90516 12.9804 6.7998 13.2348 6.7998 13.5C6.7998 13.7652 6.90516 14.0196 7.0927 14.2071C7.28023 14.3946 7.53459 14.5 7.7998 14.5ZM7.7998 18.5C8.06502 18.5 8.31938 18.3946 8.50691 18.2071C8.69445 18.0196 8.7998 17.7652 8.7998 17.5C8.7998 17.2348 8.69445 16.9804 8.50691 16.7929C8.31938 16.6054 8.06502 16.5 7.7998 16.5C7.53459 16.5 7.28023 16.6054 7.0927 16.7929C6.90516 16.9804 6.7998 17.2348 6.7998 17.5C6.7998 17.7652 6.90516 18.0196 7.0927 18.2071C7.28023 18.3946 7.53459 18.5 7.7998 18.5Z" fill="#A1A1A1"/>
 </svg>
-
 );
 
-
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 3L4.5 8.5L2 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-
+// Icons for the filter options
 const ChevronDownIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 6L7 9L10 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const MoreIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9 10.5C9.82843 10.5 10.5 9.82843 10.5 9C10.5 8.17157 9.82843 7.5 9 7.5C8.17157 7.5 7.5 8.17157 7.5 9C7.5 9.82843 8.17157 10.5 9 10.5Z" fill="currentColor"/>
-    <path d="M15 10.5C15.8284 10.5 16.5 9.82843 16.5 9C16.5 8.17157 15.8284 7.5 15 7.5C14.1716 7.5 13.5 8.17157 13.5 9C13.5 9.82843 14.1716 10.5 15 10.5Z" fill="currentColor"/>
-    <path d="M3 10.5C3.82843 10.5 4.5 9.82843 4.5 9C4.5 8.17157 3.82843 7.5 3 7.5C2.17157 7.5 1.5 8.17157 1.5 9C1.5 9.82843 2.17157 10.5 3 10.5Z" fill="currentColor"/>
+const SwitchIcon = () => (
+  <svg width="30" height="18" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="30" height="18" rx="9" fill="#7856FF"/>
+    <circle cx="21" cy="9" r="6" fill="white"/>
   </svg>
 );
 
-interface UserData {
-  id: string;
-  mobile: string;
-  categories: string[];
-  userType: string;
-  visits: number;
-  status: string;
-  addedOn: string;
-}
+const SwitchOffIcon = () => (
+  <svg width="30" height="18" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="30" height="18" rx="9" fill="#E5E5E5"/>
+    <circle cx="9" cy="9" r="6" fill="white"/>
+  </svg>
+);
 
-interface CampaignMedium {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  enabled: boolean;
-}
+// Filter Dropdown Component
+const FilterDropdown = ({
+  isOpen,
+  onToggle,
+  title,
+  options,
+  selectedItems,
+  onSelectionChange,
+  selectedCount = 0
+}: {
+  isOpen: boolean;
+  onToggle: () => void;
+  title: string;
+  options: Array<{id?: string, name?: string, label?: string, value?: string}>;
+  selectedItems: string[];
+  onSelectionChange: (items: string[]) => void;
+  selectedCount?: number;
+}) => {
+  const handleItemToggle = (itemId: string) => {
+    const newSelection = selectedItems.includes(itemId)
+      ? selectedItems.filter(id => id !== itemId)
+      : [...selectedItems, itemId];
+    onSelectionChange(newSelection);
+  };
 
-const campaignMediums: CampaignMedium[] = [
-  {
-    id: 'sms',
-    name: 'Text Message (SMS)',
-    description: 'Send text messages to your customer',
-    icon: '📱',
-    enabled: true
-  },
-  {
-    id: 'whatsapp',
-    name: 'WhatsApp',
-    description: 'Send Whatsapp to your customer',
-    icon: '💬',
-    enabled: true
-  },
-  {
-    id: 'tab',
-    name: 'tab',
-    description: 'Engage more with your users',
-    icon: '📋',
-    enabled: true
-  }
-];
+  const getDisplayName = (option: any) => {
+    return option.name || option.label || option.value || option.id || '';
+  };
 
-const progressSteps = [
-  { id: 1, title: 'Choose campaign type', completed: true },
-  { id: 2, title: 'Create campaign', completed: true },
-  { id: 3, title: 'Choose Audience', completed: true },
-  { id: 4, title: 'Schedule Date & Time', completed: false }
-];
+  const getItemId = (option: any) => {
+    return option.id || option.value || option.name || option.label || '';
+  };
 
-
+  return (
+    <div className="relative filter-dropdown">
+      <button
+        onClick={onToggle}
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors border border-[#e9e9e9] rounded"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-[#2a2a2f] text-[16px] font-normal">
+            {title}
+          </span>
+          {selectedCount > 0 && (
+            <span className="bg-[#7856ff] text-white text-xs px-2 py-1 rounded-full">
+              {selectedCount}
+            </span>
+          )}
+        </div>
+        <div className={`rotate-[270deg] transition-transform ${isOpen ? 'rotate-90' : ''}`}>
+          <ChevronDownIcon />
+        </div>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#e9e9e9] rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+          <div className="p-2">
+            {options.map((option, index) => {
+              const itemId = getItemId(option);
+              const displayName = getDisplayName(option);
+              const isSelected = selectedItems.includes(itemId);
+              
+              return (
+                <label
+                  key={index}
+                  className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => handleItemToggle(itemId)}
+                    className="rounded border-[#e9e9e9] text-[#7856ff] focus:ring-[#7856ff]"
+                  />
+                  <span className="text-[#2a2a2f] text-[14px]">
+                    {displayName}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Stepper Component based on Figma design
 const StepperStep = ({
@@ -135,13 +162,21 @@ const StepperStep = ({
   icon,
   isActive = false,
   isCompleted = false,
-  isCurrent = false
+  isCurrent = false,
+  stepIndex = 0,
+  totalSteps = 5,
+  timeEstimate = "",
+  description = ""
 }: {
   title: string;
   icon: React.ReactNode;
   isActive?: boolean;
   isCompleted?: boolean;
   isCurrent?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
+  timeEstimate?: string;
+  description?: string;
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
@@ -163,6 +198,16 @@ const StepperStep = ({
     return "text-[#a1a1a1]";
   };
 
+  const getSubTextColor = () => {
+    if (isCurrent) {
+      return "text-[#7856ff]/70";
+    }
+    if (isCompleted) {
+      return "text-[#04b440]/70";
+    }
+    return "text-[#a1a1a1]/70";
+  };
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-2 grow items-center justify-center min-h-px min-w-px p-[8px] relative shrink-0">
       <div className="box-border content-stretch flex flex-row gap-4 items-center justify-start p-0 relative shrink-0 w-full">
@@ -173,24 +218,33 @@ const StepperStep = ({
         </div>
         <div className="box-border content-stretch flex flex-col gap-1 items-start justify-center p-0 relative self-stretch shrink-0">
           <div className="box-border content-stretch flex flex-row gap-2 items-center justify-center p-0 relative shrink-0">
-            <div className={`flex flex-col font-['Manrope:Medium',_sans-serif] font-medium justify-center leading-[0] relative shrink-0 text-[14px] text-center text-nowrap ${getTextColor()}`}>
-              <p className="block leading-[20px] whitespace-pre">{title}</p>
-            </div>
-            {isCompleted && (
-              <div className="relative shrink-0 size-[15px] bg-[#04b440] rounded-full flex items-center justify-center">
-                <CheckIcon />
-              </div>
-            )}
-            {isCurrent && (
-              <div className="relative shrink-0 size-[15px]">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2"/>
-                </svg>
-              </div>
-            )}
           </div>
+          {(timeEstimate || description) && (
+            <div className={`flex flex-col items-center justify-center text-[12px] font-semibold leading-[14px] ${getSubTextColor()}`}>
+              {description && (
+                <span className="text-center">{description}</span>
+              )}
+              {timeEstimate && (
+                <span className="text-center mt-1">⏱️ {timeEstimate}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Progress Bar Component
+const StepperProgressBar = ({ currentStep = 3, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
+  const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
+  
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
+      <div 
+        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        style={{ width: `${progressPercentage}%` }}
+      />
     </div>
   );
 };
@@ -206,31 +260,82 @@ export function AudienceContent() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
-  const [selectedMediums, setSelectedMediums] = useState<string[]>(['sms', 'whatsapp', 'tab']);
-  const [userCount, setUserCount] = useState<number | null>(null); // Default to null to show '-'
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<any>({});
+  const [userCount, setUserCount] = useState<number | null>(null);
   const [allUsersEnabled, setAllUsersEnabled] = useState(true);
-  const [currentTableData, setCurrentTableData] = useState<UserData[]>([]);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categories, setCategories] = useState<Array<{name: string, label: string}>>([]);
-  const [openFilter, setOpenFilter] = useState<string | null>(null);
-  const [filterState, setFilterState] = useState({
-    category: [] as string[],
-    userType: [] as string[],
-    visits: [] as string[],
-    status: [] as string[]
-  });
   const [isLoading, setIsLoading] = useState(false);
-  const [clearFilters, setClearFilters] = useState(false);
-  const [isDataLoadedFromStorage, setIsDataLoadedFromStorage] = useState(false);
+  
+  // Filter states - using proper data center structure
+  const [filters, setFilters] = useState<any>({});
+  const [categories, setCategories] = useState<Array<{name: string, label: string}>>([]);
+  const [userTypes, setUserTypes] = useState<string[]>([]);
+  const [visitRanges, setVisitRanges] = useState<string[]>([]);
+  const [statuses, setStatuses] = useState<string[]>([]);
+  const [cohorts, setCohorts] = useState<Array<{id: string, name: string}>>([]);
+  
+  // Filter dropdown states
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState({
+    cohorts: [] as string[],
+    categories: [] as string[],
+    userTypes: [] as string[],
+    visitRanges: [] as string[],
+    statuses: [] as string[]
+  });
 
-  // Debounce timer ref
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  // Convert selected filters to data center API format
+  const convertFiltersToApiFormat = useCallback(() => {
+    const apiFilters: any = {};
+    
+    // Convert categories
+    if (selectedFilters.categories.length > 0) {
+      apiFilters.category = selectedFilters.categories;
+    }
+    
+    // Convert user types (take first one as data center API expects single value)
+    if (selectedFilters.userTypes.length > 0) {
+      apiFilters.userType = selectedFilters.userTypes[0];
+    }
+    
+    // Convert visit ranges
+    if (selectedFilters.visitRanges.length > 0) {
+      const visitRanges = selectedFilters.visitRanges.map(range => {
+        if (range === '1') return { from: 1, to: 1 };
+        if (range === '2-5') return { from: 2, to: 5 };
+        if (range === '6-10') return { from: 6, to: 10 };
+        if (range === '11-20') return { from: 11, to: 20 };
+        if (range === '21+') return { from: 21, to: 999 };
+        return null;
+      }).filter(Boolean);
+
+      if (visitRanges.length > 0) {
+        apiFilters.no_of_visits_from = Math.min(...visitRanges.map(r => r!.from));
+        apiFilters.no_of_visits_to = Math.max(...visitRanges.map(r => r!.to));
+      }
+    }
+    
+    // Convert status (take first one as data center API expects single value)
+    if (selectedFilters.statuses.length > 0) {
+      apiFilters.status = selectedFilters.statuses[0];
+    }
+    
+    return apiFilters;
+  }, [selectedFilters]);
+
+  // Use React Query to fetch data center data
+  const { data: dataCenterResponse, isLoading: dataLoading, error: dataError } = useDataCenterData({
+    page: 1,
+    pageSize: 1, // We only need the count, not the actual data
+    filters: convertFiltersToApiFormat()
+  });
+
+  // Stepper data based on Figma design
+  const stepperSteps = [
+    { title: 'campaign type', icon: <CampaignIcon />, isCompleted: true, timeEstimate: "2-3 min", description: "Choose campaign type" },
+    { title: 'Create campaign', icon: <MoneyIcon />, isCompleted: true, timeEstimate: "5-8 min", description: "Design your campaign" },
+    { title: 'Choose audience', icon: <UsersIcon />, isCurrent: true, timeEstimate: "3-5 min", description: "Select target users" },
+    { title: 'Platform & Budget', icon: <BagIcon />, isCompleted: false, timeEstimate: "2-4 min", description: "Set budget & platforms" },
+    { title: 'Schedule', icon: <CalendarIcon />, isCompleted: false, timeEstimate: "1-2 min", description: "Set timing" }
+  ];
 
   // Load data from session storage on component mount
   useEffect(() => {
@@ -239,186 +344,75 @@ export function AudienceContent() {
       try {
         const data = JSON.parse(savedData);
         console.log('Loading data from session storage:', data);
-        setSelectedMediums(data.selectedMediums || ['sms', 'whatsapp', 'tab']);
         setUserCount(data.userCount || null);
-        setFilters(data.filters || {});
         setAllUsersEnabled(data.allUsersEnabled !== undefined ? data.allUsersEnabled : true);
-        setFilterState(data.filterState || {
-          category: [],
-          userType: [],
-          visits: [],
-          status: []
+        setSelectedFilters(data.selectedFilters || {
+          cohorts: [],
+          categories: [],
+          userTypes: [],
+          visitRanges: [],
+          statuses: []
         });
-        setIsDataLoadedFromStorage(true);
       } catch (error) {
         console.error('Error loading audience data from session storage:', error);
       }
     }
+  }, []);
 
-    // Also load platform budget data if coming back from platform budget page
-    const platformBudgetData = sessionStorage.getItem('platformBudgetData');
-    if (platformBudgetData) {
-      try {
-        const data = JSON.parse(platformBudgetData);
-        console.log('Loading platform budget data in audience page:', data);
-        // Store the platform budget data for use when proceeding to next step
-        sessionStorage.setItem('platformBudgetData', JSON.stringify(data));
-      } catch (error) {
-        console.error('Error loading platform budget data from session storage:', error);
+  // Update user count when data center response changes
+  useEffect(() => {
+    if (dataCenterResponse) {
+      setUserCount(dataCenterResponse.total || 0);
+      if (dataCenterResponse.categories && Array.isArray(dataCenterResponse.categories)) {
+        setCategories(dataCenterResponse.categories);
       }
     }
-  }, []);
+  }, [dataCenterResponse]);
 
   // Save data to session storage whenever form data changes
   useEffect(() => {
     const dataToSave = {
-      selectedMediums,
       userCount,
-      filters,
       allUsersEnabled,
-      filterState
+      selectedFilters
     };
     sessionStorage.setItem('audienceData', JSON.stringify(dataToSave));
-  }, [selectedMediums, userCount, filters, allUsersEnabled, filterState]);
+  }, [userCount, allUsersEnabled, selectedFilters]);
 
-  // Stepper data based on Figma design
-  const stepperSteps = [
-    { title: 'campaign type', icon: <CampaignIcon />, isCompleted: true },
-    { title: 'Create campaign', icon: <MoneyIcon />, isCompleted: true },
-    { title: 'Choose audience', icon: <UsersIcon />, isCurrent: true },
-    { title: 'Platform & Budget', icon: <BagIcon />, isCompleted: false },
-    { title: 'Schedule', icon: <CalendarIcon />, isCompleted: false }
-  ];
-
-  // Helper to map API response to UserData[]
-  const mapApiDataToTable = (apiData: any[]): UserData[] => {
-    return apiData.map((r: any) => {
-      let status: 'Active' | 'In Active' = 'In Active';
-      if (typeof r.status === 'string' && r.status.toLowerCase() === 'active') status = 'Active';
-      return {
-        id: r.user_id,
-        mobile: r.mobile_number,
-        categories: Array.isArray(r.category) ? r.category : [r.category],
-        userType: r.user_type,
-        visits: r.no_of_visits,
-        status,
-        addedOn: r.added_on,
-      };
-    });
-  };
-
-  // Fetch data from API with proper debouncing
-  const fetchData = useCallback(async () => {
-    if (!user?.accessToken) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const params = new URLSearchParams();
-      params.append('page', String(page));
-      params.append('page_size', String(pageSize));
-      if (filters.category && filters.category.length > 0) {
-        filters.category.forEach((cat: string) => params.append('category', cat));
-      }
-      if (filters.userType) params.append('user_type', filters.userType);
-      if (filters.no_of_visits_from !== undefined) params.append('no_of_visits_from', String(filters.no_of_visits_from));
-      if (filters.no_of_visits_to !== undefined) params.append('no_of_visits_to', String(filters.no_of_visits_to));
-      if (filters.status) params.append('status', filters.status);
-      if (filters.search) params.append('search', filters.search);
-
-      const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch data center data');
-      const result = await response.json();
-
-      setCurrentTableData(mapApiDataToTable(result.data));
-      setTotal(result.total);
-
-      // Only update userCount if data wasn't loaded from session storage
-      if (!isDataLoadedFromStorage) {
-        console.log('Updating userCount from API:', result.total);
-        setUserCount(result.total);
-      } else {
-        console.log('Preserving userCount from session storage:', userCount);
-      }
-
-      if (result.categories && Array.isArray(result.categories)) {
-        setCategories(result.categories);
-      }
-
-      // Reset the flag after API call so future calls can update userCount
-      setIsDataLoadedFromStorage(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch data');
-      setUserCount(null);
-      setCurrentTableData([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.accessToken, page, pageSize, filters, isDataLoadedFromStorage]); // Removed userCount from dependencies
-
-  // Debounced fetch data effect
+  // Set filter options from data center response
   useEffect(() => {
-    // Clear existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Set new timer
-    debounceTimerRef.current = setTimeout(() => {
-      fetchData();
-    }, 500); // Increased debounce time to 500ms
-
-    // Cleanup function
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+    if (dataCenterResponse) {
+      // Set filter options from API response
+      if (dataCenterResponse.categories && Array.isArray(dataCenterResponse.categories)) {
+        setCategories(dataCenterResponse.categories);
       }
-    };
-  }, [fetchData]);
-
-  // Reset clearFilters flag after it's been used
-  useEffect(() => {
-    if (clearFilters) {
-      const timer = setTimeout(() => {
-        setClearFilters(false);
-      }, 100);
-      return () => clearTimeout(timer);
+      
+      // Set other filter options (these would come from your API)
+      setUserTypes(['retained', 'new']);
+      setVisitRanges(['1', '2-5', '6-10', '11-20', '21+']);
+      setStatuses(['active', 'inactive']);
+      setCohorts([
+        { id: '1', name: 'High Value Customers' },
+        { id: '2', name: 'Recent Purchasers' },
+        { id: '3', name: 'Abandoned Cart Users' },
+        { id: '4', name: 'First Time Buyers' }
+      ]);
     }
-  }, [clearFilters]);
-
-  const handleMediumToggle = (mediumId: string) => {
-    setSelectedMediums(prev =>
-      prev.includes(mediumId)
-        ? prev.filter(id => id !== mediumId)
-        : [...prev, mediumId]
-    );
-  };
+  }, [dataCenterResponse]);
 
   const handleAllUsersToggle = () => {
     const newAllUsersEnabled = !allUsersEnabled;
     setAllUsersEnabled(newAllUsersEnabled);
-
+    
     if (newAllUsersEnabled) {
-      // Batch all filter clearing operations to prevent multiple API calls
-      setFilters({});
-      setFilterState({
-        category: [],
-        userType: [],
-        visits: [],
-        status: []
+      // Clear all filters when "All users" is enabled
+      setSelectedFilters({
+        cohorts: [],
+        categories: [],
+        userTypes: [],
+        visitRanges: [],
+        statuses: []
       });
-      setSearchTerm(''); // Also clear search term
-      setClearFilters(true); // Trigger filter clearing in DataCenterFilters
     }
   };
 
@@ -432,70 +426,40 @@ export function AudienceContent() {
       setAllUsersEnabled(false);
     }
 
-    setFilterState(prev => ({
+    setSelectedFilters(prev => ({
       ...prev,
       [filterType]: selectedIds
     }));
-
-    // Convert to API format and update filters
-    const apiFilters: any = {};
-    if (filterType === 'category') {
-      apiFilters.category = selectedIds;
-    } else if (filterType === 'userType') {
-      apiFilters.userType = selectedIds[0];
-    } else if (filterType === 'visits') {
-      // Parse visit ranges
-      const visitRanges = selectedIds.map(id => {
-        if (id === '1') return { from: 1, to: 1 };
-        if (id === '2-5') return { from: 2, to: 5 };
-        if (id === '6-10') return { from: 6, to: 10 };
-        if (id === '11-20') return { from: 11, to: 20 };
-        if (id === '21+') return { from: 21, to: 999 };
-        return null;
-      }).filter(Boolean);
-
-      if (visitRanges.length > 0) {
-        apiFilters.no_of_visits_from = Math.min(...visitRanges.map(r => r!.from));
-        apiFilters.no_of_visits_to = Math.max(...visitRanges.map(r => r!.to));
-      }
-    } else if (filterType === 'status') {
-      apiFilters.status = selectedIds[0];
-    }
-
-    handleFiltersChange(apiFilters);
   };
 
   const getSelectedCount = (filterType: string) => {
-    return filterState[filterType as keyof typeof filterState]?.length || 0;
+    return selectedFilters[filterType as keyof typeof selectedFilters]?.length || 0;
   };
 
-  const handleFiltersChange = (newFilters: any) => {
-    // Check if any filter is being applied
-    const hasActiveFilters = Object.keys(newFilters).some(key => {
-      const value = newFilters[key];
-      if (Array.isArray(value)) {
-        return value.length > 0;
-      }
-      return value !== undefined && value !== null && value !== '';
+  const clearAllFilters = () => {
+    setSelectedFilters({
+      cohorts: [],
+      categories: [],
+      userTypes: [],
+      visitRanges: [],
+      statuses: []
     });
-
-    // Turn off "All users" toggle if any filter is applied
-    if (hasActiveFilters && allUsersEnabled) {
-      setAllUsersEnabled(false);
-    }
-
-    setFilters((prev: any) => ({ ...prev, ...newFilters }));
-    setPage(1); // Reset to first page on filter change
+    setAllUsersEnabled(true);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openFilter && !(event.target as Element).closest('.filter-dropdown')) {
+        setOpenFilter(null);
+      }
+    };
 
-  const handlePageSizeChange = (newSize: number) => {
-    setPageSize(newSize);
-    setPage(1);
-  };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openFilter]);
 
   const formatUserCount = (count: number | null) => {
     if (count === null) {
@@ -509,42 +473,29 @@ export function AudienceContent() {
     return count.toString();
   };
 
-        const handleProceed = async () => {
-      if (selectedMediums.length === 0) {
-        showWarning(
-          'No Campaign Medium Selected',
-          'Please select at least one campaign medium before proceeding.'
-        );
-        return;
-      }
+  const handleProceed = async () => {
+    if (!allUsersEnabled && Object.values(selectedFilters).every(arr => arr.length === 0)) {
+      showWarning(
+        'No Audience Selected',
+        'Please either enable "All users" or select specific filters for your audience.'
+      );
+      return;
+    }
 
-      if (!allUsersEnabled && Object.keys(filters).length === 0) {
-        showWarning(
-          'No Audience Selected',
-          'Please either enable "All users" or select specific filters for your audience.'
-        );
-        return;
-      }
+    setIsLoading(true);
+    // Simulate loading delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-      setIsLoading(true);
-      // Simulate loading delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Preserve platform budget data if it exists
-      const platformBudgetData = sessionStorage.getItem('platformBudgetData');
-      if (platformBudgetData) {
-        try {
-          const data = JSON.parse(platformBudgetData);
-          // Update the campaign type to match current selection
-          data.campaignType = campaignType;
-          sessionStorage.setItem('platformBudgetData', JSON.stringify(data));
-        } catch (error) {
-          console.error('Error preserving platform budget data:', error);
-        }
-      }
-
-      router.push(`/new-campaign/platform-budget?type=${campaignType}&medium=${selectedMediums.join(',')}`);
+    // Save the selected filters to session storage for the next step
+    const audienceData = {
+      allUsersEnabled,
+      selectedFilters,
+      userCount
     };
+    sessionStorage.setItem('audienceData', JSON.stringify(audienceData));
+
+    router.push(`/new-campaign/platform-budget?type=${campaignType}`);
+  };
 
   return (
     <main className={`flex-1 transition-sidebar ${
@@ -556,19 +507,8 @@ export function AudienceContent() {
       </div>
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32">
-        {/* Header */}
-        <header className="mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-[24px] font-medium text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
-                Campaigns
-              </h1>
-            </div>
-          </div>
-        </header>
-
         {/* Progress Indicator - Stepper */}
-        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto">
+        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
           <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
             {stepperSteps.map((step, index) => (
               <StepperStep
@@ -577,87 +517,140 @@ export function AudienceContent() {
                 icon={step.icon}
                 isCompleted={step.isCompleted}
                 isCurrent={step.isCurrent}
+                stepIndex={index + 1}
+                totalSteps={5}
+                timeEstimate={step.timeEstimate}
+                description={step.description}
               />
             ))}
           </div>
+          <StepperProgressBar currentStep={3} totalSteps={5} />
         </section>
 
-        {/* User Count Display */}
-        <section className="mb-8">
-          <div className="bg-white rounded-lg border border-[#f1f1f4] shadow-[0px_3px_4px_0px_rgba(0,0,0,0.03)] p-8">
-            <div className="text-center">
-              <p className="text-[#2a2a2f] text-base mb-4">Sending campaign to</p>
-              <div className="text-[#2a2a2f] text-[48px] font-extrabold tracking-[-0.96px] leading-[1.4]">
-                {userCount === null ? '-' : `${formatUserCount(userCount)} users`}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Main Title */}
+        <div className="mb-6">
+          <h1 className="text-[#2a2a2f] text-[20px] font-bold tracking-[-0.1px] leading-[1.4]">
+            Select users for campaign
+          </h1>
+        </div>
 
-        {/* Filter Bar */}
-        <section className="mb-8 bg-white sticky top-0 z-10 border border-[#e9e9e9] rounded-lg audience-filter-section">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-end p-4 gap-4">
-            {/* All Users Toggle */}
-            <div className="flex flex-row gap-2.5 items-center shrink-0 order-2 lg:order-1">
-              <div className="font-medium text-[#a1a1a1] text-[14px] leading-[16px] tracking-[-0.13px]">
-                All users
-              </div>
-              <div className="h-[18px] w-[30px] relative">
-                <button
-                  onClick={handleAllUsersToggle}
-                  className={`relative inline-flex h-[18px] w-[30px] items-center rounded-full transition-colors ${
-                    allUsersEnabled ? 'bg-[#7856ff]' : 'bg-gray-300'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-[14px] w-[14px] transform rounded-full bg-white transition-transform ${
-                      allUsersEnabled ? 'translate-x-4' : 'translate-x-1'
-                    }`}
+        {/* Main Content Card */}
+        <div className="bg-white border border-[#e9e9e9] rounded-lg p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Left Side - Filter Options */}
+            <div className="flex-1">
+              <div className="flex flex-col gap-4">
+                {/* All Users Toggle */}
+                <div className="bg-white border border-[#e9e9e9] rounded p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#a1a1a1] text-[16px] font-normal tracking-[-0.16px]">
+                      All users
+                    </span>
+                    <button
+                      onClick={handleAllUsersToggle}
+                      className="h-[18px] w-[30px] relative"
+                    >
+                      {allUsersEnabled ? <SwitchIcon /> : <SwitchOffIcon />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filter Options */}
+                <div className="flex flex-col gap-4">
+                  {/* Cohorts */}
+                  <FilterDropdown
+                    isOpen={openFilter === 'cohorts'}
+                    onToggle={() => handleFilterToggle('cohorts')}
+                    title="Cohorts"
+                    options={cohorts}
+                    selectedItems={selectedFilters.cohorts}
+                    onSelectionChange={(items) => handleFilterSelection('cohorts', items)}
+                    selectedCount={getSelectedCount('cohorts')}
                   />
-                </button>
+
+                  {/* Category */}
+                  <FilterDropdown
+                    isOpen={openFilter === 'categories'}
+                    onToggle={() => handleFilterToggle('categories')}
+                    title="Category"
+                    options={categories}
+                    selectedItems={selectedFilters.categories}
+                    onSelectionChange={(items) => handleFilterSelection('categories', items)}
+                    selectedCount={getSelectedCount('categories')}
+                  />
+
+                  {/* User type */}
+                  <FilterDropdown
+                    isOpen={openFilter === 'userTypes'}
+                    onToggle={() => handleFilterToggle('userTypes')}
+                    title="User type"
+                    options={userTypes.map(type => ({ 
+                      id: type, 
+                      name: type === 'retained' ? 'Retained' : type === 'new' ? 'New' : type 
+                    }))}
+                    selectedItems={selectedFilters.userTypes}
+                    onSelectionChange={(items) => handleFilterSelection('userTypes', items)}
+                    selectedCount={getSelectedCount('userTypes')}
+                  />
+
+                  {/* No of visits */}
+                  <FilterDropdown
+                    isOpen={openFilter === 'visitRanges'}
+                    onToggle={() => handleFilterToggle('visitRanges')}
+                    title="No of visits"
+                    options={visitRanges.map(range => ({ id: range, name: range }))}
+                    selectedItems={selectedFilters.visitRanges}
+                    onSelectionChange={(items) => handleFilterSelection('visitRanges', items)}
+                    selectedCount={getSelectedCount('visitRanges')}
+                  />
+
+                  {/* Status */}
+                  <FilterDropdown
+                    isOpen={openFilter === 'statuses'}
+                    onToggle={() => handleFilterToggle('statuses')}
+                    title="Status"
+                    options={statuses.map(status => ({ 
+                      id: status, 
+                      name: status === 'active' ? 'Active' : status === 'inactive' ? 'Inactive' : status 
+                    }))}
+                    selectedItems={selectedFilters.statuses}
+                    onSelectionChange={(items) => handleFilterSelection('statuses', items)}
+                    selectedCount={getSelectedCount('statuses')}
+                  />
+                </div>
+
+                {/* Clear Filters Button */}
+                {Object.values(selectedFilters).some(arr => arr.length > 0) && (
+                  <div className="mt-4">
+                    <button
+                      onClick={clearAllFilters}
+                      className="text-[#7856ff] text-[14px] font-medium hover:underline"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* DataCenterFilters Component */}
-            <div className="flex-1 w-full lg:w-auto order-1 lg:order-2">
-              <DataCenterFilters
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                onFiltersChange={handleFiltersChange}
-                totalUsers={total}
-                visibleUsers={currentTableData.length}
-                categories={categories}
-                clearFilters={clearFilters}
-                showUserCount={false}
-                showSearchBar={false}
-                alignRight={true}
-              />
+            {/* Right Side - User Count */}
+            <div className="lg:w-80 flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-[#2a2a2f] text-[16px] font-normal mb-4">
+                  Sending campaign to
+                </p>
+                <div className="text-[#2a2a2f] text-[48px] font-extrabold tracking-[-0.96px] leading-[1.4]">
+                  {dataLoading ? '...' : dataError ? 'Error' : `${formatUserCount(userCount)} users`}
+                </div>
+                {dataError && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Failed to load user count
+                  </p>
+                )}
+              </div>
             </div>
           </div>
-        </section>
-
-        {/* Data Table */}
-        <section className="bg-white rounded-lg border border-[#e9e9e9] flex-1 flex flex-col min-h-0 mb-20">
-          <div className="flex-1 min-h-0">
-            {loading ? (
-              <div className="text-center py-10 text-[#a1a1a1]">Loading data...</div>
-            ) : error ? (
-              <div className="text-center py-10 text-red-500">{error}</div>
-            ) : (
-              <AudienceTable
-                searchTerm={searchTerm}
-                data={currentTableData}
-              />
-            )}
-          </div>
-          <Pagination
-            currentPage={page}
-            itemsPerPage={pageSize}
-            totalItems={total}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handlePageSizeChange}
-          />
-        </section>
+        </div>
 
         {/* Navigation Bar */}
         <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
@@ -694,7 +687,6 @@ export function AudienceContent() {
             </div>
           </div>
         </div>
-
       </div>
     </main>
   );

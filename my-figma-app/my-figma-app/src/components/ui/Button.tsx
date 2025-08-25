@@ -56,11 +56,9 @@ const Button: React.FC<ButtonProps> = ({
       focus:ring-gray-300 active:scale-[0.98]
     `,
     outline: `
-      relative text-[#6E4EFF] bg-white rounded-sm
-      hover:text-white hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98]
-      before:absolute before:inset-0 before:rounded-sm before:p-[1px] before:bg-gradient-to-r before:from-[#6E4EFF] before:to-[#8B6AFF]
-      after:absolute after:inset-[1px] after:rounded-sm after:bg-white after:transition-colors after:duration-300
-      hover:after:bg-gradient-to-r hover:after:from-[#6E4EFF] hover:after:to-[#8B6AFF]
+      text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded-md
+      hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50 active:scale-[0.98]
+      transition-all duration-200 ease-in-out
     `,
     ghost: `
       text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10

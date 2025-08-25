@@ -86,7 +86,7 @@ const CampaignsFilters = ({
   const visibleCampaigns = 12;
 
   return (
-    <div className="bg-white sticky top-0 z-10 border-b border-t border-gray-200 min-w-0">
+    <div className="bg-white sticky top-0 z-10 border border-gray-200 rounded-lg min-w-0">
       <div className="flex flex-col gap-2 sm:gap-3 lg:gap-0 lg:flex-row lg:items-center lg:justify-between p-2 sm:p-3 lg:px-4 lg:py-0 lg:h-[60px] min-w-0">
         <div className="flex-shrink-0 text-xs sm:text-sm font-medium text-gray-700 truncate">
           Showing {visibleCampaigns} of {totalCampaigns} campaigns

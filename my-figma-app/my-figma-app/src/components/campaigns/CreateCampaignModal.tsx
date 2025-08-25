@@ -238,7 +238,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 rounded-md text-sm font-normal text-gray-700 hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>

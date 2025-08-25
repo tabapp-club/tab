@@ -35,11 +35,11 @@ export function CohortCard({ cohort }: CohortCardProps) {
       const viewportWidth = window.innerWidth;
       
       // Calculate left position to keep menu within viewport
-      let leftPosition = rect.right + window.scrollX - menuWidth;
+      let leftPosition = rect.right + window.scrollX - menuWidth - 56;
       
       // If menu would go outside right edge, align it to the right of the button
       if (leftPosition + menuWidth > viewportWidth) {
-        leftPosition = rect.left + window.scrollX - menuWidth;
+        leftPosition = rect.left + window.scrollX - menuWidth - 56;
       }
       
       // Ensure menu doesn't go outside left edge
@@ -86,11 +86,11 @@ export function CohortCard({ cohort }: CohortCardProps) {
         const viewportWidth = window.innerWidth;
         
         // Calculate left position to keep menu within viewport
-        let leftPosition = rect.right + window.scrollX - menuWidth;
+        let leftPosition = rect.right + window.scrollX - menuWidth - 56;
         
         // If menu would go outside right edge, align it to the right of the button
         if (leftPosition + menuWidth > viewportWidth) {
-          leftPosition = rect.left + window.scrollX - menuWidth;
+          leftPosition = rect.left + window.scrollX - menuWidth - 56;
         }
         
         // Ensure menu doesn't go outside left edge

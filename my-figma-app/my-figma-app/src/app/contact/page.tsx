@@ -190,10 +190,7 @@ export default function ContactPage() {
         {/* Bottom Links */}
         <div className="flex-shrink-0 space-y-1">
           <div className="text-center text-xs text-[#626266] font-['Manrope']">
-            Need immediate assistance?{' '}
-            <Link href="/help" className="text-[#7856ff] hover:text-[#6545dd] font-medium">
-              Check FAQ
-            </Link>
+            Need immediate assistance? Contact us directly using the form above.
           </div>
 
           <div className="text-center">

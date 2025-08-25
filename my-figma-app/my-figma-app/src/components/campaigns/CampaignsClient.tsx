@@ -141,21 +141,18 @@ export function CampaignsClient() {
               {/* Stats */}
               <CampaignsStats />
 
-              {/* Main Content Area */}
-              <div className="bg-white rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
-                {/* Filters */}
-                <CampaignsFilters
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
+              {/* Filters */}
+              <CampaignsFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+              />
 
-                {/* Campaigns List */}
-                <div className="flex-1 min-h-0 min-w-0">
-                  <CampaignsList
-                    searchTerm={searchTerm}
-                    onCampaignsUpdate={handleCampaignsUpdate}
-                  />
-                </div>
+              {/* Campaigns List */}
+              <div className="flex-1 min-h-0 min-w-0">
+                <CampaignsList
+                  searchTerm={searchTerm}
+                  onCampaignsUpdate={handleCampaignsUpdate}
+                />
               </div>
             </div>
           </div>

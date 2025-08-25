@@ -22,7 +22,7 @@ const TemplatesHeader = ({ onCreateTemplate, onImportClick, onExportClick }: Tem
         {/* Import Button */}
         <button
           onClick={onImportClick}
-          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-[#e9e9e9] rounded-md text-sm font-medium text-[#2a2a2f] hover:bg-gray-50 transition-colors min-h-[36px] sm:min-h-[40px]"
+          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-[#e9e9e9] rounded-md text-sm font-normal text-[#2a2a2f] hover:bg-gray-50 transition-colors min-h-[36px] sm:min-h-[40px]"
         >
           <ImportIcon />
           <span className="hidden sm:inline">Import</span>
@@ -31,7 +31,7 @@ const TemplatesHeader = ({ onCreateTemplate, onImportClick, onExportClick }: Tem
         {/* Export Button */}
         <button
           onClick={onExportClick}
-          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-[#e9e9e9] rounded-md text-sm font-medium text-[#2a2a2f] hover:bg-gray-50 transition-colors min-h-[36px] sm:min-h-[40px]"
+          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-[#e9e9e9] rounded-md text-sm font-normal text-[#2a2a2f] hover:bg-gray-50 transition-colors min-h-[36px] sm:min-h-[40px]"
         >
           <ExportIcon />
           <span className="hidden sm:inline">Export</span>

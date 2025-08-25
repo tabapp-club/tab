@@ -61,13 +61,21 @@ const StepperStep = ({
   icon,
   isActive = false,
   isCompleted = false,
-  isCurrent = false
+  isCurrent = false,
+  stepIndex = 0,
+  totalSteps = 5,
+  timeEstimate = "",
+  description = ""
 }: {
   title: string;
   icon: React.ReactNode;
   isActive?: boolean;
   isCompleted?: boolean;
   isCurrent?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
+  timeEstimate?: string;
+  description?: string;
 }) => {
   const getStepStyles = () => {
     if (isCompleted) {
@@ -89,6 +97,16 @@ const StepperStep = ({
     }
   };
 
+  const getSubTextColor = () => {
+    if (isCurrent) {
+      return "text-[#7856ff]/70";
+    }
+    if (isCompleted) {
+      return "text-[#04b440]/70";
+    }
+    return "text-[#626266]/70";
+  };
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-2 grow items-center justify-center min-h-px min-w-px p-[8px] relative shrink-0">
       <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start p-0 relative shrink-0 w-full">
@@ -99,24 +117,33 @@ const StepperStep = ({
         </div>
         <div className="box-border content-stretch flex flex-col gap-1 items-start justify-center p-0 relative self-stretch shrink-0">
           <div className="box-border content-stretch flex flex-row gap-2 items-center justify-center p-0 relative shrink-0">
-            <div className={`flex flex-col font-['Manrope:Medium',_sans-serif] font-medium justify-center leading-[0] relative shrink-0 text-[14px] text-center text-nowrap ${getTextColor()}`}>
-              <p className="block leading-[20px] whitespace-pre">{title}</p>
-            </div>
-            {isCompleted && (
-              <div className="relative shrink-0 size-[15px]">
-                <CheckIcon />
-              </div>
-            )}
-            {isCurrent && (
-              <div className="relative shrink-0 size-[15px]">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2"/>
-                </svg>
-              </div>
-            )}
           </div>
+          {(timeEstimate || description) && (
+            <div className={`flex flex-col items-center justify-center text-[12px] font-semibold leading-[14px] ${getSubTextColor()}`}>
+              {description && (
+                <span className="text-center">{description}</span>
+              )}
+              {timeEstimate && (
+                <span className="text-center mt-1">⏱️ {timeEstimate}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Progress Bar Component
+const StepperProgressBar = ({ currentStep = 5, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
+  const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
+  
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
+      <div 
+        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        style={{ width: `${progressPercentage}%` }}
+      />
     </div>
   );
 };
@@ -235,54 +262,66 @@ export function ScheduleContent() {
         <MobileMenuToggle />
       </div>
 
-      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32">
-        {/* Header */}
-        <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-[24px] font-medium text-[#2a2a2f] leading-tight tracking-[-0.1px]">
-                Campaigns
-              </h1>
-            </div>
-          </div>
-        </header>
+      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">
+
 
         {/* Stepper */}
-        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto">
-          <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
-            <StepperStep
-              title="campaign type"
-              icon={<CampaignIcon />}
-              isCompleted={true}
-            />
-            <StepperStep
-              title="Create campaign"
-              icon={<MoneyIcon />}
-              isCompleted={true}
-            />
-            <StepperStep
-              title="Choose audience"
-              icon={<UsersIcon />}
-              isCompleted={true}
-            />
-            <StepperStep
-              title="Platform & Budget"
-              icon={<BagIcon />}
-              isCompleted={true}
-            />
-            <StepperStep
-              title="Schedule"
-              icon={<CalendarIcon />}
-              isCurrent={true}
-            />
-          </div>
+        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
+                      <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
+              <StepperStep
+                title="campaign type"
+                icon={<CampaignIcon />}
+                isCompleted={true}
+                stepIndex={1}
+                totalSteps={5}
+                timeEstimate="2-3 min"
+                description="Choose campaign type"
+              />
+              <StepperStep
+                title="Create campaign"
+                icon={<MoneyIcon />}
+                isCompleted={true}
+                stepIndex={2}
+                totalSteps={5}
+                timeEstimate="5-8 min"
+                description="Design your campaign"
+              />
+              <StepperStep
+                title="Choose audience"
+                icon={<UsersIcon />}
+                isCompleted={true}
+                stepIndex={3}
+                totalSteps={5}
+                timeEstimate="3-5 min"
+                description="Select target users"
+              />
+              <StepperStep
+                title="Platform & Budget"
+                icon={<BagIcon />}
+                isCompleted={true}
+                stepIndex={4}
+                totalSteps={5}
+                timeEstimate="2-4 min"
+                description="Set budget & platforms"
+              />
+              <StepperStep
+                title="Schedule"
+                icon={<CalendarIcon />}
+                isCurrent={true}
+                stepIndex={5}
+                totalSteps={5}
+                timeEstimate="1-2 min"
+                description="Set timing"
+              />
+            </div>
+          <StepperProgressBar currentStep={5} totalSteps={5} />
         </section>
 
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Start and End Date Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Start Date and Time */}
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9] shadow-[0px_3px_4px_0px_rgba(0,0,0,0.03)]">
+            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9]">
               <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
                 <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
                   <div className="font-['Manrope:Bold',_sans-serif] font-bold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">
@@ -393,7 +432,7 @@ export function ScheduleContent() {
             </div>
 
             {/* End Date and Time */}
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9] shadow-[0px_3px_4px_0px_rgba(0,0,0,0.03)]">
+            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9]">
               <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
                 <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
                   <div className="font-['Manrope:Bold',_sans-serif] font-bold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">
@@ -506,7 +545,7 @@ export function ScheduleContent() {
 
           {/* Repeat Campaign Section - Only for Tab campaigns */}
           {isTabSelected && (
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 w-full border border-[#e9e9e9] shadow-[0px_3px_4px_0px_rgba(0,0,0,0.03)]">
+            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 w-full border border-[#e9e9e9]">
               <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
                 <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
                   <div className="font-['Manrope:SemiBold',_sans-serif] font-semibold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">

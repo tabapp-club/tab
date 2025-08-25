@@ -87,7 +87,7 @@ export function MobileMenuToggle() {
     <>
       <button
         onClick={toggleMenu}
-        className="mobile-menu-toggle w-10 h-10 bg-white border border-[#e9e9e9] rounded-md flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
+                    className="mobile-menu-toggle w-10 h-10 bg-white border border-[#e9e9e9] rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors"
         aria-label="Toggle menu"
         aria-expanded={isOpen}
       >

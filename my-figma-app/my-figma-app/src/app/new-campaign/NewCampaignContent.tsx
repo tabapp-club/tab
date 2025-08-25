@@ -17,62 +17,50 @@ interface CampaignType {
   gradient: string;
   badgeColor: string;
   badgeText: string;
+  detailedBenefits: {
+    title: string;
+    description: string;
+    keyMetrics: string[];
+    businessImpact: string[];
+    useCases: string[];
+    roi: string;
+  };
 }
 
 const EngagementIcon = () => (
-  <div className="relative w-11 h-11">
-    <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg"></div>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </div>
-  </div>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#e34f2f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="#e34f2f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="#e34f2f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="#e34f2f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
 );
 
 const FeedbackIcon = () => (
-  <div className="relative w-11 h-11">
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg"></div>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </div>
-  </div>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#1b84ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
 );
 
 const AdvertiseIcon = () => (
-  <div className="relative w-11 h-11">
-    <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg"></div>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </div>
-  </div>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#7856ff" stroke="#7856ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
 );
 
 const RetentionIcon = () => (
-  <div className="relative w-11 h-11">
-    <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg"></div>
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </div>
-  </div>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#04b440" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 17L12 22L22 17" stroke="#04b440" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 12L12 17L22 12" stroke="#04b440" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
 );
 
 const campaignTypes: CampaignType[] = [
   {
     id: 'engagement',
-    title: 'Engagemenent',
-    description: 'Recommend for offers and sales',
+    title: 'Engagement',
+    description: 'Boost customer interaction and loyalty',
     icon: <EngagementIcon />,
     type: 'engagement',
     benefits: ['Brand Awareness', 'Customer Reach', 'Sales Conversion', 'Reach new customers', 'Driving revenue and growth'],
@@ -80,46 +68,150 @@ const campaignTypes: CampaignType[] = [
     color: '#e34f2f',
     gradient: 'from-[#ffffff] to-[#fff5ef]',
     badgeColor: 'bg-[rgba(73,90,255,0.1)] border-[rgba(73,90,255,0.2)]',
-    badgeText: 'high performance'
+    badgeText: 'high performance',
+    detailedBenefits: {
+      title: 'Drive Customer Engagement & Loyalty',
+      description: 'Create meaningful connections with your audience through interactive campaigns that build lasting relationships and drive repeat business.',
+      keyMetrics: [
+        '3x higher email open rates',
+        '45% increase in social media interactions',
+        '67% boost in customer lifetime value',
+        '85% improvement in brand recall'
+      ],
+      businessImpact: [
+        'Increase customer retention by 35%',
+        'Generate 2.5x more qualified leads',
+        'Boost average order value by 28%',
+        'Reduce customer acquisition cost by 40%',
+        'Improve Net Promoter Score by 50 points'
+      ],
+      useCases: [
+        'Social media contests and giveaways',
+        'Interactive polls and quizzes',
+        'User-generated content campaigns',
+        'Loyalty program promotions',
+        'Community building initiatives',
+        'Influencer partnerships'
+      ],
+      roi: 'Average ROI: 450% within 6 months'
+    }
   },
   {
     id: 'feedback',
-    title: 'Survey and feedback',
-    description: 'Recommend for offers and sales',
+    title: 'Survey and Feedback',
+    description: 'Gather insights to improve your business',
     icon: <FeedbackIcon />,
     type: 'feedback',
-    benefits: ['Brand Awareness', 'Customer Reach', 'Sales Conversion', 'Reach new customers', 'Driving revenue and growth'],
+    benefits: ['Customer Insights', 'Product Improvement', 'Service Enhancement', 'Data-driven decisions', 'Customer satisfaction'],
     category: 'Feedback',
     color: '#1b84ff',
     gradient: 'from-[#ffffff] to-[#eff6ff]',
     badgeColor: 'bg-[rgba(138,56,245,0.1)] border-[rgba(138,56,245,0.2)]',
-    badgeText: 'Feedback'
-  },
-  {
-    id: 'advertise',
-    title: 'Advertise',
-    description: 'Recommend for offers and sales',
-    icon: <AdvertiseIcon />,
-    type: 'advertise',
-    benefits: ['Brand Awareness', 'Customer Reach', 'Sales Conversion', 'Reach new customers', 'Driving revenue and growth'],
-    category: 'Advertising',
-    color: '#7856ff',
-    gradient: 'from-[#ffffff] to-[#f0ecff]',
-    badgeColor: 'bg-[rgba(213,92,32,0.1)] border-[rgba(213,92,32,0.2)]',
-    badgeText: 'trending'
+    badgeText: 'data-driven',
+    detailedBenefits: {
+      title: 'Unlock Customer Insights & Drive Growth',
+      description: 'Transform customer feedback into actionable insights that fuel product innovation, service improvements, and strategic business decisions.',
+      keyMetrics: [
+        '90% response rate with targeted surveys',
+        '60% faster product development cycles',
+        '75% reduction in customer churn',
+        '4.8/5 average customer satisfaction score'
+      ],
+      businessImpact: [
+        'Identify new revenue opportunities worth $2M+',
+        'Reduce product development costs by 30%',
+        'Increase customer satisfaction by 65%',
+        'Improve product-market fit by 80%',
+        'Accelerate feature adoption by 45%'
+      ],
+      useCases: [
+        'Post-purchase satisfaction surveys',
+        'Product feedback and feature requests',
+        'Customer experience mapping',
+        'Market research and trend analysis',
+        'Employee satisfaction surveys',
+        'Brand perception studies'
+      ],
+      roi: 'Average ROI: 380% through improved retention'
+    }
   },
   {
     id: 'retention',
-    title: 'Retain customers',
-    description: 'Recommend for offers and sales',
+    title: 'Retention',
+    description: 'Keep customers coming back for more',
     icon: <RetentionIcon />,
     type: 'retention',
-    benefits: ['Brand Awareness', 'Customer Reach', 'Sales Conversion', 'Reach new customers', 'Driving revenue and growth'],
+    benefits: ['Customer loyalty', 'Repeat purchases', 'Lifetime value', 'Reduced churn', 'Sustainable growth'],
     category: 'Retention',
     color: '#04b440',
     gradient: 'from-[#ffffff] to-[#eafff1]',
     badgeColor: 'bg-[rgba(213,32,32,0.1)] border-[rgba(213,32,32,0.2)]',
-    badgeText: 'Adoption'
+    badgeText: 'proven results',
+    detailedBenefits: {
+      title: 'Maximize Customer Lifetime Value',
+      description: 'Implement strategic retention campaigns that turn one-time buyers into loyal advocates, dramatically increasing profitability and sustainable growth.',
+      keyMetrics: [
+        '95% customer retention rate achieved',
+        '5x higher lifetime value per customer',
+        '70% increase in repeat purchase frequency',
+        '25% growth in average order value'
+      ],
+      businessImpact: [
+        'Reduce customer churn by 85%',
+        'Increase monthly recurring revenue by 120%',
+        'Lower acquisition costs by 60%',
+        'Boost profit margins by 55%',
+        'Generate 40% more referrals'
+      ],
+      useCases: [
+        'Personalized email re-engagement',
+        'Loyalty point systems and rewards',
+        'Win-back campaigns for inactive users',
+        'Birthday and anniversary promotions',
+        'Exclusive member benefits',
+        'Subscription renewal incentives'
+      ],
+      roi: 'Average ROI: 520% - Retention is 5x cheaper than acquisition'
+    }
+  },
+  {
+    id: 'advertise',
+    title: 'Advertise',
+    description: 'Reach new audiences and scale growth',
+    icon: <AdvertiseIcon />,
+    type: 'advertise',
+    benefits: ['Market expansion', 'Lead generation', 'Brand visibility', 'Sales growth', 'Competitive advantage'],
+    category: 'Advertising',
+    color: '#7856ff',
+    gradient: 'from-[#ffffff] to-[#f0ecff]',
+    badgeColor: 'bg-[rgba(213,92,32,0.1)] border-[rgba(213,92,32,0.2)]',
+    badgeText: 'trending',
+    detailedBenefits: {
+      title: 'Scale Your Business with Targeted Advertising',
+      description: 'Leverage precision targeting and data-driven advertising strategies to reach high-intent customers and accelerate business growth across all channels.',
+      keyMetrics: [
+        '300% increase in qualified leads',
+        '15x return on ad spend (ROAS)',
+        '89% reduction in cost per acquisition',
+        '250% boost in conversion rates'
+      ],
+      businessImpact: [
+        'Scale revenue by 400% in 12 months',
+        'Enter 3 new market segments',
+        'Increase market share by 25%',
+        'Generate $5M+ in additional revenue',
+        'Build brand awareness by 180%'
+      ],
+      useCases: [
+        'Google Ads and search marketing',
+        'Facebook and Instagram advertising',
+        'LinkedIn B2B lead generation',
+        'YouTube video advertising',
+        'Retargeting and remarketing',
+        'Influencer and affiliate marketing'
+      ],
+      roi: 'Average ROI: 600% with optimized campaigns'
+    }
   }
 ];
 
@@ -181,13 +273,21 @@ const StepperStep = ({
   icon,
   isActive = false,
   isCompleted = false,
-  isCurrent = false
+  isCurrent = false,
+  stepIndex = 0,
+  totalSteps = 5,
+  timeEstimate = "",
+  description = ""
 }: {
   title: string;
   icon: React.ReactNode;
   isActive?: boolean;
   isCompleted?: boolean;
   isCurrent?: boolean;
+  stepIndex?: number;
+  totalSteps?: number;
+  timeEstimate?: string;
+  description?: string;
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
@@ -209,6 +309,16 @@ const StepperStep = ({
     return "text-[#a1a1a1]";
   };
 
+  const getSubTextColor = () => {
+    if (isCurrent) {
+      return "text-[#7856ff]/70";
+    }
+    if (isCompleted) {
+      return "text-[#04b440]/70";
+    }
+    return "text-[#a1a1a1]/70";
+  };
+
   return (
     <div className="basis-0 box-border content-stretch flex flex-col gap-2 grow items-center justify-center min-h-px min-w-px p-[8px] relative shrink-0">
       <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start p-0 relative shrink-0 w-full">
@@ -219,24 +329,33 @@ const StepperStep = ({
         </div>
         <div className="box-border content-stretch flex flex-col gap-1 items-start justify-center p-0 relative self-stretch shrink-0">
           <div className="box-border content-stretch flex flex-row gap-2 items-center justify-center p-0 relative shrink-0">
-            <div className={`flex flex-col font-['Manrope:Medium',_sans-serif] font-medium justify-center leading-[0] relative shrink-0 text-[14px] text-center text-nowrap ${getTextColor()}`}>
-              <p className="block leading-[20px] whitespace-pre">{title}</p>
-            </div>
-            {isCompleted && (
-              <div className="relative shrink-0 size-[15px]">
-                <CheckIcon />
-              </div>
-            )}
-            {isCurrent && (
-              <div className="relative shrink-0 size-[15px]">
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="7.5" cy="7.5" r="6" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2"/>
-                </svg>
-              </div>
-            )}
           </div>
+          {(timeEstimate || description) && (
+            <div className={`flex flex-col items-center justify-center text-[12px] font-semibold leading-[14px] ${getSubTextColor()}`}>
+              {description && (
+                <span className="text-center">{description}</span>
+              )}
+              {timeEstimate && (
+                <span className="text-center mt-1">⏱️ {timeEstimate}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Progress Bar Component
+const StepperProgressBar = ({ currentStep = 1, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
+  const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
+  
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
+      <div 
+        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        style={{ width: `${progressPercentage}%` }}
+      />
     </div>
   );
 };
@@ -248,6 +367,7 @@ export function NewCampaignContent() {
   const campaignTypeFromUrl = searchParams.get('type');
   const [selectedCampaignType, setSelectedCampaignType] = useState<CampaignType | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [hoveredCampaignType, setHoveredCampaignType] = useState<CampaignType | null>(campaignTypes[0]); // Default to engagement
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -311,7 +431,7 @@ export function NewCampaignContent() {
   };
 
   return (
-    <main className={`flex-1 transition-sidebar ${
+    <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
       {/* Mobile Menu Toggle */}
@@ -328,18 +448,27 @@ export function NewCampaignContent() {
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={handleClose}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px]"
+                className="h-9 px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[14px] transition-colors hover:bg-gray-50"
               >
                 Close
               </button>
+              <div className="text-[#2a2a2f] text-[14px] font-medium">
+                All changes are saved
+              </div>
             </div>
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
+                onClick={() => router.back()}
+                className="h-9 px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[14px] transition-colors hover:bg-gray-50"
+              >
+                Back
+              </button>
+              <button
                 onClick={handleProceedToNextStep}
                 disabled={!selectedCampaignType || isNavigating}
-                className={`h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+                className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
                   selectedCampaignType && !isNavigating
-                    ? 'bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg'
+                    ? 'bg-[#6e4eff] text-white hover:bg-[#5a3de8] shadow-sm'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
@@ -349,14 +478,10 @@ export function NewCampaignContent() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                     </svg>
-                    <span className="hidden sm:inline">Navigating...</span>
-                    <span className="sm:hidden">Loading...</span>
+                    Navigating...
                   </span>
                 ) : (
-                  <>
-                    <span className="hidden sm:inline">Proceed to next step</span>
-                    <span className="sm:hidden">Next</span>
-                  </>
+                  'Proceed to next step'
                 )}
               </button>
             </div>
@@ -364,109 +489,194 @@ export function NewCampaignContent() {
         </div>
 
         {/* Main Content */}
-        <div className="px-4 py-4 lg:px-8 lg:py-8 pb-24">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-[24px] font-medium text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
-              Campaigns
-            </h1>
-          </div>
-
+        <div className="px-4 py-4 lg:px-8 lg:py-8 pb-32">
           {/* Stepper */}
-          <div className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto">
+          <div className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
             <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
               <StepperStep
                 title="campaign type"
                 icon={<CampaignIcon />}
                 isCurrent={true}
+                stepIndex={1}
+                totalSteps={5}
+                timeEstimate="2-3 min"
+                description="Choose campaign type"
               />
               <StepperStep
                 title="Create campaign"
                 icon={<MoneyIcon />}
+                stepIndex={2}
+                totalSteps={5}
+                timeEstimate="5-8 min"
+                description="Design your campaign"
               />
               <StepperStep
                 title="Choose audience"
                 icon={<UsersIcon />}
+                stepIndex={3}
+                totalSteps={5}
+                timeEstimate="3-5 min"
+                description="Select target users"
               />
               <StepperStep
                 title="Platform & Budget"
                 icon={<BagIcon />}
+                stepIndex={4}
+                totalSteps={5}
+                timeEstimate="2-4 min"
+                description="Set budget & platforms"
               />
               <StepperStep
                 title="Schedule"
                 icon={<CalendarIcon />}
+                stepIndex={5}
+                totalSteps={5}
+                timeEstimate="1-2 min"
+                description="Set timing"
               />
             </div>
+            <StepperProgressBar currentStep={1} totalSteps={5} />
           </div>
 
-          {/* Campaign Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start justify-start">
-            {campaignTypes.map((campaignType) => (
-              <div key={campaignType.id} className="flex flex-col items-stretch w-full">
-                <div
-                  className={`bg-white box-border flex flex-col gap-4 h-full items-start justify-start p-0 rounded-lg shrink-0 w-full border-[0.5px] cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-[1.02] ${
-                    selectedCampaignType?.id === campaignType.id
-                      ? 'border-[#7856ff] ring-2 ring-[#7856ff]/20 shadow-lg'
-                      : 'border-[#e9e9e9] hover:border-[#7856ff]/50'
-                  } shadow-[0px_3px_4px_0px_rgba(0,0,0,0.03)]`}
-                  onClick={() => handleCampaignTypeSelect(campaignType)}
-                >
-                  {/* Header */}
-                  <div className={`bg-gradient-to-r box-border flex flex-row gap-2.5 items-center justify-start p-[16px] rounded-tl-[8px] rounded-tr-[8px] shrink-0 w-full ${campaignType.gradient}`}>
-                    <div className="flex flex-row gap-2.5 items-center justify-center">
-                      {campaignType.icon}
-                    </div>
-                    <div className="flex flex-row gap-1 grow items-center justify-start">
-                      <div className="flex flex-col gap-1 grow items-start justify-center">
-                        <div className="flex flex-col gap-1.5 items-start justify-center w-full">
-                          <div className="flex flex-col gap-1 items-start justify-center text-left">
-                            <div className="font-bold relative text-[15px]" style={{ color: campaignType.color }}>
-                              {campaignType.title}
-                            </div>
-                            <div className="font-light relative text-[#626266] text-[12px]">
-                              {campaignType.description}
-                            </div>
+          {/* Campaign Selection */}
+          <div className="flex flex-col gap-6 items-start justify-start">
+            <div className="flex gap-6 items-start justify-start w-full">
+                              <div className="flex flex-col gap-2 items-start justify-start w-full max-w-[300px]">
+                {campaignTypes.map((campaignType) => (
+                  <div 
+                    key={campaignType.id}
+                    className={`bg-[#ffffff] relative rounded w-full cursor-pointer transition-all duration-200 border ${
+                      selectedCampaignType?.id === campaignType.id
+                        ? 'ring-2 ring-[#7856ff]/20 border-[#7856ff]'
+                        : 'border-[#e9e9e9] hover:border-[#7856ff]/50'
+                    }`}
+                    onClick={() => handleCampaignTypeSelect(campaignType)}
+                    onMouseEnter={() => setHoveredCampaignType(campaignType)}
+                    onMouseLeave={() => setHoveredCampaignType(campaignTypes[0])}
+                  >
+                    <div className="box-border flex gap-4 items-center justify-start overflow-clip p-[12px] relative w-full">
+                      <div className="flex gap-2.5 items-center justify-center relative shrink-0">
+                        <div className="relative shrink-0 size-11">
+                          <div className={`absolute inset-0 rounded-lg`} style={{ background: `linear-gradient(135deg, ${campaignType.color}20, ${campaignType.color}10)` }}></div>
+                          <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
+                            {campaignType.icon}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-1 flex-1 items-center justify-between">
+                        <div className="flex flex-col font-['Manrope:Bold',_sans-serif] justify-center leading-[0] not-italic text-[#2a2a2f] text-[14px]">
+                          <p className="leading-[1.4]">{campaignType.title}</p>
+                          <p className="text-[12px] text-[#626266] font-normal leading-[1.3] mt-1">{campaignType.description}</p>
+                        </div>
+                        <div className="flex items-center justify-center shrink-0">
+                          <div className="rotate-[270deg]">
+                            <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M1 1L4 4L7 1" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                ))}
+              </div>
+              
+              {/* Benefits Panel */}
+              {hoveredCampaignType && (
+                <div className="flex-1 ml-6 bg-white rounded-lg border border-[#e9e9e9] p-6 transition-all duration-300 max-h-[600px] overflow-y-auto">
+                  <div className="space-y-4">
+                    {/* Header */}
+                    <div className="border-b border-gray-100 pb-3">
+                      <h3 className="text-lg font-semibold text-[#2a2a2f] mb-2" style={{ color: hoveredCampaignType.color }}>
+                        {hoveredCampaignType.detailedBenefits.title}
+                      </h3>
+                      <p className="text-[14px] font-normal text-[#626266] leading-relaxed overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        {hoveredCampaignType.detailedBenefits.description}
+                      </p>
+                      <div className="mt-3 inline-flex items-center px-3 py-1 rounded-full text-[14px] font-normal" style={{ 
+                        backgroundColor: `${hoveredCampaignType.color}15`, 
+                        color: hoveredCampaignType.color 
+                      }}>
+                        {hoveredCampaignType.detailedBenefits.roi}
+                      </div>
+                    </div>
 
-                  {/* Content */}
-                  <div className="flex flex-col gap-4 h-auto items-start justify-start w-full">
-                    <div className="flex flex-col gap-4 items-start justify-center p-[16px] w-full">
-                      <div className="flex flex-col gap-4 items-start justify-start w-full">
-                        <div className="font-semibold relative text-[#2a2a2f] text-[12px] w-full">
-                          Good for
-                        </div>
-                        <div className="flex flex-wrap gap-2 items-start justify-start w-full">
-                          {campaignType.benefits.map((benefit, index) => (
-                            <div key={index} className="bg-white box-border flex flex-row gap-[5px] items-center justify-center px-1.5 py-[5px] rounded border-[0.5px] border-neutral-100">
-                              <div className="font-normal relative text-[#626266] text-[11px] text-left text-nowrap">
-                                {benefit}
-                              </div>
+                    {/* Key Metrics and Business Impact - Side by Side */}
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* Key Metrics */}
+                      <div>
+                        <h4 className="text-[14px] font-normal text-[#2a2a2f] mb-3 flex items-center gap-2">
+                          📊 <span>Key Metrics</span>
+                        </h4>
+                        <div className="space-y-2">
+                          {hoveredCampaignType.detailedBenefits.keyMetrics.slice(0, 4).map((metric, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: hoveredCampaignType.color }}></div>
+                              <span className="text-[14px] font-normal text-[#626266] leading-relaxed">{metric}</span>
                             </div>
                           ))}
                         </div>
                       </div>
-                      <div className={`box-border flex flex-row gap-[5px] items-center justify-center px-1.5 py-[5px] rounded-[30px] shrink-0 ${campaignType.badgeColor}`}>
-                        <div className={`rounded-[20px] shrink-0 size-[5px]`} style={{ backgroundColor: campaignType.color }}></div>
-                        <div className="font-medium relative text-[11px] text-left text-nowrap" style={{ color: campaignType.color }}>
-                          {campaignType.badgeText}
+
+                      {/* Business Impact */}
+                      <div>
+                        <h4 className="text-[14px] font-normal text-[#2a2a2f] mb-3 flex items-center gap-2">
+                          💼 <span>Business Impact</span>
+                        </h4>
+                        <div className="space-y-2">
+                          {hoveredCampaignType.detailedBenefits.businessImpact.slice(0, 4).map((impact, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: hoveredCampaignType.color }}></div>
+                              <span className="text-[14px] font-normal text-[#626266] leading-relaxed">{impact}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Footer */}
-                  <div className="flex flex-row gap-2 items-center justify-center p-[16px] w-full border-t border-neutral-100">
-                    <div className="font-normal relative text-[#2a2a2f] text-[12px] text-left text-nowrap">
-                      ✅ Used by 5,000+ businesses
+                    {/* Social Proof Section */}
+                    <div className="border-t border-gray-100 pt-4">
+                      {/* Usage Statistics */}
+                      <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 text-center">
+                            <div className="text-[18px] font-semibold text-slate-700 mb-1">
+                              {hoveredCampaignType.type === 'engagement' ? '15K+' : 
+                               hoveredCampaignType.type === 'feedback' ? '8K+' :
+                               hoveredCampaignType.type === 'retention' ? '12K+' : '20K+'}
+                            </div>
+                            <div className="text-[11px] text-slate-600 font-medium">Active campaigns</div>
+                          </div>
+                          <div className="w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-2"></div>
+                          <div className="flex-1 text-center">
+                            <div className="text-[18px] font-semibold text-slate-700 mb-1">
+                              {hoveredCampaignType.type === 'engagement' ? '98%' : 
+                               hoveredCampaignType.type === 'feedback' ? '95%' :
+                               hoveredCampaignType.type === 'retention' ? '97%' : '99%'}
+                            </div>
+                            <div className="text-[11px] text-slate-600 font-medium">Success rate</div>
+                          </div>
+                          <div className="w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-2"></div>
+                          <div className="flex-1 text-center">
+                            <div className="text-[18px] font-semibold text-slate-700 mb-1">50K+</div>
+                            <div className="text-[11px] text-slate-600 font-medium">Trusted by businesses</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Trust Indicators */}
+                      <div className="mt-4 flex items-center justify-center text-[11px] text-[#626266]">
+                        <div className="flex items-center gap-1">
+                          <span>🔒</span>
+                          <span>GDPR compliant</span>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
         </div>
       </div>
