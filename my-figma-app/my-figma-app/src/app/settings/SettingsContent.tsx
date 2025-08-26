@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 
 export function SettingsContent() {
+  const router = useRouter();
   const { isCollapsed, isMobile } = useSidebar();
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
@@ -99,7 +101,10 @@ export function SettingsContent() {
     smsBackup: false
   });
 
-  // Integrations state
+  // Kebab menu state
+  const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
+
+  // Integration states
   const [integrations, setIntegrations] = useState<Record<string, boolean>>({
     square: false,
     shopify: false,
@@ -109,8 +114,177 @@ export function SettingsContent() {
     toast: false,
   });
 
-  // Kebab menu state
-  const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
+  // Manual integrations state
+  const [manualIntegrations, setManualIntegrations] = useState({
+    zapier: { connected: false, webhookUrl: '', apiKey: '' },
+    webhooks: { enabled: false, endpoints: [], secret: '' },
+    api: { enabled: false, apiKey: '', rateLimit: 1000 },
+    csv: { enabled: false, lastSync: null },
+    scheduled: { enabled: false, frequency: 'daily', nextSync: null }
+  });
+
+  // Loading states
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const [errorStates, setErrorStates] = useState<Record<string, string>>({});
+
+  // Modal states
+  const [showZapierModal, setShowZapierModal] = useState(false);
+  const [showWebhookModal, setShowWebhookModal] = useState(false);
+  const [showApiModal, setShowApiModal] = useState(false);
+  const [showCsvModal, setShowCsvModal] = useState(false);
+  const [showScheduledModal, setShowScheduledModal] = useState(false);
+
+  // Form states for modals
+  const [zapierForm, setZapierForm] = useState({ webhookUrl: '', apiKey: '' });
+  const [webhookForm, setWebhookForm] = useState({ endpoint: '', secret: '', events: [] });
+  const [apiForm, setApiForm] = useState({ apiKey: '', rateLimit: 1000 });
+  const [csvForm, setCsvForm] = useState({ enabled: false, fields: [] });
+  const [scheduledForm, setScheduledForm] = useState({ frequency: 'daily', time: '09:00' });
+
+  // Integration functions
+  const connectIntegration = async (integrationId: string) => {
+    setLoadingStates(prev => ({ ...prev, [integrationId]: true }));
+    setErrorStates(prev => ({ ...prev, [integrationId]: '' }));
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setIntegrations(prev => ({ ...prev, [integrationId]: true }));
+      
+      // Show success notification
+      console.log(`${integrationId} integration connected successfully`);
+    } catch (error) {
+      setErrorStates(prev => ({ ...prev, [integrationId]: 'Failed to connect integration' }));
+      console.error(`Error connecting ${integrationId}:`, error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [integrationId]: false }));
+    }
+  };
+
+  const disconnectIntegration = async (integrationId: string) => {
+    setLoadingStates(prev => ({ ...prev, [integrationId]: true }));
+    setErrorStates(prev => ({ ...prev, [integrationId]: '' }));
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setIntegrations(prev => ({ ...prev, [integrationId]: false }));
+      
+      // Show success notification
+      console.log(`${integrationId} integration disconnected successfully`);
+    } catch (error) {
+      setErrorStates(prev => ({ ...prev, [integrationId]: 'Failed to disconnect integration' }));
+      console.error(`Error disconnecting ${integrationId}:`, error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [integrationId]: false }));
+    }
+  };
+
+  const syncIntegration = async (integrationId: string) => {
+    setLoadingStates(prev => ({ ...prev, [`${integrationId}_sync`]: true }));
+    
+    try {
+      // Simulate sync API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Show success notification
+      console.log(`${integrationId} data synced successfully`);
+    } catch (error) {
+      console.error(`Error syncing ${integrationId}:`, error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [`${integrationId}_sync`]: false }));
+    }
+  };
+
+  const openIntegrationSettings = (integrationId: string) => {
+    // Navigate to integration settings or open modal
+    console.log(`Opening settings for ${integrationId}`);
+  };
+
+  const viewIntegrationDocs = (integrationId: string) => {
+    // Open documentation in new tab
+    const docsUrls = {
+      square: 'https://developer.squareup.com/docs',
+      shopify: 'https://shopify.dev/docs',
+      stripe: 'https://stripe.com/docs',
+      quickbooks: 'https://developer.intuit.com/docs',
+      clover: 'https://docs.clover.com',
+      toast: 'https://developer.toasttab.com/docs'
+    };
+    
+    const url = docsUrls[integrationId as keyof typeof docsUrls];
+    if (url) {
+      window.open(url, '_blank');
+    }
+  };
+
+  // Manual integration functions
+  const setupZapierIntegration = async () => {
+    setLoadingStates(prev => ({ ...prev, zapier: true }));
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setManualIntegrations(prev => ({
+        ...prev,
+        zapier: { ...prev.zapier, connected: true, ...zapierForm }
+      }));
+      
+      setShowZapierModal(false);
+      console.log('Zapier integration setup successfully');
+    } catch (error) {
+      console.error('Error setting up Zapier:', error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, zapier: false }));
+    }
+  };
+
+  const setupWebhookIntegration = async () => {
+    setLoadingStates(prev => ({ ...prev, webhooks: true }));
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setManualIntegrations(prev => ({
+        ...prev,
+        webhooks: { 
+          ...prev.webhooks, 
+          enabled: true, 
+          endpoints: [...prev.webhooks.endpoints, webhookForm.endpoint],
+          secret: webhookForm.secret
+        }
+      }));
+      
+      setShowWebhookModal(false);
+      console.log('Webhook integration setup successfully');
+    } catch (error) {
+      console.error('Error setting up webhooks:', error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, webhooks: false }));
+    }
+  };
+
+  const setupApiIntegration = async () => {
+    setLoadingStates(prev => ({ ...prev, api: true }));
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      setManualIntegrations(prev => ({
+        ...prev,
+        api: { ...prev.api, enabled: true, ...apiForm }
+      }));
+      
+      setShowApiModal(false);
+      console.log('API integration setup successfully');
+    } catch (error) {
+      console.error('Error setting up API:', error);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, api: false }));
+    }
+  };
 
   // Close kebab menu when clicking outside
   useEffect(() => {
@@ -1010,7 +1184,7 @@ export function SettingsContent() {
                           {Object.values(integrations).filter(Boolean).length} Connected
                         </span>
                         <button 
-                          onClick={() => window.location.href = '/settings/browse-integrations'}
+                          onClick={() => router.push('/settings/browse-integrations')}
                           className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6E4EFF]"
                         >
                           Browse All
@@ -1062,6 +1236,172 @@ export function SettingsContent() {
                       </div>
                     </div>
 
+                  {/* Manual Integrations Section */}
+                  <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">Manual Integrations</h3>
+                        <p className="text-sm text-gray-600">Connect with custom solutions, automation tools, and third-party services</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1"></div>
+                          Advanced
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Zapier Integration */}
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                              <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                          </div>
+                          <div>
+                              <h4 className="text-sm font-semibold text-gray-900">Zapier</h4>
+                              <p className="text-xs text-gray-500">Automation platform</p>
+                          </div>
+                        </div>
+                        </div>
+                        
+                        <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                          Automate workflows by connecting Tab with 5000+ apps through Zapier's no-code platform.
+                        </p>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                            </svg>
+                            <span>5000+ apps</span>
+                          </div>
+                          <button 
+                            onClick={() => setShowZapierModal(true)}
+                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                          >
+                            {manualIntegrations.zapier.connected ? 'Connected' : 'Setup Guide'}
+                          </button>
+                      </div>
+                    </div>
+
+                      {/* Webhooks Integration */}
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                          </div>
+                          <div>
+                              <h4 className="text-sm font-semibold text-gray-900">Webhooks</h4>
+                              <p className="text-xs text-gray-500">Real-time notifications</p>
+                          </div>
+                        </div>
+                        </div>
+                        
+                        <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                          Receive real-time notifications when events occur in your Tab account via HTTP webhooks.
+                        </p>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                            </svg>
+                            <span>Real-time</span>
+                          </div>
+                          <button 
+                            onClick={() => setShowWebhookModal(true)}
+                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                          >
+                            {manualIntegrations.webhooks.enabled ? 'Active' : 'Configure'}
+                          </button>
+                      </div>
+                    </div>
+
+                      {/* API Integration */}
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                              <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                            </svg>
+                          </div>
+                          <div>
+                              <h4 className="text-sm font-semibold text-gray-900">REST API</h4>
+                              <p className="text-xs text-gray-500">Developer access</p>
+                          </div>
+                        </div>
+                        </div>
+                        
+                        <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                          Build custom integrations using our comprehensive REST API with full CRUD operations.
+                        </p>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                            </svg>
+                            <span>Full CRUD</span>
+                          </div>
+                          <button 
+                            onClick={() => setShowApiModal(true)}
+                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                          >
+                            {manualIntegrations.api.enabled ? 'Enabled' : 'API Docs'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Additional Manual Integration Options */}
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <h4 className="text-sm font-medium text-gray-900 mb-3">Other Integration Methods</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                          </div>
+                          <div>
+                              <h5 className="text-sm font-medium text-gray-900">CSV Import/Export</h5>
+                              <p className="text-xs text-gray-500">Bulk data operations</p>
+                          </div>
+                        </div>
+                          <button className="text-xs text-[#6E4EFF] hover:text-[#5D3EE8] font-medium">
+                            Learn More
+                        </button>
+                      </div>
+
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-indigo-100 rounded flex items-center justify-center">
+                              <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                              </svg>
+                            </div>
+                            <div>
+                              <h5 className="text-sm font-medium text-gray-900">Scheduled Sync</h5>
+                              <p className="text-xs text-gray-500">Automated data sync</p>
+                            </div>
+                          </div>
+                          <button className="text-xs text-[#6E4EFF] hover:text-[#5D3EE8] font-medium">
+                            Configure
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Featured Integrations */}
                   <div>
                     <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4 flex items-center">
@@ -1098,10 +1438,19 @@ export function SettingsContent() {
                           <div className="flex items-center gap-3">
                                                         {!integrations.square ? (
                               <button 
-                                onClick={() => setIntegrations(v => ({ ...v, square: !v.square }))}
-                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                                onClick={() => connectIntegration('square')}
+                                disabled={loadingStates.square}
+                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                Connect
+                                {loadingStates.square ? (
+                                  <div className="flex items-center gap-2">
+                                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Connecting...
+                                  </div>
+                                ) : 'Connect'}
                               </button>
                             ) : (
                               <span className="px-3 py-1.5 bg-green-50 text-green-700 rounded text-sm font-medium border border-green-200">
@@ -1125,7 +1474,13 @@ export function SettingsContent() {
                             {openKebabMenu === 'square' && (
                               <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <div className="py-1">
-                                  <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                                  <button 
+                                    onClick={() => {
+                                      viewIntegrationDocs('square');
+                                      setOpenKebabMenu(null);
+                                    }}
+                                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                  >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                     </svg>
@@ -1149,7 +1504,7 @@ export function SettingsContent() {
                                       <div className="border-t border-gray-100">
                                         <button 
                                           onClick={() => {
-                                            setIntegrations(v => ({ ...v, square: !v.square }));
+                                            disconnectIntegration('square');
                                             setOpenKebabMenu(null);
                                           }}
                                           className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
@@ -1205,10 +1560,19 @@ export function SettingsContent() {
                           <div className="flex items-center gap-3">
                                                         {!integrations.shopify ? (
                               <button 
-                                onClick={() => setIntegrations(v => ({ ...v, shopify: !v.shopify }))}
-                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                                onClick={() => connectIntegration('shopify')}
+                                disabled={loadingStates.shopify}
+                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                Connect
+                                {loadingStates.shopify ? (
+                                  <div className="flex items-center gap-2">
+                                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Connecting...
+                                  </div>
+                                ) : 'Connect'}
                               </button>
                             ) : (
                               <span className="px-3 py-1.5 bg-green-50 text-green-700 rounded text-sm font-medium border border-green-200">
@@ -1305,7 +1669,7 @@ export function SettingsContent() {
                                      </clipPath>
                                    </defs>
                                  </svg>
-                               </div>
+                        </div>
                               <div className="flex items-center gap-3 flex-1">
                           <div>
                                   <h4 className="text-sm font-medium text-gray-900">Stripe</h4>
@@ -1317,7 +1681,7 @@ export function SettingsContent() {
                                     className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
                                   >
                                     Connect
-                                  </button>
+                        </button>
                                 ) : (
                                   <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
                                     ✓ Connected
@@ -2222,6 +2586,183 @@ export function SettingsContent() {
           </div>
         </div>
       </div>
+
+      {/* Zapier Integration Modal */}
+      {showZapierModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Setup Zapier Integration</h3>
+              <button 
+                onClick={() => setShowZapierModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Webhook URL</label>
+                <input
+                  type="url"
+                  value={zapierForm.webhookUrl}
+                  onChange={(e) => setZapierForm(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="https://hooks.zapier.com/..."
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">API Key (Optional)</label>
+                <input
+                  type="password"
+                  value={zapierForm.apiKey}
+                  onChange={(e) => setZapierForm(prev => ({ ...prev, apiKey: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="Enter API key for authentication"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowZapierModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={setupZapierIntegration}
+                disabled={loadingStates.zapier || !zapierForm.webhookUrl}
+                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingStates.zapier ? 'Setting up...' : 'Setup Integration'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Webhook Integration Modal */}
+      {showWebhookModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Configure Webhooks</h3>
+              <button 
+                onClick={() => setShowWebhookModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Endpoint URL</label>
+                <input
+                  type="url"
+                  value={webhookForm.endpoint}
+                  onChange={(e) => setWebhookForm(prev => ({ ...prev, endpoint: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="https://your-server.com/webhook"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Secret Key</label>
+                <input
+                  type="password"
+                  value={webhookForm.secret}
+                  onChange={(e) => setWebhookForm(prev => ({ ...prev, secret: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="Enter secret for webhook verification"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowWebhookModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={setupWebhookIntegration}
+                disabled={loadingStates.webhooks || !webhookForm.endpoint}
+                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingStates.webhooks ? 'Configuring...' : 'Configure Webhook'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* API Integration Modal */}
+      {showApiModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">API Configuration</h3>
+              <button 
+                onClick={() => setShowApiModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                <input
+                  type="password"
+                  value={apiForm.apiKey}
+                  onChange={(e) => setApiForm(prev => ({ ...prev, apiKey: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="Enter your API key"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rate Limit (requests/hour)</label>
+                <input
+                  type="number"
+                  value={apiForm.rateLimit}
+                  onChange={(e) => setApiForm(prev => ({ ...prev, rateLimit: parseInt(e.target.value) || 1000 }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  placeholder="1000"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowApiModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={setupApiIntegration}
+                disabled={loadingStates.api || !apiForm.apiKey}
+                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingStates.api ? 'Configuring...' : 'Enable API'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

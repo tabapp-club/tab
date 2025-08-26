@@ -222,7 +222,6 @@ export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
   const { logout } = useAuth();
-  const [isHovered, setIsHovered] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -265,35 +264,7 @@ export function Sidebar() {
           </div>
         </div>
 
-        {/* New Campaign Button */}
-      <div className={`p-3 pt-3 pb-2 sm:p-4 sm:pt-4 sm:pb-3 lg:pt-4 lg:pb-3 transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10' : 'w-full max-w-48'}`}>
-          {!actualIsCollapsed && (
-            <Link
-              href="/new-campaign"
-              className={`w-full h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] border border-[#6E4EFF0D] rounded px-2 flex items-center justify-center gap-2 text-[#FFFFFF] font-semibold text-[14px] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] ${
-                actualIsCollapsed ? 'opacity-0' : 'opacity-100'
-              }`}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <div className="flex items-center">
-                <PlusIcon colorCode="#FFFFFF"/>
-              </div>
-              <span className="text-[14px] font-semibold font-manrope leading-[1.4] whitespace-nowrap">
-                New campaign
-              </span>
-            </Link>
-          )}
-          {actualIsCollapsed && (
-            <Link href="/new-campaign" className={`w-9 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] border border-[#6E4EFF0D] rounded flex items-center justify-center group hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] ${
-              !actualIsCollapsed ? 'opacity-0' : 'opacity-100'
-            }`}>
-              <PlusIcon colorCode="#FFFFFF"/>
-            </Link>
-          )}
-        </div>
-      </div>
+
 
       {/* Navigation Menu */}
       <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
@@ -368,7 +339,7 @@ export function Sidebar() {
         <div className={`transition-all duration-300 ${
           actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
         }`}>
-          <div className="text-center bg-[#f8f9fa] border border-[#e9ecef] rounded px-2 py-1">
+          <div className="text-center px-2 py-1">
             <span className="text-xs font-medium text-[#6c757d] font-manrope whitespace-nowrap">
               🔒 Your data stays private. Always.
             </span>
