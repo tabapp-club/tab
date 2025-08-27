@@ -125,8 +125,10 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
 /* Responsive layout utilities */
 .main-content {
   margin-left: 0;
-  transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1), 
+              padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 100vh;
+  will-change: margin-left, padding-left;
 }
 
 @media (min-width: 1024px) {
@@ -168,6 +170,27 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
 }
 
 /* Sidebar positioning */
+
+/* Improved sidebar transitions */
+.sidebar-mobile {
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width, transform;
+}
+
+.sidebar-mobile * {
+  transition-property: opacity, max-width, width, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Optimize text transitions for better performance */
+.sidebar-mobile .transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  will-change: opacity, max-width, transform;
+}
 
 /* Mobile responsive improvements */
 @media (max-width: 1023px) {

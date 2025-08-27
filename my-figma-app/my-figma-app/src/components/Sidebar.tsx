@@ -229,12 +229,12 @@ export function Sidebar() {
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   return (
-    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#FFFFFF] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden ${
+    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#FFFFFF] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
       actualIsCollapsed ? 'w-16' : 'w-[232px]'
     }`}>
       {/* User Profile Section */}
-      <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className={`transition-all duration-300 ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
+      <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
+        <div className={`transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
           {!actualIsCollapsed && (
                         <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f8f9fa] transition-all duration-200">
               <div className="relative">
@@ -267,7 +267,7 @@ export function Sidebar() {
 
 
       {/* Navigation Menu */}
-      <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
+      <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className="space-y-2 sm:space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -307,8 +307,8 @@ export function Sidebar() {
                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff4757] rounded-full animate-pulse"></div>
                   )}
                 </div>
-                                <div className={`flex flex-col flex-1 ${
-                  actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                                <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 } ${
                   isActive || hoveredItem === item.id ? 'justify-center' : 'justify-start'
                 }`}>
@@ -323,8 +323,8 @@ export function Sidebar() {
                     </span>
                   )}
                 </div>
-                <div className={`${
-                  actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                <div className={`transition-all duration-300 ease-in-out ${
+                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 }`}>
                   <NotificationBadge count={item.notificationCount} isActive={isActive} />
                 </div>
@@ -335,9 +335,9 @@ export function Sidebar() {
       </nav>
 
       {/* Privacy Message */}
-      <div className={`px-3 py-1 transition-all duration-300 ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className={`transition-all duration-300 ${
-          actualIsCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+      <div className={`px-3 py-1 transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
+        <div className={`transition-all duration-300 ease-in-out ${
+          actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
         }`}>
           <div className="text-center px-2 py-1">
             <span className="text-xs font-medium text-[#6c757d] font-manrope whitespace-nowrap">
@@ -349,10 +349,10 @@ export function Sidebar() {
 
       {/* Bottom Actions */}
       <div className="border-t border-[#e9e9e9] p-1 mt-auto">
-        <div className={`flex items-center p-1 transition-all duration-300 ${
+        <div className={`flex items-center p-1 transition-all duration-300 ease-in-out ${
           actualIsCollapsed ? 'flex-col gap-0.5' : 'justify-between'
         }`}>
-          <div className={`flex items-center gap-0.5 transition-all duration-300 ${
+          <div className={`flex items-center gap-0.5 transition-all duration-300 ease-in-out ${
             actualIsCollapsed ? 'flex-col' : ''
           }`}>
 
