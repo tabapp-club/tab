@@ -303,8 +303,8 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className={`bg-white rounded-2xl border border-gray-100 shadow-lg p-8 transition-all duration-500 ${
-        isComplete ? 'scale-105 shadow-xl' : 'scale-100'
+      <div className={`bg-white rounded-2xl border border-gray-100 p-8 transition-all duration-500 ${
+        isComplete ? 'scale-105' : 'scale-100'
       }`}>
         {/* Header */}
         <div className="text-center mb-8">
@@ -490,7 +490,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out">
             <div className="space-y-5">
               {/* Business Summary */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="p-2 bg-blue-50 rounded-xl">
                     <BarChart3 className="w-5 h-5 text-blue-600" />
@@ -544,7 +544,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               </div>
 
               {/* Reason Analysis */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-5">
                   <div className="p-2 bg-amber-50 rounded-xl">
                     <AlertCircle className="w-5 h-5 text-amber-600" />
@@ -625,7 +625,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               </div> */}
 
               {/* Smart Actions */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="p-2 bg-purple-50 rounded-xl">
                     <Target className="w-5 h-5 text-purple-600" />

@@ -301,7 +301,7 @@ export function DashboardContent() {
             </div>
 
             {/* Key Metrics Container */}
-            <div className="rounded-lg border border-[#e5e7eb] p-4 mb-8">
+            <div className="rounded-lg p-4 mb-8">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 {/* Customer Acquisition */}
                 <div className="text-center p-4 flex-1">
