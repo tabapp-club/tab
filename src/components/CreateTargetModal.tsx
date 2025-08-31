@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import {
   Sheet,
   SheetContent,
@@ -284,7 +284,7 @@ export function CreateTargetModal({ isOpen, onClose, onCreateTarget }: CreateTar
               </Button>
               <Button
                 type="submit"
-                variant="primary"
+                variant="default"
                 onClick={handleSubmit}
                 className="flex-1"
               >

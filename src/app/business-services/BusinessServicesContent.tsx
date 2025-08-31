@@ -3,7 +3,6 @@
 import React from 'react';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
-import Button from "@/components/ui/Button";
 
 export function BusinessServicesContent() {
   const { isCollapsed, isMobile } = useSidebar();
@@ -39,7 +38,7 @@ export function BusinessServicesContent() {
                 </span>
               </h1>
               <p className="text-base text-gray-600 leading-relaxed max-w-lg mx-auto">
-                We're crafting something extraordinary. Our business services platform is in development, 
+                We&apos;re crafting something extraordinary. Our business services platform is in development,
                 designed to revolutionize how you manage and grow your business.
               </p>
             </div>
@@ -57,7 +56,7 @@ export function BusinessServicesContent() {
                  </div>
                  <span className="text-xs font-medium text-gray-700">Analytics</span>
                </div>
-               
+
                <div className="flex flex-col items-center gap-1.5 p-3 bg-gray-50 rounded-lg">
                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-blue-600">
@@ -68,7 +67,7 @@ export function BusinessServicesContent() {
                  </div>
                  <span className="text-xs font-medium text-gray-700">Automation</span>
                </div>
-               
+
                <div className="flex flex-col items-center gap-1.5 p-3 bg-gray-50 rounded-lg">
                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-green-600">

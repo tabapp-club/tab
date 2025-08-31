@@ -22,17 +22,17 @@ interface Integration {
 
 export default function BrowseIntegrationsPage() {
   const router = useRouter();
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
-  
+  const { isCollapsed, toggleSidebar } = useSidebar();
+
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [sortBy, setSortBy] = useState('name');
-  
+
   // Kebab menu state
   const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
-  
+
   // Integrations state (simulating connected integrations)
   const [connectedIntegrations, setConnectedIntegrations] = useState<Set<string>>(new Set(['square', 'shopify']));
 
@@ -269,7 +269,7 @@ export default function BrowseIntegrationsPage() {
                          integration.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || integration.category === selectedCategory;
     const matchesStatus = selectedStatus === 'all' || integration.status === selectedStatus;
-    
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -457,7 +457,7 @@ export default function BrowseIntegrationsPage() {
                       <p className="text-sm text-gray-500 mt-1">{integration.description}</p>
                     </div>
                   </div>
-                  
+
                   {/* Kebab Menu */}
                   <div className="relative kebab-menu-container">
                     <button
@@ -469,7 +469,7 @@ export default function BrowseIntegrationsPage() {
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                       </svg>
                     </button>
-                    
+
                     {openKebabMenu === integration.id && (
                       <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                         <div className="py-1">
@@ -489,7 +489,7 @@ export default function BrowseIntegrationsPage() {
                                 Settings
                               </button>
                               <div className="border-t border-gray-100">
-                                <button 
+                                <button
                                   onClick={() => {
                                     handleDisconnect(integration.id);
                                     setOpenKebabMenu(null);

@@ -57,7 +57,7 @@ export function SettingsContent() {
 
   // Preferences
   const [prefs, setPrefs] = useState({ email: true, push: false, marketing: true });
-  
+
   // Extended notification preferences
   const [notifications, setNotifications] = useState({
     email: {
@@ -117,7 +117,7 @@ export function SettingsContent() {
   // Manual integrations state
   const [manualIntegrations, setManualIntegrations] = useState({
     zapier: { connected: false, webhookUrl: '', apiKey: '' },
-    webhooks: { enabled: false, endpoints: [], secret: '' },
+    webhooks: { enabled: false, endpoints: [] as string[], secret: '' },
     api: { enabled: false, apiKey: '', rateLimit: 1000 },
     csv: { enabled: false, lastSync: null },
     scheduled: { enabled: false, frequency: 'daily', nextSync: null }
@@ -149,9 +149,9 @@ export function SettingsContent() {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       setIntegrations(prev => ({ ...prev, [integrationId]: true }));
-      
+
       // Show success notification
       console.log(`${integrationId} integration connected successfully`);
     } catch (error) {
@@ -169,9 +169,9 @@ export function SettingsContent() {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setIntegrations(prev => ({ ...prev, [integrationId]: false }));
-      
+
       // Show success notification
       console.log(`${integrationId} integration disconnected successfully`);
     } catch (error) {
@@ -184,11 +184,11 @@ export function SettingsContent() {
 
   const syncIntegration = async (integrationId: string) => {
     setLoadingStates(prev => ({ ...prev, [`${integrationId}_sync`]: true }));
-    
+
     try {
       // Simulate sync API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Show success notification
       console.log(`${integrationId} data synced successfully`);
     } catch (error) {
@@ -213,7 +213,7 @@ export function SettingsContent() {
       clover: 'https://docs.clover.com',
       toast: 'https://developer.toasttab.com/docs'
     };
-    
+
     const url = docsUrls[integrationId as keyof typeof docsUrls];
     if (url) {
       window.open(url, '_blank');
@@ -223,15 +223,15 @@ export function SettingsContent() {
   // Manual integration functions
   const setupZapierIntegration = async () => {
     setLoadingStates(prev => ({ ...prev, zapier: true }));
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       setManualIntegrations(prev => ({
         ...prev,
         zapier: { ...prev.zapier, connected: true, ...zapierForm }
       }));
-      
+
       setShowZapierModal(false);
       console.log('Zapier integration setup successfully');
     } catch (error) {
@@ -243,20 +243,20 @@ export function SettingsContent() {
 
   const setupWebhookIntegration = async () => {
     setLoadingStates(prev => ({ ...prev, webhooks: true }));
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       setManualIntegrations(prev => ({
         ...prev,
-        webhooks: { 
-          ...prev.webhooks, 
-          enabled: true, 
+        webhooks: {
+          ...prev.webhooks,
+          enabled: true,
           endpoints: [...prev.webhooks.endpoints, webhookForm.endpoint],
           secret: webhookForm.secret
         }
       }));
-      
+
       setShowWebhookModal(false);
       console.log('Webhook integration setup successfully');
     } catch (error) {
@@ -268,15 +268,15 @@ export function SettingsContent() {
 
   const setupApiIntegration = async () => {
     setLoadingStates(prev => ({ ...prev, api: true }));
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1200));
-      
+
       setManualIntegrations(prev => ({
         ...prev,
         api: { ...prev.api, enabled: true, ...apiForm }
       }));
-      
+
       setShowApiModal(false);
       console.log('API integration setup successfully');
     } catch (error) {
@@ -303,13 +303,13 @@ export function SettingsContent() {
   }, [openKebabMenu]);
 
   // User management
-  type Member = { 
-    initials: string; 
-    name: string; 
-    email: string; 
-    phone: string; 
-    role: 'Owner' | 'Admin' | 'Member'; 
-    employeeId: string; 
+  type Member = {
+    initials: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: 'Owner' | 'Admin' | 'Member';
+    employeeId: string;
   };
   const [members, setMembers] = useState<Member[]>([
     { initials: 'JD', name: 'John Doe', email: 'john@example.com', phone: '+1 (555) 123-4567', role: 'Owner', employeeId: 'EMP001' },
@@ -317,21 +317,21 @@ export function SettingsContent() {
     { initials: 'MJ', name: 'Mike Johnson', email: 'mike@example.com', phone: '+1 (555) 555-1234', role: 'Member', employeeId: 'EMP003' },
   ]);
   const [showAddMember, setShowAddMember] = useState(false);
-  const [newMember, setNewMember] = useState({ 
-    name: '', 
-    email: '', 
-    phone: '', 
-    role: 'Member' as 'Owner' | 'Admin' | 'Member', 
-    employeeId: '' 
+  const [newMember, setNewMember] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: 'Member' as 'Owner' | 'Admin' | 'Member',
+    employeeId: ''
   });
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [editingMember, setEditingMember] = useState<string | null>(null);
-  const [editMember, setEditMember] = useState({ 
-    name: '', 
-    email: '', 
-    phone: '', 
-    role: 'Member' as 'Owner' | 'Admin' | 'Member', 
-    employeeId: '' 
+  const [editMember, setEditMember] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: 'Member' as 'Owner' | 'Admin' | 'Member',
+    employeeId: ''
   });
   const [showEditRoleDropdown, setShowEditRoleDropdown] = useState(false);
 
@@ -380,7 +380,7 @@ export function SettingsContent() {
             actualIsCollapsed ? 'left-16' : 'left-[232px]'
           }`}>
 
-            
+
             <div className="space-y-1">
               <button
                 onClick={() => setActiveSection('account-settings')}
@@ -397,7 +397,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('preferences')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -413,7 +413,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('integrations')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -429,7 +429,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('user-management')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -445,7 +445,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('login-security')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -461,7 +461,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('payments-billing')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -477,7 +477,7 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => setActiveSection('data-privacy')}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
@@ -494,7 +494,7 @@ export function SettingsContent() {
                 </div>
               </button>
             </div>
-            
+
             {/* Settings Footer */}
             <div className="mt-auto pt-4 pb-4 border-t border-gray-100">
               <div className="bg-blue-50 rounded-[4px] p-2">
@@ -527,7 +527,7 @@ export function SettingsContent() {
                   {activeSection === 'preferences' ? 'Preferences' : 'Account settings'}
               </h1>
                 <p className="text-[#626266] text-[14px] leading-[20px] tracking-[-0.1px] mt-1 font-normal">
-                  {activeSection === 'preferences' 
+                  {activeSection === 'preferences'
                     ? 'Customize your application preferences and notification settings'
                     : 'Manage your account preferences and integrations'
                   }
@@ -706,9 +706,9 @@ export function SettingsContent() {
                             {business.businessEmails.length < 3 && (
                               <button
                                 onClick={() => {
-                                  setBusiness(v => ({ 
-                                    ...v, 
-                                    businessEmails: [...v.businessEmails, ''] 
+                                  setBusiness(v => ({
+                                    ...v,
+                                    businessEmails: [...v.businessEmails, '']
                                   }));
                                 }}
                                 className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
@@ -754,9 +754,9 @@ export function SettingsContent() {
                             {business.businessPhones.length < 3 && (
                               <button
                                 onClick={() => {
-                                  setBusiness(v => ({ 
-                                    ...v, 
-                                    businessPhones: [...v.businessPhones, ''] 
+                                  setBusiness(v => ({
+                                    ...v,
+                                    businessPhones: [...v.businessPhones, '']
                                   }));
                                 }}
                                 className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
@@ -836,9 +836,9 @@ export function SettingsContent() {
                               <input
                                 type="text"
                                 value={business.primaryPOC.name}
-                                onChange={(e) => setBusiness(v => ({ 
-                                  ...v, 
-                                  primaryPOC: { ...v.primaryPOC, name: e.target.value } 
+                                onChange={(e) => setBusiness(v => ({
+                                  ...v,
+                                  primaryPOC: { ...v.primaryPOC, name: e.target.value }
                                 }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
                                 placeholder="Enter POC name"
@@ -852,9 +852,9 @@ export function SettingsContent() {
                               <input
                                 type="email"
                                 value={business.primaryPOC.email}
-                                onChange={(e) => setBusiness(v => ({ 
-                                  ...v, 
-                                  primaryPOC: { ...v.primaryPOC, email: e.target.value } 
+                                onChange={(e) => setBusiness(v => ({
+                                  ...v,
+                                  primaryPOC: { ...v.primaryPOC, email: e.target.value }
                                 }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
                                 placeholder="Enter POC email"
@@ -868,9 +868,9 @@ export function SettingsContent() {
                               <input
                                 type="tel"
                                 value={business.primaryPOC.phone}
-                                onChange={(e) => setBusiness(v => ({ 
-                                  ...v, 
-                                  primaryPOC: { ...v.primaryPOC, phone: e.target.value } 
+                                onChange={(e) => setBusiness(v => ({
+                                  ...v,
+                                  primaryPOC: { ...v.primaryPOC, phone: e.target.value }
                                 }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
                                 placeholder="Enter POC phone number"
@@ -884,9 +884,9 @@ export function SettingsContent() {
                               <input
                                 type="text"
                                 value={business.primaryPOC.designation}
-                                onChange={(e) => setBusiness(v => ({ 
-                                  ...v, 
-                                  primaryPOC: { ...v.primaryPOC, designation: e.target.value } 
+                                onChange={(e) => setBusiness(v => ({
+                                  ...v,
+                                  primaryPOC: { ...v.primaryPOC, designation: e.target.value }
                                 }))}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
                                 placeholder="Enter POC designation"
@@ -951,14 +951,14 @@ export function SettingsContent() {
                                 <p className="text-xs text-gray-500">{description}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  className="sr-only peer" 
+                                <input
+                                  type="checkbox"
+                                  className="sr-only peer"
                                   checked={notifications.email[key as keyof typeof notifications.email]}
                                   onChange={() => setNotifications(v => ({
                                     ...v,
                                     email: { ...v.email, [key]: !v.email[key as keyof typeof v.email] }
-                                  }))} 
+                                  }))}
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
                       </label>
@@ -990,14 +990,14 @@ export function SettingsContent() {
                                 <p className="text-xs text-gray-500">{description}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  className="sr-only peer" 
+                                <input
+                                  type="checkbox"
+                                  className="sr-only peer"
                                   checked={notifications.push[key as keyof typeof notifications.push]}
                                   onChange={() => setNotifications(v => ({
                                     ...v,
                                     push: { ...v.push, [key]: !v.push[key as keyof typeof v.push] }
-                                  }))} 
+                                  }))}
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
                       </label>
@@ -1029,14 +1029,14 @@ export function SettingsContent() {
                                 <p className="text-xs text-gray-500">{description}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  className="sr-only peer" 
+                                <input
+                                  type="checkbox"
+                                  className="sr-only peer"
                                   checked={notifications.sms[key as keyof typeof notifications.sms]}
                                   onChange={() => setNotifications(v => ({
                                     ...v,
                                     sms: { ...v.sms, [key]: !v.sms[key as keyof typeof v.sms] }
-                                  }))} 
+                                  }))}
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
                               </label>
@@ -1068,14 +1068,14 @@ export function SettingsContent() {
                                 <p className="text-xs text-gray-500">{description}</p>
                               </div>
                               <label className="relative inline-flex items-center cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  className="sr-only peer" 
+                                <input
+                                  type="checkbox"
+                                  className="sr-only peer"
                                   checked={notifications.inApp[key as keyof typeof notifications.inApp]}
                                   onChange={() => setNotifications(v => ({
                                     ...v,
                                     inApp: { ...v.inApp, [key]: !v.inApp[key as keyof typeof v.inApp] }
-                                  }))} 
+                                  }))}
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
                               </label>
@@ -1144,11 +1144,11 @@ export function SettingsContent() {
                             <p className="text-xs text-gray-500 mt-1">If the app is not installed on the user&apos;s device, send invoice via SMS as a backup delivery method</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                            <input 
-                              type="checkbox" 
-                              className="sr-only peer" 
+                            <input
+                              type="checkbox"
+                              className="sr-only peer"
                               checked={invoicePrefs.smsBackup}
-                              onChange={() => setInvoicePrefs(v => ({ ...v, smsBackup: !v.smsBackup }))} 
+                              onChange={() => setInvoicePrefs(v => ({ ...v, smsBackup: !v.smsBackup }))}
                             />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </label>
@@ -1183,7 +1183,7 @@ export function SettingsContent() {
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           {Object.values(integrations).filter(Boolean).length} Connected
                         </span>
-                        <button 
+                        <button
                           onClick={() => router.push('/settings/browse-integrations')}
                           className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6E4EFF]"
                         >
@@ -1267,9 +1267,9 @@ export function SettingsContent() {
                           </div>
                         </div>
                         </div>
-                        
+
                         <p className="text-xs text-gray-600 mb-4 leading-relaxed">
-                          Automate workflows by connecting Tab with 5000+ apps through Zapier's no-code platform.
+                          Automate workflows by connecting Tab with 5000+ apps through Zapier&apos;s no-code platform.
                         </p>
 
                         <div className="flex items-center justify-between">
@@ -1279,7 +1279,7 @@ export function SettingsContent() {
                             </svg>
                             <span>5000+ apps</span>
                           </div>
-                          <button 
+                          <button
                             onClick={() => setShowZapierModal(true)}
                             className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
                           >
@@ -1303,7 +1303,7 @@ export function SettingsContent() {
                           </div>
                         </div>
                         </div>
-                        
+
                         <p className="text-xs text-gray-600 mb-4 leading-relaxed">
                           Receive real-time notifications when events occur in your Tab account via HTTP webhooks.
                         </p>
@@ -1315,7 +1315,7 @@ export function SettingsContent() {
                             </svg>
                             <span>Real-time</span>
                           </div>
-                          <button 
+                          <button
                             onClick={() => setShowWebhookModal(true)}
                             className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
                           >
@@ -1339,7 +1339,7 @@ export function SettingsContent() {
                           </div>
                         </div>
                         </div>
-                        
+
                         <p className="text-xs text-gray-600 mb-4 leading-relaxed">
                           Build custom integrations using our comprehensive REST API with full CRUD operations.
                         </p>
@@ -1351,7 +1351,7 @@ export function SettingsContent() {
                             </svg>
                             <span>Full CRUD</span>
                           </div>
-                          <button 
+                          <button
                             onClick={() => setShowApiModal(true)}
                             className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
                           >
@@ -1431,13 +1431,13 @@ export function SettingsContent() {
                           Sync sales data, inventory, and customer information from your Square POS system in real-time.
                         </p>
 
-                        
+
 
                                                 {/* Actions */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                                                         {!integrations.square ? (
-                              <button 
+                              <button
                                 onClick={() => connectIntegration('square')}
                                 disabled={loadingStates.square}
                                 className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1458,7 +1458,7 @@ export function SettingsContent() {
                               </span>
                             )}
                           </div>
-                          
+
                           {/* Kebab Menu */}
                           <div className="relative kebab-menu-container">
                             <button
@@ -1470,11 +1470,11 @@ export function SettingsContent() {
                                 <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                               </svg>
                             </button>
-                            
+
                             {openKebabMenu === 'square' && (
                               <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <div className="py-1">
-                                  <button 
+                                  <button
                                     onClick={() => {
                                       viewIntegrationDocs('square');
                                       setOpenKebabMenu(null);
@@ -1502,7 +1502,7 @@ export function SettingsContent() {
                                         Sync Now
                                       </button>
                                       <div className="border-t border-gray-100">
-                                        <button 
+                                        <button
                                           onClick={() => {
                                             disconnectIntegration('square');
                                             setOpenKebabMenu(null);
@@ -1559,7 +1559,7 @@ export function SettingsContent() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                                                         {!integrations.shopify ? (
-                              <button 
+                              <button
                                 onClick={() => connectIntegration('shopify')}
                                 disabled={loadingStates.shopify}
                                 className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1580,7 +1580,7 @@ export function SettingsContent() {
                               </span>
                             )}
                           </div>
-                          
+
                           {/* Kebab Menu */}
                           <div className="relative kebab-menu-container">
                             <button
@@ -1592,7 +1592,7 @@ export function SettingsContent() {
                                 <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                               </svg>
                             </button>
-                            
+
                             {openKebabMenu === 'shopify' && (
                               <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <div className="py-1">
@@ -1618,7 +1618,7 @@ export function SettingsContent() {
                                         Sync Now
                                       </button>
                                       <div className="border-t border-gray-100">
-                                        <button 
+                                        <button
                                           onClick={() => {
                                             setIntegrations(v => ({ ...v, shopify: !v.shopify }));
                                             setOpenKebabMenu(null);
@@ -1676,7 +1676,7 @@ export function SettingsContent() {
                                   <p className="text-xs text-gray-500">Payment processing platform</p>
                           </div>
                                 {!integrations.stripe ? (
-                                                                    <button 
+                                                                    <button
                                     onClick={() => setIntegrations(v => ({ ...v, stripe: !v.stripe }))}
                                     className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
                                   >
@@ -1701,7 +1701,7 @@ export function SettingsContent() {
                                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                             </svg>
                               </button>
-                              
+
                               {openKebabMenu === 'stripe' && (
                                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                   <div className="py-1">
@@ -1727,7 +1727,7 @@ export function SettingsContent() {
                                           Sync Now
                                         </button>
                                         <div className="border-t border-gray-100">
-                                          <button 
+                                          <button
                                             onClick={() => {
                                               setIntegrations(v => ({ ...v, stripe: !v.stripe }));
                                               setOpenKebabMenu(null);
@@ -1762,7 +1762,7 @@ export function SettingsContent() {
                                   <p className="text-xs text-gray-500">Accounting & financial management</p>
                           </div>
                                 {!integrations.quickbooks ? (
-                                                                    <button 
+                                                                    <button
                                     onClick={() => setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }))}
                                     className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
                                   >
@@ -1787,7 +1787,7 @@ export function SettingsContent() {
                                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                             </svg>
                               </button>
-                              
+
                               {openKebabMenu === 'quickbooks' && (
                                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                   <div className="py-1">
@@ -1813,7 +1813,7 @@ export function SettingsContent() {
                                           Sync Now
                                         </button>
                                         <div className="border-t border-gray-100">
-                                          <button 
+                                          <button
                                             onClick={() => {
                                               setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }));
                                               setOpenKebabMenu(null);
@@ -1869,7 +1869,7 @@ export function SettingsContent() {
                                   <p className="text-xs text-gray-500">Point of sale system</p>
                           </div>
                                 {!integrations.clover ? (
-                                                                    <button 
+                                                                    <button
                                     onClick={() => setIntegrations(v => ({ ...v, clover: !v.clover }))}
                                     className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
                                   >
@@ -1894,7 +1894,7 @@ export function SettingsContent() {
                                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                             </svg>
                               </button>
-                              
+
                               {openKebabMenu === 'clover' && (
                                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                   <div className="py-1">
@@ -1920,7 +1920,7 @@ export function SettingsContent() {
                                           Sync Now
                                         </button>
                                         <div className="border-t border-gray-100">
-                                          <button 
+                                          <button
                                             onClick={() => {
                                               setIntegrations(v => ({ ...v, clover: !v.clover }));
                                               setOpenKebabMenu(null);
@@ -1957,7 +1957,7 @@ export function SettingsContent() {
                                   <p className="text-xs text-gray-500">Restaurant management system</p>
                           </div>
                                 {!integrations.toast ? (
-                                  <button 
+                                  <button
                                     onClick={() => setIntegrations(v => ({ ...v, toast: !v.toast }))}
                                     className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
                                   >
@@ -1970,7 +1970,7 @@ export function SettingsContent() {
                                 )}
                         </div>
                             </div>
-                            
+
                             {/* Kebab Menu */}
                             <div className="relative kebab-menu-container ml-2">
                               <button
@@ -1982,7 +1982,7 @@ export function SettingsContent() {
                                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                                 </svg>
                               </button>
-                              
+
                               {openKebabMenu === 'toast' && (
                                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                   <div className="py-1">
@@ -2008,7 +2008,7 @@ export function SettingsContent() {
                                           Sync Now
                                         </button>
                                         <div className="border-t border-gray-100">
-                                          <button 
+                                          <button
                                             onClick={() => {
                                               setIntegrations(v => ({ ...v, toast: !v.toast }));
                                               setOpenKebabMenu(null);
@@ -2078,11 +2078,11 @@ export function SettingsContent() {
                           <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                             Name <span className="text-red-500">*</span>
                           </label>
-                          <input 
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                            placeholder="Enter full name" 
-                            value={newMember.name} 
-                            onChange={e => setNewMember({ ...newMember, name: e.target.value })} 
+                          <input
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            placeholder="Enter full name"
+                            value={newMember.name}
+                            onChange={e => setNewMember({ ...newMember, name: e.target.value })}
                           />
                   </div>
 
@@ -2090,12 +2090,12 @@ export function SettingsContent() {
                           <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                             Email
                           </label>
-                          <input 
+                          <input
                             type="email"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                            placeholder="Enter email address" 
-                            value={newMember.email} 
-                            onChange={e => setNewMember({ ...newMember, email: e.target.value })} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            placeholder="Enter email address"
+                            value={newMember.email}
+                            onChange={e => setNewMember({ ...newMember, email: e.target.value })}
                           />
                           </div>
 
@@ -2103,12 +2103,12 @@ export function SettingsContent() {
                           <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                             Phone Number <span className="text-red-500">*</span>
                           </label>
-                          <input 
+                          <input
                             type="tel"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                            placeholder="Enter phone number" 
-                            value={newMember.phone} 
-                            onChange={e => setNewMember({ ...newMember, phone: e.target.value })} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            placeholder="Enter phone number"
+                            value={newMember.phone}
+                            onChange={e => setNewMember({ ...newMember, phone: e.target.value })}
                           />
                           </div>
 
@@ -2153,30 +2153,30 @@ export function SettingsContent() {
                           <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                             Employee ID
                           </label>
-                          <input 
+                          <input
                             type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                            placeholder="Enter employee ID" 
-                            value={newMember.employeeId} 
-                            onChange={e => setNewMember({ ...newMember, employeeId: e.target.value })} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            placeholder="Enter employee ID"
+                            value={newMember.employeeId}
+                            onChange={e => setNewMember({ ...newMember, employeeId: e.target.value })}
                           />
                           </div>
                           </div>
-                      
+
                       <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                        <button 
+                        <button
                           onClick={() => {
                             // Validate mandatory fields
                             if (!newMember.name.trim() || !newMember.phone.trim()) {
                               alert('Please fill in all mandatory fields (Name and Phone Number)');
                               return;
                             }
-                            
+
                             const initials = newMember.name.split(' ').map(p => p[0]).join('').slice(0,2).toUpperCase();
-                            setMembers(m => [...m, { 
-                              initials, 
-                              name: newMember.name, 
-                              email: newMember.email, 
+                            setMembers(m => [...m, {
+                              initials,
+                              name: newMember.name,
+                              email: newMember.email,
                               phone: newMember.phone,
                               role: newMember.role,
                               employeeId: newMember.employeeId
@@ -2184,12 +2184,12 @@ export function SettingsContent() {
                             setNewMember({ name: '', email: '', phone: '', role: 'Member', employeeId: '' });
                             setShowAddMember(false);
                             setShowRoleDropdown(false);
-                          }} 
+                          }}
                           className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
                         >
                           Add Employee
                         </button>
-                        <button 
+                        <button
                           onClick={() => {
                             setNewMember({ name: '', email: '', phone: '', role: 'Member', employeeId: '' });
                             setShowAddMember(false);
@@ -2207,7 +2207,7 @@ export function SettingsContent() {
                     {members.map((m, idx) => {
                       const memberKey = `${m.email}-${m.employeeId}-${idx}`;
                       const isEditing = editingMember === memberKey;
-                      
+
                       return (
                         <div key={memberKey} className={`p-4 ${idx !== 0 ? 'border-t border-gray-200' : ''} ${idx===0 ? 'bg-gray-50' : ''}`}>
                           {isEditing ? (
@@ -2218,24 +2218,24 @@ export function SettingsContent() {
                                   <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                                     Name <span className="text-red-500">*</span>
                                   </label>
-                                  <input 
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                                    placeholder="Enter full name" 
-                                    value={editMember.name} 
-                                    onChange={e => setEditMember({ ...editMember, name: e.target.value })} 
+                                  <input
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    placeholder="Enter full name"
+                                    value={editMember.name}
+                                    onChange={e => setEditMember({ ...editMember, name: e.target.value })}
                                   />
                           </div>
-                                
+
                                 <div>
                                   <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                                     Email
                                   </label>
-                                  <input 
+                                  <input
                                     type="email"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                                    placeholder="Enter email address" 
-                                    value={editMember.email} 
-                                    onChange={e => setEditMember({ ...editMember, email: e.target.value })} 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    placeholder="Enter email address"
+                                    value={editMember.email}
+                                    onChange={e => setEditMember({ ...editMember, email: e.target.value })}
                                   />
                         </div>
 
@@ -2243,12 +2243,12 @@ export function SettingsContent() {
                                   <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                                     Phone Number <span className="text-red-500">*</span>
                                   </label>
-                                  <input 
+                                  <input
                                     type="tel"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                                    placeholder="Enter phone number" 
-                                    value={editMember.phone} 
-                                    onChange={e => setEditMember({ ...editMember, phone: e.target.value })} 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    placeholder="Enter phone number"
+                                    value={editMember.phone}
+                                    onChange={e => setEditMember({ ...editMember, phone: e.target.value })}
                                   />
                                 </div>
 
@@ -2293,39 +2293,39 @@ export function SettingsContent() {
                                   <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
                                     Employee ID
                                   </label>
-                                  <input 
+                                  <input
                                     type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal" 
-                                    placeholder="Enter employee ID" 
-                                    value={editMember.employeeId} 
-                                    onChange={e => setEditMember({ ...editMember, employeeId: e.target.value })} 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    placeholder="Enter employee ID"
+                                    value={editMember.employeeId}
+                                    onChange={e => setEditMember({ ...editMember, employeeId: e.target.value })}
                                   />
                                 </div>
                               </div>
-                              
+
                               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                                <button 
+                                <button
                                   onClick={() => {
                                     if (!editMember.name.trim() || !editMember.phone.trim()) {
                                       alert('Please fill in all mandatory fields (Name and Phone Number)');
                                       return;
                                     }
-                                    
+
                                     const initials = editMember.name.split(' ').map(p => p[0]).join('').slice(0,2).toUpperCase();
-                                    setMembers(members => members.map((member, index) => 
-                                      index === idx ? { 
+                                    setMembers(members => members.map((member, index) =>
+                                      index === idx ? {
                                         ...editMember,
                                         initials
                                       } : member
                                     ));
                                     setEditingMember(null);
                                     setShowEditRoleDropdown(false);
-                                  }} 
+                                  }}
                                   className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
                                 >
                                   Save Changes
                                 </button>
-                                <button 
+                                <button
                                   onClick={() => {
                                     setEditingMember(null);
                                     setShowEditRoleDropdown(false);
@@ -2341,8 +2341,8 @@ export function SettingsContent() {
                       <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3 flex-1 min-w-0">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0 ${
-                                  m.role === 'Owner' ? 'bg-purple-500' : 
-                                  m.role === 'Admin' ? 'bg-green-500' : 
+                                  m.role === 'Owner' ? 'bg-purple-500' :
+                                  m.role === 'Admin' ? 'bg-green-500' :
                                   'bg-blue-500'
                                 }`}>
                                   {m.initials}
@@ -2370,8 +2370,8 @@ export function SettingsContent() {
                               </div>
                               <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                  m.role === 'Owner' ? 'bg-purple-100 text-purple-800' : 
-                                  m.role === 'Admin' ? 'bg-green-100 text-green-800' : 
+                                  m.role === 'Owner' ? 'bg-purple-100 text-purple-800' :
+                                  m.role === 'Admin' ? 'bg-green-100 text-green-800' :
                                   'bg-blue-100 text-blue-800'
                                 }`}>
                                   {m.role}
@@ -2593,7 +2593,7 @@ export function SettingsContent() {
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Setup Zapier Integration</h3>
-              <button 
+              <button
                 onClick={() => setShowZapierModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -2602,7 +2602,7 @@ export function SettingsContent() {
                 </svg>
               </button>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Webhook URL</label>
@@ -2614,7 +2614,7 @@ export function SettingsContent() {
                   placeholder="https://hooks.zapier.com/..."
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">API Key (Optional)</label>
                 <input
@@ -2626,7 +2626,7 @@ export function SettingsContent() {
                 />
               </div>
             </div>
-            
+
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowZapierModal(false)}
@@ -2652,7 +2652,7 @@ export function SettingsContent() {
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Configure Webhooks</h3>
-              <button 
+              <button
                 onClick={() => setShowWebhookModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -2661,7 +2661,7 @@ export function SettingsContent() {
                 </svg>
               </button>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Endpoint URL</label>
@@ -2673,7 +2673,7 @@ export function SettingsContent() {
                   placeholder="https://your-server.com/webhook"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Secret Key</label>
                 <input
@@ -2685,7 +2685,7 @@ export function SettingsContent() {
                 />
               </div>
             </div>
-            
+
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowWebhookModal(false)}
@@ -2711,7 +2711,7 @@ export function SettingsContent() {
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">API Configuration</h3>
-              <button 
+              <button
                 onClick={() => setShowApiModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -2720,7 +2720,7 @@ export function SettingsContent() {
                 </svg>
               </button>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">API Key</label>
@@ -2732,7 +2732,7 @@ export function SettingsContent() {
                   placeholder="Enter your API key"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rate Limit (requests/hour)</label>
                 <input
@@ -2744,7 +2744,7 @@ export function SettingsContent() {
                 />
               </div>
             </div>
-            
+
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowApiModal(false)}

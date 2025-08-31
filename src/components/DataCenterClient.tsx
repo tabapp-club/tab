@@ -111,8 +111,6 @@ export default function DataCenterClient() {
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
     const mappedData = mapApiDataToTable(dataCenterResponse.data);
-    console.log('Data Center - Original API data:', dataCenterResponse.data);
-    console.log('Data Center - Mapped table data:', mappedData);
     return mappedData;
   }, [dataCenterResponse]);
 

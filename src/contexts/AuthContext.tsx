@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Prompt for name if missing
   async function promptForNameAndCreateCustomer(token: string): Promise<string> {
     let name = '';
-     
+
     while (!name) {
       name = window.prompt('Please enter your name to complete registration:') || '';
       name = name.trim();

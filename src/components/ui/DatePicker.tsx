@@ -40,7 +40,7 @@ export function DatePicker({
         <button
           disabled={disabled}
           className={`
-            w-full px-4 py-3 text-left border border-gray-300 rounded-[4px] 
+            w-full px-4 py-3 text-left border border-gray-300 rounded-[4px]
             focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors
             disabled:opacity-50 disabled:cursor-not-allowed
             ${selected ? 'text-gray-900' : 'text-gray-500'}
@@ -61,13 +61,10 @@ export function DatePicker({
           selected={selected}
           onSelect={handleSelect}
           disabled={[
-            { before: minDate },
-            { after: maxDate }
-          ].filter(Boolean)}
-          components={{
-            IconLeft: () => <ChevronLeft className="h-4 w-4" />,
-            IconRight: () => <ChevronRight className="h-4 w-4" />,
-          }}
+            ...(minDate ? [{ before: minDate }] : []),
+            ...(maxDate ? [{ after: maxDate }] : [])
+          ]}
+
           classNames={{
             months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
             month: "space-y-4",

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 interface ChatMessage {
   id: string;
@@ -499,7 +499,7 @@ export function AIServicesContent() {
                             <span className="text-xs font-normal text-[#6E4EFF]">AI Assistant</span>
                           </div>
                         )}
-                        <div 
+                        <div
                           className={`text-sm leading-relaxed ${
                             !msg.isUser ? 'prose prose-sm max-w-none' : ''
                           }`}
@@ -606,7 +606,7 @@ export function AIServicesContent() {
                 </svg>
               </button>
             </div>
-            
+
             {/* Search Bar */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

@@ -84,7 +84,7 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
       if (error.message === 'No access token available') {
         return false;
       }
-      return failureCount < 2;
+      return false;
     },
     // Return default data structure when query is disabled
     initialData: {
