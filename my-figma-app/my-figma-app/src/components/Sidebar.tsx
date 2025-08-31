@@ -145,11 +145,11 @@ const CollapseIcon = () => (
 // Notification Badge Component
 const NotificationBadge = ({ count, isActive }: { count: number; isActive: boolean }) => {
   if (count === 0) return null;
-  
+
   return (
     <div className={`ml-auto flex-shrink-0 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold font-manrope ${
-      isActive 
-        ? 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white' 
+      isActive
+        ? 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white'
         : 'bg-gradient-to-r from-[#ff4757] to-[#ff6b7a] text-white hover:from-[#ff3742] hover:to-[#ff4757]'
     }`}>
       {count > 99 ? '99+' : count}
@@ -158,61 +158,61 @@ const NotificationBadge = ({ count, isActive }: { count: number; isActive: boole
 };
 
 const menuItems = [
-  { 
-    id: "dashboard", 
-    label: "Dashboard", 
+  {
+    id: "dashboard",
+    label: "Dashboard",
     description: "Overview & analytics",
-    icon: DashboardIcon, 
-    href: "/dashboard", 
+    icon: DashboardIcon,
+    href: "/dashboard",
     active: true,
     notificationCount: 0
   },
-  { 
-    id: "data-center", 
-    label: "Data centre", 
+  {
+    id: "data-center",
+    label: "Data centre",
     description: "Manage your data",
-    icon: DataCenterIcon, 
+    icon: DataCenterIcon,
     href: "/data-center",
     notificationCount: 4
   },
-  { 
-    id: "ai-services", 
-    label: "Tab AI", 
+  {
+    id: "ai-services",
+    label: "Tab AI",
     description: "AI-powered insights",
-    icon: AIServicesIcon, 
+    icon: AIServicesIcon,
     href: "/ai-services",
     notificationCount: 0
   },
-  { 
-    id: "cohorts", 
-    label: "Cohorts", 
+  {
+    id: "cohorts",
+    label: "Cohorts",
     description: "User segmentation",
-    icon: CohortsIcon, 
+    icon: CohortsIcon,
     href: "/cohorts",
     notificationCount: 0
   },
-  { 
-    id: "campaigns", 
-    label: "Campaigns", 
+  {
+    id: "campaigns",
+    label: "Campaigns",
     description: "Marketing campaigns",
-    icon: CampaignsIcon, 
+    icon: CampaignsIcon,
     href: "/campaigns",
     notificationCount: 7
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
-  { 
-    id: "business-services", 
-    label: "Business services", 
+  {
+    id: "business-services",
+    label: "Business services",
     description: "Enterprise solutions",
-    icon: BusinessServicesIcon, 
+    icon: BusinessServicesIcon,
     href: "/business-services",
     notificationCount: 0
   },
-  { 
-    id: "achievements", 
-    label: "Achievements", 
+  {
+    id: "achievements",
+    label: "Achievements",
     description: "Goals & milestones",
-    icon: AchievementsIcon, 
+    icon: AchievementsIcon,
     href: "/achievements",
     notificationCount: 2
   },
@@ -221,7 +221,7 @@ const menuItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -236,31 +236,31 @@ export function Sidebar() {
       <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className={`transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
           {!actualIsCollapsed && (
-                        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f8f9fa] transition-all duration-200">
+            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f8f9fa] transition-all duration-200">
               <div className="relative">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  A
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold text-[#2a2a2f] font-manrope leading-tight truncate">
-                  Aditya Kumar
+                  {user?.name || 'User'}
                 </div>
                 <div className="text-xs text-[#6b7280] font-manrope leading-tight">
                   Business Manager
                 </div>
-          </div>
+              </div>
             </div>
           )}
           {actualIsCollapsed && (
             <div className="relative">
               <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm hover:scale-105 transition-all duration-200 cursor-pointer">
-                A
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
-              </div>
-            )}
+            </div>
+          )}
           </div>
         </div>
 
