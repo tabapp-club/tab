@@ -120,10 +120,10 @@ const StepperStep = ({
 // Progress Bar Component
 const StepperProgressBar = ({ currentStep = 2, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
   const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
-  
+
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
-      <div 
+      <div
         className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
@@ -249,7 +249,7 @@ export function AudienceContent() {
   const updateArrayFilter = (section: keyof typeof customFilters, value: string) => {
     setCustomFilters(prev => ({
       ...prev,
-      [section]: Array.isArray(prev[section]) 
+      [section]: Array.isArray(prev[section])
         ? prev[section].includes(value)
           ? prev[section].filter(item => item !== value)
           : [...prev[section], value]
@@ -275,26 +275,26 @@ export function AudienceContent() {
 
   const getActiveFiltersCount = () => {
     let count = 0;
-    
+
     // Count customerType
     count += customFilters.customerType.length;
-    
+
     // Count customerStatus
     count += customFilters.customerStatus.length;
-    
+
     // Count category
     count += customFilters.category.length;
-    
+
     // Count customerBehaviour
     count += customFilters.customerBehaviour.purchaseHistory.length;
     if (customFilters.customerBehaviour.engagementLevel) count += 1;
     if (customFilters.customerBehaviour.visitFrequency) count += 1;
     if (customFilters.customerBehaviour.lastActivity) count += 1;
     if (customFilters.customerBehaviour.lifetimeValue) count += 1;
-    
+
     // Count numberOfVisits if range is set
     if (customFilters.numberOfVisits.min > 0 || customFilters.numberOfVisits.max < 100) count += 1;
-    
+
     return count;
   };
 
@@ -324,7 +324,7 @@ export function AudienceContent() {
 
   // Mock data for simplicity
   const totalUsers = 2847;
-  
+
   // Calculate custom audience size based on filters
   const customAudienceSize = Math.max(1, Math.floor(totalUsers * (0.3 + Math.random() * 0.4)));
 
@@ -389,10 +389,10 @@ export function AudienceContent() {
         {/* Audience Selection Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
           {/* All Customers Card */}
-          <div 
+          <div
             className={`bg-white border rounded-lg p-4 cursor-pointer ${
-              audienceType === 'all' 
-                ? 'border-[#6E4EFF]' 
+              audienceType === 'all'
+                ? 'border-[#6E4EFF]'
                 : 'border-[#e9e9e9]'
             }`}
             onClick={() => setAudienceType('all')}
@@ -408,7 +408,7 @@ export function AudienceContent() {
             <p className="text-[14px] text-[#626266] leading-relaxed mb-3">
               Reach your entire customer base with maximum coverage and comprehensive impact across all segments.
             </p>
-                  
+
             <div className="grid grid-cols-3 gap-3 pt-3 border-t border-gray-100">
             <div className="text-center">
                 <div className="text-[14px] font-semibold text-[#2a2a2f]">2,420</div>
@@ -426,10 +426,10 @@ export function AudienceContent() {
               </div>
 
           {/* Custom Customers Card */}
-          <div 
+          <div
             className={`bg-white border rounded-lg p-4 cursor-pointer ${
-              audienceType === 'custom' 
-                ? 'border-[#6E4EFF]' 
+              audienceType === 'custom'
+                ? 'border-[#6E4EFF]'
                 : 'border-[#e9e9e9]'
             }`}
             onClick={() => setAudienceType('custom')}
@@ -445,7 +445,7 @@ export function AudienceContent() {
             <p className="text-[14px] text-[#626266] leading-relaxed mb-3">
               Create targeted audiences using advanced filters for precise campaign targeting and higher engagement rates.
             </p>
-                  
+
             <div className="grid grid-cols-3 gap-3 pt-3 border-t border-gray-100">
                     <div className="text-center">
                 <div className="text-[14px] font-semibold text-[#2a2a2f]">Variable</div>
@@ -468,7 +468,7 @@ export function AudienceContent() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <h4 className="text-[14px] font-semibold text-blue-800 mb-2">All Customers Campaign</h4>
             <p className="text-[12px] text-blue-700">
-              You're targeting all {totalUsers.toLocaleString()} customers in your database. This provides maximum reach and is perfect for general announcements, promotions, or brand awareness campaigns.
+              You&apos;re targeting all {totalUsers.toLocaleString()} customers in your database. This provides maximum reach and is perfect for general announcements, promotions, or brand awareness campaigns.
             </p>
           </div>
         )}
@@ -544,7 +544,7 @@ export function AudienceContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {expandedFilters.includes('customerType') && (
                     <div className="mt-3 p-3 bg-white border border-[#e9e9e9] rounded transition-all duration-800 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top scale-100 opacity-100 animate-in slide-in-from-top-2">
                       <div className="space-y-2">
@@ -600,7 +600,7 @@ export function AudienceContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
-                  
+
                   {expandedFilters.includes('customerStatus') && (
                     <div className="mt-3 p-3 bg-white border border-[#e9e9e9] rounded transition-all duration-800 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top scale-100 opacity-100 animate-in slide-in-from-top-2">
                       <div className="space-y-2">
@@ -659,7 +659,7 @@ export function AudienceContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {expandedFilters.includes('numberOfVisits') && (
                     <div className="mt-3 p-3 bg-white border border-[#e9e9e9] rounded transition-all duration-800 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top scale-100 opacity-100 animate-in slide-in-from-top-2">
                       <div className="space-y-2">
@@ -680,7 +680,7 @@ export function AudienceContent() {
                                 <div className="text-[13px] font-medium text-[#2a2a2f]">{range.label}</div>
             </div>
                               <span className="text-[11px] text-[#626266] font-medium">
-                                {range.id === '1' ? '427' : 
+                                {range.id === '1' ? '427' :
                                  range.id === '2-5' ? '1,284' :
                                  range.id === '6-10' ? '856' :
                                  range.id === '11-20' ? '171' :
@@ -722,7 +722,7 @@ export function AudienceContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {expandedFilters.includes('category') && (
                     <div className="mt-3 p-3 bg-white border border-[#e9e9e9] rounded transition-all duration-800 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top scale-100 opacity-100 animate-in slide-in-from-top-2">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -786,7 +786,7 @@ export function AudienceContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                                     {expandedFilters.includes('customerBehaviour') && (
                     <div className="mt-3 p-3 bg-white border border-[#e9e9e9] rounded transition-all duration-800 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top scale-100 opacity-100 animate-in slide-in-from-top-2">
                       <div className="space-y-6">
@@ -966,7 +966,7 @@ export function AudienceContent() {
                     <h2 className="text-[16px] font-bold text-[#2a2a2f] mb-0.5">Audience Summary</h2>
                     <p className="text-[#a1a1a1] text-[14px] font-normal">Review your audience configuration before proceeding</p>
                   </div>
-                
+
                 <div className="p-4">
                   <div className="space-y-4">
                     {/* Filters Applied */}
@@ -978,18 +978,18 @@ export function AudienceContent() {
                           className="flex items-center gap-1 text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
                         >
                           <span>{filtersExpanded ? 'Collapse' : 'Expand'}</span>
-                          <svg 
-                            className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${filtersExpanded ? 'rotate-180' : ''}`} 
-                            fill="none" 
-                            stroke="currentColor" 
+                          <svg
+                            className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${filtersExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
                             viewBox="0 0 24 24"
                           >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
                       </div>
-                      
-                      
+
+
                                              {/* No Filters Applied - Show when closed or no filters */}
                        {(!filtersExpanded || getActiveFiltersCount() === 0) && (
                          <div className="mb-3">
@@ -998,7 +998,7 @@ export function AudienceContent() {
                           </p>
                         </div>
                       )}
-                      
+
                       {/* Separator */}
                       <div className="w-full h-px bg-[#e9e9e9] mb-3 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"></div>
                       <div className="space-y-3">
@@ -1154,8 +1154,8 @@ export function AudienceContent() {
                       </div>
                     </div>
 
-                                         
-  
+
+
                      {/* Total Customer */}
                      <div className="text-center">
                        <h3 className="text-[14px] font-normal text-[#2a2a2f] mb-3">Total Customer</h3>
@@ -1223,10 +1223,10 @@ export function AudienceContent() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* AI Card 1: Inactive Users Reactivation */}
-            <div 
+            <div
               className={`relative bg-white border rounded-xl p-5 cursor-pointer transition-all duration-300 group ${
-                audienceType === 'ai_inactive' 
-                  ? 'border-[#ff6b35] bg-gradient-to-br from-[#ff6b35]/5 to-[#ff8a65]/5' 
+                audienceType === 'ai_inactive'
+                  ? 'border-[#ff6b35] bg-gradient-to-br from-[#ff6b35]/5 to-[#ff8a65]/5'
                   : 'border-gray-200 hover:border-[#ff6b35]/50 hover:bg-gradient-to-br hover:from-[#ff6b35]/2 hover:to-[#ff8a65]/2'
               }`}
               onClick={() => setAudienceType('ai_inactive')}
@@ -1289,10 +1289,10 @@ export function AudienceContent() {
             </div>
 
             {/* AI Card 2: VIP Customer Retention */}
-            <div 
+            <div
               className={`relative bg-white border rounded-xl p-5 cursor-pointer transition-all duration-300 group ${
-                audienceType === 'ai_vip' 
-                  ? 'border-[#9c27b0] bg-gradient-to-br from-[#9c27b0]/5 to-[#ba68c8]/5' 
+                audienceType === 'ai_vip'
+                  ? 'border-[#9c27b0] bg-gradient-to-br from-[#9c27b0]/5 to-[#ba68c8]/5'
                   : 'border-gray-200 hover:border-[#9c27b0]/50 hover:bg-gradient-to-br hover:from-[#9c27b0]/2 hover:to-[#ba68c8]/2'
               }`}
               onClick={() => setAudienceType('ai_vip')}
@@ -1355,10 +1355,10 @@ export function AudienceContent() {
             </div>
 
             {/* AI Card 3: New Customers */}
-            <div 
+            <div
               className={`relative bg-white border rounded-xl p-5 cursor-pointer transition-all duration-300 group ${
-                audienceType === 'ai_cart' 
-                  ? 'border-[#10b981] bg-gradient-to-br from-[#10b981]/5 to-[#34d399]/5' 
+                audienceType === 'ai_cart'
+                  ? 'border-[#10b981] bg-gradient-to-br from-[#10b981]/5 to-[#34d399]/5'
                   : 'border-gray-200 hover:border-[#10b981]/50 hover:bg-gradient-to-br hover:from-[#10b981]/2 hover:to-[#34d399]/2'
               }`}
               onClick={() => setAudienceType('ai_cart')}

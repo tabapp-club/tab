@@ -38,9 +38,6 @@ const exportToCSV = (data: UserData[], filename: string = 'data-center-export.cs
       `"${row.id}"`,
       `"${row.mobile}"`,
       `"${Array.isArray(row.categories) ? row.categories.join('; ') : row.categories}"`,
-      `"${row.userType}"`,
-      row.visits,
-      `"${row.status}"`,
       `"${row.addedOn}"`
     ].join(','))
   ].join('\n');
@@ -111,8 +108,6 @@ export default function DataCenterClient() {
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
     const mappedData = mapApiDataToTable(dataCenterResponse.data);
-    console.log('Data Center - Original API data:', dataCenterResponse.data);
-    console.log('Data Center - Mapped table data:', mappedData);
     return mappedData;
   }, [dataCenterResponse]);
 

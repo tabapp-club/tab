@@ -37,9 +37,12 @@ interface UseDataCenterDataProps {
 export function useDataCenterData({ page, pageSize, filters }: UseDataCenterDataProps) {
   const { user } = useAuth();
 
+  const isEnabled = !!user?.accessToken;
+
   return useQuery<DataCenterApiResponse, Error>({
     queryKey: ['data-center-data', page, pageSize, filters],
     queryFn: async () => {
+
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
@@ -59,22 +62,28 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
 
       const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.accessToken}`
+          }
+        });
+
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch data center data: ${response.status}`);
         }
-      });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data center data: ${response.status}`);
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        throw error;
       }
-
-      const result = await response.json();
-      return result;
     },
-    enabled: !!user?.accessToken,
+    enabled: isEnabled,
     staleTime: filters.search ? 30 * 1000 : 1 * 60 * 1000, // 30 seconds for search, 1 minute for regular data
     gcTime: 3 * 60 * 1000, // 3 minutes in cache
     // Keep previous data while fetching new data to avoid loading states during search
@@ -84,10 +93,10 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
       if (error.message === 'No access token available') {
         return false;
       }
-      return failureCount < 2;
+      return false;
     },
     // Return default data structure when query is disabled
-    initialData: {
+    initialData: isEnabled ? undefined : {
       success: true,
       data: [],
       total: 0

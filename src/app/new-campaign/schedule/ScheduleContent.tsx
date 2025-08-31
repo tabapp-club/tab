@@ -139,10 +139,10 @@ const StepperStep = ({
 // Progress Bar Component
 const StepperProgressBar = ({ currentStep = 5, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
   const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
-  
+
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
-      <div 
+      <div
         className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
@@ -349,7 +349,7 @@ export function ScheduleContent() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="space-y-4">
                   {/* Immediate Start Option */}
@@ -369,7 +369,7 @@ export function ScheduleContent() {
                         <span className="font-medium text-gray-900">Start Immediately</span>
                         <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Recommended</span>
                       </div>
-                      <p className="text-sm text-gray-600">Campaign will start as soon as it's published</p>
+                      <p className="text-sm text-gray-600">Campaign will start as soon as it&apos;s published</p>
                     </div>
                   </label>
 
@@ -437,7 +437,7 @@ export function ScheduleContent() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="space-y-4">
                   {/* Automatic End Option */}
@@ -528,7 +528,7 @@ export function ScheduleContent() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="space-y-4">
                   {/* Allow Repeatedly */}
@@ -676,4 +676,3 @@ export function ScheduleContent() {
     </main>
   );
 }
-

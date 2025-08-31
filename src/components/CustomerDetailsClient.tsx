@@ -65,7 +65,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
   // Calculate all analytics
   const daysSinceJoin = customerData ? Math.floor((Date.now() - new Date(customerData.joinDate).getTime()) / (1000 * 60 * 60 * 24)) : 0;
   const daysSinceLastPurchase = customerData ? Math.floor((Date.now() - new Date(customerData.purchaseHistory[0]?.date || Date.now()).getTime()) / (1000 * 60 * 60 * 24)) : 0;
-  
+
   const engagementScore = customerData ? calculateEngagementScore(customerData.visits, daysSinceJoin) : { score: 0, level: 'Unknown', color: 'bg-gray-500' };
   const retentionScore = customerData ? calculateRetentionScore(customerData.visits, customerData.totalSpent, customerData.averageOrderValue, customerData.categories) : 0;
   const customerLifetimeValue = customerData ? calculateCustomerLifetimeValue(customerData.averageOrderValue, customerData.visits, daysSinceJoin) : 0;
@@ -73,7 +73,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
   const riskLevel = customerData ? getRiskLevel(customerData.visits, daysSinceLastPurchase) : { level: 'Unknown', color: '' };
 
   // Calculate purchase trend
-  const purchaseTrend = customerData && customerData.purchaseHistory.length >= 2 ? 
+  const purchaseTrend = customerData && customerData.purchaseHistory.length >= 2 ?
     (() => {
       const recent = customerData.purchaseHistory.slice(0, 3);
       const older = customerData.purchaseHistory.slice(-3);
@@ -121,8 +121,8 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 <div className="text-red-500 text-6xl mb-4">⚠️</div>
                 <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Error Loading Customer Data</h2>
                 <p className="text-[#626266] mb-4">{error.message}</p>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
                 >
                   Try Again
@@ -149,9 +149,9 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               <div className="text-center">
                 <div className="text-gray-500 text-6xl mb-4">👤</div>
                 <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Customer Not Found</h2>
-                <p className="text-[#626266] mb-4">The customer you're looking for doesn't exist or has been removed.</p>
-                <button 
-                  onClick={() => router.back()} 
+                <p className="text-[#626266] mb-4">The customer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+                <button
+                  onClick={() => router.back()}
                   className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
                 >
                   Go Back
@@ -175,7 +175,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
         <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
           <div className="h-full flex flex-col min-w-0">
             <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
-              
+
               {/* Header with Back Button and Actions */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -226,7 +226,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Quick Stats */}
                   <div className="lg:ml-auto flex flex-wrap gap-0 border border-[#e9e9e9] rounded">
                     <div className="text-center flex-1 p-4 border-r border-[#e9e9e9] last:border-r-0">
@@ -279,8 +279,8 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     <span className="text-2xl">{engagementScore.score}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
-                    <div 
-                      className={`${engagementScore.color} h-1 rounded-full transition-all duration-1000`} 
+                    <div
+                      className={`${engagementScore.color} h-1 rounded-full transition-all duration-1000`}
                       style={{ width: `${engagementScore.score}%` }}
                     ></div>
                   </div>
@@ -304,14 +304,14 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     <span className="text-2xl">{retentionScore}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
-                    <div 
-                      className="bg-green-500 h-1 rounded-full transition-all duration-1000" 
+                    <div
+                      className="bg-green-500 h-1 rounded-full transition-all duration-1000"
                       style={{ width: `${retentionScore}%` }}
                     ></div>
                   </div>
                   <p className="text-[12px] font-normal text-[#626266] mb-4">
-                    {retentionScore >= 80 ? 'Excellent retention' : 
-                     retentionScore >= 60 ? 'Good retention' : 
+                    {retentionScore >= 80 ? 'Excellent retention' :
+                     retentionScore >= 60 ? 'Good retention' :
                      retentionScore >= 40 ? 'Moderate retention' : 'Needs attention'}
                   </p>
                   <div className="space-y-2 text-[14px] font-normal">
@@ -502,7 +502,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                           const categoryPurchases = customerData.purchaseHistory.filter(p => p.category === category);
                           const totalSpent = categoryPurchases.reduce((sum, p) => sum + p.amount, 0);
                           const percentage = (categoryPurchases.length / customerData.purchaseHistory.length) * 100;
-                          
+
                           return (
                             <div key={category} className="p-4 bg-gray-50 rounded-lg border border-[#e9e9e9]">
                               <div className="flex items-center justify-between mb-2">
@@ -588,7 +588,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                              'Customer needs re-engagement. Send personalized offers and check-in messages.'}
                           </p>
                         </div>
-                        
+
                         <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xl">📈</span>
@@ -599,7 +599,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                              'Focus on increasing average order value with premium products.'}
                           </p>
                         </div>
-                        
+
                         <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xl">⏰</span>
@@ -610,7 +610,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                              'Create targeted campaign for new category exploration.'}
                           </p>
                         </div>
-                        
+
                         <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xl">💡</span>
@@ -638,7 +638,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                             <span className="text-blue-600">→</span>
                           </div>
                         </button>
-                        
+
                         <button className="w-full p-4 text-left bg-green-50 hover:bg-green-100 rounded border border-green-200 transition-colors">
                           <div className="flex items-center justify-between">
                             <div>
@@ -648,7 +648,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                             <span className="text-green-600">→</span>
                           </div>
                         </button>
-                        
+
                         <button className="w-full p-4 text-left bg-purple-50 hover:bg-purple-100 rounded border border-purple-200 transition-colors">
                           <div className="flex items-center justify-between">
                             <div>

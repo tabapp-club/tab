@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { useAchievementsData } from "@/hooks/useAchievementsData";
 import { CreateTargetModal } from "@/components/CreateTargetModal";
 
@@ -16,7 +16,7 @@ export function AchievementsContent() {
   const [showCreateTarget, setShowCreateTarget] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
-  
+
   const { milestones, aiTargets, aiMetrics, loading, createMilestone } = useAchievementsData();
 
   // Close dropdown when clicking outside
@@ -94,7 +94,7 @@ export function AchievementsContent() {
       {/* Main Content */}
         <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden bg-white">
         <div className="pt-12 lg:pt-0 space-y-8">
-          
+
                                 {/* 1. Top Section - Cover Page with Summary */}
           <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-8 border border-slate-100 mb-20">
                          <div className="flex flex-col items-center gap-8">
@@ -126,7 +126,7 @@ export function AchievementsContent() {
                    </div>
                  </div>
               </div>
-              
+
             </div>
             </div>
 
@@ -173,7 +173,7 @@ export function AchievementsContent() {
                 >
                   <div className="flex items-center gap-1 min-w-0">
                     <span className="text-[13.453px] font-normal text-[#2a2a2f] truncate">
-                      {selectedStatus === 'all' ? 'All Status' : 
+                      {selectedStatus === 'all' ? 'All Status' :
                        selectedStatus === 'active' ? '🟢 Active' :
                        selectedStatus === 'completed' ? '✅ Completed' :
                        selectedStatus === 'overdue' ? '⚠️ Overdue' : 'All Status'}
@@ -185,10 +185,10 @@ export function AchievementsContent() {
                     )}
                   </div>
                   <div className="flex-shrink-0 w-[22px] h-full flex items-center justify-center">
-                    <svg 
-                      width="7.5" 
-                      height="4.518" 
-                      viewBox="0 0 7.5 4.518" 
+                    <svg
+                      width="7.5"
+                      height="4.518"
+                      viewBox="0 0 7.5 4.518"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                       className={`transition-transform duration-200 ${isStatusDropdownOpen ? 'rotate-180' : ''}`}
@@ -205,7 +205,7 @@ export function AchievementsContent() {
                     <div className="px-4 py-2 bg-white border-b border-gray-100">
                       <div className="flex justify-between items-center">
                         <span className="text-[12px] text-[#626266]">Filter by Status</span>
-                        <button 
+                        <button
                           className="text-[12px] text-[#626266] hover:text-[#7856ff]"
                           onClick={() => {
                             setSelectedStatus('all');
@@ -254,13 +254,11 @@ export function AchievementsContent() {
 
               <Button
                 onClick={() => setShowCreateTarget(true)}
-                variant="primary"
-                icon={
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                }
+                variant="default"
               >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
                 Create New Target
               </Button>
             </div>
@@ -377,7 +375,7 @@ export function AchievementsContent() {
                        <p className="text-sm text-gray-600 leading-relaxed">{milestone.description}</p>
                      </div>
                    </div>
-                  
+
                                      {/* Progress Bar */}
                    <div className="mb-4">
                      <div className="flex justify-between text-sm mb-2">
@@ -385,7 +383,7 @@ export function AchievementsContent() {
                        <span className="font-semibold text-base">{milestone.progress}%</span>
                      </div>
                      <div className="w-full bg-gray-200 rounded-full h-1">
-                       <div 
+                       <div
                          className={`h-1 rounded-full transition-all duration-500 ${milestone.color}`}
                          style={{ width: `${milestone.progress}%` }}
                        ></div>
@@ -479,7 +477,7 @@ export function AchievementsContent() {
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{target.title}</h3>
                       <p className="text-sm text-gray-600 mb-4">{target.description}</p>
-                      
+
                       {/* Target Details */}
                       <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100">
                         <div className="flex justify-between items-center mb-2">
@@ -566,7 +564,7 @@ export function AchievementsContent() {
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{metric.title}</h3>
                       <div className="text-3xl font-bold text-gray-900 mb-4">{metric.value}</div>
-                      
+
                       {/* Insight */}
                       <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100">
                         <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Insight</h4>
@@ -593,7 +591,7 @@ export function AchievementsContent() {
               <div className="absolute top-1/2 right-0 w-24 h-24 bg-white rounded-full translate-x-12 -translate-y-12"></div>
               <div className="absolute bottom-0 left-1/3 w-20 h-20 bg-white rounded-full translate-y-10"></div>
             </div>
-            
+
             <div className="relative z-10 text-center">
               <div className="mb-8">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-6 border border-purple-200">
@@ -603,14 +601,14 @@ export function AchievementsContent() {
                   Celebrate Your Success
                 </h2>
               </div>
-              
+
               <div className="max-w-3xl mx-auto mb-10">
                 <blockquote className="text-base italic text-gray-700 leading-relaxed mb-4">
-                  "The only way to achieve the impossible is to believe it is possible. Every milestone reached is a testament to your dedication and the power of setting meaningful goals."
+                  &quot;The only way to achieve the impossible is to believe it is possible. Every milestone reached is a testament to your dedication and the power of setting meaningful goals.&quot;
                 </blockquote>
                 <div className="text-sm text-gray-600">— Charles Kingsleigh</div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
                 <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-white/30 hover:bg-white/70 transition-all duration-300">
                   <div className="text-3xl font-bold mb-2 text-gray-800">24</div>
@@ -628,17 +626,17 @@ export function AchievementsContent() {
                   <div className="text-xs text-gray-500">From achievements</div>
                 </div>
               </div>
-              
 
-              
+
+
               <div className="flex justify-center">
                 <div className="inline-flex items-center gap-2 text-sm text-gray-600">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  Last updated: {new Date().toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  Last updated: {new Date().toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                   })}
                 </div>
               </div>

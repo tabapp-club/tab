@@ -13,6 +13,8 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       // Don't refetch on reconnect by default
       refetchOnReconnect: false,
+      // Enable refetch on mount
+      refetchOnMount: true,
     },
   },
 });

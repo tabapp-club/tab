@@ -46,9 +46,9 @@ export const metadata: Metadata = {
 };
 
 interface CustomerPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Generate static params for dynamic routes
@@ -59,10 +59,12 @@ export async function generateStaticParams() {
   return [];
 }
 
-export default function CustomerPage({ params }: CustomerPageProps) {
+export default async function CustomerPage({ params }: CustomerPageProps) {
+  const { id } = await params;
+
   return (
     <ProtectedRoute>
-      <CustomerDetailsClient customerId={params.id} />
+      <CustomerDetailsClient customerId={id} />
     </ProtectedRoute>
   );
 }

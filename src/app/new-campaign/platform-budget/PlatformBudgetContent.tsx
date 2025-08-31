@@ -121,10 +121,10 @@ const StepperStep = ({
 // Progress Bar Component
 const StepperProgressBar = ({ currentStep = 4, totalSteps = 5 }: { currentStep?: number; totalSteps?: number }) => {
   const progressPercentage = Math.min((currentStep / totalSteps) * 100, 100);
-  
+
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
-      <div 
+      <div
         className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
@@ -137,7 +137,7 @@ export function PlatformBudgetContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const campaignType = searchParams.get('type') || 'advertise';
-  
+
   const {
     campaignData,
     selectedPlatforms,
@@ -150,7 +150,9 @@ export function PlatformBudgetContent() {
   const [budgetInputs, setBudgetInputs] = useState({
     total: campaignData.budget.total,
     daily: campaignData.budget.daily,
-    expectedReach: campaignData.budget.expectedReach
+    expectedReach: campaignData.budget.expectedReach,
+    allocationStrategy: 'equal' as 'equal' | 'performance' | 'cost' | 'manual',
+    duration: 14
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -220,40 +222,8 @@ export function PlatformBudgetContent() {
 
   // Helper function to get active filters count
   const getActiveFiltersCount = () => {
-    let count = 0;
-    
-    // Check if filters exist and have the expected structure
-    if (campaignData.filters) {
-      if (campaignData.filters.customerType && Array.isArray(campaignData.filters.customerType)) {
-        count += campaignData.filters.customerType.length;
-      }
-      if (campaignData.filters.customerStatus && Array.isArray(campaignData.filters.customerStatus)) {
-        count += campaignData.filters.customerStatus.length;
-      }
-      if (campaignData.filters.category && Array.isArray(campaignData.filters.category)) {
-        count += campaignData.filters.category.length;
-      }
-      if (campaignData.filters.customerBehaviour && campaignData.filters.customerBehaviour.purchaseHistory && Array.isArray(campaignData.filters.customerBehaviour.purchaseHistory)) {
-        count += campaignData.filters.customerBehaviour.purchaseHistory.length;
-      }
-      if (campaignData.filters.customerBehaviour && campaignData.filters.customerBehaviour.engagementLevel) {
-        count += 1;
-      }
-      if (campaignData.filters.customerBehaviour && campaignData.filters.customerBehaviour.visitFrequency) {
-        count += 1;
-      }
-      if (campaignData.filters.customerBehaviour && campaignData.filters.customerBehaviour.lastActivity) {
-        count += 1;
-      }
-      if (campaignData.filters.customerBehaviour && campaignData.filters.customerBehaviour.lifetimeValue) {
-        count += 1;
-      }
-      if (campaignData.filters.numberOfVisits && (campaignData.filters.numberOfVisits.min > 0 || campaignData.filters.numberOfVisits.max < 100)) {
-        count += 1;
-      }
-    }
-    
-    return count;
+    // TODO: Implement filters count when filters are added to CampaignData interface
+    return 0;
   };
 
   // Force uncollapsed state on mobile
@@ -271,36 +241,36 @@ export function PlatformBudgetContent() {
   // Validation function
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (selectedPlatforms.length === 0) {
       newErrors.platforms = 'Please select at least one platform';
     }
-    
+
     if (budgetInputs.total <= 0) {
       newErrors.total = 'Total budget must be greater than 0';
     }
-    
+
     if (budgetInputs.daily <= 0) {
       newErrors.daily = 'Daily budget must be greater than 0';
     }
-    
+
     if (budgetInputs.daily > budgetInputs.total) {
       newErrors.daily = 'Daily budget cannot exceed total budget';
     }
-    
+
     if (budgetInputs.expectedReach <= 0) {
       newErrors.expectedReach = 'Expected reach must be greater than 0';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Handle budget input changes
-  const handleBudgetChange = (field: string, value: number) => {
+  const handleBudgetChange = (field: string, value: number | string) => {
     setBudgetInputs(prev => ({ ...prev, [field]: value }));
     setSelectedBudgetType('custom');
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -309,10 +279,10 @@ export function PlatformBudgetContent() {
 
   // Calculate budget allocations with different strategies
   const calculateBudgetAllocationsWithStrategy = () => {
-    const selectedPlatformsData = campaignData.platforms.filter(p => 
+    const selectedPlatformsData = campaignData.platforms.filter(p =>
       selectedPlatforms.includes(p.id)
     );
-    
+
     if (selectedPlatformsData.length === 0) return;
 
     const strategy = budgetInputs.allocationStrategy || 'equal';
@@ -346,7 +316,7 @@ export function PlatformBudgetContent() {
 
       case 'cost':
         // Cost-based allocation (inverse of cost - lower cost gets more budget)
-        const totalInverseCost = selectedPlatformsData.reduce((sum, platform) => 
+        const totalInverseCost = selectedPlatformsData.reduce((sum, platform) =>
           sum + (1 / platform.costPerMessage), 0
         );
         allocations = selectedPlatformsData.map(platform => {
@@ -396,12 +366,12 @@ export function PlatformBudgetContent() {
   const handleManualAllocationChange = (platformId: string, field: 'amount' | 'percentage', value: number) => {
     const currentAllocations = [...campaignData.budget.allocations];
     const allocationIndex = currentAllocations.findIndex(a => a.platformId === platformId);
-    
+
     if (allocationIndex === -1) {
       // Create new allocation if it doesn't exist
       const platform = campaignData.platforms.find(p => p.id === platformId);
       if (!platform) return;
-      
+
       currentAllocations.push({
         platformId,
         amount: field === 'amount' ? value : 0,
@@ -421,7 +391,7 @@ export function PlatformBudgetContent() {
         currentAllocations[allocationIndex].amount = Math.round((value / 100) * totalBudget);
       }
     }
-    
+
     // Update allocations
     updateBudget({ allocations: currentAllocations });
   };
@@ -430,13 +400,13 @@ export function PlatformBudgetContent() {
   const handleEqualizeAllocation = () => {
     const equalAmount = budgetInputs.total / selectedPlatforms.length;
     const equalPercentage = 100 / selectedPlatforms.length;
-    
+
     const equalizedAllocations = selectedPlatforms.map(platformId => ({
       platformId,
       amount: Math.round(equalAmount),
       percentage: Math.round(equalPercentage)
     }));
-    
+
     updateBudget({ allocations: equalizedAllocations });
   };
 
@@ -453,7 +423,7 @@ export function PlatformBudgetContent() {
       balanced: { total: 5000, daily: 500 },
       aggressive: { total: 10000, daily: 1000 }
     };
-    
+
     const budget = budgets[type];
     setBudgetInputs(prev => ({ ...prev, ...budget }));
     setSelectedBudgetType(type);
@@ -474,11 +444,11 @@ export function PlatformBudgetContent() {
     if (!validateForm()) {
       return;
     }
-    
+
     // Update final budget data
     updateBudget(budgetInputs);
     calculateBudgetAllocationsWithStrategy();
-    
+
     router.push(`/new-campaign/create?type=${campaignType}`);
   };
 
@@ -526,7 +496,7 @@ export function PlatformBudgetContent() {
         <section className="mb-8">
           <div className="bg-white border border-[#e9e9e9] rounded-lg overflow-hidden">
 
-            
+
             {/* Platform Comparison Table */}
             <div className="p-6">
               {errors.platforms && (
@@ -767,7 +737,7 @@ export function PlatformBudgetContent() {
                 </button>
               </div>
         </div>
-            
+
             <div className="p-6">
               {/* Budget Section - Toggle between Suggested and Custom */}
               <div className="mb-6">
@@ -782,7 +752,7 @@ export function PlatformBudgetContent() {
                     </div>
                   )}
                 </div>
-                
+
                 {selectedBudgetType === 'custom' ? (
                   // Custom Budget Input Fields
                   <div className="space-y-6">
@@ -867,7 +837,7 @@ export function PlatformBudgetContent() {
                           <option value="cost">Cost Based</option>
                           <option value="manual">Manual Allocation</option>
                         </select>
-                        
+
                         {/* Strategy Description */}
                         <div className="mt-2 p-3 bg-[#f8f9fa] rounded-lg">
                           <p className="text-[12px] text-[#a1a1a1] mb-2">
@@ -876,7 +846,7 @@ export function PlatformBudgetContent() {
                             {budgetInputs.allocationStrategy === 'cost' && "More budget allocated to cost-effective platforms"}
                             {budgetInputs.allocationStrategy === 'manual' && "Custom budget allocation based on your preferences"}
                           </p>
-                          
+
                           {/* Manual Allocation Editor */}
                           {budgetInputs.allocationStrategy === 'manual' && (
                             <div className="mt-3 space-y-3">
@@ -886,22 +856,22 @@ export function PlatformBudgetContent() {
                                   Total: ₹{campaignData.budget.allocations.reduce((sum, alloc) => sum + alloc.amount, 0).toLocaleString()}
                                 </span>
                         </div>
-                              
+
                               {selectedPlatforms.map(platformId => {
                                 const platform = campaignData.platforms.find(p => p.id === platformId);
                                 const allocation = campaignData.budget.allocations.find(a => a.platformId === platformId);
                                 if (!platform) return null;
-                                
+
                                 const currentAmount = allocation?.amount || 0;
                                 const currentPercentage = allocation?.percentage || 0;
-                                
+
                                 return (
                                   <div key={platformId} className="space-y-2">
                                     <div className="flex items-center justify-between">
                                       <span className="text-[12px] text-[#2a2a2f] font-medium">{platform.name}</span>
                                       <span className="text-[10px] text-[#a1a1a1]">₹{platform.costPerMessage.toFixed(2)} per message</span>
                       </div>
-                                    
+
                                     <div className="grid grid-cols-2 gap-2">
                                       <div>
                                         <label className="block text-[10px] text-[#a1a1a1] mb-1">Amount (₹)</label>
@@ -928,7 +898,7 @@ export function PlatformBudgetContent() {
                 </div>
                                 );
                               })}
-                              
+
                               {/* Quick Actions */}
                               <div className="flex gap-2 pt-2 border-t border-[#e9e9e9]">
                                 <button
@@ -946,14 +916,14 @@ export function PlatformBudgetContent() {
               </div>
                   </div>
                           )}
-                          
+
                           {/* Current Allocation Preview (for non-manual strategies) */}
                           {budgetInputs.allocationStrategy !== 'manual' && campaignData.budget.allocations.length > 0 && (
                             <div className="space-y-1">
                               {campaignData.budget.allocations.map(allocation => {
                                 const platform = campaignData.platforms.find(p => p.id === allocation.platformId);
                                 if (!platform) return null;
-                                
+
                                 return (
                                   <div key={allocation.platformId} className="flex justify-between text-[12px]">
                                     <span className="text-[#2a2a2f]">{platform.name}:</span>
@@ -983,10 +953,10 @@ export function PlatformBudgetContent() {
                                                       // Suggested Budgets Cards - List View
                   <div className="space-y-4">
                     {/* Conservative Budget */}
-                    <div 
+                    <div
                       className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
-                        selectedBudgetType === 'conservative' 
-                          ? 'border-[#7856ff] bg-[#7856ff]/5' 
+                        selectedBudgetType === 'conservative'
+                          ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('conservative')}
@@ -1033,8 +1003,8 @@ export function PlatformBudgetContent() {
 
                           {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            selectedBudgetType === 'conservative' 
-                              ? 'border-[#7856ff] bg-[#7856ff]' 
+                            selectedBudgetType === 'conservative'
+                              ? 'border-[#7856ff] bg-[#7856ff]'
                               : 'border-[#e9e9e9]'
                           }`}>
                             {selectedBudgetType === 'conservative' && (
@@ -1048,10 +1018,10 @@ export function PlatformBudgetContent() {
                     </div>
 
                     {/* Balanced Budget */}
-                    <div 
+                    <div
                       className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
-                        selectedBudgetType === 'balanced' 
-                          ? 'border-[#7856ff] bg-[#7856ff]/5' 
+                        selectedBudgetType === 'balanced'
+                          ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('balanced')}
@@ -1098,8 +1068,8 @@ export function PlatformBudgetContent() {
 
                           {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            selectedBudgetType === 'balanced' 
-                              ? 'border-[#7856ff] bg-[#7856ff]' 
+                            selectedBudgetType === 'balanced'
+                              ? 'border-[#7856ff] bg-[#7856ff]'
                               : 'border-[#e9e9e9]'
                           }`}>
                             {selectedBudgetType === 'balanced' && (
@@ -1113,10 +1083,10 @@ export function PlatformBudgetContent() {
                     </div>
 
                     {/* Aggressive Budget */}
-                    <div 
+                    <div
                       className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
-                        selectedBudgetType === 'aggressive' 
-                          ? 'border-[#7856ff] bg-[#7856ff]/5' 
+                        selectedBudgetType === 'aggressive'
+                          ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('aggressive')}
@@ -1163,8 +1133,8 @@ export function PlatformBudgetContent() {
 
                           {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            selectedBudgetType === 'aggressive' 
-                              ? 'border-[#7856ff] bg-[#7856ff]' 
+                            selectedBudgetType === 'aggressive'
+                              ? 'border-[#7856ff] bg-[#7856ff]'
                               : 'border-[#e9e9e9]'
                           }`}>
                             {selectedBudgetType === 'aggressive' && (
@@ -1182,7 +1152,7 @@ export function PlatformBudgetContent() {
 
 
 
-              
+
                   </div>
                     </div>
           </section>
@@ -1194,7 +1164,7 @@ export function PlatformBudgetContent() {
                 <h2 className="text-[16px] font-bold text-[#2a2a2f] mb-0.5">Campaign Summary</h2>
                 <p className="text-[#a1a1a1] text-[14px] font-normal">Review your campaign configuration before proceeding</p>
                   </div>
-              
+
               <div className="p-4">
                 <div className="space-y-4">
                   {/* Audience Preview */}
@@ -1206,17 +1176,17 @@ export function PlatformBudgetContent() {
                          className="flex items-center gap-1 text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
                        >
                          <span>{audienceExpanded ? 'Collapse' : 'Expand'}</span>
-                         <svg 
-                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${audienceExpanded ? 'rotate-180' : ''}`} 
-                           fill="none" 
-                           stroke="currentColor" 
+                         <svg
+                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${audienceExpanded ? 'rotate-180' : ''}`}
+                           fill="none"
+                           stroke="currentColor"
                            viewBox="0 0 24 24"
                          >
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                          </svg>
                        </button>
                 </div>
-                     
+
                      {/* Audience Summary - Show when closed */}
                      {!audienceExpanded && (
                        <div className="mb-3">
@@ -1226,7 +1196,7 @@ export function PlatformBudgetContent() {
               </div>
             </div>
                      )}
-                     
+
                      {/* Separator */}
                      <div className="w-full h-px bg-[#e9e9e9] mb-3 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"></div>
                      <div className="space-y-3">
@@ -1249,7 +1219,7 @@ export function PlatformBudgetContent() {
                           </div>
                              <div className="flex justify-between items-center text-[14px]">
                                <span className="text-[#626266]">• Audience Type</span>
-                               <span className="font-medium text-[#2a2a2f] capitalize">{campaignData.audience.type || 'custom'}</span>
+                                                               <span className="font-medium text-[#2a2a2f] capitalize">custom</span>
                         </div>
                       </div>
                            <div className="w-full h-px bg-[#e9e9e9] mt-2"></div>
@@ -1315,17 +1285,17 @@ export function PlatformBudgetContent() {
                          className="flex items-center gap-1 text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
                        >
                          <span>{platformsExpanded ? 'Collapse' : 'Expand'}</span>
-                         <svg 
-                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${platformsExpanded ? 'rotate-180' : ''}`} 
-                           fill="none" 
-                           stroke="currentColor" 
+                         <svg
+                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${platformsExpanded ? 'rotate-180' : ''}`}
+                           fill="none"
+                           stroke="currentColor"
                            viewBox="0 0 24 24"
                          >
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                          </svg>
                        </button>
                      </div>
-                     
+
                      {/* No Platforms Selected - Show when closed or no platforms */}
                      {(!platformsExpanded || selectedPlatforms.length === 0) && (
                        <div className="mb-3">
@@ -1334,7 +1304,7 @@ export function PlatformBudgetContent() {
                         </p>
                       </div>
                      )}
-                     
+
                      {/* Separator */}
                      <div className="w-full h-px bg-[#e9e9e9] mb-3 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"></div>
                      <div className="space-y-3">
@@ -1343,7 +1313,7 @@ export function PlatformBudgetContent() {
                       {selectedPlatforms.map(platformId => {
                         const platform = campaignData.platforms.find(p => p.id === platformId);
                         if (!platform) return null;
-                        
+
                         return (
                                <div key={platformId} className="transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top">
                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
@@ -1372,7 +1342,7 @@ export function PlatformBudgetContent() {
                     </div>
                                      <div>
                                        <div className="text-[14px] font-medium text-[#2a2a2f]">{platform.name}</div>
-                                       <div className="text-[12px] text-[#a1a1a1]">{platform.description}</div>
+                                                                               <div className="text-[12px] text-[#a1a1a1]">{platform.features[0]}</div>
                                      </div>
                                    </div>
                                    <div className="text-right">
@@ -1398,17 +1368,17 @@ export function PlatformBudgetContent() {
                          className="flex items-center gap-1 text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
                        >
                          <span>{budgetExpanded ? 'Collapse' : 'Expand'}</span>
-                         <svg 
-                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${budgetExpanded ? 'rotate-180' : ''}`} 
-                           fill="none" 
-                           stroke="currentColor" 
+                         <svg
+                           className={`w-4 h-4 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${budgetExpanded ? 'rotate-180' : ''}`}
+                           fill="none"
+                           stroke="currentColor"
                            viewBox="0 0 24 24"
                          >
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                              </svg>
                        </button>
                       </div>
-                     
+
                      {/* Budget Summary - Show when closed */}
                      {!budgetExpanded && (
                        <div className="mb-3">
@@ -1418,7 +1388,7 @@ export function PlatformBudgetContent() {
                       </div>
                       </div>
                      )}
-                     
+
                      {/* Separator */}
                      <div className="w-full h-px bg-[#e9e9e9] mb-3 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"></div>
                      <div className="space-y-3">
@@ -1455,7 +1425,7 @@ export function PlatformBudgetContent() {
                       {campaignData.budget.allocations.map(allocation => {
                         const platform = campaignData.platforms.find(p => p.id === allocation.platformId);
                         if (!platform) return null;
-                        
+
                         return (
                                    <div key={allocation.platformId} className="flex justify-between items-center text-[14px]">
                                      <span className="text-[#626266]">• {platform.name}</span>
