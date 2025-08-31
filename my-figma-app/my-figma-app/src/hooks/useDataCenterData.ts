@@ -78,7 +78,20 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
     staleTime: filters.search ? 30 * 1000 : 1 * 60 * 1000, // 30 seconds for search, 1 minute for regular data
     gcTime: 3 * 60 * 1000, // 3 minutes in cache
     // Keep previous data while fetching new data to avoid loading states during search
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
+    retry: (failureCount, error) => {
+      // Don't retry if there's no access token
+      if (error.message === 'No access token available') {
+        return false;
+      }
+      return failureCount < 2;
+    },
+    // Return default data structure when query is disabled
+    initialData: {
+      success: true,
+      data: [],
+      total: 0
+    }
   });
 }
 

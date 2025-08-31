@@ -1,51 +1,38 @@
-import React from 'react';
-import type { Metadata } from "next";
-import { Sidebar } from "@/components/Sidebar";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { PlatformBudgetContent } from "./PlatformBudgetContent";
+import { Sidebar } from '@/components/Sidebar';
+import { PlatformBudgetContent } from './PlatformBudgetContent';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: "Platform & Budget - Campaign Builder | Business Dashboard",
-  description: "Select your campaign platform and set your budget. Choose between Tab campaigns, WhatsApp, and SMS with detailed cost breakdowns.",
-  keywords: ["platform selection", "budget planning", "campaign builder", "marketing automation", "cost analysis"],
-  authors: [{ name: "Business Dashboard" }],
-  creator: "Business Dashboard",
-  publisher: "Business Dashboard",
+  title: 'Platform & Budget | Campaign Builder | Business Dashboard',
+  description: 'Set your campaign budget and choose advertising platforms. Configure spending limits and select the best channels for your campaign.',
+  keywords: 'campaign budget, advertising platforms, marketing spend, campaign configuration, platform selection',
   openGraph: {
-    title: "Platform & Budget - Campaign Builder",
-    description: "Select your campaign platform and set your budget. Choose between Tab campaigns, WhatsApp, and SMS with detailed cost breakdowns.",
-    type: "website",
-    url: "https://business.dashboard.com/new-campaign/platform-budget",
-    siteName: "Business Dashboard",
+    title: 'Platform & Budget | Campaign Builder | Business Dashboard',
+    description: 'Set your campaign budget and choose advertising platforms. Configure spending limits and select the best channels for your campaign.',
+    type: 'website',
+    locale: 'en_US',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Platform & Budget - Campaign Builder",
-    description: "Select your campaign platform and set your budget. Choose between Tab campaigns, WhatsApp, and SMS with detailed cost breakdowns.",
+    card: 'summary_large_image',
+    title: 'Platform & Budget | Campaign Builder | Business Dashboard',
+    description: 'Set your campaign budget and choose advertising platforms.',
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code",
   },
 };
 
 export default function PlatformBudgetPage() {
   return (
-    <ProtectedRoute>
-      <div className="flex h-screen bg-gray-50">
-        <Sidebar />
-        <PlatformBudgetContent />
+    <div className="flex h-screen bg-[#f6f6f6]">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlatformBudgetContent />
+        </Suspense>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

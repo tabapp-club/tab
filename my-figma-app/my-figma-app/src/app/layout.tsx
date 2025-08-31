@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider } from "@/components/SidebarContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PopupProvider } from "@/contexts/PopupContext";
+import { CampaignProvider } from "@/contexts/CampaignContext";
 import { GlobalPopup } from "@/components/GlobalPopup";
 import { QueryProvider } from "@/components/QueryProvider";
 
@@ -37,10 +38,12 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <PopupProvider>
-              <SidebarProvider>
-                {children}
-                <GlobalPopup />
-              </SidebarProvider>
+              <CampaignProvider>
+                <SidebarProvider>
+                  {children}
+                  <GlobalPopup />
+                </SidebarProvider>
+              </CampaignProvider>
             </PopupProvider>
           </AuthProvider>
         </QueryProvider>

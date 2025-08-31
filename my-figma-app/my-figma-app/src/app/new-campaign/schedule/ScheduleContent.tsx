@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSidebar } from "@/components/SidebarContext";
 import { usePopup } from "@/contexts/PopupContext";
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
+import { DashboardDatePicker } from "@/components/ui/DashboardDatePicker";
+import { DashboardTimePicker } from "@/components/ui/DashboardTimePicker";
 
 const CampaignIcon = () => (
   <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +17,7 @@ const CampaignIcon = () => (
 const MoneyIcon = () => (
   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M14.2002 4.5H10.2002C6.42896 4.5 4.54334 4.5 3.37177 5.67157C2.52823 6.51511 2.29204 7.72882 2.22591 9.75H22.1745C22.1083 7.72882 21.8722 6.51511 21.0286 5.67157C19.857 4.5 17.9714 4.5 14.2002 4.5Z" fill="#04B440"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2002 20.5H10.2002C6.42896 20.5 4.54334 20.5 3.37177 19.3284C2.2002 18.1569 2.2002 16.2712 2.2002 12.5C2.2002 12.0581 2.2002 11.642 2.20208 11.25H22.1983C22.2002 11.642 22.2002 12.0581 22.2002 12.5C22.2002 16.2712 22.2002 18.1569 21.0286 19.3284C19.857 20.5 17.9714 20.5 14.2002 20.5ZM16.2449 12.75C16.6778 12.7499 17.0746 12.7499 17.3974 12.7933C17.7529 12.8411 18.1286 12.9535 18.4376 13.2626C18.7467 13.5716 18.8591 13.9473 18.9069 14.3028C18.9503 14.6256 18.9502 15.0224 18.9502 15.4553V15.5447C18.9502 15.9776 18.9503 16.3744 18.9069 16.6972C18.8591 17.0527 18.7467 17.4284 18.4376 17.7374C18.1286 18.0465 17.7529 18.1589 17.3974 18.2067C17.0746 18.2501 16.6778 18.2501 16.2449 18.25L16.2002 18.25L16.1555 18.25C15.7226 18.2501 15.3258 18.2501 15.003 18.2067C14.6475 18.1589 14.2718 18.0465 13.9628 17.7374C13.6537 17.4284 13.5413 17.0527 13.4935 16.6972C13.4501 16.3744 13.4501 15.9776 13.4502 15.5447L13.4502 15.5L13.4502 15.4553C13.4501 15.0224 13.4501 14.6256 13.4935 14.3028C13.5413 13.9473 13.6537 13.5716 13.9628 13.2626C14.2718 12.9535 14.6475 12.8411 15.003 12.7933C15.3258 12.7499 15.7226 12.7499 16.1554 12.75H16.2449ZM5.4502 14C5.4502 13.5858 5.78598 13.25 6.2002 13.25H8.2002C8.61441 13.25 8.9502 13.5858 8.9502 14C8.9502 14.4142 8.61441 14.75 8.2002 14.75H6.2002C5.78598 14.75 5.4502 14.4142 5.4502 14ZM5.4502 17C5.4502 16.5858 5.78598 16.25 6.2002 16.25H10.2002C10.6144 16.25 10.9502 16.5858 10.9502 17C10.9502 17.4142 10.6144 17.75 10.2002 17.75H6.2002C5.78598 17.75 5.4502 17.4142 5.4502 17Z" fill="#04B440"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M14.2002 20.5H10.2002C6.42896 20.5 4.54334 20.5 3.37177 19.3284C2.2002 18.1569 2.2002 16.2712 2.2002 12.5C2.2002 12.0581 2.2002 11.642 2.20208 11.25H22.1983C22.2002 11.642 22.2002 12.0581 22.2002 12.5C22.2002 16.2712 22.2002 18.1569 21.0286 19.3284C19.857 20.5 17.9714 20.5 14.2002 20.5ZM16.2449 12.75C16.6778 12.7499 17.0746 12.7499 17.3974 12.7933C17.7529 12.8411 18.1286 12.9535 18.4376 13.2626C18.7467 13.5716 18.8591 13.9473 18.9069 14.3028C18.9503 14.6256 18.9502 15.0224 18.9502 15.4553V15.5447C18.9502 15.9776 18.9503 16.3744 18.9069 16.6972C18.8591 17.0527 18.7467 17.4284 18.4376 17.7374C18.1286 18.0465 17.7529 18.1589 17.3974 18.2067C17.0746 18.2501 16.6778 18.2501 16.2449 18.25L16.2002 18.25L16.1555 18.25C15.7226 18.2501 15.3258 18.2501 15.003 18.2067C14.6475 18.1589 14.2718 18.0465 13.9628 17.7374C13.6537 17.4284 13.5413 17.0527 13.4935 16.6972C13.4501 16.3744 13.4501 15.9776 13.4502 15.5447L13.4502 15.5L13.4502 15.4553C13.4501 15.0224 13.4501 14.6256 13.4935 14.3028C13.5413 13.9473 13.6537 13.5716 13.9628 13.2626C14.2718 12.9535 14.6475 12.8411 15.003 12.7933C15.3258 12.7499 15.7226 12.7499 16.1554 12.75H16.2449ZM5.4502 14C5.4502 13.5858 5.78598 13.25 6.2002 13.25H8.2002C8.61441 13.25 8.9502 13.5858 8.9502 14C8.9502 14.4142 8.61441 14.75 8.2002 14.75H6.2002C5.78598 14.75 5.4502 14.4142 5.4502 14ZM5.4502 17C5.4502 16.5858 5.78598 16.25 6.2002 16.25H10.2002C10.6144 16.25 10.9502 16.5858 10.9502 17C10.9502 17.4142 10.6144 17.75 10.2002 17.75H6.2002C5.78598 17.75 5.4502 17.4142 5.4502 17Z" fill="#04B440"/>
   </svg>
 );
 
@@ -28,8 +30,8 @@ const UsersIcon = () => (
 );
 const BagIcon = () => (
   <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_719_7542)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M19.8329 14.3459C19.8329 18.5916 15.9858 20.5002 10.6 20.5002C5.21433 20.5002 1.36719 18.5916 1.36719 14.3759C1.36719 9.76018 3.67576 7.42161 8.29147 5.08304L6.65719 2.03875C6.55968 1.88627 6.50538 1.71019 6.50008 1.52927C6.49478 1.34836 6.53868 1.1694 6.62711 1.01147C6.71553 0.853546 6.84515 0.72258 7.00215 0.632536C7.15916 0.542492 7.33766 0.496748 7.51862 0.50018H14.0429C14.2125 0.50452 14.3782 0.551947 14.5245 0.637997C14.6707 0.724047 14.7926 0.84589 14.8788 0.99206C14.965 1.13823 15.0125 1.30392 15.017 1.47353C15.0214 1.64315 14.9827 1.81111 14.9043 1.96161L12.9086 5.08304C17.5229 7.39018 19.8329 9.72875 19.8329 14.3459ZM7.68147 9.78589H10.0858C10.2858 9.84589 10.5372 9.95732 10.7386 10.143C10.8894 10.2798 11.0008 10.4544 11.0615 10.6488H7.6829C7.5891 10.6488 7.49622 10.6672 7.40956 10.7031C7.3229 10.739 7.24415 10.7916 7.17782 10.858C7.1115 10.9243 7.05888 11.003 7.02299 11.0897C6.98709 11.1764 6.96862 11.2692 6.96862 11.363C6.96862 11.4568 6.98709 11.5497 7.02299 11.6364C7.05888 11.723 7.1115 11.8018 7.17782 11.8681C7.24415 11.9344 7.3229 11.9871 7.40956 12.023C7.49622 12.0588 7.5891 12.0773 7.6829 12.0773H10.8358C10.5903 12.35 10.2789 12.5552 9.93147 12.673C9.48365 12.8366 9.01234 12.9268 8.53576 12.9402H8.51433C8.36893 12.9403 8.22703 12.9848 8.10759 13.0677C7.98815 13.1507 7.89686 13.2681 7.84593 13.4042C7.79499 13.5404 7.78684 13.6889 7.82254 13.8299C7.85825 13.9708 7.93612 14.0975 8.04576 14.193L8.04862 14.1959L8.05576 14.2002L8.07433 14.2173C8.17571 14.3033 8.28006 14.3857 8.38719 14.4645C9.61907 15.3844 11.02 16.0528 12.51 16.4316C12.6018 16.4568 12.6978 16.4634 12.7921 16.4509C12.8865 16.4385 12.9775 16.4074 13.0596 16.3593C13.1418 16.3112 13.2135 16.2472 13.2706 16.171C13.3277 16.0948 13.3689 16.008 13.392 15.9157C13.415 15.8233 13.4194 15.7273 13.4048 15.6332C13.3902 15.5391 13.3569 15.4489 13.307 15.3679C13.257 15.2869 13.1914 15.2166 13.1139 15.1613C13.0364 15.106 12.9486 15.0668 12.8558 15.0459C11.9819 14.8217 11.1414 14.4836 10.3558 14.0402L10.4329 14.0116C10.9158 13.8302 11.4472 13.5416 11.8615 13.0745C12.1115 12.7959 12.3072 12.463 12.4286 12.0773H13.5172C13.7066 12.0773 13.8883 12.0021 14.0223 11.8681C14.1562 11.7342 14.2315 11.5525 14.2315 11.363C14.2315 11.1736 14.1562 10.9919 14.0223 10.858C13.8883 10.724 13.7066 10.6488 13.5172 10.6488H12.5258C12.4806 10.3473 12.385 10.0556 12.2429 9.78589H13.5172C13.7066 9.78589 13.8883 9.71064 14.0223 9.57668C14.1562 9.44273 14.2315 9.26105 14.2315 9.07161C14.2315 8.88217 14.1562 8.70049 14.0223 8.56653C13.8883 8.43258 13.7066 8.35732 13.5172 8.35732H7.6829C7.49346 8.35732 7.31178 8.43258 7.17782 8.56653C7.04387 8.70049 6.96862 8.88217 6.96862 9.07161C6.96862 9.26105 7.04387 9.44273 7.17782 9.57668C7.31178 9.71064 7.49346 9.78589 7.6829 9.78589H7.68147Z" fill="currentColor"/>
+<g clipPath="url(#clip0_719_7542)">
+<path fillRule="evenodd" clipRule="evenodd" d="M19.8329 14.3459C19.8329 18.5916 15.9858 20.5002 10.6 20.5002C5.21433 20.5002 1.36719 18.5916 1.36719 14.3759C1.36719 9.76018 3.67576 7.42161 8.29147 5.08304L6.65719 2.03875C6.55968 1.88627 6.50538 1.71019 6.50008 1.52927C6.49478 1.34836 6.53868 1.1694 6.62711 1.01147C6.71553 0.853546 6.84515 0.72258 7.00215 0.632536C7.15916 0.542492 7.33766 0.496748 7.51862 0.50018H14.0429C14.2125 0.50452 14.3782 0.551947 14.5245 0.637997C14.6707 0.724047 14.7926 0.84589 14.8788 0.99206C14.965 1.13823 15.0125 1.30392 15.017 1.47353C15.0214 1.64315 14.9827 1.81111 14.9043 1.96161L12.9086 5.08304C17.5229 7.39018 19.8329 9.72875 19.8329 14.3459ZM7.68147 9.78589H10.0858C10.2858 9.84589 10.5372 9.95732 10.7386 10.143C10.8894 10.2798 11.0008 10.4544 11.0615 10.6488H7.6829C7.5891 10.6488 7.49622 10.6672 7.40956 10.7031C7.3229 10.739 7.24415 10.7916 7.17782 10.858C7.1115 10.9243 7.05888 11.003 7.02299 11.0897C6.98709 11.1764 6.96862 11.2692 6.96862 11.363C6.96862 11.4568 6.98709 11.5497 7.02299 11.6364C7.05888 11.723 7.1115 11.8018 7.17782 11.8681C7.24415 11.9344 7.3229 11.9871 7.40956 12.023C7.49622 12.0588 7.5891 12.0773 7.6829 12.0773H10.8358C10.5903 12.35 10.2789 12.5552 9.93147 12.673C9.48365 12.8366 9.01234 12.9268 8.53576 12.9402H8.51433C8.36893 12.9403 8.22703 12.9848 8.10759 13.0677C7.98815 13.1507 7.89686 13.2681 7.84593 13.4042C7.79499 13.5404 7.78684 13.6889 7.82254 13.8299C7.85825 13.9708 7.93612 14.0975 8.04576 14.193L8.04862 14.1959L8.05576 14.2002L8.07433 14.2173C8.17571 14.3033 8.28006 14.3857 8.38719 14.4645C9.61907 15.3844 11.02 16.0528 12.51 16.4316C12.6018 16.4568 12.6978 16.4634 12.7921 16.4509C12.8865 16.4385 12.9775 16.4074 13.0596 16.3593C13.1418 16.3112 13.2135 16.2472 13.2706 16.171C13.3277 16.0948 13.3689 16.008 13.392 15.9157C13.415 15.8233 13.4194 15.7273 13.4048 15.6332C13.3902 15.5391 13.3569 15.4489 13.307 15.3679C13.257 15.2869 13.1914 15.2166 13.1139 15.1613C13.0364 15.106 12.9486 15.0668 12.8558 15.0459C11.9819 14.8217 11.1414 14.4836 10.3558 14.0402L10.4329 14.0116C10.9158 13.8302 11.4472 13.5416 11.8615 13.0745C12.1115 12.7959 12.3072 12.463 12.4286 12.0773H13.5172C13.7066 12.0773 13.8883 12.0021 14.0223 11.8681C14.1562 11.7342 14.2315 11.5525 14.2315 11.363C14.2315 11.1736 14.1562 10.9919 14.0223 10.858C13.8883 10.724 13.7066 10.6488 13.5172 10.6488H12.5258C12.4806 10.3473 12.385 10.0556 12.2429 9.78589H13.5172C13.7066 9.78589 13.8883 9.71064 14.0223 9.57668C14.1562 9.44273 14.2315 9.26105 14.2315 9.07161C14.2315 8.88217 14.1562 8.70049 14.0223 8.56653C13.8883 8.43258 13.7066 8.35732 13.5172 8.35732H7.6829C7.49346 8.35732 7.31178 8.43258 7.17782 8.56653C7.04387 8.70049 6.96862 8.88217 6.96862 9.07161C6.96862 9.26105 7.04387 9.44273 7.17782 9.57668C7.31178 9.71064 7.49346 9.78589 7.6829 9.78589H7.68147Z" fill="currentColor"/>
 </g>
 <defs>
 <clipPath id="clip0_719_7542">
@@ -43,7 +45,7 @@ const BagIcon = () => (
 const CalendarIcon = () => (
 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.54991 3C8.54991 2.80109 8.47089 2.61032 8.33024 2.46967C8.18958 2.32902 7.99882 2.25 7.79991 2.25C7.60099 2.25 7.41023 2.32902 7.26958 2.46967C7.12892 2.61032 7.04991 2.80109 7.04991 3V4.58C5.60991 4.695 4.66591 4.977 3.97191 5.672C3.27691 6.366 2.99491 7.311 2.87891 8.75H22.7209C22.6049 7.31 22.3229 6.366 21.6279 5.672C20.9339 4.977 19.9889 4.695 18.5499 4.579V3C18.5499 2.80109 18.4709 2.61032 18.3302 2.46967C18.1896 2.32902 17.9988 2.25 17.7999 2.25C17.601 2.25 17.4102 2.32902 17.2696 2.46967C17.1289 2.61032 17.0499 2.80109 17.0499 3V4.513C16.3849 4.5 15.6389 4.5 14.7999 4.5H10.7999C9.96091 4.5 9.21491 4.5 8.54991 4.513V3Z" fill="currentColor"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M2.7998 12.5C2.7998 11.661 2.7998 10.915 2.8128 10.25H22.7868C22.7998 10.915 22.7998 11.661 22.7998 12.5V14.5C22.7998 18.271 22.7998 20.157 21.6278 21.328C20.4558 22.499 18.5708 22.5 14.7998 22.5H10.7998C7.0288 22.5 5.1428 22.5 3.9718 21.328C2.8008 20.156 2.7998 18.271 2.7998 14.5V12.5ZM17.7998 14.5C18.065 14.5 18.3194 14.3946 18.5069 14.2071C18.6944 14.0196 18.7998 13.7652 18.7998 13.5C18.7998 13.2348 18.6944 12.9804 18.5069 12.7929C18.3194 12.6054 18.065 12.5 17.7998 12.5C17.5346 12.5 17.2802 12.6054 17.0927 12.7929C16.9052 12.9804 16.7998 13.2348 16.7998 13.5C16.7998 13.7652 16.9052 14.0196 17.0927 14.2071C17.2802 14.3946 17.5346 14.5 17.7998 14.5ZM17.7998 18.5C18.065 18.5 18.3194 18.3946 18.5069 18.2071C18.6944 18.0196 18.7998 17.7652 18.7998 17.5C18.7998 17.2348 18.6944 16.9804 18.5069 16.7929C18.3194 16.6054 18.065 16.5 17.7998 16.5C17.5346 16.5 17.2802 16.6054 17.0927 16.7929C16.9052 16.9804 16.7998 17.2348 16.7998 17.5C16.7998 17.7652 16.9052 18.0196 17.0927 18.2071C17.2802 18.3946 17.5346 18.5 17.7998 18.5ZM13.7998 13.5C13.7998 13.7652 13.6944 14.0196 13.5069 14.2071C13.3194 14.3946 13.065 14.5 12.7998 14.5C12.5346 14.5 12.2802 14.3946 12.0927 14.2071C11.9052 14.0196 11.7998 13.7652 11.7998 13.5C11.7998 13.2348 11.9052 12.9804 12.0927 12.7929C12.2802 12.6054 12.5346 12.5 12.7998 12.5C13.065 12.5 13.3194 12.6054 13.5069 12.7929C13.6944 12.9804 13.7998 13.2348 13.7998 13.5ZM13.7998 17.5C13.7998 17.7652 13.6944 18.0196 13.5069 18.2071C13.3194 18.3946 13.065 18.5 12.7998 18.5C12.5346 18.5 12.2802 18.3946 12.0927 18.2071C11.9052 18.0196 11.7998 17.7652 11.7998 17.5C11.7998 17.2348 11.9052 16.9804 12.0927 16.7929C12.2802 16.6054 12.5346 16.5 12.7998 16.5C13.065 16.5 13.3194 16.6054 13.5069 16.7929C13.6944 16.9804 13.7998 17.2348 13.7998 17.5ZM7.7998 14.5C8.06502 14.5 8.31938 14.3946 8.50691 14.2071C8.69445 14.0196 8.7998 13.7652 8.7998 13.5C8.7998 13.2348 8.69445 12.9804 8.50691 12.7929C8.31938 12.6054 8.06502 12.5 7.7998 12.5C7.53459 12.5 7.28023 12.6054 7.0927 12.7929C6.90516 12.9804 6.7998 13.2348 6.7998 13.5C6.7998 13.7652 6.90516 14.0196 7.0927 14.2071C7.28023 14.3946 7.53459 14.5 7.7998 14.5ZM7.7998 18.5C8.06502 18.5 8.31938 18.3946 8.50691 18.2071C8.69445 18.0196 8.7998 17.7652 8.7998 17.5C8.7998 17.2348 8.69445 16.9804 8.50691 16.7929C8.31938 16.6054 8.06502 16.5 7.7998 16.5C7.53459 16.5 7.28023 16.6054 7.0927 16.7929C6.90516 16.9804 6.7998 17.2348 6.7998 17.5C6.7998 17.7652 6.90516 18.0196 7.0927 18.2071C7.28023 18.3946 7.53459 18.5 7.7998 18.5Z" fill="currentColor"/>
+<path fillRule="evenodd" clipRule="evenodd" d="M2.7998 12.5C2.7998 11.661 2.7998 10.915 2.8128 10.25H22.7868C22.7998 10.915 22.7998 11.661 22.7998 12.5V14.5C22.7998 18.271 22.7998 20.157 21.6278 21.328C20.4558 22.499 18.5708 22.5 14.7998 22.5H10.7998C7.0288 22.5 5.1428 22.5 3.9718 21.328C2.8008 20.156 2.7998 18.271 2.7998 14.5V12.5ZM17.7998 14.5C18.065 14.5 18.3194 14.3946 18.5069 14.2071C18.6944 14.0196 18.7998 13.7652 18.7998 13.5C18.7998 13.2348 18.6944 12.9804 18.5069 12.7929C18.3194 12.6054 18.065 12.5 17.7998 12.5C17.5346 12.5 17.2802 12.6054 17.0927 12.7929C16.9052 12.9804 16.7998 13.2348 16.7998 13.5C16.7998 13.7652 16.9052 14.0196 17.0927 14.2071C17.2802 14.3946 17.5346 14.5 17.7998 14.5ZM17.7998 18.5C18.065 18.5 18.3194 18.3946 18.5069 18.2071C18.6944 18.0196 18.7998 17.7652 18.7998 17.5C18.7998 17.2348 18.6944 16.9804 18.5069 16.7929C18.3194 16.6054 18.065 16.5 17.7998 16.5C17.5346 16.5 17.2802 16.6054 17.0927 16.7929C16.9052 16.9804 16.7998 17.2348 16.7998 17.5C16.7998 17.7652 16.9052 18.0196 17.0927 18.2071C17.2802 18.3946 17.5346 18.5 17.7998 18.5ZM13.7998 13.5C13.7998 13.7652 13.6944 14.0196 13.5069 14.2071C13.3194 14.3946 13.065 14.5 12.7998 14.5C12.5346 14.5 12.2802 14.3946 12.0927 14.2071C11.9052 14.0196 11.7998 13.7652 11.7998 13.5C11.7998 13.2348 11.9052 12.9804 12.0927 12.7929C12.2802 12.6054 12.5346 12.5 12.7998 12.5C13.065 12.5 13.3194 12.6054 13.5069 12.7929C13.6944 12.9804 13.7998 13.2348 13.7998 13.5ZM13.7998 17.5C13.7998 17.7652 13.6944 18.0196 13.5069 18.2071C13.3194 18.3946 13.065 18.5 12.7998 18.5C12.5346 18.5 12.2802 18.3946 12.0927 18.2071C11.9052 18.0196 11.7998 17.7652 11.7998 17.5C11.7998 17.2348 11.9052 16.9804 12.0927 16.7929C12.2802 16.6054 12.5346 16.5 12.7998 16.5C13.065 16.5 13.3194 16.6054 13.5069 16.7929C13.6944 16.9804 13.7998 17.2348 13.7998 17.5ZM7.7998 14.5C8.06502 14.5 8.31938 14.3946 8.50691 14.2071C8.69445 14.0196 8.7998 13.7652 8.7998 13.5C8.7998 13.2348 8.69445 12.9804 8.50691 12.7929C8.31938 12.6054 8.06502 12.5 7.7998 12.5C7.53459 12.5 7.28023 12.6054 7.0927 12.7929C6.90516 12.9804 6.7998 13.2348 6.7998 13.5C6.7998 13.7652 6.90516 14.0196 7.0927 14.2071C7.28023 14.3946 7.53459 14.5 7.7998 14.5ZM7.7998 18.5C8.06502 18.5 8.31938 18.3946 8.50691 18.2071C8.69445 18.0196 8.7998 17.7652 8.7998 17.5C8.7998 17.2348 8.69445 16.9804 8.50691 16.7929C8.31938 16.6054 8.06502 16.5 7.7998 16.5C7.53459 16.5 7.28023 16.6054 7.0927 16.7929C6.90516 16.9804 6.7998 17.2348 6.7998 17.5C6.7998 17.7652 6.90516 18.0196 7.0927 18.2071C7.28023 18.3946 7.53459 18.5 7.7998 18.5Z" fill="currentColor"/>
 </svg>
 
 );
@@ -165,9 +167,9 @@ export function ScheduleContent() {
   const [endOption, setEndOption] = useState<'automatic' | 'specific'>('automatic');
   const [repeatOption, setRepeatOption] = useState<'repeatedly' | 'once' | 'limited'>('repeatedly');
   const [repeatCount, setRepeatCount] = useState(5);
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [startTime, setStartTime] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [endTime, setEndTime] = useState('');
 
   // Check if tab is selected - first try platforms parameter, then fallback to medium
@@ -189,9 +191,9 @@ export function ScheduleContent() {
         setEndOption(data.endOption || 'automatic');
         setRepeatOption(data.repeatOption || 'repeatedly');
         setRepeatCount(data.repeatCount || 5);
-        setStartDate(data.startDate || '');
+        setStartDate(data.startDate ? new Date(data.startDate) : undefined);
         setStartTime(data.startTime || '');
-        setEndDate(data.endDate || '');
+        setEndDate(data.endDate ? new Date(data.endDate) : undefined);
         setEndTime(data.endTime || '');
       } catch (error) {
         console.error('Error loading schedule data from session storage:', error);
@@ -206,9 +208,9 @@ export function ScheduleContent() {
       endOption,
       repeatOption,
       repeatCount,
-      startDate,
+      startDate: startDate?.toISOString(),
       startTime,
-      endDate,
+      endDate: endDate?.toISOString(),
       endTime
     };
     sessionStorage.setItem('scheduleData', JSON.stringify(dataToSave));
@@ -269,7 +271,7 @@ export function ScheduleContent() {
         <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
                       <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
               <StepperStep
-                title="campaign type"
+                title="Choose campaign type"
                 icon={<CampaignIcon />}
                 isCompleted={true}
                 stepIndex={1}
@@ -278,19 +280,10 @@ export function ScheduleContent() {
                 description="Choose campaign type"
               />
               <StepperStep
-                title="Create campaign"
-                icon={<MoneyIcon />}
-                isCompleted={true}
-                stepIndex={2}
-                totalSteps={5}
-                timeEstimate="5-8 min"
-                description="Design your campaign"
-              />
-              <StepperStep
                 title="Choose audience"
                 icon={<UsersIcon />}
                 isCompleted={true}
-                stepIndex={3}
+                stepIndex={2}
                 totalSteps={5}
                 timeEstimate="3-5 min"
                 description="Select target users"
@@ -299,10 +292,19 @@ export function ScheduleContent() {
                 title="Platform & Budget"
                 icon={<BagIcon />}
                 isCompleted={true}
-                stepIndex={4}
+                stepIndex={3}
                 totalSteps={5}
                 timeEstimate="2-4 min"
                 description="Set budget & platforms"
+              />
+              <StepperStep
+                title="Design your campaign"
+                icon={<MoneyIcon />}
+                isCompleted={true}
+                stepIndex={4}
+                totalSteps={5}
+                timeEstimate="5-8 min"
+                description="Design your campaign"
               />
               <StepperStep
                 title="Schedule"
@@ -311,326 +313,314 @@ export function ScheduleContent() {
                 stepIndex={5}
                 totalSteps={5}
                 timeEstimate="1-2 min"
-                description="Set timing"
+                description="Schedule"
               />
             </div>
           <StepperProgressBar currentStep={5} totalSteps={5} />
         </section>
 
         <div className="max-w-6xl mx-auto space-y-6">
-          {/* Start and End Date Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Start Date and Time */}
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9]">
-              <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
-                <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
-                  <div className="font-['Manrope:Bold',_sans-serif] font-bold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">
-                    <p className="block leading-[16px] whitespace-pre">Start Date and Time</p>
+          {/* Header */}
+          <div className="flex flex-col gap-[2px]">
+            <h1 className="text-[#2a2a2f] text-[20px] font-bold tracking-[-0.1px] leading-[1.4]">
+              Schedule Your Campaign
+            </h1>
+            <p className="text-[#a1a1a1] text-[14px]">
+              Set the timing and frequency for your campaign launch
+            </p>
+          </div>
+
+          {/* Campaign Timeline Section */}
+          <div className="space-y-6">
+            {/* Date Configuration Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Start Date Configuration */}
+              <div className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-colors duration-200" style={{ borderWidth: '1px' }}>
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                   </div>
-                  <div className="font-['Manrope:Regular',_sans-serif] font-normal relative shrink-0 text-[#626266] text-[12px] w-[427.312px]">
-                    <p className="block leading-[12px]">Specify when the campaign starts</p>
+                  <div>
+                    <h3 className="text-[16px] font-bold text-gray-900">Start Date & Time</h3>
+                    <p className="text-[14px] text-gray-600">Choose when your campaign should begin</p>
                   </div>
                 </div>
-                <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start px-6 py-0 relative shrink-0 w-full">
-                  <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                    <div className="relative shrink-0 size-[18px]">
-                      <input
-                        type="radio"
-                        id="start-immediate"
-                        name="start-option"
-                        checked={startOption === 'immediate'}
-                        onChange={() => setStartOption('immediate')}
-                        className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                      />
-                    </div>
-                    <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                      <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">As soon as campaign published</p>
-                    </div>
-                  </div>
-                  <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start p-0 relative shrink-0">
-                    <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                      <div className="relative shrink-0 size-[18px]">
-                        <input
-                          type="radio"
-                          id="start-specific"
-                          name="start-option"
-                          checked={startOption === 'specific'}
-                          onChange={() => setStartOption('specific')}
-                          className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                        />
+              </div>
+              
+              <div className="p-6">
+                <div className="space-y-4">
+                  {/* Immediate Start Option */}
+                  <label className="flex items-start gap-3 p-4 rounded-[4px] border cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    startOption === 'immediate' ? 'border-green-500 bg-green-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="start-option"
+                      value="immediate"
+                      checked={startOption === 'immediate'}
+                      onChange={() => setStartOption('immediate')}
+                      className="mt-1 w-4 h-4 text-green-600 focus:ring-green-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Start Immediately</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Recommended</span>
                       </div>
-                      <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                        <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">At specific</p>
-                      </div>
+                      <p className="text-sm text-gray-600">Campaign will start as soon as it's published</p>
                     </div>
-                    {startOption === 'specific' && (
-                      <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start px-6 py-0 relative shrink-0">
-                        <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start p-0 relative shrink-0">
-                          <div className="bg-[#f6f6f6] box-border content-stretch flex flex-row items-center justify-between px-2.5 py-2 relative rounded-md shrink-0 w-[122px] cursor-pointer" data-name="Basic Inputs">
-                            <div aria-hidden="true" className="absolute border border-[#e9e9e9] border-solid inset-0 pointer-events-none rounded-md"></div>
-                            <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[11px] text-left text-nowrap pointer-events-none">
-                              <p className="block leading-[12px] whitespace-pre">Date</p>
-                            </div>
-                            <div className="overflow-clip relative shrink-0 size-4 pointer-events-none" data-name="calendar-2">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2H4C3.44772 2 3 2.44772 3 3V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V3C13 2.44772 12.5523 2 12 2Z" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M3 6H13" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M6 2V4" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M10 2V4" stroke="currentColor" strokeWidth="1.5"/>
-                              </svg>
-                            </div>
-                            <input
-                              type="date"
-                              value={startDate}
-                              onChange={(e) => setStartDate(e.target.value)}
-                              className="absolute inset-0 w-full h-full cursor-pointer z-20"
-                              style={{ opacity: 0 }}
-                              min={new Date().toISOString().split('T')[0]}
-                            />
-                            {startDate && (
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-xs text-[#2a2a2f] font-medium">
-                                  {new Date(startDate).toLocaleDateString()}
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                  </label>
+
+                  {/* Specific Start Option */}
+                  <label className="flex items-start gap-3 p-4 rounded-[4px] border cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    startOption === 'specific' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="start-option"
+                      value="specific"
+                      checked={startOption === 'specific'}
+                      onChange={() => setStartOption('specific')}
+                      className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Schedule for Later</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">Custom</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Set a specific date and time to start</p>
+                    </div>
+                  </label>
+
+                  {/* Date/Time Inputs */}
+                  {startOption === 'specific' && (
+                    <div className="ml-7 p-4 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                          <DashboardDatePicker
+                            selected={startDate}
+                            onSelect={setStartDate}
+                            placeholder="Select start date"
+                            minDate={new Date()}
+                          />
                         </div>
-                        <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start p-0 relative shrink-0">
-                          <div className="bg-[#f6f6f6] box-border content-stretch flex flex-row items-center justify-between px-2.5 py-2 relative rounded-md shrink-0 w-[122px] cursor-pointer" data-name="Basic Inputs">
-                            <div aria-hidden="true" className="absolute border border-[#e9e9e9] border-solid inset-0 pointer-events-none rounded-md"></div>
-                            <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[11px] text-left text-nowrap pointer-events-none">
-                              <p className="block leading-[12px] whitespace-pre">Time</p>
-                            </div>
-                            <div className="overflow-clip relative shrink-0 size-4 pointer-events-none" data-name="time">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M8 4V8L10.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                              </svg>
-                            </div>
-                            <input
-                              type="time"
-                              value={startTime}
-                              onChange={(e) => setStartTime(e.target.value)}
-                              className="absolute inset-0 w-full h-full cursor-pointer z-20"
-                              style={{ opacity: 0 }}
-                            />
-                            {startTime && (
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-xs text-[#2a2a2f] font-medium">
-                                  {startTime}
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                          <DashboardTimePicker
+                            selected={startTime}
+                            onSelect={setStartTime}
+                            placeholder="Select start time"
+                          />
                         </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* End Date and Time */}
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 border border-[#e9e9e9]">
-              <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
-                <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
-                  <div className="font-['Manrope:Bold',_sans-serif] font-bold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">
-                    <p className="block leading-[16px] whitespace-pre">End Date and Time</p>
+            {/* End Date Configuration */}
+            <div className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-colors duration-200" style={{ borderWidth: '1px' }}>
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </div>
-                  <div className="font-['Manrope:Regular',_sans-serif] font-normal relative shrink-0 text-[#626266] text-[12px] w-[427.312px]">
-                    <p className="block leading-[12px]">Specify when the campaign starts</p>
+                  <div>
+                    <h3 className="text-[16px] font-bold text-gray-900">End Date & Time</h3>
+                    <p className="text-[14px] text-gray-600">Choose when your campaign should end</p>
                   </div>
                 </div>
-                <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start px-6 py-0 relative shrink-0 w-full">
-                  <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                    <div className="relative shrink-0 size-[18px]">
-                      <input
-                        type="radio"
-                        id="end-automatic"
-                        name="end-option"
-                        checked={endOption === 'automatic'}
-                        onChange={() => setEndOption('automatic')}
-                        className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                      />
-                    </div>
-                    <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                      <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">As soon as campaign ended</p>
-                    </div>
-                  </div>
-                  <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start p-0 relative shrink-0">
-                    <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                      <div className="relative shrink-0 size-[18px]">
-                        <input
-                          type="radio"
-                          id="end-specific"
-                          name="end-option"
-                          checked={endOption === 'specific'}
-                          onChange={() => setEndOption('specific')}
-                          className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                        />
+              </div>
+              
+              <div className="p-6">
+                <div className="space-y-4">
+                  {/* Automatic End Option */}
+                  <label className="flex items-start gap-3 p-4 rounded-[4px] border cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    endOption === 'automatic' ? 'border-green-500 bg-green-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="end-option"
+                      value="automatic"
+                      checked={endOption === 'automatic'}
+                      onChange={() => setEndOption('automatic')}
+                      className="mt-1 w-4 h-4 text-green-600 focus:ring-green-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">End Automatically</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Recommended</span>
                       </div>
-                      <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                        <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">At specific</p>
-                      </div>
+                      <p className="text-sm text-gray-600">Campaign will end when budget is exhausted or target reached</p>
                     </div>
-                    {endOption === 'specific' && (
-                      <div className="box-border content-stretch flex flex-row gap-4 items-start justify-start px-6 py-0 relative shrink-0">
-                        <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start p-0 relative shrink-0">
-                          <div className="bg-[#f6f6f6] box-border content-stretch flex flex-row items-center justify-between px-2.5 py-2 relative rounded-md shrink-0 w-[122px] cursor-pointer" data-name="Basic Inputs">
-                            <div aria-hidden="true" className="absolute border border-[#e9e9e9] border-solid inset-0 pointer-events-none rounded-md"></div>
-                            <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[11px] text-left text-nowrap pointer-events-none">
-                              <p className="block leading-[12px] whitespace-pre">Date</p>
-                            </div>
-                            <div className="overflow-clip relative shrink-0 size-4 pointer-events-none" data-name="calendar-2">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2H4C3.44772 2 3 2.44772 3 3V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V3C13 2.44772 12.5523 2 12 2Z" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M3 6H13" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M6 2V4" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M10 2V4" stroke="currentColor" strokeWidth="1.5"/>
-                              </svg>
-                            </div>
-                            <input
-                              type="date"
-                              value={endDate}
-                              onChange={(e) => setEndDate(e.target.value)}
-                              className="absolute inset-0 w-full h-full cursor-pointer z-20"
-                              style={{ opacity: 0 }}
-                              min={startDate || new Date().toISOString().split('T')[0]}
-                            />
-                            {endDate && (
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-xs text-[#2a2a2f] font-medium">
-                                  {new Date(endDate).toLocaleDateString()}
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                  </label>
+
+                  {/* Specific End Option */}
+                  <label className="flex items-start gap-3 p-4 rounded-[4px] border cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    endOption === 'specific' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="end-option"
+                      value="specific"
+                      checked={endOption === 'specific'}
+                      onChange={() => setEndOption('specific')}
+                      className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Set End Date</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">Custom</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Set a specific date and time to end</p>
+                    </div>
+                  </label>
+
+                  {/* Date/Time Inputs */}
+                  {endOption === 'specific' && (
+                    <div className="ml-7 p-4 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                          <DashboardDatePicker
+                            selected={endDate}
+                            onSelect={setEndDate}
+                            placeholder="Select end date"
+                            minDate={startDate || new Date()}
+                          />
                         </div>
-                        <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start p-0 relative shrink-0">
-                          <div className="bg-[#f6f6f6] box-border content-stretch flex flex-row items-center justify-between px-2.5 py-2 relative rounded-md shrink-0 w-[122px] cursor-pointer" data-name="Basic Inputs">
-                            <div aria-hidden="true" className="absolute border border-[#e9e9e9] border-solid inset-0 pointer-events-none rounded-md"></div>
-                            <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[11px] text-left text-nowrap pointer-events-none">
-                              <p className="block leading-[12px] whitespace-pre">Time</p>
-                            </div>
-                            <div className="overflow-clip relative shrink-0 size-4 pointer-events-none" data-name="time">
-                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M8 4V8L10.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                              </svg>
-                            </div>
-                            <input
-                              type="time"
-                              value={endTime}
-                              onChange={(e) => setEndTime(e.target.value)}
-                              className="absolute inset-0 w-full h-full cursor-pointer z-20"
-                              style={{ opacity: 0 }}
-                            />
-                            {endTime && (
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-xs text-[#2a2a2f] font-medium">
-                                  {endTime}
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">End Time</label>
+                          <DashboardTimePicker
+                            selected={endTime}
+                            onSelect={setEndTime}
+                            placeholder="Select end time"
+                          />
                         </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+          </div>
 
           {/* Repeat Campaign Section - Only for Tab campaigns */}
           {isTabSelected && (
-            <div className="bg-[#ffffff] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-xl shrink-0 w-full border border-[#e9e9e9]">
-              <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[30px] relative shrink-0 w-full">
-                <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] p-0 relative shrink-0 text-left">
-                  <div className="font-['Manrope:SemiBold',_sans-serif] font-semibold relative shrink-0 text-[#2a2a2f] text-[16px] text-nowrap">
-                    <p className="block leading-[16px] whitespace-pre">Repeat campaign on</p>
+            <div className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-colors duration-200" style={{ borderWidth: '1px' }}>
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
                   </div>
-                  <div className="font-['Manrope:Regular',_sans-serif] font-normal relative shrink-0 text-[#626266] text-[12px] w-[427.312px]">
-                    <p className="block leading-[12px]">Choose how often a user will see this campaign</p>
+                  <div>
+                    <h3 className="text-[16px] font-bold text-gray-900">Campaign Frequency</h3>
+                    <p className="text-[14px] text-gray-600">Control how often users see this campaign</p>
                   </div>
                 </div>
-                <div className="box-border content-stretch flex flex-col gap-4 items-start justify-start px-6 py-0 relative shrink-0 w-full">
-                  <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                    <div className="relative shrink-0 size-[18px]">
-                      <input
-                        type="radio"
-                        id="repeat-repeatedly"
-                        name="repeat-option"
-                        checked={repeatOption === 'repeatedly'}
-                        onChange={() => setRepeatOption('repeatedly')}
-                        className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                      />
-                    </div>
-                    <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                      <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">Allow user to view campaign repeatedly</p>
-                    </div>
-                  </div>
-                  <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                    <div className="relative shrink-0 size-[18px]">
-                      <input
-                        type="radio"
-                        id="repeat-once"
-                        name="repeat-option"
-                        checked={repeatOption === 'once'}
-                        onChange={() => setRepeatOption('once')}
-                        className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                      />
-                    </div>
-                    <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                      <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">Show campaign to user only once</p>
-                    </div>
-                  </div>
-                  <div className="box-border content-stretch flex flex-row gap-2 items-center justify-start p-0 relative shrink-0">
-                    <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                      <div className="relative shrink-0 size-[18px]">
-                        <input
-                          type="radio"
-                          id="repeat-limited"
-                          name="repeat-option"
-                          checked={repeatOption === 'limited'}
-                          onChange={() => setRepeatOption('limited')}
-                          className="w-[18px] h-[18px] text-[#7856ff] focus:ring-[#7856ff] accent-[#7856ff]"
-                        />
+              </div>
+              
+              <div className="p-6">
+                <div className="space-y-4">
+                  {/* Allow Repeatedly */}
+                  <label className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    repeatOption === 'repeatedly' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="repeat-option"
+                      value="repeatedly"
+                      checked={repeatOption === 'repeatedly'}
+                      onChange={() => setRepeatOption('repeatedly')}
+                      className="mt-1 w-4 h-4 text-purple-600 focus:ring-purple-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Allow Repeated Views</span>
+                        <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">Flexible</span>
                       </div>
-                      <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                        <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">Allow user to view campaign upto</p>
+                      <p className="text-sm text-gray-600">Users can see this campaign multiple times</p>
+                    </div>
+                  </label>
+
+                  {/* Show Once */}
+                  <label className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    repeatOption === 'once' ? 'border-green-500 bg-green-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="repeat-option"
+                      value="once"
+                      checked={repeatOption === 'once'}
+                      onChange={() => setRepeatOption('once')}
+                      className="mt-1 w-4 h-4 text-green-600 focus:ring-green-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Show Once Only</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Recommended</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Each user sees this campaign only once</p>
+                    </div>
+                  </label>
+
+                  {/* Limited Views */}
+                  <label className="flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
+                    repeatOption === 'limited' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }">
+                    <input
+                      type="radio"
+                      name="repeat-option"
+                      value="limited"
+                      checked={repeatOption === 'limited'}
+                      onChange={() => setRepeatOption('limited')}
+                      className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-gray-900">Limited Views</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">Custom</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Set maximum number of times a user can see this campaign</p>
+                    </div>
+                  </label>
+
+                  {/* Limited Views Input */}
+                  {repeatOption === 'limited' && (
+                    <div className="ml-7 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-700">Show campaign up to</span>
+                        <div className="relative">
+                          <select
+                            value={repeatCount}
+                            onChange={(e) => setRepeatCount(parseInt(e.target.value))}
+                            className="appearance-none px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                          >
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                              <option key={num} value={num}>
+                                {num}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-sm text-gray-700">times per user</span>
                       </div>
                     </div>
-                    <div className="bg-[#f6f6f6] box-border content-stretch flex flex-row gap-2.5 items-center justify-start px-2.5 py-2 relative rounded-md shrink-0 cursor-pointer" data-name="Basic Inputs">
-                      <div aria-hidden="true" className="absolute border border-[#e9e9e9] border-solid inset-0 pointer-events-none rounded-md"></div>
-                      <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[11px] text-left text-nowrap pointer-events-none">
-                        <p className="block leading-[12px] whitespace-pre">{repeatCount}</p>
-                      </div>
-                      <div className="overflow-clip relative shrink-0 size-3.5 pointer-events-none" data-name="down">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                      <select
-                        value={repeatCount}
-                        onChange={(e) => setRepeatCount(parseInt(e.target.value))}
-                        className="absolute inset-0 w-full h-full cursor-pointer z-20"
-                        style={{ opacity: 0 }}
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                          <option key={num} value={num}>
-                            {num}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="box-border content-stretch flex flex-row gap-1.5 items-center justify-start p-0 relative shrink-0" data-name="Radio">
-                      <div className="font-['Manrope:Regular',_sans-serif] font-normal leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap tracking-[-0.14px]">
-                        <p className="adjustLetterSpacing block leading-[14px] whitespace-pre">times</p>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -645,7 +635,7 @@ export function ScheduleContent() {
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
                 onClick={() => router.push('/campaigns')}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[12px] sm:text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >
                 Close
               </button>
@@ -656,30 +646,28 @@ export function ScheduleContent() {
                   // Preserve query parameters when going back
                   const searchParams = new URLSearchParams(window.location.search);
                   const campaignType = searchParams.get('type') || 'advertise';
-                  const selectedMedium = searchParams.get('medium') || '';
-                  const selectedPlatforms = searchParams.get('platforms') || '';
 
-                  const newSearchParams = new URLSearchParams();
-                  newSearchParams.set('type', campaignType);
-                  if (selectedMedium) {
-                    newSearchParams.set('medium', selectedMedium);
-                  }
-                  if (selectedPlatforms) {
-                    newSearchParams.set('platforms', selectedPlatforms);
-                  }
-
-                  router.push(`/new-campaign/platform-budget?${newSearchParams.toString()}`);
+                  router.push(`/new-campaign/create?type=${campaignType}`);
                 }}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded text-[#2a2a2f] text-[12px] sm:text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >
                 Back
               </button>
               <button
                 onClick={handlePublishCampaign}
                 disabled={isPublishing || isPublished}
-                className="bg-[#7856ff] h-9 px-3 sm:px-4 py-1 rounded text-white text-[12px] sm:text-[14px] font-medium hover:bg-[#6a4fd8] transition-colors"
+                className="h-9 px-4 sm:px-6 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg min-w-[140px]"
               >
-                {isPublishing ? 'Publishing...' : isPublished ? 'Published!' : 'Publish'}
+                {isPublishing ? (
+                  <span className="hidden sm:inline">Publishing...</span>
+                ) : isPublished ? (
+                  <span className="hidden sm:inline">Published!</span>
+                ) : (
+                  <>
+                    <span className="hidden sm:inline">Publish</span>
+                    <span className="sm:hidden">Publish</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -688,3 +676,4 @@ export function ScheduleContent() {
     </main>
   );
 }
+

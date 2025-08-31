@@ -291,7 +291,7 @@ export function DashboardContent() {
           {/* Main Content */}
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <h2 className="text-[20px] font-bold text-[#2a2a2f] mb-3">
                 Data-Driven Business Growth with Tab Dashboard
               </h2>
@@ -300,52 +300,8 @@ export function DashboardContent() {
               </p>
             </div>
 
-            {/* Key Metrics Container */}
-            <div className="rounded-lg p-4 mb-8">
-              <div className="flex flex-col md:flex-row items-center justify-between">
-                {/* Customer Acquisition */}
-                <div className="text-center p-4 flex-1">
-                  <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">2.4K</div>
-                  <div className="text-[12px] text-[#696969]">New Customers</div>
-                  <div className="text-[10px] text-[#696969] mt-1">This month</div>
-                </div>
-
-                {/* Vertical Separator */}
-                <div className="hidden md:block w-px h-12 bg-[#e5e7eb] mx-4"></div>
-
-                {/* Revenue Growth */}
-                <div className="text-center p-4 flex-1">
-                  <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">₹4.2M</div>
-                  <div className="text-[12px] text-[#696969]">Total Revenue</div>
-                  <div className="text-[10px] text-[#696969] mt-1">Last 30 days</div>
-                </div>
-
-                {/* Vertical Separator */}
-                <div className="hidden md:block w-px h-12 bg-[#e5e7eb] mx-4"></div>
-
-                {/* Campaign Performance */}
-                <div className="text-center p-4 flex-1">
-                  <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">6.8%</div>
-                  <div className="text-[12px] text-[#696969]">Conversion Rate</div>
-                  <div className="text-[10px] text-[#696969] mt-1">Industry avg: 2.9%</div>
-                </div>
-
-                {/* Vertical Separator */}
-                <div className="hidden md:block w-px h-12 bg-[#e5e7eb] mx-4"></div>
-
-                {/* Customer Retention */}
-                <div className="text-center p-4 flex-1">
-                  <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">89%</div>
-                  <div className="text-[12px] text-[#696969]">Retention Rate</div>
-                  <div className="text-[10px] text-[#696969] mt-1">Last quarter</div>
-                </div>
-              </div>
-            </div>
-
-
-
             {/* Action Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
               <div className="bg-gradient-to-r from-[#fafafa] to-[#f5f5f5] p-5 rounded-lg border border-[#e5e5e5]">
                 <div className="flex items-center mb-3">
                   <span className="text-2xl mr-3">📊</span>
@@ -354,7 +310,7 @@ export function DashboardContent() {
                 <p className="text-[13px] text-[#737373] mb-3">
                   Monitor real-time performance, track KPIs, and identify growth opportunities with detailed analytics.
                 </p>
-                <a href="/data-center" className="text-[13px] text-[#7856ff] font-medium hover:underline">
+                <a href="/data-center" className="text-[13px] text-primary font-medium hover:underline">
                   View Analytics →
                 </a>
               </div>
@@ -367,7 +323,7 @@ export function DashboardContent() {
                 <p className="text-[13px] text-[#737373] mb-3">
                   Create targeted campaigns with AI-powered customer segmentation and behavioral analysis.
                 </p>
-                <a href="/cohorts" className="text-[13px] text-[#17c653] font-medium hover:underline">
+                <a href="/cohorts" className="text-[13px] text-primary font-medium hover:underline">
                   Manage Segments →
                 </a>
               </div>
@@ -380,27 +336,27 @@ export function DashboardContent() {
                 <p className="text-[13px] text-[#737373] mb-3">
                   Launch high-converting campaigns with pre-built templates and AI optimization recommendations.
                 </p>
-                <a href="/new-campaign" className="text-[13px] text-[#ff6b6b] font-medium hover:underline">
+                <a href="/new-campaign" className="text-[13px] text-primary font-medium hover:underline">
                   Create Campaign →
                 </a>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
-              <a href="/templates" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-[#2a2a2f] hover:border-[#7856ff] transition-all">
+            <div className="flex flex-wrap justify-center gap-4 mb-10">
+              <a href="/templates" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 📋 Campaign Templates
               </a>
-              <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-[#2a2a2f] hover:border-[#17c653] transition-all">
+              <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 🏆 Achievements
               </a>
-              <a href="/business-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-[#2a2a2f] hover:border-[#ff6b6b] transition-all">
+              <a href="/business-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 💼 Business Solutions
               </a>
-              <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-[#2a2a2f] hover:border-[#ffa726] transition-all">
+              <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 🤖 AI Insights
               </a>
-              <a href="/contact" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-[#2a2a2f] hover:border-[#7856ff] transition-all">
+              <a href="/contact" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 📞 Get Support
               </a>
             </div>

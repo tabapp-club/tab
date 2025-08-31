@@ -1,4 +1,13 @@
 @import "tailwindcss";
+
+/* Custom table header corner radius */
+.platform-table-header th:first-child {
+  border-top-left-radius: 4px !important;
+}
+
+.platform-table-header th:last-child {
+  border-top-right-radius: 4px !important;
+}
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -975,4 +984,19 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
 
 .animate-shimmer {
   animation: shimmer 2s infinite;
+}
+
+/* Custom checkbox styling for platform selection */
+.platform-checkbox {
+  accent-color: #6E4EFF !important;
+}
+
+.platform-checkbox:checked {
+  background-color: #6E4EFF !important;
+  border-color: #6E4EFF !important;
+}
+
+.platform-checkbox:focus {
+  ring-color: #6E4EFF !important;
+  border-color: #6E4EFF !important;
 }

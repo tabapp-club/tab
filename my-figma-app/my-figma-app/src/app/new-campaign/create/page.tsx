@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function CreateCampaignPage() {
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-[#f6f6f6]">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Suspense fallback={<div>Loading...</div>}>
