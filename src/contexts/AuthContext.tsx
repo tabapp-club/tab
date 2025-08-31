@@ -29,13 +29,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkAuthStatus = () => {
       try {
         const savedUser = localStorage.getItem('user');
+        const savedAccessToken = localStorage.getItem('access_token');
+
         if (savedUser) {
           const userData = JSON.parse(savedUser);
+
+          // Check if we have an access token in localStorage that might not be in userData
+          if (savedAccessToken && !userData.accessToken) {
+            userData.accessToken = savedAccessToken;
+            // Update localStorage with the complete user data
+            localStorage.setItem('user', JSON.stringify(userData));
+          }
+
           setUser(userData);
+        } else if (savedAccessToken) {
+          const fallbackUser: User = {
+            phoneNumber: 'unknown',
+            isAuthenticated: true,
+            accessToken: savedAccessToken,
+            name: 'User'
+          };
+          setUser(fallbackUser);
+          localStorage.setItem('user', JSON.stringify(fallbackUser));
+        } else {
+          console.log('AuthContext - checkAuthStatus - no saved user or access_token found');
         }
       } catch (error) {
         console.error('Error checking auth status:', error);
         localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
       } finally {
         setIsLoading(false);
       }
@@ -44,7 +66,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuthStatus();
   }, []);
 
-    const sendOTP = async (phoneNumber: string): Promise<boolean> => {
+  // Debug logging for user state changes
+  useEffect(() => {
+    console.log('AuthContext - user state changed:', user);
+    console.log('AuthContext - isAuthenticated:', !!user?.isAuthenticated);
+  }, [user]);
+
+  const sendOTP = async (phoneNumber: string): Promise<boolean> => {
     try {
       setIsLoading(true);
       const response = await fetch('https://api.tabapp.club/v1/auth/send-otp', {
@@ -134,6 +162,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
   };
 
   const value: AuthContextType = {
@@ -144,6 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     sendOTP,
     isAuthenticated: !!user?.isAuthenticated,
   };
+
 
   return (
     <AuthContext.Provider value={value}>
