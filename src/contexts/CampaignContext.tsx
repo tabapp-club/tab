@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 
 export interface Platform {
   id: string;
@@ -22,6 +22,11 @@ export interface BudgetAllocation {
 
 export interface CampaignData {
   type: string;
+  source?: {
+    origin: string;
+    campaignType: string;
+    timestamp: string;
+  };
   audience: {
     totalUsers: number;
     demographics: string;
@@ -41,6 +46,7 @@ interface CampaignContextType {
   campaignData: CampaignData;
   selectedPlatforms: string[];
   updateCampaignType: (type: string) => void;
+  updateSource: (source: CampaignData['source']) => void;
   updateAudience: (audience: CampaignData['audience']) => void;
   togglePlatform: (platformId: string) => void;
   updateBudget: (budget: Partial<CampaignData['budget']>) => void;
@@ -153,7 +159,7 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({ children }) 
     return ['tab', 'whatsapp', 'sms'];
   });
 
-  const updateCampaignType = (type: string) => {
+  const updateCampaignType = useCallback((type: string) => {
     setCampaignData(prev => {
       const updated = { ...prev, type };
       if (typeof window !== 'undefined') {
@@ -161,7 +167,17 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({ children }) 
       }
       return updated;
     });
-  };
+  }, []);
+
+  const updateSource = useCallback((source: CampaignData['source']) => {
+    setCampaignData(prev => {
+      const updated = { ...prev, source };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('campaign_data', JSON.stringify(updated));
+      }
+      return updated;
+    });
+  }, []);
 
   const updateAudience = (audience: CampaignData['audience']) => {
     setCampaignData(prev => {
@@ -238,6 +254,7 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({ children }) 
       campaignData,
       selectedPlatforms,
       updateCampaignType,
+      updateSource,
       updateAudience,
       togglePlatform,
       updateBudget,

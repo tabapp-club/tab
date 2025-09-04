@@ -16,6 +16,7 @@ import { useSidebar } from "@/components/SidebarContext";
  * - /settings?section=login-security
  * - /settings?section=payments-billing
  * - /settings?section=data-privacy
+ * - /settings?section=help-support
  * - /settings/browse-integrations (dedicated integrations page)
  */
 export function SettingsContent() {
@@ -25,6 +26,27 @@ export function SettingsContent() {
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
   const [preferencesTab, setPreferencesTab] = useState('notifications');
+  
+  // Help & Support form state
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoryDropdownOpen) {
+        const target = event.target as Element;
+        if (!target.closest('.dropdown-container')) {
+          setCategoryDropdownOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [categoryDropdownOpen]);
 
   // Mock user data - in real app this would come from context/API
   const userData = {
@@ -47,6 +69,17 @@ export function SettingsContent() {
       designation: "Operations Manager"
     }
   };
+
+  // Help & Support dropdown options
+  const categoryOptions = [
+    { value: 'account', label: 'Account & Billing' },
+    { value: 'campaigns', label: 'Campaign Management' },
+    { value: 'analytics', label: 'Analytics & Reports' },
+    { value: 'integrations', label: 'Integrations' },
+    { value: 'technical', label: 'Technical Issues' },
+    { value: 'feature', label: 'Feature Request' },
+    { value: 'other', label: 'Other' }
+  ];
 
   // Editable state (simulating full functionality)
   const [profile, setProfile] = useState({
@@ -320,7 +353,7 @@ export function SettingsContent() {
   useEffect(() => {
     const section = searchParams.get('section');
     const tab = searchParams.get('tab');
-    const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy'];
+    const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
     const validTabs = ['user-profile', 'business-profile'];
     
     if (section && validSections.includes(section)) {
@@ -380,6 +413,10 @@ export function SettingsContent() {
       'data-privacy': {
         title: 'Data & Privacy',
         description: 'Export data, privacy settings & account deletion'
+      },
+      'help-support': {
+        title: 'Help & Support',
+        description: 'Help center, documentation & contact support'
       }
     };
     
@@ -598,26 +635,27 @@ export function SettingsContent() {
                   </span>
                 </div>
               </button>
+
+              <button
+                onClick={() => {
+                  setActiveSection('help-support');
+                  updateURL('help-support');
+                }}
+                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
+                  activeSection === 'help-support'
+                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
+                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                }`}
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">Help & Support</span>
+                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
+                    Help center, documentation & contact support
+                  </span>
+                </div>
+              </button>
             </div>
 
-            {/* Settings Footer */}
-            <div className="mt-auto pt-4 pb-4 border-t border-gray-100">
-              <div className="bg-blue-50 rounded-[4px] p-2">
-                <div className="flex items-start space-x-2">
-                  <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center mt-0.5 flex-shrink-0">
-                    <svg className="w-2.5 h-2.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-blue-900 mb-1">Need help?</p>
-                    <p className="text-xs text-blue-700 leading-relaxed">
-                      Visit our <span className="underline cursor-pointer">help center</span> or <span className="underline cursor-pointer">contact support</span> for assistance.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Main Content Area */}
@@ -2684,6 +2722,333 @@ export function SettingsContent() {
                         <button className="text-red-600 hover:text-red-700 text-sm font-medium">
                           Delete
                         </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeSection === 'help-support' && (
+                <div className="space-y-6">
+                  {/* Help Center Section */}
+                  <div className="space-y-4">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">Help Center</h2>
+                      <p className="text-gray-600 text-sm">Find answers to common questions and learn how to use our platform.</p>
+                    </div>
+
+                    {/* Quick Help Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">Getting Started</h3>
+                            <p className="text-xs text-gray-500 mb-2">Learn the basics of our platform</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Guide →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">Campaign Management</h3>
+                            <p className="text-xs text-gray-500 mb-2">Create and manage your campaigns</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Guide →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">Analytics & Reports</h3>
+                            <p className="text-xs text-gray-500 mb-2">Understand your performance data</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Guide →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">Integrations</h3>
+                            <p className="text-xs text-gray-500 mb-2">Connect third-party tools</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Guide →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">Troubleshooting</h3>
+                            <p className="text-xs text-gray-500 mb-2">Common issues and solutions</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Guide →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-[4px] p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900 mb-1">API Documentation</h3>
+                            <p className="text-xs text-gray-500 mb-2">Developer resources and guides</p>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              View Docs →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Search Help */}
+                    <div className="border border-gray-200 rounded-[4px] p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            placeholder="Search help articles, guides, and FAQs..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                          />
+                        </div>
+                        <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                          Search
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contact Support Section */}
+                  <div className="space-y-4">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">Contact Support</h2>
+                      <p className="text-gray-600 text-sm">Get personalized help from our support team.</p>
+                    </div>
+
+                    {/* Support Options */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Contact Numbers */}
+                      <div className="border border-gray-200 rounded-[4px] p-6 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-1">Contact Numbers</h3>
+                            <p className="text-sm text-gray-600 mb-3">
+                              Call our support team directly for immediate assistance.
+                            </p>
+                            <div className="space-y-2 mb-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500">General Support</span>
+                                <span className="text-xs font-medium text-gray-900">+1 (555) 123-4567</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500">Technical Support</span>
+                                <span className="text-xs font-medium text-gray-900">+1 (555) 987-6543</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500">Emergency (24/7)</span>
+                                <span className="text-xs font-medium text-gray-900">+1 (555) 911-0000</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2 mb-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-xs text-green-600 font-medium">Available 24/7</span>
+                            </div>
+                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                              Call Now
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Email Support */}
+                      <div className="border border-gray-200 rounded-[4px] p-6 hover:shadow-md transition-shadow">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-1">Email Support</h3>
+                            <p className="text-sm text-gray-600 mb-3">
+                              Send us a detailed message and we'll respond within 24 hours.
+                            </p>
+                            <div className="flex items-center space-x-2 mb-3">
+                              <span className="text-xs text-gray-500">support@businessdashboard.com</span>
+                            </div>
+                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                              Send Email
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Support Form */}
+                    <div className="border border-gray-200 rounded-[4px] p-6">
+                      <h3 className="text-sm font-semibold text-gray-900 mb-4">Submit a Support Request</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Subject <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="Brief description of your issue"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Category <span className="text-red-500">*</span>
+                          </label>
+                          <div className="relative dropdown-container">
+                            <button
+                              onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                              className={`w-full px-3 py-2 border border-gray-300 rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors text-sm ${
+                                selectedCategory
+                                  ? 'border-[#7856ff] bg-[#7856ff]/5'
+                                  : 'border-gray-300'
+                              }`}
+                            >
+                              <span className="text-sm font-normal text-[#2a2a2f] truncate">
+                                {selectedCategory || 'Select category'}
+                              </span>
+                              <div className="flex-shrink-0 w-[22px] h-full flex items-center justify-center">
+                                <svg width="7.5" height="4.518" viewBox="0 0 7.5 4.518" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M1.5 1.5L3.75 3.75L6 1.5" stroke="#2a2a2f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                            </button>
+                            {categoryDropdownOpen && (
+                              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#e9e9e9] rounded-md shadow-lg z-50">
+                                <div className="py-2">
+                                  {categoryOptions.map((option) => (
+                                    <button
+                                      key={option.value}
+                                      onClick={() => {
+                                        setSelectedCategory(option.label);
+                                        setCategoryDropdownOpen(false);
+                                      }}
+                                      className="w-full px-4 py-2 text-left text-[14px] text-[#2a2a2f] hover:bg-gray-50 cursor-pointer"
+                                    >
+                                      {option.label}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Description <span className="text-red-500">*</span>
+                          </label>
+                          <textarea
+                            rows={4}
+                            placeholder="Please provide detailed information about your issue or question..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm resize-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Attachments (Optional)
+                          </label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
+                            <svg className="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p className="text-xs text-gray-500 mt-2">Drag and drop files here, or click to browse</p>
+                            <p className="text-xs text-gray-400">Max file size: 10MB</p>
+                          </div>
+                        </div>
+                        <div className="flex justify-end">
+                          <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                            Submit Request
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Support Resources */}
+                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-1">Additional Resources</h4>
+                          <p className="text-sm text-gray-600 mb-3">
+                            Explore our comprehensive documentation, video tutorials, and community resources.
+                          </p>
+                          <div className="flex flex-wrap gap-3">
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              Video Tutorials
+                            </button>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              Community Forum
+                            </button>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              Status Page
+                            </button>
+                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                              Release Notes
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

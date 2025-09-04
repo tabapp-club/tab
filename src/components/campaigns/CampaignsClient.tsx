@@ -27,65 +27,6 @@ export interface CampaignData {
   description: string;
 }
 
-// CSV Export Utility Function
-const exportCampaignsToCSV = (data: CampaignData[], filename: string = 'campaigns-export.csv') => {
-  if (!data || data.length === 0) {
-    alert('No campaigns to export');
-    return;
-  }
-
-  // Define CSV headers
-  const headers = [
-    'Campaign Name',
-    'Type',
-    'Status',
-    'Audience Size',
-    'Messages Sent',
-    'Opened',
-    'Clicked',
-    'Conversion Rate (%)',
-    'Budget',
-    'Spent',
-    'Created Date',
-    'End Date',
-    'Description'
-  ];
-
-  // Convert data to CSV format
-  const csvContent = [
-    headers.join(','),
-    ...data.map(campaign => [
-      `"${campaign.name}"`,
-      `"${campaign.type}"`,
-      `"${campaign.status}"`,
-      campaign.audience,
-      campaign.sent,
-      campaign.opened,
-      campaign.clicked,
-      campaign.conversion.toFixed(2),
-      campaign.budget,
-      campaign.spent,
-      `"${campaign.createdDate}"`,
-      `"${campaign.endDate}"`,
-      `"${campaign.description}"`
-    ].join(','))
-  ].join('\n');
-
-  // Create and download file
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-
-  if (link.download !== undefined) {
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
-};
 
 export function CampaignsClient() {
   const router = useRouter();
@@ -133,14 +74,6 @@ export function CampaignsClient() {
     router.push('/new-campaign', { scroll: false });
   }, [router]);
 
-  const handleImportClick = useCallback(() => {
-    // Handle import functionality
-    console.log('Import campaigns');
-  }, []);
-
-  const handleExportClick = useCallback(() => {
-    exportCampaignsToCSV(filteredCampaigns);
-  }, [filteredCampaigns]);
 
   const handleCampaignsUpdate = useCallback((campaigns: CampaignData[]) => {
     setFilteredCampaigns(campaigns);
@@ -167,8 +100,6 @@ export function CampaignsClient() {
               {/* Header */}
               <CampaignsHeader
                 onCreateCampaign={handleCreateCampaign}
-                onImportClick={handleImportClick}
-                onExportClick={handleExportClick}
               />
 
               {/* Stats */}

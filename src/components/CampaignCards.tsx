@@ -99,7 +99,16 @@ export function CampaignCards() {
         await new Promise(resolve => setTimeout(resolve, 300));
 
         try {
-            await router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
+            // Save source information to localStorage for tracking
+            const sourceData = {
+                source: 'dashboard',
+                campaignType: campaignType,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('campaign_source', JSON.stringify(sourceData));
+            
+            // Route to audience page to start the journey
+            await router.push(`/new-campaign/audience?type=${campaignType}&source=dashboard`, { scroll: false });
         } catch (error) {
             console.error('Navigation error:', error);
             setLoadingCardId(null);

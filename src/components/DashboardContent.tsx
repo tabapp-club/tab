@@ -344,7 +344,7 @@ export function DashboardContent() {
 
             {/* Quick Actions */}
             <div className="flex flex-wrap justify-center gap-4 mb-10">
-              <a href="/templates" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/new-campaign" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 📋 Campaign Templates
               </a>
               <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
@@ -356,8 +356,8 @@ export function DashboardContent() {
               <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
                 🤖 AI Insights
               </a>
-              <a href="/contact" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                📞 Get Support
+              <a href="/settings?section=help-support" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+                📞 Help and Support
               </a>
             </div>
           </div>
@@ -373,8 +373,6 @@ export function DashboardContent() {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-[12px] text-[#696969]">v1.0.0</span>
-                <span className="text-[12px] text-[#696969]">•</span>
-                <span className="text-[12px] text-[#696969]">Updated: {new Date().toLocaleDateString()}</span>
               </div>
             </div>
           </div>

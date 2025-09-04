@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCampaign } from "@/contexts/CampaignContext";
 import CustomCheckbox from "@/components/ui/CustomCheckbox";
 
 // Icons for the stepper
@@ -136,12 +137,38 @@ export function AudienceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const campaignType = searchParams.get('type') || 'advertise';
+  const source = searchParams.get('source') || '';
   const { user } = useAuth();
+  const { updateCampaignType, updateSource } = useCampaign();
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   console.log('AudienceContent: Component rendering', { campaignType, user: !!user });
+
+  // Handle source information and campaign type on component mount
+  useEffect(() => {
+    // Update campaign type in context only if it's different
+    updateCampaignType(campaignType);
+    
+    // Handle source information if coming from dashboard
+    if (source === 'dashboard') {
+      // Get source data from localStorage
+      const sourceData = localStorage.getItem('campaign_source');
+      if (sourceData) {
+        try {
+          const parsedSourceData = JSON.parse(sourceData);
+          updateSource({
+            origin: parsedSourceData.source,
+            campaignType: parsedSourceData.campaignType,
+            timestamp: parsedSourceData.timestamp
+          });
+        } catch (error) {
+          console.error('Error parsing source data:', error);
+        }
+      }
+    }
+  }, [campaignType, source]); // Remove updateCampaignType and updateSource from dependencies
 
   // Simple audience selection state
   const [audienceType, setAudienceType] = useState<'all' | 'custom' | 'ai_inactive' | 'ai_vip' | 'ai_cart'>('all');
