@@ -7,7 +7,7 @@ import { useSidebar } from "@/components/SidebarContext";
 
 /**
  * SettingsContent component with URL routing support
- * 
+ *
  * Available URLs:
  * - /settings?section=account-settings (default)
  * - /settings?section=preferences
@@ -26,7 +26,7 @@ export function SettingsContent() {
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
   const [preferencesTab, setPreferencesTab] = useState('notifications');
-  
+
   // Help & Support form state
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -355,11 +355,11 @@ export function SettingsContent() {
     const tab = searchParams.get('tab');
     const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
     const validTabs = ['user-profile', 'business-profile'];
-    
+
     if (section && validSections.includes(section)) {
       setActiveSection(section);
     }
-    
+
     if (tab && validTabs.includes(tab)) {
       setActiveTab(tab);
     }
@@ -419,7 +419,7 @@ export function SettingsContent() {
         description: 'Help center, documentation & contact support'
       }
     };
-    
+
     return sectionMap[section as keyof typeof sectionMap] || sectionMap['account-settings'];
   };
 
@@ -2922,7 +2922,7 @@ export function SettingsContent() {
                           <div className="flex-1">
                             <h3 className="text-sm font-semibold text-gray-900 mb-1">Email Support</h3>
                             <p className="text-sm text-gray-600 mb-3">
-                              Send us a detailed message and we'll respond within 24 hours.
+                              Send us a detailed message and we&apos;ll respond within 24 hours.
                             </p>
                             <div className="flex items-center space-x-2 mb-3">
                               <span className="text-xs text-gray-500">support@businessdashboard.com</span>
