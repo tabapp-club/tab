@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import CustomerDetailsClient from '../../../components/CustomerDetailsClient';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -64,7 +65,9 @@ export default async function CustomerPage({ params }: CustomerPageProps) {
 
   return (
     <ProtectedRoute>
-      <CustomerDetailsClient customerId={id} />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
+        <CustomerDetailsClient customerId={id} />
+      </Suspense>
     </ProtectedRoute>
   );
 }

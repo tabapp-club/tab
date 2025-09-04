@@ -251,7 +251,7 @@ export function ScheduleContent() {
 
     // Navigate after success animation
     setTimeout(() => {
-      router.push('/campaigns');
+      router.push('/campaigns', { scroll: false });
     }, 2000);
   };
 
@@ -634,7 +634,7 @@ export function ScheduleContent() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
-                onClick={() => router.push('/campaigns')}
+                onClick={() => router.push('/campaigns', { scroll: false })}
                 className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >
                 Close
@@ -647,7 +647,7 @@ export function ScheduleContent() {
                   const searchParams = new URLSearchParams(window.location.search);
                   const campaignType = searchParams.get('type') || 'advertise';
 
-                  router.push(`/new-campaign/create?type=${campaignType}`);
+                  router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
                 }}
                 className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
               >

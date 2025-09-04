@@ -1,12 +1,26 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 
+/**
+ * SettingsContent component with URL routing support
+ * 
+ * Available URLs:
+ * - /settings?section=account-settings (default)
+ * - /settings?section=preferences
+ * - /settings?section=integrations
+ * - /settings?section=user-management
+ * - /settings?section=login-security
+ * - /settings?section=payments-billing
+ * - /settings?section=data-privacy
+ * - /settings/browse-integrations (dedicated integrations page)
+ */
 export function SettingsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isCollapsed, isMobile } = useSidebar();
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
@@ -302,6 +316,76 @@ export function SettingsContent() {
     }
   }, [openKebabMenu]);
 
+  // Handle URL parameters for section navigation
+  useEffect(() => {
+    const section = searchParams.get('section');
+    const tab = searchParams.get('tab');
+    const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy'];
+    const validTabs = ['user-profile', 'business-profile'];
+    
+    if (section && validSections.includes(section)) {
+      setActiveSection(section);
+    }
+    
+    if (tab && validTabs.includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  // Function to update URL when section changes
+  const updateURL = (section: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('section', section);
+    // Clear tab when changing sections (except for account-settings)
+    if (section !== 'account-settings') {
+      params.delete('tab');
+    }
+    router.push(`/settings?${params.toString()}`, { scroll: false });
+  };
+
+  // Function to update URL when tab changes
+  const updateTabURL = (tab: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    router.push(`/settings?${params.toString()}`, { scroll: false });
+  };
+
+  // Function to get section title and description
+  const getSectionInfo = (section: string) => {
+    const sectionMap = {
+      'account-settings': {
+        title: 'Account settings',
+        description: 'Personal & business profile information'
+      },
+      'preferences': {
+        title: 'Preferences',
+        description: 'Notifications & invoice delivery settings'
+      },
+      'integrations': {
+        title: 'Integrations',
+        description: 'Connect POS systems & third-party apps'
+      },
+      'user-management': {
+        title: 'User management',
+        description: 'Manage team members & access permissions'
+      },
+      'login-security': {
+        title: 'Login and security',
+        description: 'Password, 2FA & session management'
+      },
+      'payments-billing': {
+        title: 'Payments & Billing',
+        description: 'Subscription plans & payment methods'
+      },
+      'data-privacy': {
+        title: 'Data & Privacy',
+        description: 'Export data, privacy settings & account deletion'
+      }
+    };
+    
+    return sectionMap[section as keyof typeof sectionMap] || sectionMap['account-settings'];
+  };
+
   // User management
   type Member = {
     initials: string;
@@ -383,7 +467,10 @@ export function SettingsContent() {
 
             <div className="space-y-1">
               <button
-                onClick={() => setActiveSection('account-settings')}
+                onClick={() => {
+                  setActiveSection('account-settings');
+                  updateURL('account-settings');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'account-settings'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -399,7 +486,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('preferences')}
+                onClick={() => {
+                  setActiveSection('preferences');
+                  updateURL('preferences');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'preferences'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -415,7 +505,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('integrations')}
+                onClick={() => {
+                  setActiveSection('integrations');
+                  updateURL('integrations');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'integrations'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -431,7 +524,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('user-management')}
+                onClick={() => {
+                  setActiveSection('user-management');
+                  updateURL('user-management');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'user-management'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -447,7 +543,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('login-security')}
+                onClick={() => {
+                  setActiveSection('login-security');
+                  updateURL('login-security');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'login-security'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -463,7 +562,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('payments-billing')}
+                onClick={() => {
+                  setActiveSection('payments-billing');
+                  updateURL('payments-billing');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'payments-billing'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -479,7 +581,10 @@ export function SettingsContent() {
               </button>
 
               <button
-                onClick={() => setActiveSection('data-privacy')}
+                onClick={() => {
+                  setActiveSection('data-privacy');
+                  updateURL('data-privacy');
+                }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'data-privacy'
                     ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
@@ -524,13 +629,10 @@ export function SettingsContent() {
             {/* Header */}
             <div className="mb-4">
                 <h1 className="text-[20px] leading-[28px] tracking-[-0.1px] font-bold text-[#2a2a2f]">
-                  {activeSection === 'preferences' ? 'Preferences' : 'Account settings'}
+                  {getSectionInfo(activeSection).title}
               </h1>
                 <p className="text-[#626266] text-[14px] leading-[20px] tracking-[-0.1px] mt-1 font-normal">
-                  {activeSection === 'preferences'
-                    ? 'Customize your application preferences and notification settings'
-                    : 'Manage your account preferences and integrations'
-                  }
+                  {getSectionInfo(activeSection).description}
                 </p>
             </div>
 
@@ -538,7 +640,10 @@ export function SettingsContent() {
               {activeSection === 'account-settings' && (
             <div className="mb-4 flex gap-2">
               <button
-                onClick={() => setActiveTab('user-profile')}
+                onClick={() => {
+                  setActiveTab('user-profile');
+                  updateTabURL('user-profile');
+                }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'user-profile'
                         ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
@@ -548,7 +653,10 @@ export function SettingsContent() {
                 User Profile
               </button>
               <button
-                onClick={() => setActiveTab('business-profile')}
+                onClick={() => {
+                  setActiveTab('business-profile');
+                  updateTabURL('business-profile');
+                }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'business-profile'
                         ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'

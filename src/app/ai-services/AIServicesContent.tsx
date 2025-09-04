@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,6 +31,8 @@ interface AIFeature {
 }
 
 export function AIServicesContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
   const [message, setMessage] = useState('');
@@ -42,6 +45,98 @@ export function AIServicesContent() {
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
+
+  // Track if we're loading from URL to prevent circular updates
+  const [isLoadingFromURL, setIsLoadingFromURL] = useState(false);
+  // Store pending session ID from URL when sessions aren't loaded yet
+  const [pendingSessionId, setPendingSessionId] = useState<string | null>(null);
+  
+  // Load state from URL parameters (only on mount and URL changes)
+  useEffect(() => {
+    setIsLoadingFromURL(true);
+    
+    const sessionId = searchParams.get('session');
+    const features = searchParams.get('features');
+    
+    // Only update session if it's different and exists
+    if (sessionId && sessionId !== currentSessionId) {
+      const sessionExists = chatSessions.find(session => session.id === sessionId);
+      if (sessionExists) {
+        setCurrentSessionId(sessionId);
+        setShowFeatures(false);
+        setPendingSessionId(null); // Clear pending if we found the session
+      } else {
+        // Session doesn't exist yet, store it as pending
+        setPendingSessionId(sessionId);
+      }
+    } else if (!sessionId && currentSessionId) {
+      // URL doesn't have session but state does - clear it
+      setCurrentSessionId(null);
+      setShowFeatures(true);
+      setPendingSessionId(null);
+    }
+    
+    // Handle features parameter
+    if (features === 'false') {
+      setShowFeatures(false);
+    } else if (features === 'true' || features === null) {
+      // If features is null (not in URL) or explicitly true, show features
+      if (!sessionId) { // Only show features if no session is active
+        setShowFeatures(true);
+      }
+    }
+    
+    setTimeout(() => setIsLoadingFromURL(false), 0);
+  }, [searchParams]); // Remove currentSessionId and chatSessions from deps
+
+  // Handle pending session ID when sessions are loaded
+  useEffect(() => {
+    if (pendingSessionId && chatSessions.length > 0) {
+      const sessionExists = chatSessions.find(session => session.id === pendingSessionId);
+      if (sessionExists) {
+        setCurrentSessionId(pendingSessionId);
+        setShowFeatures(false);
+        setPendingSessionId(null);
+      } else {
+        // Session still doesn't exist, clear the pending ID
+        setPendingSessionId(null);
+      }
+    }
+  }, [pendingSessionId, chatSessions]);
+
+  // Function to update URL with current state (only when not loading from URL)
+  const updateURL = useCallback(() => {
+    if (isLoadingFromURL) return; // Prevent updates while loading from URL
+    
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams();
+    
+    if (currentSessionId) {
+      newParams.set('session', currentSessionId);
+    }
+    
+    if (!showFeatures && currentSessionId) {
+      newParams.set('features', 'false');
+    }
+    
+    // Only update URL if parameters have actually changed
+    if (currentParams.toString() !== newParams.toString()) {
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `/ai-services?${queryString}` : '/ai-services';
+      router.push(newUrl, { scroll: false });
+    }
+  }, [currentSessionId, showFeatures, router, isLoadingFromURL, searchParams]);
+
+  // Update URL when state changes (debounced to prevent excessive updates)
+  useEffect(() => {
+    if (isLoadingFromURL) return; // Don't update URL while loading from URL
+    
+    const timer = setTimeout(() => {
+      updateURL();
+    }, 100); // Small debounce to batch state changes
+
+    return () => clearTimeout(timer);
+  }, [currentSessionId, showFeatures, updateURL, isLoadingFromURL]);
 
   // Get current session
   const currentSession = chatSessions.find(session => session.id === currentSessionId);

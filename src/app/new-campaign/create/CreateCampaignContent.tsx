@@ -166,15 +166,15 @@ export function CreateCampaignContent() {
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   const handleProceedToNextStep = () => {
-    router.push(`/new-campaign/schedule?type=${campaignType}`);
+    router.push(`/new-campaign/schedule?type=${campaignType}`, { scroll: false });
   };
 
   const handleBack = () => {
-    router.push(`/new-campaign/platform-budget?type=${campaignType}`);
+    router.push(`/new-campaign/platform-budget?type=${campaignType}`, { scroll: false });
   };
 
   const handleClose = () => {
-    router.push('/campaigns');
+    router.push('/campaigns', { scroll: false });
   };
 
   return (

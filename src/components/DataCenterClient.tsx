@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { MobileMenuToggle } from './MobileMenuToggle';
 import DataCenterStats from './DataCenterStats';
@@ -59,6 +60,8 @@ const exportToCSV = (data: UserData[], filename: string = 'data-center-export.cs
 };
 
 export default function DataCenterClient() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(''); // For UI display (immediate)
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // For API calls (debounced)
@@ -69,6 +72,79 @@ export default function DataCenterClient() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
+
+  // Load filters and search from URL parameters
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    const urlPage = searchParams.get('page');
+    const urlPageSize = searchParams.get('pageSize');
+    const urlCard = searchParams.get('card');
+    
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearchTerm(urlSearch);
+    }
+    
+    if (urlPage) {
+      const pageNum = parseInt(urlPage);
+      if (!isNaN(pageNum) && pageNum > 0) {
+        setPage(pageNum);
+      }
+    }
+    
+    if (urlPageSize) {
+      const pageSizeNum = parseInt(urlPageSize);
+      if (!isNaN(pageSizeNum) && [10, 25, 50, 100].includes(pageSizeNum)) {
+        setPageSize(pageSizeNum);
+      }
+    }
+    
+    if (urlCard) {
+      setSelectedCard(urlCard);
+    }
+
+    // Load filters from URL
+    const urlFilters: any = {};
+    const category = searchParams.get('category');
+    const userType = searchParams.get('userType');
+    const status = searchParams.get('status');
+    const visitsFrom = searchParams.get('visitsFrom');
+    const visitsTo = searchParams.get('visitsTo');
+    
+    if (category) urlFilters.category = category.split(',');
+    if (userType) urlFilters.userType = userType;
+    if (status) urlFilters.status = status;
+    if (visitsFrom) urlFilters.no_of_visits_from = parseInt(visitsFrom);
+    if (visitsTo) urlFilters.no_of_visits_to = parseInt(visitsTo);
+    
+    if (Object.keys(urlFilters).length > 0) {
+      setFilters(urlFilters);
+    }
+  }, [searchParams]);
+
+  // Function to update URL with current state
+  const updateURL = useCallback(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams();
+    
+    if (searchTerm) newParams.set('search', searchTerm);
+    if (page > 1) newParams.set('page', page.toString());
+    if (pageSize !== 10) newParams.set('pageSize', pageSize.toString());
+    if (selectedCard !== 'total') newParams.set('card', selectedCard);
+    
+    if (filters.category?.length) newParams.set('category', filters.category.join(','));
+    if (filters.userType) newParams.set('userType', filters.userType);
+    if (filters.status) newParams.set('status', filters.status);
+    if (filters.no_of_visits_from) newParams.set('visitsFrom', filters.no_of_visits_from.toString());
+    if (filters.no_of_visits_to) newParams.set('visitsTo', filters.no_of_visits_to.toString());
+    
+    // Only update URL if parameters have actually changed
+    if (currentParams.toString() !== newParams.toString()) {
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `/data-center?${queryString}` : '/data-center';
+      router.push(newUrl, { scroll: false });
+    }
+  }, [searchTerm, page, pageSize, selectedCard, filters, router, searchParams]);
 
   // Debounce timer ref
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -96,6 +172,19 @@ export default function DataCenterClient() {
       }
     };
   }, [searchTerm, debouncedSearchTerm]);
+
+  // Update URL when state changes (debounced to avoid excessive updates)
+  useEffect(() => {
+    // Skip URL updates during initial load from URL parameters
+    const isInitialLoad = !searchTerm && !debouncedSearchTerm && page === 1 && pageSize === 10 && selectedCard === 'total' && Object.keys(filters).length === 0;
+    if (isInitialLoad) return;
+    
+    const urlUpdateTimer = setTimeout(() => {
+      updateURL();
+    }, 100); // Reduced debounce to prevent history conflicts
+
+    return () => clearTimeout(urlUpdateTimer);
+  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, updateURL]);
 
   // Use React Query to fetch data center data
   const { data: dataCenterResponse, isLoading: loading, error } = useDataCenterData({

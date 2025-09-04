@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import type { Metadata } from "next";
 import { CampaignsClient } from "@/components/campaigns/CampaignsClient";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
 export default function CampaignsPage() {
   return (
     <ProtectedRoute>
-      <CampaignsClient />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
+        <CampaignsClient />
+      </Suspense>
     </ProtectedRoute>
   );
 }

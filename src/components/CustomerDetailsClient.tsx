@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { MobileMenuToggle } from './MobileMenuToggle';
 import { useSidebar } from './SidebarContext';
@@ -54,7 +54,25 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Handle URL parameters for tab navigation
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    const validTabs = ['overview', 'analytics', 'history', 'insights'];
+    
+    if (tab && validTabs.includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
+  // Function to update URL when tab changes
+  const updateTabURL = (tab: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    router.push(`/customer/${customerId}?${params.toString()}`, { scroll: false });
+  };
 
   // Use the real API data hook
   const { data: customerData, isLoading: loading, error } = useCustomerData({ customerId });
@@ -257,7 +275,10 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                   ].map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        updateTabURL(tab.id);
+                      }}
                       className={`flex-1 px-4 py-4 font-medium text-sm transition-all duration-200 relative ${
                         activeTab === tab.id
                           ? 'text-[#6E4EFF] border-b-2 border-[#6E4EFF] bg-[#6E4EFF]/5'

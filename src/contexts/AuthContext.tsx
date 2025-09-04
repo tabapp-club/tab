@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (phoneNumber: string, otp: string) => Promise<boolean>;
   logout: () => void;
   sendOTP: (phoneNumber: string) => Promise<boolean>;
+  verifyOTP: (phoneNumber: string, otp: string) => Promise<boolean>;
   isAuthenticated: boolean;
 }
 
@@ -80,13 +81,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phoneNumber, country_code: '+91' })
       });
-      if (!response.ok) throw new Error('Failed to send OTP');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send OTP');
+      }
       const data = await response.json();
-      // Optionally check data for success
       return true;
     } catch (error) {
       console.error('Error sending OTP:', error);
-      return false;
+      throw error; // Re-throw to allow proper error handling in components
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyOTP = async (phoneNumber: string, otp: string): Promise<boolean> => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('https://api.tabapp.club/v1/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phoneNumber, otp, userType: 'business' })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('OTP verification failed:', errorData.message || 'Invalid OTP');
+        return false; // Return false instead of throwing
+      }
+      
+      const data = await response.json();
+      const { access_token, name } = data;
+      
+      if (!access_token) {
+        console.error('Authentication failed: No access token received');
+        return false; // Return false instead of throwing
+      }
+      
+      let finalName = name;
+      // If name is missing, prompt and call /v1/customers
+      if (!finalName) {
+        try {
+          finalName = await promptForNameAndCreateCustomer(access_token);
+        } catch (nameError) {
+          console.error('Failed to get user name:', nameError);
+          finalName = 'User'; // Fallback name
+        }
+      }
+      
+      const userData: User = {
+        phoneNumber,
+        isAuthenticated: true,
+        accessToken: access_token,
+        name: finalName,
+      };
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('access_token', access_token);
+      return true;
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      return false; // Return false instead of throwing
     } finally {
       setIsLoading(false);
     }
@@ -171,6 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     sendOTP,
+    verifyOTP,
     isAuthenticated: !!user?.isAuthenticated,
   };
 

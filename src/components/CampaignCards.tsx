@@ -99,7 +99,7 @@ export function CampaignCards() {
         await new Promise(resolve => setTimeout(resolve, 300));
 
         try {
-            await router.push(`/new-campaign/create?type=${campaignType}`);
+            await router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
         } catch (error) {
             console.error('Navigation error:', error);
             setLoadingCardId(null);

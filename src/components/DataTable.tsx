@@ -38,7 +38,7 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
 
   const handleAction = (action: string, user: UserData) => {
     if (action === 'view') {
-      router.push(`/customer/${user.id}`);
+      router.push(`/customer/${user.id}`, { scroll: false });
     }
     console.log(`${action} for user:`, user);
   };

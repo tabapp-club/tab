@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -78,7 +78,9 @@ export default function AIServicesPage() {
           <Sidebar />
 
           {/* Main Content */}
-          <AIServicesContent />
+          <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
+            <AIServicesContent />
+          </Suspense>
         </div>
       </div>
     </ProtectedRoute>

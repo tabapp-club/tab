@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from '../Sidebar';
 import { MobileMenuToggle } from '../MobileMenuToggle';
 import { useSidebar } from '../SidebarContext';
@@ -88,16 +88,49 @@ const exportCampaignsToCSV = (data: CampaignData[], filename: string = 'campaign
 };
 
 export function CampaignsClient() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignData[]>([]);
   const { isCollapsed, isMobile } = useSidebar();
-  const router = useRouter();
+
+  // Load search term from URL parameters
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+  }, [searchParams]);
+
+  // Update URL when search term changes
+  useEffect(() => {
+    // Skip URL updates during initial load
+    if (!searchTerm && searchParams.get('search')) return;
+    
+    const timer = setTimeout(() => {
+      const currentParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams();
+      
+      if (searchTerm) {
+        newParams.set('search', searchTerm);
+      }
+      
+      // Only update URL if parameters have actually changed
+      if (currentParams.toString() !== newParams.toString()) {
+        const queryString = newParams.toString();
+        const newUrl = queryString ? `/campaigns?${queryString}` : '/campaigns';
+        router.push(newUrl, { scroll: false });
+      }
+    }, 300); // Reduced debounce to prevent history conflicts
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, searchParams, router]);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   const handleCreateCampaign = useCallback(() => {
-    router.push('/new-campaign');
+    router.push('/new-campaign', { scroll: false });
   }, [router]);
 
   const handleImportClick = useCallback(() => {

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +11,8 @@ import { CreateTargetModal } from "@/components/CreateTargetModal";
 
 
 export function AchievementsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isCollapsed, isMobile } = useSidebar();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -39,6 +42,66 @@ export function AchievementsContent() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isStatusDropdownOpen, openKebabMenu]);
+
+  // Load state from URL parameters
+  useEffect(() => {
+    const category = searchParams.get('category');
+    const status = searchParams.get('status');
+    const createTarget = searchParams.get('createTarget');
+    
+    const validCategories = ['all', 'sales', 'engagement', 'retention'];
+    const validStatuses = ['all', 'active', 'completed', 'overdue'];
+    
+    if (category && validCategories.includes(category)) {
+      setSelectedCategory(category);
+    }
+    
+    if (status && validStatuses.includes(status)) {
+      setSelectedStatus(status);
+    }
+    
+    if (createTarget === 'true') {
+      setShowCreateTarget(true);
+    }
+  }, [searchParams]);
+
+  // Function to update URL with current state
+  const updateURL = useCallback(() => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams();
+    
+    if (selectedCategory !== 'all') {
+      newParams.set('category', selectedCategory);
+    }
+    
+    if (selectedStatus !== 'all') {
+      newParams.set('status', selectedStatus);
+    }
+    
+    if (showCreateTarget) {
+      newParams.set('createTarget', 'true');
+    }
+    
+    // Only update URL if parameters have actually changed
+    if (currentParams.toString() !== newParams.toString()) {
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `/achievements?${queryString}` : '/achievements';
+      router.push(newUrl, { scroll: false });
+    }
+  }, [selectedCategory, selectedStatus, showCreateTarget, router, searchParams]);
+
+  // Update URL when state changes
+  useEffect(() => {
+    // Skip URL updates during initial load
+    const isInitialLoad = selectedCategory === 'all' && selectedStatus === 'all' && !showCreateTarget;
+    if (isInitialLoad && !searchParams.get('category') && !searchParams.get('status') && !searchParams.get('createTarget')) return;
+    
+    const timer = setTimeout(() => {
+      updateURL();
+    }, 50); // Minimal debounce to batch rapid state changes
+
+    return () => clearTimeout(timer);
+  }, [updateURL, selectedCategory, selectedStatus, showCreateTarget, searchParams]);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
