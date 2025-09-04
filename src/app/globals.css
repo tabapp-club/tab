@@ -686,6 +686,16 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
   background: #a1a1a1;
 }
 
+/* Hide scrollbars on mobile devices */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 /* Fix flexbox overflow issues */
 
 /* Cohorts page responsive improvements */

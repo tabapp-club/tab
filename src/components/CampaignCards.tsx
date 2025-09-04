@@ -116,7 +116,7 @@ export function CampaignCards() {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full">
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0 scrollbar-hide sm:scrollbar-default">
         {campaigns.map((campaign) => {
             const Icon = campaign.icon;
             const isLoading = loadingCardId === campaign.id;
@@ -124,7 +124,7 @@ export function CampaignCards() {
             return (
             <div
                 key={campaign.id}
-                className="relative min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-out cursor-pointer group overflow-hidden transform"
+                className="relative min-w-[280px] sm:min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-out cursor-pointer group overflow-hidden transform flex-shrink-0 sm:flex-shrink"
                 onClick={() => !isLoading && handleCampaignClick(campaign.type, campaign.id)}
             >
                 {/* Loading Overlay */}

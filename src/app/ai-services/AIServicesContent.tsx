@@ -454,11 +454,11 @@ export function AIServicesContent() {
                 {showFeatures && (
                   <div className="w-full max-w-6xl mb-8 px-4">
                     <h3 className="text-base font-semibold text-[#2a2a2f] mb-4 text-center">What can AI help you with?</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0 scrollbar-hide sm:scrollbar-default">
                       {aiFeatures.map((feature) => (
                         <div
                           key={feature.id}
-                          className={`${feature.gradient} p-4 rounded-2xl text-gray-500 transform hover:scale-105 transition-all duration-300 cursor-pointer border border-gray-100`}
+                          className={`${feature.gradient} p-4 rounded-2xl text-gray-500 transform hover:scale-105 transition-all duration-300 cursor-pointer border border-gray-100 min-w-[160px] sm:min-w-0 flex-shrink-0 sm:flex-shrink`}
                           onClick={() => handleQuestionClick(`Tell me about ${feature.title.toLowerCase()}`)}
                         >
                           <div className="text-2xl mb-2">{feature.icon}</div>
@@ -478,12 +478,12 @@ export function AIServicesContent() {
                 {/* Enhanced Suggested Questions */}
                 <div className="w-full max-w-5xl mb-8 px-4">
                   <h3 className="text-base font-semibold text-[#2a2a2f] mb-4 text-center">Popular questions to get started</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex sm:grid sm:grid-cols-2 gap-4 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0 scrollbar-hide sm:scrollbar-default">
                     {suggestedQuestions.map((question, index) => (
                       <button
                         key={index}
                         onClick={() => handleQuestionClick(question.text)}
-                        className="group py-3 px-4 text-left bg-white border border-gray-100 rounded hover:border-[#6E4EFF] transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-transparent"
+                        className="group py-3 px-4 text-left bg-white border border-gray-100 rounded hover:border-[#6E4EFF] transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-transparent min-w-[320px] sm:min-w-0 flex-shrink-0 sm:flex-shrink"
                         aria-label={`Ask: ${question.text}`}
                       >
                         <div className="flex items-center justify-between w-full">

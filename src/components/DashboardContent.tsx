@@ -262,8 +262,12 @@ export function DashboardContent() {
         </header>
 
         {/* Campaign Cards Section */}
-        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-lg bg-[#ffffff] border border-[#dbdbdb] box-border overflow-hidden">
-          <div className="p-3 sm:p-4 lg:p-6 lg:pl-[35px]">
+        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-[4px] bg-[#ffffff] border border-[#dbdbdb] box-border overflow-hidden relative">
+          {/* Brand Gradient Border */}
+          <div className="absolute inset-0 rounded-[4px] bg-gradient-to-r from-[#8B5CF6] via-[#A78BFA] via-[#DDD6FE] to-[#8B5CF6] p-[1px]">
+            <div className="w-full h-full rounded-[3px] bg-[#ffffff]"></div>
+          </div>
+          <div className="relative z-10 p-3 sm:p-4 lg:p-6 lg:pl-[35px]">
             <h2 className="text-sm sm:text-[16px] font-semibold text-[#696969] leading-[1.4] sm:leading-[22.4px] tracking-[-0.1px] mb-3 sm:mb-4 lg:mb-[17px]">
               Campaigns to grow your business
             </h2>

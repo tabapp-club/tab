@@ -106,7 +106,7 @@ export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
 
   return (
     <>
-      <div className="overflow-x-auto mb-4 sm:mb-6">
+      <div className="overflow-x-auto mb-4 sm:mb-6 scrollbar-hide sm:scrollbar-default">
         <div className="inline-flex border border-[#e9e9e9] rounded-[5px] bg-white overflow-hidden min-w-max">
         {timeFilters.map((filter, index) => {
           const isActive = activeFilter === filter.id;
