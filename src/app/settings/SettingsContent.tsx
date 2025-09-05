@@ -7,7 +7,7 @@ import { useSidebar } from "@/components/SidebarContext";
 
 /**
  * SettingsContent component with URL routing support
- * 
+ *
  * Available URLs:
  * - /settings?section=account-settings (default)
  * - /settings?section=preferences
@@ -356,11 +356,11 @@ export function SettingsContent() {
     const tab = searchParams.get('tab');
     const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
     const validTabs = ['user-profile', 'business-profile'];
-    
+
     if (section && validSections.includes(section)) {
       setActiveSection(section);
     }
-    
+
     if (tab && validTabs.includes(tab)) {
       setActiveTab(tab);
     }
@@ -420,7 +420,7 @@ export function SettingsContent() {
         description: 'Help center, documentation & contact support'
       }
     };
-    
+
     return sectionMap[section as keyof typeof sectionMap] || sectionMap['account-settings'];
   };
 
