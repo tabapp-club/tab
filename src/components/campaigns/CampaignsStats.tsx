@@ -5,7 +5,7 @@ const CampaignsStats = () => {
     {
       value: '24',
       label: 'Active Campaigns',
-      labelColor: 'text-[#7856ff]',
+      labelColor: 'text-[#a1a1a1]',
       insights: '+12%',
       icon: <ActiveCampaignsIcon />,
       bgColor: 'bg-purple-100'

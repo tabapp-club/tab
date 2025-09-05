@@ -8,10 +8,10 @@ const CampaignsHeader = ({ onCreateCampaign }: CampaignsHeaderProps) => {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
       <div className="flex-1 min-w-0">
-        <h1 className="text-xl sm:text-2xl lg:text-[28px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px] truncate">
+        <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px] truncate">
           Campaigns
         </h1>
-        <p className="text-sm text-[#626266] mt-1 truncate">
+        <p className="text-[14px] text-[#626266] font-normal mt-1 truncate">
           Manage and track your marketing campaigns
         </p>
       </div>
@@ -32,7 +32,7 @@ const CampaignsHeader = ({ onCreateCampaign }: CampaignsHeaderProps) => {
 
 // Icon Components
 const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );

@@ -212,10 +212,10 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 </div>
                 <div className="flex gap-3">
                   <button className="px-4 py-2 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
-                    📧 Send Message
+                    Send Message
                   </button>
                   <button className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
-                    🎯 Create Campaign
+                    Create Campaign
                   </button>
                 </div>
               </div>
@@ -260,34 +260,6 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                       <p className="text-[12px] font-normal text-[#626266]">Categories</p>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Tab Navigation */}
-              <div className="bg-white rounded-xl border border-[#e9e9e9]">
-                <div className="flex">
-                  {[
-                    { id: 'overview', label: '📊 Overview', icon: '📊' },
-                    { id: 'engagement', label: '🎯 Engagement', icon: '🎯' },
-                    { id: 'purchases', label: '🛒 Purchases', icon: '🛒' },
-                    { id: 'analytics', label: '📈 Analytics', icon: '📈' },
-                    { id: 'insights', label: '💡 Insights', icon: '💡' }
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => {
-                        setActiveTab(tab.id);
-                        updateTabURL(tab.id);
-                      }}
-                      className={`flex-1 px-4 py-4 font-medium text-sm transition-all duration-200 relative ${
-                        activeTab === tab.id
-                          ? 'text-[#6E4EFF] border-b-2 border-[#6E4EFF] bg-[#6E4EFF]/5'
-                          : 'text-[#626266] hover:text-[#6E4EFF] hover:bg-gray-50'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
                 </div>
               </div>
 
@@ -369,6 +341,34 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                       <span className="font-medium">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}/month</span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Tab Navigation */}
+              <div className="bg-white rounded border border-[#e9e9e9]">
+                <div className="flex">
+                  {[
+                    { id: 'overview', label: 'Overview', icon: '📊' },
+                    { id: 'engagement', label: 'Engagement', icon: '🎯' },
+                    { id: 'purchases', label: 'Purchases', icon: '🛒' },
+                    { id: 'analytics', label: 'Analytics', icon: '📈' },
+                    { id: 'insights', label: 'Insights', icon: '💡' }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        updateTabURL(tab.id);
+                      }}
+                      className={`flex-1 px-4 py-4 font-medium text-sm transition-all duration-200 relative ${
+                        activeTab === tab.id
+                          ? 'text-[#6E4EFF] border-b-2 border-[#6E4EFF] bg-[#6E4EFF]/5 rounded-t'
+                          : 'text-[#626266] hover:text-[#6E4EFF] hover:bg-gray-50'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 

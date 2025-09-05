@@ -119,8 +119,8 @@ export function BugReportContent() {
         <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 min-w-0">
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl lg:text-[32px] font-bold text-[#2a2a2f] leading-tight sm:leading-[39.2px] lg:leading-[44px] tracking-[-0.1px]">Report a Bug</h1>
-              <p className="text-sm sm:text-base text-[#8f8f91] font-medium mt-2">Help us improve by reporting issues you encounter</p>
+              <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">Report a Bug</h1>
+              <p className="text-[14px] text-[#8f8f91] font-normal mt-2">Help us improve by reporting issues you encounter</p>
             </div>
           </div>
         </header>

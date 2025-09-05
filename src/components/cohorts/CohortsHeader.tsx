@@ -34,10 +34,15 @@ export function CohortsHeader({ onImportClick, onExportClick, onCreateCohort }: 
     <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10 mb-4">
       {/* Main header with title and buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
-        {/* Title */}
-        <h1 className="text-xl sm:text-2xl lg:text-[26.9062px] font-bold text-[#2a2a2f] leading-tight lg:leading-[39.2px] tracking-[-0.1px]">
-          Cohorts
-        </h1>
+        {/* Title and supporting text */}
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[20px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
+            Cohorts
+          </h1>
+          <p className="text-[14px] text-[#2A2A2F] font-normal">
+            Manage and analyze customer segments with detailed insights
+          </p>
+        </div>
 
         {/* Action buttons */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-3.5">

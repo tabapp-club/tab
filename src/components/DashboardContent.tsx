@@ -262,9 +262,9 @@ export function DashboardContent() {
         </header>
 
         {/* Campaign Cards Section */}
-        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-[4px] bg-[#ffffff] border border-[#dbdbdb] box-border overflow-hidden relative">
+        <section className="mb-6 sm:mb-8 lg:mb-12 rounded-[4px] bg-[#ffffff] box-border overflow-hidden relative">
           {/* Brand Gradient Border */}
-          <div className="absolute inset-0 rounded-[4px] bg-gradient-to-r from-[#8B5CF6] via-[#A78BFA] via-[#DDD6FE] to-[#8B5CF6] p-[1px]">
+          <div className="absolute inset-0 rounded-[4px] bg-gradient-to-r from-[#A78BFA] via-[#C4B5FD] via-[#E9D5FF] to-[#A78BFA] p-[1px] animate-gradient-x">
             <div className="w-full h-full rounded-[3px] bg-[#ffffff]"></div>
           </div>
           <div className="relative z-10 p-3 sm:p-4 lg:p-6 lg:pl-[35px]">
@@ -349,19 +349,19 @@ export function DashboardContent() {
             {/* Quick Actions */}
             <div className="flex flex-wrap justify-center gap-4 mb-10">
               <a href="/new-campaign" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                📋 Campaign Templates
+                Campaign Templates
               </a>
               <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                🏆 Achievements
+                Achievements
               </a>
               <a href="/business-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                💼 Business Solutions
+                Business Solutions
               </a>
               <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                🤖 AI Insights
+                AI Insights
               </a>
               <a href="/settings?section=help-support" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
-                📞 Help and Support
+                Help and Support
               </a>
             </div>
           </div>

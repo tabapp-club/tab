@@ -157,7 +157,7 @@ export function CohortsClient() {
         >
           <div className="flex flex-col min-h-screen">
             {/* Header Section */}
-            <div className="px-2 sm:px-4 lg:px-6 pt-4 sm:pt-6 lg:pt-[77px] pb-0">
+            <div className="px-2 sm:px-4 lg:px-6 pt-10 pb-0">
               <CohortsHeader
                 onImportClick={handleImportClick}
                 onExportClick={handleExportClick}

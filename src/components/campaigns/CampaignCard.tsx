@@ -189,7 +189,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <>
       <div className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-all duration-200 min-w-0 relative">
-        <div className="flex items-start gap-4">
+        <div className="flex items-center gap-4">
           {/* Left Side - Campaign Information */}
           <div className="flex-1 min-w-0">
             {/* Header */}
@@ -221,54 +221,63 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           </div>
 
           {/* Center - All Metrics in Single Line */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             {/* Audience */}
-            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
-              <div className="text-xs font-bold text-gray-900">
+            <div className="text-center px-4 py-1 min-w-[60px]">
+              <div className="text-base text-gray-900">
                 {formatNumber(campaign.audience)}
               </div>
               <div className="text-xs text-gray-500">Audience</div>
             </div>
             
+            {/* Separator */}
+            <div className="w-px h-8 bg-gray-200"></div>
+            
             {/* Conversion */}
-            <div className="text-center p-1 bg-gray-50 rounded min-w-[50px]">
-              <div className="text-xs font-bold text-gray-900">
+            <div className="text-center px-4 py-1 min-w-[50px]">
+              <div className="text-base text-gray-900">
                 {campaign.conversion.toFixed(1)}%
               </div>
               <div className="text-xs text-gray-500">Conv.</div>
             </div>
             
+            {/* Separator */}
+            <div className="w-px h-8 bg-gray-200"></div>
+            
             {/* Budget */}
-            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
-              <div className="text-xs font-bold text-gray-900">
+            <div className="text-center px-4 py-1 min-w-[60px]">
+              <div className="text-base text-gray-900">
                 {formatCurrency(campaign.budget)}
               </div>
               <div className="text-xs text-gray-500">Budget</div>
             </div>
             
+            {/* Separator */}
+            <div className="w-px h-8 bg-gray-200"></div>
+            
             {/* Spent */}
-            <div className="text-center p-1 bg-gray-50 rounded min-w-[60px]">
-              <div className="text-xs font-bold text-gray-900">
+            <div className="text-center px-4 py-1 min-w-[60px]">
+              <div className="text-base text-gray-900">
                 {formatCurrency(campaign.spent)}
               </div>
               <div className="text-xs text-gray-500">Spent</div>
             </div>
             
             {/* Sent */}
-            <div className="text-center p-1 bg-blue-50 rounded min-w-[50px]">
-              <div className="text-xs font-medium text-blue-900">{formatNumber(campaign.sent)}</div>
+            <div className="text-center px-4 py-1 bg-blue-50 rounded min-w-[50px]">
+              <div className="text-base text-blue-900">{formatNumber(campaign.sent)}</div>
               <div className="text-xs text-blue-600">Sent</div>
             </div>
             
             {/* Opened */}
-            <div className="text-center p-1 bg-green-50 rounded min-w-[50px]">
-              <div className="text-xs font-medium text-green-900">{formatNumber(campaign.opened)}</div>
+            <div className="text-center px-4 py-1 bg-green-50 rounded min-w-[50px]">
+              <div className="text-base text-green-900">{formatNumber(campaign.opened)}</div>
               <div className="text-xs text-green-600">Opened</div>
             </div>
             
             {/* Clicked */}
-            <div className="text-center p-1 bg-purple-50 rounded min-w-[50px]">
-              <div className="text-xs font-medium text-purple-900">{formatNumber(campaign.clicked)}</div>
+            <div className="text-center px-4 py-1 bg-purple-50 rounded min-w-[50px]">
+              <div className="text-base text-purple-900">{formatNumber(campaign.clicked)}</div>
               <div className="text-xs text-purple-600">Clicked</div>
             </div>
           </div>
