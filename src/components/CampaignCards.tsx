@@ -145,7 +145,7 @@ export function CampaignCards() {
 
                 {/* Header with gradient background */}
                 <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden transition-transform duration-300 group-hover:scale-105`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                  <div className="absolute inset-0 bg-black/50"></div>
+                  <div className="absolute inset-0 bg-black/25"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-20"></div>
 
                 {/* Icon */}

@@ -1,12 +1,213 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
 import { useCampaign, BudgetAllocation } from "@/contexts/CampaignContext";
 
 import CustomCheckbox from "@/components/ui/CustomCheckbox";
+
+// Custom Dropdown Components matching Data Center design
+const DurationDropdown = ({ value, onChange }: { value: number; onChange: (value: number) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<'down' | 'up'>('down');
+
+  const durationOptions = [
+    { value: 7, label: '7 days' },
+    { value: 14, label: '14 days' },
+    { value: 21, label: '21 days' },
+    { value: 30, label: '30 days' },
+    { value: 60, label: '60 days' },
+    { value: 90, label: '90 days' }
+  ];
+
+  const selectedOption = durationOptions.find(option => option.value === value);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleDropdownPosition = () => {
+      if (buttonRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const dropdownHeight = (durationOptions.length * 40) + 60;
+
+        const spaceBelow = viewportHeight - buttonRect.bottom;
+        const spaceAbove = buttonRect.top;
+
+        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+          setDropdownPosition('up');
+        } else {
+          setDropdownPosition('down');
+        }
+      }
+    };
+
+    if (isOpen) {
+      handleDropdownPosition();
+    }
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        ref={buttonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        className="bg-white h-12 px-4 py-3 border border-[#e9e9e9] rounded-lg flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
+      >
+        <span className="text-[14px] text-[#2a2a2f]">
+          {selectedOption?.label || 'Select duration'}
+        </span>
+        <div className="flex-shrink-0 w-[22px] h-full flex items-center justify-center">
+          <ChevronDownIcon />
+        </div>
+      </button>
+
+      {isOpen && (
+        <div
+          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded-lg z-50 w-full max-h-[300px] overflow-y-auto`}
+          style={{ zIndex: 9999 }}
+        >
+          <div className="py-2">
+            {durationOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
+                  value === option.value ? 'bg-[#7856ff]/5 text-[#7856ff]' : 'text-[#2a2a2f]'
+                }`}
+              >
+                <span className="text-[14px]">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StrategyDropdown = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<'down' | 'up'>('down');
+
+  const strategyOptions = [
+    { value: 'equal', label: 'Equal Distribution' },
+    { value: 'performance', label: 'Performance Based' },
+    { value: 'cost', label: 'Cost Based' },
+    { value: 'manual', label: 'Manual Allocation' }
+  ];
+
+  const selectedOption = strategyOptions.find(option => option.value === value);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleDropdownPosition = () => {
+      if (buttonRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const dropdownHeight = (strategyOptions.length * 40) + 60;
+
+        const spaceBelow = viewportHeight - buttonRect.bottom;
+        const spaceAbove = buttonRect.top;
+
+        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+          setDropdownPosition('up');
+        } else {
+          setDropdownPosition('down');
+        }
+      }
+    };
+
+    if (isOpen) {
+      handleDropdownPosition();
+    }
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        ref={buttonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        className="bg-white h-12 px-4 py-3 border border-[#e9e9e9] rounded-lg flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors w-full text-left focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
+      >
+        <span className="text-[14px] text-[#2a2a2f]">
+          {selectedOption?.label || 'Select strategy'}
+        </span>
+        <div className="flex-shrink-0 w-[22px] h-full flex items-center justify-center">
+          <ChevronDownIcon />
+        </div>
+      </button>
+
+      {isOpen && (
+        <div
+          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded-lg z-50 w-full max-h-[300px] overflow-y-auto`}
+          style={{ zIndex: 9999 }}
+        >
+          <div className="py-2">
+            {strategyOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
+                  value === option.value ? 'bg-[#7856ff]/5 text-[#7856ff]' : 'text-[#2a2a2f]'
+                }`}
+              >
+                <span className="text-[14px]">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ChevronDownIcon = () => (
+  <svg width="7.5" height="4.518" viewBox="0 0 7.5 4.518" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 1L3.75 3.518L6.5 1" stroke="#2A2A2F" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 // Icons for the stepper
 const CampaignIcon = () => (
@@ -763,13 +964,13 @@ export function PlatformBudgetContent() {
                           Total Campaign Budget
                         </label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a1a1a1]">₹</span>
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a1a1a1] text-[14px]">₹</span>
                           <input
                             type="number"
                             value={budgetInputs.total}
                             onChange={(e) => handleBudgetChange('total', parseFloat(e.target.value) || 0)}
-                            className={`w-full pl-8 pr-4 py-3 border rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 ${
-                              errors.total ? 'border-red-500' : 'border-[#e9e9e9] focus:border-[#6E4EFF]'
+                            className={`w-full pl-8 pr-4 py-3 border rounded-lg text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 transition-colors ${
+                              errors.total ? 'border-red-500' : 'border-[#e9e9e9] focus:border-[#6E4EFF] hover:border-[#d1d5db]'
                             }`}
                             placeholder="Enter total budget"
                           />
@@ -785,17 +986,17 @@ export function PlatformBudgetContent() {
                           Daily Budget Limit
                         </label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a1a1a1]">₹</span>
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a1a1a1] text-[14px]">₹</span>
                           <input
                             type="number"
                             value={budgetInputs.daily}
                             onChange={(e) => handleBudgetChange('daily', parseFloat(e.target.value) || 0)}
-                            className={`w-full pl-8 pr-4 py-3 border rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 ${
-                              errors.daily ? 'border-red-500' : 'border-[#e9e9e9] focus:border-[#6E4EFF]'
+                            className={`w-full pl-8 pr-4 py-3 border rounded-lg text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 transition-colors ${
+                              errors.daily ? 'border-red-500' : 'border-[#e9e9e9] focus:border-[#6E4EFF] hover:border-[#d1d5db]'
                             }`}
                             placeholder="Enter daily limit"
                           />
-                  </div>
+                        </div>
                         {errors.daily && (
                           <p className="text-red-500 text-[12px] mt-1">{errors.daily}</p>
                         )}
@@ -808,18 +1009,10 @@ export function PlatformBudgetContent() {
                         <label className="block text-[14px] font-medium text-[#2a2a2f] mb-2">
                           Campaign Duration (Days)
                         </label>
-                        <select
+                        <DurationDropdown
                           value={budgetInputs.duration || 14}
-                          onChange={(e) => handleBudgetChange('duration', parseInt(e.target.value) || 14)}
-                          className="w-full px-4 py-3 border border-[#e9e9e9] rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
-                        >
-                          <option value={7}>7 days</option>
-                          <option value={14}>14 days</option>
-                          <option value={21}>21 days</option>
-                          <option value={30}>30 days</option>
-                          <option value={60}>60 days</option>
-                          <option value={90}>90 days</option>
-                        </select>
+                          onChange={(value) => handleBudgetChange('duration', value)}
+                        />
                       </div>
 
                       {/* Budget Allocation Strategy */}
@@ -827,20 +1020,14 @@ export function PlatformBudgetContent() {
                         <label className="block text-[14px] font-medium text-[#2a2a2f] mb-2">
                           Budget Allocation Strategy
                         </label>
-                        <select
+                        <StrategyDropdown
                           value={budgetInputs.allocationStrategy || 'equal'}
-                          onChange={(e) => handleBudgetChange('allocationStrategy', e.target.value)}
-                          className="w-full px-4 py-3 border border-[#e9e9e9] rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
-                        >
-                          <option value="equal">Equal Distribution</option>
-                          <option value="performance">Performance Based</option>
-                          <option value="cost">Cost Based</option>
-                          <option value="manual">Manual Allocation</option>
-                        </select>
+                          onChange={(value) => handleBudgetChange('allocationStrategy', value)}
+                        />
 
                         {/* Strategy Description */}
-                        <div className="mt-2 p-3 bg-[#f8f9fa] rounded-lg">
-                          <p className="text-[12px] text-[#a1a1a1] mb-2">
+                        <div className="mt-2 p-3 bg-[#f6f6f6] border border-[#e9e9e9] rounded-lg">
+                          <p className="text-[12px] text-[#626266] mb-2">
                             {budgetInputs.allocationStrategy === 'equal' && "Budget distributed equally across all selected platforms"}
                             {budgetInputs.allocationStrategy === 'performance' && "Higher budget allocation to platforms with better performance ratings"}
                             {budgetInputs.allocationStrategy === 'cost' && "More budget allocated to cost-effective platforms"}
@@ -849,13 +1036,13 @@ export function PlatformBudgetContent() {
 
                           {/* Manual Allocation Editor */}
                           {budgetInputs.allocationStrategy === 'manual' && (
-                            <div className="mt-3 space-y-3">
-                              <div className="flex items-center justify-between text-[12px] text-[#2a2a2f] font-medium">
+                            <div className="mt-3 space-y-3 bg-white border border-[#e9e9e9] rounded-lg p-3">
+                              <div className="flex items-center justify-between text-[12px] text-[#2a2a2f] font-medium mb-3">
                                 <span>Manual Budget Allocation</span>
                                 <span className="text-[#2a2a2f]">
                                   Total: ₹{campaignData.budget.allocations.reduce((sum, alloc) => sum + alloc.amount, 0).toLocaleString()}
                                 </span>
-                        </div>
+                              </div>
 
                               {selectedPlatforms.map(platformId => {
                                 const platform = campaignData.platforms.find(p => p.id === platformId);
@@ -879,7 +1066,7 @@ export function PlatformBudgetContent() {
                                           type="number"
                                           value={currentAmount}
                                           onChange={(e) => handleManualAllocationChange(platformId, 'amount', parseFloat(e.target.value) || 0)}
-                                          className="w-full px-2 py-1 text-[12px] border border-[#e9e9e9] rounded focus:outline-none focus:ring-1 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
+                                          className="w-full px-2 py-1 text-[12px] border border-[#e9e9e9] rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] hover:border-[#d1d5db] transition-colors"
                                           placeholder="0"
                                         />
                     </div>
@@ -889,7 +1076,7 @@ export function PlatformBudgetContent() {
                                           type="number"
                                           value={currentPercentage}
                                           onChange={(e) => handleManualAllocationChange(platformId, 'percentage', parseFloat(e.target.value) || 0)}
-                                          className="w-full px-2 py-1 text-[12px] border border-[#e9e9e9] rounded focus:outline-none focus:ring-1 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
+                                          className="w-full px-2 py-1 text-[12px] border border-[#e9e9e9] rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] hover:border-[#d1d5db] transition-colors"
                                           placeholder="0"
                                           max="100"
                                         />
@@ -900,40 +1087,42 @@ export function PlatformBudgetContent() {
                               })}
 
                               {/* Quick Actions */}
-                              <div className="flex gap-2 pt-2 border-t border-[#e9e9e9]">
+                              <div className="flex gap-2 pt-3 border-t border-[#e9e9e9]">
                                 <button
                                   onClick={handleEqualizeAllocation}
-                                  className="text-[10px] text-[#6E4EFF] hover:text-[#5A3FE6] font-medium"
+                                  className="text-[12px] text-[#6E4EFF] hover:text-[#5A3FE6] font-medium px-3 py-1 rounded hover:bg-[#6E4EFF]/5 transition-colors"
                                 >
                                   Equalize All
                                 </button>
                                 <button
                                   onClick={handleResetAllocation}
-                                  className="text-[10px] text-[#a1a1a1] hover:text-[#2a2a2f] font-medium"
+                                  className="text-[12px] text-[#a1a1a1] hover:text-[#2a2a2f] font-medium px-3 py-1 rounded hover:bg-gray-50 transition-colors"
                                 >
                                   Reset
                                 </button>
-              </div>
+                              </div>
                   </div>
                           )}
 
                           {/* Current Allocation Preview (for non-manual strategies) */}
                           {budgetInputs.allocationStrategy !== 'manual' && campaignData.budget.allocations.length > 0 && (
-                            <div className="space-y-1">
-                              {campaignData.budget.allocations.map(allocation => {
-                                const platform = campaignData.platforms.find(p => p.id === allocation.platformId);
-                                if (!platform) return null;
+                            <div className="mt-3 bg-white border border-[#e9e9e9] rounded-lg p-3">
+                              <div className="space-y-2">
+                                {campaignData.budget.allocations.map(allocation => {
+                                  const platform = campaignData.platforms.find(p => p.id === allocation.platformId);
+                                  if (!platform) return null;
 
-                                return (
-                                  <div key={allocation.platformId} className="flex justify-between text-[12px]">
-                                    <span className="text-[#2a2a2f]">{platform.name}:</span>
-                                    <span className="text-[#2a2a2f] font-medium">
-                                      ₹{allocation.amount.toLocaleString()} ({allocation.percentage}%)
-                                    </span>
-                </div>
-                                );
-                              })}
-                  </div>
+                                  return (
+                                    <div key={allocation.platformId} className="flex justify-between text-[12px] py-1">
+                                      <span className="text-[#2a2a2f]">{platform.name}:</span>
+                                      <span className="text-[#2a2a2f] font-medium">
+                                        ₹{allocation.amount.toLocaleString()} ({allocation.percentage}%)
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
                           )}
                 </div>
               </div>
@@ -943,7 +1132,7 @@ export function PlatformBudgetContent() {
                     <div className="pt-4">
                       <button
                         onClick={() => setSelectedBudgetType('balanced')}
-                        className="h-9 px-4 py-1 rounded font-semibold text-[14px] text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10 hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
+                        className="h-9 px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[14px] text-[#6E4EFF] bg-white hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF]/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF]"
                       >
                         Back to Suggested Budgets
                       </button>

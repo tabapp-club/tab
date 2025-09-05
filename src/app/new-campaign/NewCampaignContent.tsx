@@ -468,12 +468,6 @@ export function NewCampaignContent() {
             </div>
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
-                onClick={() => router.back()}
-                  className="h-9 px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[14px] transition-colors hover:bg-gray-50"
-              >
-                Back
-              </button>
-              <button
                 onClick={handleProceedToNextStep}
                 disabled={!selectedCampaignType || isNavigating}
                 className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
