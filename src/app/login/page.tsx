@@ -337,22 +337,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-white relative w-screen h-screen overflow-hidden" data-name="login page" data-node-id="293:4825">
-      {/* Background Shadow Elements - Scaled proportionally */}
-      <div className="absolute w-[93%] h-[87%] left-[3.4%] top-[6.3%] bg-white shadow-2xl" data-name="BG" data-node-id="293:4898">
-        <div className="absolute inset-0 border border-[#2a2a2f] border-opacity-20" />
-      </div>
+    <div className="bg-white relative w-screen h-screen md:overflow-hidden" data-name="login page" data-node-id="293:4825">
+      {/* Desktop Layout */}
+      <div className="hidden md:block">
+        {/* Background Shadow Elements - Scaled proportionally */}
+        <div className="absolute w-[93%] h-[87%] left-[3.4%] top-[6.3%] bg-white" data-name="BG" data-node-id="293:4898">
+          <div className="absolute inset-0 border border-[#2a2a2f] border-opacity-20" />
+        </div>
 
-      {/* Right Side - Login Form or Help Modal */}
-      <div className="absolute w-[25%] h-[38%] right-[200px] top-[26.4%] flex flex-col items-center justify-center px-6" data-name="Frame 1171279597" data-node-id="293:5406">
+        {/* Right Side - Login Form or Help Modal */}
+        <div className="absolute w-[25%] h-[38%] right-[200px] top-[26.4%] flex flex-col items-center justify-center px-6" data-name="Frame 1171279597" data-node-id="293:5406">
         {!showHelpModal && !showContactSupport && !showContactSales ? (
           // Login Form
           <>
             {/* Logo */}
             <div className="w-20 h-20 mb-8" data-name="Logo" data-node-id="293:4968">
-              <div className="w-full h-full bg-[#2a2a2f] rounded-full flex items-center justify-center" data-name="Ellipse 3" data-node-id="293:4970">
-                <span className="text-white text-xl font-bold">tab</span>
-              </div>
+              <svg width="80" height="80" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24.0049" cy="24.0049" r="24" fill="#151515"/>
+                <path d="M10.7547 17.9554L11.2783 20.419L13.7619 19.8911L14.2825 22.3403L11.7989 22.8682L12.7698 27.436C12.8442 27.7856 12.9651 28.0673 13.1298 28.284C13.3065 28.4965 13.5339 28.6396 13.8139 28.7127C14.1083 28.7831 14.4639 28.7762 14.8818 28.6874C14.9717 28.6682 15.0744 28.6401 15.1892 28.6021L15.5579 28.4817L15.6251 28.4595L16.1244 30.8084L16.0725 30.8274C15.8921 30.8935 15.6852 30.9648 15.4522 31.0421C15.2176 31.1199 14.9992 31.1803 14.7978 31.2231C13.5679 31.4845 12.5323 31.3555 11.6982 30.8257L11.6971 30.8249C10.8736 30.2785 10.3336 29.3843 10.0721 28.1542L9.07175 23.4478L7.20429 23.8448L6.6837 21.3956L6.94448 21.3402C7.46348 21.2298 7.82837 21.0108 8.04886 20.6881C8.26851 20.3665 8.32829 19.9504 8.21818 19.4321L8.02752 18.5351L10.7547 17.9554Z" fill="#0D0D0D" stroke="white" strokeWidth="0.126962"/>
+                <path d="M13.4102 31.7799C12.1642 31.7799 11.1959 31.4414 10.5053 30.7643C9.82814 30.0736 9.48958 29.1053 9.48958 27.8594V22.984H7.58008V20.6073H7.78322C8.32492 20.6073 8.74474 20.4651 9.04267 20.1807C9.34061 19.8963 9.48958 19.4833 9.48958 18.9416V18.0884H12.1507V20.6073H14.6899V22.984H12.1507V27.7172C12.1507 28.0828 12.2116 28.3943 12.3335 28.6516C12.4689 28.9089 12.6721 29.1053 12.9429 29.2407C13.2273 29.3761 13.5862 29.4438 14.0196 29.4438C14.1144 29.4438 14.2227 29.4371 14.3446 29.4235C14.48 29.41 14.6087 29.3964 14.7306 29.3829V31.6581C14.541 31.6851 14.3243 31.7122 14.0805 31.7393C13.8367 31.7664 13.6133 31.7799 13.4102 31.7799Z" fill="white"/>
+                <path d="M20.5614 31.78C19.7895 31.78 19.1191 31.6513 18.5503 31.394C17.9815 31.1367 17.5414 30.7711 17.2299 30.2971C16.9184 29.8095 16.7627 29.2475 16.7627 28.611C16.7627 28.0016 16.8981 27.4599 17.169 26.9859C17.4398 26.4984 17.8596 26.0921 18.4284 25.7671C18.9972 25.4421 19.715 25.2118 20.5817 25.0764L24.1976 24.4873V26.5187L21.0895 27.0469C20.5614 27.1417 20.1686 27.3109 19.9113 27.5547C19.654 27.7985 19.5254 28.1167 19.5254 28.5095C19.5254 28.8886 19.6676 29.1934 19.952 29.4236C20.2499 29.6403 20.6156 29.7486 21.0489 29.7486C21.6042 29.7486 22.0917 29.6335 22.5115 29.4033C22.9449 29.1595 23.2767 28.8277 23.5069 28.4079C23.7507 27.9881 23.8725 27.5276 23.8725 27.0265V24.1826C23.8725 23.7086 23.6829 23.3159 23.3038 23.0044C22.9381 22.6794 22.4506 22.5169 21.8412 22.5169C21.2724 22.5169 20.7645 22.6726 20.3176 22.9841C19.8843 23.282 19.566 23.6815 19.3629 24.1826L17.1893 23.1263C17.406 22.5439 17.7445 22.0429 18.205 21.623C18.679 21.1897 19.2342 20.8511 19.8707 20.6073C20.5072 20.3636 21.1979 20.2417 21.9427 20.2417C22.8501 20.2417 23.6491 20.411 24.3398 20.7495C25.0304 21.0746 25.5654 21.535 25.9446 22.1309C26.3373 22.7132 26.5337 23.3971 26.5337 24.1826V31.5362H24.0147V29.647L24.5835 29.6064C24.2991 30.0804 23.9606 30.4799 23.5678 30.8049C23.1751 31.1164 22.7282 31.3602 22.2271 31.5362C21.726 31.6987 21.1708 31.78 20.5614 31.78Z" fill="white"/>
+                <path d="M34.5962 31.7796C33.7972 31.7796 33.0591 31.6238 32.382 31.3124C31.7184 30.9873 31.1902 30.5269 30.7975 29.931L31.0616 29.4029V31.5358H28.563V16.1582H31.2241V22.679L30.8178 22.1305C31.197 21.5346 31.7116 21.0742 32.3617 20.7491C33.0117 20.4106 33.7633 20.2413 34.6165 20.2413C35.6593 20.2413 36.6005 20.4986 37.4401 21.0132C38.2798 21.5278 38.9434 22.2185 39.4309 23.0852C39.932 23.952 40.1825 24.927 40.1825 26.0104C40.1825 27.0803 39.9387 28.0554 39.4512 28.9356C38.9637 29.8159 38.3001 30.5134 37.4604 31.028C36.6208 31.5291 35.6661 31.7796 34.5962 31.7796ZM34.2915 29.3419C34.9009 29.3419 35.4426 29.1997 35.9166 28.9153C36.3906 28.6309 36.7562 28.2382 37.0135 27.7371C37.2844 27.236 37.4198 26.6605 37.4198 26.0104C37.4198 25.3604 37.2844 24.7916 37.0135 24.3041C36.7562 23.803 36.3906 23.4103 35.9166 23.1259C35.4426 22.8279 34.9009 22.679 34.2915 22.679C33.7092 22.679 33.181 22.8212 32.707 23.1056C32.2466 23.3899 31.8809 23.7895 31.6101 24.3041C31.3528 24.8052 31.2241 25.3739 31.2241 26.0104C31.2241 26.6605 31.3528 27.236 31.6101 27.7371C31.8809 28.2382 32.2466 28.6309 32.707 28.9153C33.181 29.1997 33.7092 29.3419 34.2915 29.3419Z" fill="white"/>
+              </svg>
             </div>
 
             {/* Description */}
@@ -750,6 +756,10 @@ export default function LoginPage() {
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
                           expandedItem === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                         }`}
+                        style={{
+                          transformOrigin: 'top',
+                          transform: expandedItem === index ? 'scaleY(1)' : 'scaleY(0)'
+                        }}
                       >
                         <div className="px-4 pb-4 pt-2">
                           <p className="text-[#2a2a2f] text-sm leading-relaxed">
@@ -901,5 +911,402 @@ export default function LoginPage() {
           </div>
         )}
       </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col min-h-screen">
+        {/* Mobile Header */}
+        <div className="flex justify-end items-center p-4 border-b border-gray-200">
+          {/* Mobile Top Buttons */}
+          {!showHelpModal && !showContactSales && (
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setShowHelpModal(true)}
+                className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
+              >
+                <div className="w-3 h-3 flex items-center justify-center">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 18.75C5.175 18.75 1.25 14.825 1.25 10C1.25 5.175 5.175 1.25 10 1.25C14.825 1.25 18.75 5.175 18.75 10C18.75 14.825 14.825 18.75 10 18.75ZM10 2.5C5.8625 2.5 2.5 5.8625 2.5 10C2.5 14.1375 5.8625 17.5 10 17.5C14.1375 17.5 17.5 14.1375 17.5 10C17.5 5.8625 14.1375 2.5 10 2.5Z" fill="#6E4EFF"/>
+                    <path d="M10 5.625C8.6125 5.625 7.5 6.7375 7.5 8.125H8.75C8.75 7.4375 9.3125 6.875 10 6.875C10.6875 6.875 11.25 7.4375 11.25 8.125C11.25 9.375 9.375 9.225 9.375 11.25H10.625C10.625 9.85 12.5 9.6875 12.5 8.125C12.5 6.7375 11.3875 5.625 10 5.625Z" fill="#6E4EFF"/>
+                    <path d="M10.0001 14.525C10.4281 14.525 10.7751 14.178 10.7751 13.75C10.7751 13.322 10.4281 12.975 10.0001 12.975C9.57208 12.975 9.2251 13.322 9.2251 13.75C9.2251 14.178 9.57208 14.525 10.0001 14.525Z" fill="#6E4EFF"/>
+                  </svg>
+                </div>
+                <span className="text-[#6e4eff] text-xs font-medium">Help</span>
+              </button>
+              <button 
+                onClick={() => setShowContactSales(true)}
+                className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
+              >
+                <div className="w-3 h-3 flex items-center justify-center">
+                  <svg width="12" height="13" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M13.4062 1.76562H1.59375C1.50673 1.76562 1.42327 1.8002 1.36173 1.86173C1.3002 1.92327 1.26562 2.00673 1.26562 2.09375V13.9062C1.26562 13.9933 1.3002 14.0767 1.36173 14.1383C1.42327 14.1998 1.50673 14.2344 1.59375 14.2344H13.4062C13.4933 14.2344 13.5767 14.1998 13.6383 14.1383C13.6998 14.0767 13.7344 13.9933 13.7344 13.9062V2.09375C13.7344 2.00673 13.6998 1.92327 13.6383 1.86173C13.5767 1.8002 13.4933 1.76562 13.4062 1.76562ZM1.59375 0.78125C1.24565 0.78125 0.911814 0.919531 0.665672 1.16567C0.419531 1.41181 0.28125 1.74565 0.28125 2.09375V13.9062C0.28125 14.2543 0.419531 14.5882 0.665672 14.8343C0.911814 15.0805 1.24565 15.2188 1.59375 15.2188H13.4062C13.7543 15.2188 14.0882 15.0805 14.3343 14.8343C14.5805 14.5882 14.7188 14.2543 14.7188 13.9062V2.09375C14.7188 1.74565 14.5805 1.41181 14.3343 1.16567C14.0882 0.919531 13.7543 0.78125 13.4062 0.78125H1.59375ZM7.5 10.1328C7.63054 10.1328 7.75573 10.1847 7.84803 10.277C7.94033 10.3693 7.99219 10.4945 7.99219 10.625V12.5938C7.99219 12.7243 7.94033 12.8495 7.84803 12.9418C7.75573 13.0341 7.63054 13.0859 7.5 13.0859C7.36946 13.0859 7.24427 13.0341 7.15197 12.9418C7.05967 12.8495 7.00781 12.7243 7.00781 12.5938V10.625C7.00781 10.4945 7.05967 10.3693 7.15197 10.277C7.24427 10.1847 7.36946 10.1328 7.5 10.1328ZM4.71094 11.9375C4.71094 11.807 4.65908 11.6818 4.56678 11.5895C4.47448 11.4972 4.34929 11.4453 4.21875 11.4453C4.08821 11.4453 3.96302 11.4972 3.87072 11.5895C3.77842 11.6818 3.72656 11.807 3.72656 11.9375V12.5938C3.72656 12.7243 3.77842 12.8495 3.87072 12.9418C3.96302 13.0341 4.08821 13.0859 4.21875 13.0859C4.34929 13.0859 4.47448 13.0341 4.56678 12.9418C4.65908 12.8495 4.71094 12.7243 4.71094 12.5938V11.9375ZM10.7812 11.4453C10.9118 11.4453 11.037 11.4972 11.1293 11.5895C11.2216 11.6818 11.2734 11.807 11.2734 11.9375V12.5938C11.2734 12.7243 11.2216 12.8495 11.1293 12.9418C11.037 13.0341 10.9118 13.0859 10.7812 13.0859C10.6507 13.0859 10.5255 13.0341 10.4332 12.9418C10.3409 12.8495 10.2891 12.7243 10.2891 12.5938V11.9375C10.2891 11.807 10.3409 11.6818 10.4332 11.5895C10.5255 11.4972 10.6507 11.4453 10.7812 11.4453ZM2.88656 7.98031C2.83821 8.02537 2.79942 8.07971 2.77252 8.14008C2.74562 8.20046 2.73115 8.26563 2.72999 8.33172C2.72882 8.39781 2.74098 8.46345 2.76573 8.52474C2.79049 8.58602 2.82733 8.64169 2.87407 8.68843C2.92081 8.73517 2.97648 8.77201 3.03776 8.79677C3.09905 8.82152 3.16469 8.83368 3.23078 8.83251C3.29687 8.83135 3.36204 8.81688 3.42242 8.78998C3.48279 8.76308 3.53713 8.7243 3.58219 8.67594L5.53125 6.72688L7.15219 8.34781C7.24447 8.43998 7.36957 8.49175 7.5 8.49175C7.63043 8.49175 7.75553 8.43998 7.84781 8.34781L12.1134 4.08219C12.1618 4.03713 12.2006 3.98279 12.2275 3.92242C12.2544 3.86204 12.2688 3.79687 12.27 3.73078C12.2712 3.66469 12.259 3.59905 12.2343 3.53776C12.2095 3.47648 12.1727 3.42081 12.1259 3.37407C12.0792 3.32733 12.0235 3.29049 11.9622 3.26573C11.9009 3.24098 11.8353 3.22882 11.7692 3.22999C11.7031 3.23115 11.638 3.24562 11.5776 3.27252C11.5172 3.29942 11.4629 3.33821 11.4178 3.38656L7.5 7.30437L5.87906 5.68344C5.78678 5.59127 5.66168 5.5395 5.53125 5.5395C5.40082 5.5395 5.27572 5.59127 5.18344 5.68344L2.88656 7.98031Z" fill="#6E4EFF"/>
+                  </svg>
+                </div>
+                <span className="text-[#6e4eff] text-xs font-medium">Sales</span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Content */}
+        <div className="flex-1 flex flex-col">
+          {/* Mobile Login Form */}
+          <div className="flex-1 flex flex-col items-center justify-center p-6">
+            {!showHelpModal && !showContactSupport && !showContactSales ? (
+              // Mobile Login Form
+              <>
+                {/* Logo */}
+                <div className="w-16 h-16 mb-6">
+                  <svg width="64" height="64" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24.0049" cy="24.0049" r="24" fill="#151515"/>
+                    <path d="M10.7547 17.9554L11.2783 20.419L13.7619 19.8911L14.2825 22.3403L11.7989 22.8682L12.7698 27.436C12.8442 27.7856 12.9651 28.0673 13.1298 28.284C13.3065 28.4965 13.5339 28.6396 13.8139 28.7127C14.1083 28.7831 14.4639 28.7762 14.8818 28.6874C14.9717 28.6682 15.0744 28.6401 15.1892 28.6021L15.5579 28.4817L15.6251 28.4595L16.1244 30.8084L16.0725 30.8274C15.8921 30.8935 15.6852 30.9648 15.4522 31.0421C15.2176 31.1199 14.9992 31.1803 14.7978 31.2231C13.5679 31.4845 12.5323 31.3555 11.6982 30.8257L11.6971 30.8249C10.8736 30.2785 10.3336 29.3843 10.0721 28.1542L9.07175 23.4478L7.20429 23.8448L6.6837 21.3956L6.94448 21.3402C7.46348 21.2298 7.82837 21.0108 8.04886 20.6881C8.26851 20.3665 8.32829 19.9504 8.21818 19.4321L8.02752 18.5351L10.7547 17.9554Z" fill="#0D0D0D" stroke="white" strokeWidth="0.126962"/>
+                    <path d="M13.4102 31.7799C12.1642 31.7799 11.1959 31.4414 10.5053 30.7643C9.82814 30.0736 9.48958 29.1053 9.48958 27.8594V22.984H7.58008V20.6073H7.78322C8.32492 20.6073 8.74474 20.4651 9.04267 20.1807C9.34061 19.8963 9.48958 19.4833 9.48958 18.9416V18.0884H12.1507V20.6073H14.6899V22.984H12.1507V27.7172C12.1507 28.0828 12.2116 28.3943 12.3335 28.6516C12.4689 28.9089 12.6721 29.1053 12.9429 29.2407C13.2273 29.3761 13.5862 29.4438 14.0196 29.4438C14.1144 29.4438 14.2227 29.4371 14.3446 29.4235C14.48 29.41 14.6087 29.3964 14.7306 29.3829V31.6581C14.541 31.6851 14.3243 31.7122 14.0805 31.7393C13.8367 31.7664 13.6133 31.7799 13.4102 31.7799Z" fill="white"/>
+                    <path d="M20.5614 31.78C19.7895 31.78 19.1191 31.6513 18.5503 31.394C17.9815 31.1367 17.5414 30.7711 17.2299 30.2971C16.9184 29.8095 16.7627 29.2475 16.7627 28.611C16.7627 28.0016 16.8981 27.4599 17.169 26.9859C17.4398 26.4984 17.8596 26.0921 18.4284 25.7671C18.9972 25.4421 19.715 25.2118 20.5817 25.0764L24.1976 24.4873V26.5187L21.0895 27.0469C20.5614 27.1417 20.1686 27.3109 19.9113 27.5547C19.654 27.7985 19.5254 28.1167 19.5254 28.5095C19.5254 28.8886 19.6676 29.1934 19.952 29.4236C20.2499 29.6403 20.6156 29.7486 21.0489 29.7486C21.6042 29.7486 22.0917 29.6335 22.5115 29.4033C22.9449 29.1595 23.2767 28.8277 23.5069 28.4079C23.7507 27.9881 23.8725 27.5276 23.8725 27.0265V24.1826C23.8725 23.7086 23.6829 23.3159 23.3038 23.0044C22.9381 22.6794 22.4506 22.5169 21.8412 22.5169C21.2724 22.5169 20.7645 22.6726 20.3176 22.9841C19.8843 23.282 19.566 23.6815 19.3629 24.1826L17.1893 23.1263C17.406 22.5439 17.7445 22.0429 18.205 21.623C18.679 21.1897 19.2342 20.8511 19.8707 20.6073C20.5072 20.3636 21.1979 20.2417 21.9427 20.2417C22.8501 20.2417 23.6491 20.411 24.3398 20.7495C25.0304 21.0746 25.5654 21.535 25.9446 22.1309C26.3373 22.7132 26.5337 23.3971 26.5337 24.1826V31.5362H24.0147V29.647L24.5835 29.6064C24.2991 30.0804 23.9606 30.4799 23.5678 30.8049C23.1751 31.1164 22.7282 31.3602 22.2271 31.5362C21.726 31.6987 21.1708 31.78 20.5614 31.78Z" fill="white"/>
+                    <path d="M34.5962 31.7796C33.7972 31.7796 33.0591 31.6238 32.382 31.3124C31.7184 30.9873 31.1902 30.5269 30.7975 29.931L31.0616 29.4029V31.5358H28.563V16.1582H31.2241V22.679L30.8178 22.1305C31.197 21.5346 31.7116 21.0742 32.3617 20.7491C33.0117 20.4106 33.7633 20.2413 34.6165 20.2413C35.6593 20.2413 36.6005 20.4986 37.4401 21.0132C38.2798 21.5278 38.9434 22.2185 39.4309 23.0852C39.932 23.952 40.1825 24.927 40.1825 26.0104C40.1825 27.0803 39.9387 28.0554 39.4512 28.9356C38.9637 29.8159 38.3001 30.5134 37.4604 31.028C36.6208 31.5291 35.6661 31.7796 34.5962 31.7796ZM34.2915 29.3419C34.9009 29.3419 35.4426 29.1997 35.9166 28.9153C36.3906 28.6309 36.7562 28.2382 37.0135 27.7371C37.2844 27.236 37.4198 26.6605 37.4198 26.0104C37.4198 25.3604 37.2844 24.7916 37.0135 24.3041C36.7562 23.803 36.3906 23.4103 35.9166 23.1259C35.4426 22.8279 34.9009 22.679 34.2915 22.679C33.7092 22.679 33.181 22.8212 32.707 23.1056C32.2466 23.3899 31.8809 23.7895 31.6101 24.3041C31.3528 24.8052 31.2241 25.3739 31.2241 26.0104C31.2241 26.6605 31.3528 27.236 31.6101 27.7371C31.8809 28.2382 32.2466 28.6309 32.707 28.9153C33.181 29.1997 33.7092 29.3419 34.2915 29.3419Z" fill="white"/>
+                  </svg>
+                </div>
+
+                {/* Description */}
+                <div className="text-center text-[#a1a1a1] text-sm font-light leading-relaxed mb-6">
+                  Login to understand your customers like never before.
+                </div>
+
+                {/* Login Form */}
+                <div className="w-full max-w-sm">
+                  {!isOtpSent ? (
+                    // Phone Number Input
+                    <>
+                      <div className="mb-4">
+                        <div className="text-center text-[#2a2a2f] text-sm font-normal mb-3">
+                          Enter the registered phone number
+                        </div>
+                        <div className={`w-full h-12 border flex items-center justify-center px-4 ${
+                          error ? 'border-red-500' : 'border-[#e9e9e9]'
+                        }`}>
+                          <input
+                            type="tel"
+                            value={formatPhoneNumber(phoneNumber)}
+                            onChange={handlePhoneChange}
+                            className="w-full text-center text-[#2a2a2f] text-lg font-bold tracking-widest bg-transparent outline-none placeholder:text-[#dadada]"
+                            placeholder="9876543210"
+                            maxLength={12}
+                          />
+                        </div>
+                        {error && (
+                          <div className="text-red-500 text-xs mt-2 text-center">
+                            {error}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Login Button */}
+                      <button
+                        onClick={handleSendOTP}
+                        disabled={isLoading || !phoneNumber}
+                        className="w-full h-12 bg-[#6e4eff] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#5a3fd9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isLoading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Login
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M2.35962 11.0913L18.6165 11.0913C17.2643 9.47141 16.6957 8.09788 16.5803 7.61377L17.761 6.81885C18.0461 7.64267 18.5455 8.42449 19.4211 9.63916C20.034 10.4894 20.8296 11.3523 21.4075 11.8228L21.6409 11.9995C21.0609 12.3994 20.1217 13.388 19.4211 14.3599C18.5454 15.5747 18.0461 16.3572 17.761 17.1812L16.5803 16.3853C16.6957 15.9011 17.2643 14.5276 18.6165 12.9077L2.35962 12.9077L2.35962 11.0913Z" fill="white"/>
+                            </svg>
+                          </>
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    // OTP Input
+                    <>
+                      <div className="mb-6">
+                        <div className="text-center text-[#2a2a2f] text-sm font-normal mb-3">
+                          Enter the OTP sent to {formatPhoneNumber(phoneNumber)}
+                        </div>
+                        
+                        {/* OTP Input Boxes */}
+                        <div className="flex gap-2 justify-center mb-4">
+                          {[0, 1, 2, 3, 4, 5].map((index) => (
+                            <div key={index} className="w-10 h-10 border border-[#e9e9e9] flex items-center justify-center">
+                              <input
+                                id={`otp-${index}`}
+                                type="text"
+                                maxLength={1}
+                                value={otp[index] || ''}
+                                onChange={(e) => handleOtpDigitChange(index, e.target.value)}
+                                onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                                className="w-full h-full text-center text-[#6e4eff] text-lg font-bold tracking-widest bg-transparent outline-none border-none"
+                                disabled={isLoading}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {otpError && (
+                          <div className="text-red-500 text-xs text-center mb-4">
+                            {otpError}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Resend OTP */}
+                      <div className="text-center mb-4">
+                        {resendTimer > 0 ? (
+                          <span className="text-[#a1a1a1] text-sm">
+                            Resend OTP in {resendTimer}s
+                          </span>
+                        ) : (
+                          <button
+                            onClick={handleResendOTP}
+                            disabled={isResendDisabled}
+                            className="text-[#6e4eff] text-sm font-medium hover:underline disabled:opacity-50"
+                          >
+                            Resend OTP
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Back Button */}
+                      <button
+                        onClick={handleBackToPhone}
+                        className="w-full h-10 text-[#6e4eff] font-medium border border-[#6e4eff] hover:bg-[#6e4eff] hover:text-white transition-colors mb-4"
+                      >
+                        Back to Phone Number
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* Privacy Section */}
+                <div className="text-center mt-6">
+                  <div className="text-[#2a2a2f] text-sm font-semibold mb-2">
+                    🔒 Your data stays private. Always.
+                  </div>
+                  <div className="text-[#a1a1a1] text-xs font-normal leading-relaxed">
+                    At Tab, we never share your personal information. Your data is encrypted and secure.{' '}
+                    <a href="#" className="underline hover:no-underline text-[#a1a1a1]">
+                      Read our Privacy Policy
+                    </a>
+                  </div>
+                </div>
+              </>
+            ) : showContactSupport ? (
+              // Mobile Contact Support
+              <div className="w-full max-w-sm">
+                <button
+                  onClick={() => setShowContactSupport(false)}
+                  className="w-full h-12 flex items-center justify-start gap-2 hover:bg-gray-50 transition-colors mb-6"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21.6413 11.0913L5.38348 11.0913C6.73574 9.47136 7.30519 8.0979 7.42059 7.61377L6.23895 6.81885C5.9538 7.64266 5.45443 8.42447 4.5788 9.63916C3.96586 10.4894 3.17036 11.3524 2.59247 11.8228L2.35907 11.9995C2.93905 12.3994 3.87817 13.388 4.5788 14.3599C5.45458 15.5748 5.95382 16.3572 6.23895 17.1812L7.42059 16.3853C7.30519 15.9011 6.73574 14.5277 5.38348 12.9077L21.6413 12.9077L21.6413 11.0913Z" fill="#6E4EFF"/>
+                    </svg>
+                  </div>
+                  <span className="text-[#2a2a2f] text-base font-semibold">
+                    Back to login
+                  </span>
+                </button>
+
+                <div className="text-center">
+                  <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Support</h2>
+                  <p className="text-sm text-[#a1a1a1] mb-6">Get help from our support team</p>
+                  
+                  <div className="space-y-4">
+                    <a href="mailto:support@tabapp.club" className="block w-full h-12 bg-[#6e4eff] text-white font-semibold flex items-center justify-center hover:bg-[#5a3fd9] transition-colors">
+                      Email Support
+                    </a>
+                    <a href="tel:+911234567890" className="block w-full h-12 border border-[#6e4eff] text-[#6e4eff] font-semibold flex items-center justify-center hover:bg-[#6e4eff] hover:text-white transition-colors">
+                      Call Support
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ) : showContactSales ? (
+              // Mobile Contact Sales
+              <div className="w-full max-w-sm">
+                <button
+                  onClick={() => setShowContactSales(false)}
+                  className="w-full h-12 flex items-center justify-start gap-2 hover:bg-gray-50 transition-colors mb-6"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21.6413 11.0913L5.38348 11.0913C6.73574 9.47136 7.30519 8.0979 7.42059 7.61377L6.23895 6.81885C5.9538 7.64266 5.45443 8.42447 4.5788 9.63916C3.96586 10.4894 3.17036 11.3524 2.59247 11.8228L2.35907 11.9995C2.93905 12.3994 3.87817 13.388 4.5788 14.3599C5.45458 15.5748 5.95382 16.3572 6.23895 17.1812L7.42059 16.3853C7.30519 15.9011 6.73574 14.5277 5.38348 12.9077L21.6413 12.9077L21.6413 11.0913Z" fill="#6E4EFF"/>
+                    </svg>
+                  </div>
+                  <span className="text-[#2a2a2f] text-base font-semibold">
+                    Back to login
+                  </span>
+                </button>
+
+                <div className="text-center">
+                  <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Sales</h2>
+                  <p className="text-sm text-[#a1a1a1] mb-6">Get in touch with our sales team</p>
+                  
+                  <form onSubmit={(e) => { e.preventDefault(); console.log('Sales form submitted:', salesForm); setSalesForm({ fullName: '', email: '', phoneNumber: '', requirement: '' }); }}>
+                    <div className="space-y-4 mb-6">
+                      <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={salesForm.fullName}
+                        onChange={(e) => setSalesForm({...salesForm, fullName: e.target.value})}
+                        className="w-full h-12 px-4 border border-[#e9e9e9] text-[#2a2a2f] placeholder:text-[#dadada]"
+                        required
+                      />
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={salesForm.email}
+                        onChange={(e) => setSalesForm({...salesForm, email: e.target.value})}
+                        className="w-full h-12 px-4 border border-[#e9e9e9] text-[#2a2a2f] placeholder:text-[#dadada]"
+                        required
+                      />
+                      <input
+                        type="tel"
+                        placeholder="Phone Number"
+                        value={salesForm.phoneNumber}
+                        onChange={(e) => setSalesForm({...salesForm, phoneNumber: e.target.value})}
+                        className="w-full h-12 px-4 border border-[#e9e9e9] text-[#2a2a2f] placeholder:text-[#dadada]"
+                        required
+                      />
+                      <textarea
+                        placeholder="Tell us about your requirements"
+                        value={salesForm.requirement}
+                        onChange={(e) => setSalesForm({...salesForm, requirement: e.target.value})}
+                        className="w-full h-24 px-4 py-3 border border-[#e9e9e9] text-[#2a2a2f] placeholder:text-[#dadada] resize-none"
+                        required
+                      />
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      className="w-full h-12 bg-[#6e4eff] text-white font-semibold hover:bg-[#5a3fd9] transition-colors"
+                    >
+                      Send Message
+                    </button>
+                  </form>
+                </div>
+              </div>
+            ) : (
+              // Mobile Help Modal
+              <div className="w-full max-w-sm">
+                <button
+                  onClick={() => setShowHelpModal(false)}
+                  className="w-full h-12 flex items-center justify-start gap-2 hover:bg-gray-50 transition-colors mb-6"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21.6413 11.0913L5.38348 11.0913C6.73574 9.47136 7.30519 8.0979 7.42059 7.61377L6.23895 6.81885C5.9538 7.64266 5.45443 8.42447 4.5788 9.63916C3.96586 10.4894 3.17036 11.3524 2.59247 11.8228L2.35907 11.9995C2.93905 12.3994 3.87817 13.388 4.5788 14.3599C5.45458 15.5748 5.95382 16.3572 6.23895 17.1812L7.42059 16.3853C7.30519 15.9011 6.73574 14.5277 5.38348 12.9077L21.6413 12.9077L21.6413 11.0913Z" fill="#6E4EFF"/>
+                    </svg>
+                  </div>
+                  <span className="text-[#2a2a2f] text-base font-semibold">
+                    Back to login
+                  </span>
+                </button>
+
+                <div className="text-center">
+                  <h2 className="text-lg font-bold text-[#2a2a2f] mb-2">Need help?</h2>
+                  <p className="text-sm text-[#a1a1a1] mb-6">Find answers to common questions</p>
+                  
+                  <div className="space-y-3 mb-6">
+                    {faqItems.map((item, index) => (
+                      <div key={index} className="border border-[#e9e9e9]">
+                        <button
+                          onClick={() => setExpandedItem(expandedItem === index ? null : index)}
+                          className="w-full p-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
+                        >
+                          <span className="text-sm font-medium text-[#2a2a2f]">{item.question}</span>
+                          <svg
+                            className={`w-4 h-4 transition-transform duration-200 ${
+                              expandedItem === index ? 'rotate-180' : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        <div
+                          className={`overflow-hidden transition-all duration-300 ${
+                            expandedItem === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                          }`}
+                          style={{
+                            transformOrigin: 'top',
+                            transform: expandedItem === index ? 'scaleY(1)' : 'scaleY(0)'
+                          }}
+                        >
+                          <div className="p-4 pt-0 text-sm text-[#a1a1a1] leading-relaxed">
+                            {item.answer}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="text-center">
+                    <h3 className="text-base font-bold text-[#2a2a2f] mb-2">Still need help?</h3>
+                    <button
+                      onClick={() => setShowContactSupport(true)}
+                      className="w-full h-12 bg-[#6e4eff] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#5a3fd9] transition-colors"
+                    >
+                      <span className="text-sm">Contact support</span>
+                      <svg width="20" height="20" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.85876 11.0913L19.1166 11.0913C17.7643 9.47135 17.1949 8.0979 17.0795 7.61377L18.2611 6.81885C18.5463 7.64266 19.0456 8.42448 19.9213 9.63916C20.5342 10.4894 21.3297 11.3524 21.9076 11.8228L22.141 11.9995C21.561 12.3994 20.6219 13.388 19.9213 14.3599C19.0455 15.5748 18.5462 16.3572 18.2611 17.1812L17.0795 16.3853C17.1949 15.9011 17.7643 14.5277 19.1166 12.9077L2.85876 12.9077L2.85876 11.0913Z" fill="white"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Carousel Section */}
+          <div className="bg-[#f6f6f6] border-t border-black p-6 flex-shrink-0">
+            <div className="flex flex-col items-center justify-center">
+              {/* Carousel Content */}
+              <div className="text-center text-[#2a2a2f] mb-6">
+                <div className="text-xl font-semibold leading-tight mb-3">
+                  {carouselSlides[currentSlide].title}
+                </div>
+                <div className="text-sm font-normal leading-relaxed">
+                  {carouselSlides[currentSlide].description}
+                </div>
+              </div>
+              
+              {/* Carousel Image */}
+              <div className="w-48 h-40 flex items-center justify-center mb-4">
+                <img 
+                  src={carouselSlides[currentSlide].image} 
+                  alt={`${carouselSlides[currentSlide].title} Illustration`} 
+                  className="max-w-full max-h-full object-contain" 
+                />
+              </div>
+              
+              {/* Carousel Dots */}
+              <div className="flex gap-2">
+                {carouselSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? 'bg-[#6e4eff] scale-125'
+                        : 'bg-[#d1d5db] hover:bg-[#9ca3af] hover:scale-110'
+                    }`}
+                  >
+                    {index === currentSlide && (
+                      <div className="absolute inset-0 rounded-full bg-[#6e4eff] opacity-30 blur-sm"></div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
