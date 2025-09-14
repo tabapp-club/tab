@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { CampaignCards } from "./CampaignCards";
 import { AnalyticsCards } from "./AnalyticsCards";
@@ -8,8 +8,23 @@ import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
 import { useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Pencil } from "lucide-react";
 import { format, subDays, subMonths, subYears } from 'date-fns';
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useWorkflowAnalytics } from "@/hooks/useWorkflowAnalytics";
+import { useWorkflowData } from "@/hooks/useWorkflowData";
+import { WhatsAppSMSComparisonChart } from "@/app/workflow-automation/components/WhatsAppSMSComparisonChart";
+import { 
+  MessageSquare, 
+  Smartphone, 
+  BarChart3, 
+  Brain, 
+  TrendingUp, 
+  AlertTriangle, 
+  Info,
+  CheckCircle,
+  Target
+} from "lucide-react";
 
 export function DashboardContent() {
   const { isCollapsed, isMobile } = useSidebar();
@@ -74,6 +89,10 @@ export function DashboardContent() {
     days: filterDays,
     dateRange
   });
+
+  // Workflow automation data
+  const { data: workflowAnalyticsData, loading: workflowLoading, error: workflowError } = useWorkflowAnalytics("7d");
+  const { data: workflowData } = useWorkflowData();
 
   // Helper to generate date label based on filter
   const generateDateLabel = (filterType: string, days?: number, range?: { from: Date | null; to: Date | null }) => {
@@ -253,12 +272,23 @@ export function DashboardContent() {
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
         {/* Header */}
         <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
-          <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
-            {getGreeting()}, {user?.name || 'User'}
-          </h1>
-          <p className="text-[14px] text-[#2A2A2F] font-normal mt-2">
-            🔒 Your data stays private. Always.
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
+                {getGreeting()}, {user?.name || 'User'}
+              </h1>
+              <p className="text-[14px] text-[#2A2A2F] font-normal mt-2">
+                🔒 Your data stays private. Always.
+              </p>
+            </div>
+            <a 
+              href="/business-log" 
+              className="bg-[#7856ff] hover:bg-[#6d46e5] text-white px-4 py-2 rounded text-sm font-medium transition-all duration-200 flex items-center gap-2"
+            >
+              <Pencil className="w-4 h-4" />
+              Business Log
+            </a>
+          </div>
         </header>
 
         {/* Campaign Cards Section */}
@@ -290,12 +320,218 @@ export function DashboardContent() {
           </div>
         </section>
 
+        {/* Workflow Automation Section */}
+        <section className="mb-6 sm:mb-8 lg:mb-12">
+
+          {/* Communication Analytics */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] p-6 mb-6">
+            <h3 className="text-lg font-semibold text-[#1e293b] flex items-center gap-2 mb-6">
+              <MessageSquare size={20} className="text-[#6E4EFF]" />
+              Communication Analytics
+            </h3>
+            
+            {/* WhatsApp vs SMS Performance Chart */}
+            <div className="mb-6">
+              <WhatsAppSMSComparisonChart />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-lg border border-[#e2e8f0] p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg">
+                      <MessageSquare size={20} className="text-[#6E4EFF]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-[#475569]">WhatsApp Messages</h4>
+                      <p className="text-xs text-[#64748b]">Total messages sent</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-[#1e293b] mb-1">
+                      {workflowAnalyticsData?.whatsapp.messages.toLocaleString() || "1,247"}
+                    </div>
+                    <div className="flex items-center justify-end gap-1 text-xs font-medium text-[#059669]">
+                      <TrendingUp size={12} />
+                      +12.5%
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#059669]">
+                      {workflowAnalyticsData?.whatsapp.deliveryRate.toFixed(1) || "95.2"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Delivery</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#2563eb]">
+                      {workflowAnalyticsData?.whatsapp.readRate.toFixed(1) || "87.3"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Read Rate</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#6E4EFF]">
+                      {workflowAnalyticsData?.whatsapp.responseRate.toFixed(1) || "24.1"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Response</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-lg border border-[#e2e8f0] p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg">
+                      <Smartphone size={20} className="text-[#6E4EFF]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-[#475569]">SMS Messages</h4>
+                      <p className="text-xs text-[#64748b]">Total messages sent</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-[#1e293b] mb-1">
+                      {workflowAnalyticsData?.sms.messages.toLocaleString() || "892"}
+                    </div>
+                    <div className="flex items-center justify-end gap-1 text-xs font-medium text-[#059669]">
+                      <TrendingUp size={12} />
+                      +8.3%
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#059669]">
+                      {workflowAnalyticsData?.sms.deliveryRate.toFixed(1) || "98.7"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Delivery</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#2563eb]">
+                      {workflowAnalyticsData?.sms.readRate.toFixed(1) || "92.1"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Read Rate</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-[#6E4EFF]">
+                      {workflowAnalyticsData?.sms.responseRate.toFixed(1) || "18.9"}%
+                    </div>
+                    <div className="text-xs text-[#64748b]">Response</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* AI-Powered Insights */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] p-6">
+            <h3 className="text-lg font-semibold text-[#1e293b] flex items-center gap-2 mb-6">
+              <Brain size={20} className="text-[#6E4EFF]" />
+              AI-Powered Insights
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {workflowAnalyticsData?.insights.map((insight, index) => {
+                const colors = {
+                  success: {
+                    bg: "bg-gradient-to-br from-[#f0fdf4] to-[#dcfce7]",
+                    border: "border-[#bbf7d0]",
+                    icon: "text-[#16a34a]",
+                    title: "text-[#166534]"
+                  },
+                  warning: {
+                    bg: "bg-gradient-to-br from-[#fffbeb] to-[#fef3c7]",
+                    border: "border-[#fde68a]",
+                    icon: "text-[#d97706]",
+                    title: "text-[#92400e]"
+                  },
+                  info: {
+                    bg: "bg-gradient-to-br from-[#eff6ff] to-[#dbeafe]",
+                    border: "border-[#bfdbfe]",
+                    icon: "text-[#2563eb]",
+                    title: "text-[#1e40af]"
+                  }
+                };
+                const colorScheme = colors[insight.type];
+                const IconComponent = insight.type === "success" ? TrendingUp : insight.type === "warning" ? AlertTriangle : Info;
+
+                return (
+                  <div key={index} className={`${colorScheme.bg} rounded-lg border ${colorScheme.border} p-4`}>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-white rounded-lg">
+                        <IconComponent size={16} className={colorScheme.icon} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={`text-sm font-semibold ${colorScheme.title} mb-1`}>{insight.title}</h4>
+                        <p className="text-xs text-[#64748b] leading-relaxed">{insight.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }) || [
+                {
+                  type: "success" as const,
+                  title: "High Engagement Peak",
+                  description: "Your messages perform 23% better during 9:00 AM - 10:00 AM. Consider scheduling more campaigns during this window."
+                },
+                {
+                  type: "warning" as const,
+                  title: "SMS Response Rate",
+                  description: "SMS response rate is 18.9%, below industry average of 25%. Consider A/B testing different message formats."
+                },
+                {
+                  type: "info" as const,
+                  title: "Template Performance",
+                  description: "Template messages show 15% higher engagement than regular text messages. Expand your template library."
+                }
+              ].map((insight, index) => {
+                const colors = {
+                  success: {
+                    bg: "bg-gradient-to-br from-[#f0fdf4] to-[#dcfce7]",
+                    border: "border-[#bbf7d0]",
+                    icon: "text-[#16a34a]",
+                    title: "text-[#166534]"
+                  },
+                  warning: {
+                    bg: "bg-gradient-to-br from-[#fffbeb] to-[#fef3c7]",
+                    border: "border-[#fde68a]",
+                    icon: "text-[#d97706]",
+                    title: "text-[#92400e]"
+                  },
+                  info: {
+                    bg: "bg-gradient-to-br from-[#eff6ff] to-[#dbeafe]",
+                    border: "border-[#bfdbfe]",
+                    icon: "text-[#2563eb]",
+                    title: "text-[#1e40af]"
+                  }
+                };
+                const colorScheme = colors[insight.type];
+                const IconComponent = insight.type === "success" ? TrendingUp : insight.type === "warning" ? AlertTriangle : Info;
+
+                return (
+                  <div key={index} className={`${colorScheme.bg} rounded-lg border ${colorScheme.border} p-4`}>
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-white rounded-lg">
+                        <IconComponent size={16} className={colorScheme.icon} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={`text-sm font-semibold ${colorScheme.title} mb-1`}>{insight.title}</h4>
+                        <p className="text-xs text-[#64748b] leading-relaxed">{insight.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* Footer Section */}
-        <footer className="mt-12 pt-8 border-t border-[#dbdbdb] p-6">
+        <footer className="border-t border-[#dbdbdb] p-6">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
-            <div className="text-center mb-10">
+            <div className="text-center">
               <h2 className="text-[20px] font-bold text-[#2a2a2f] mb-3">
                 Data-Driven Business Growth with Tab Dashboard
               </h2>
@@ -306,44 +542,6 @@ export function DashboardContent() {
 
             {/* Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-              <div className="bg-gradient-to-r from-[#fafafa] to-[#f5f5f5] p-5 rounded-lg border border-[#e5e5e5]">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-3">📊</span>
-                  <h3 className="text-[16px] font-semibold text-[#525252]">Analytics Dashboard</h3>
-                </div>
-                <p className="text-[13px] text-[#737373] mb-3">
-                  Monitor real-time performance, track KPIs, and identify growth opportunities with detailed analytics.
-                </p>
-                <a href="/data-center" className="text-[13px] text-primary font-medium hover:underline">
-                  View Analytics →
-                </a>
-              </div>
-
-              <div className="bg-gradient-to-r from-[#fafafa] to-[#f5f5f5] p-5 rounded-lg border border-[#e5e5e5]">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-3">🎯</span>
-                  <h3 className="text-[16px] font-semibold text-[#525252]">Customer Segmentation</h3>
-                </div>
-                <p className="text-[13px] text-[#737373] mb-3">
-                  Create targeted campaigns with AI-powered customer segmentation and behavioral analysis.
-                </p>
-                <a href="/cohorts" className="text-[13px] text-primary font-medium hover:underline">
-                  Manage Segments →
-                </a>
-              </div>
-
-              <div className="bg-gradient-to-r from-[#fafafa] to-[#f5f5f5] p-5 rounded-lg border border-[#e5e5e5]">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-3">🚀</span>
-                  <h3 className="text-[16px] font-semibold text-[#525252]">Campaign Builder</h3>
-                </div>
-                <p className="text-[13px] text-[#737373] mb-3">
-                  Launch high-converting campaigns with pre-built templates and AI optimization recommendations.
-                </p>
-                <a href="/new-campaign" className="text-[13px] text-primary font-medium hover:underline">
-                  Create Campaign →
-                </a>
-              </div>
             </div>
 
             {/* Quick Actions */}

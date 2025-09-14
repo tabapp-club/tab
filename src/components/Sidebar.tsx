@@ -7,6 +7,7 @@ import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
+import { ShoppingCart, Zap } from "lucide-react";
 
 // SVG Icons as React components
 const DashboardIcon = ({colorCode}: {colorCode: string}) => (
@@ -104,6 +105,14 @@ const AchievementsIcon = ({colorCode}: {colorCode: string}) => (
 </svg>
 );
 
+const UpsellCrossSellIcon = ({colorCode}: {colorCode: string}) => (
+  <ShoppingCart size={16} color={colorCode} />
+);
+
+const WorkflowAutomationIcon = ({colorCode}: {colorCode: string}) => (
+  <Zap size={16} color={colorCode} />
+);
+
 
 
 const SettingsIcon = ({colorCode}: {colorCode: string}) => (
@@ -192,6 +201,22 @@ const menuItems = [
     notificationCount: 0
   },
   {
+    id: "workflow-automation",
+    label: "Automation",
+    description: "Automate communications",
+    icon: WorkflowAutomationIcon,
+    href: "/workflow-automation",
+    notificationCount: 3
+  },
+  {
+    id: "achievements",
+    label: "Achievements",
+    description: "Goals & milestones",
+    icon: AchievementsIcon,
+    href: "/achievements",
+    notificationCount: 2
+  },
+  {
     id: "campaigns",
     label: "Campaigns",
     description: "Marketing campaigns",
@@ -201,20 +226,20 @@ const menuItems = [
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   {
+    id: "upsell-cross-sell",
+    label: "Upsell & cross sell",
+    description: "Sell products & services",
+    icon: UpsellCrossSellIcon,
+    href: "/upsell-cross-sell",
+    notificationCount: 0
+  },
+  {
     id: "business-services",
     label: "Business services",
     description: "Enterprise solutions",
     icon: BusinessServicesIcon,
     href: "/business-services",
     notificationCount: 0
-  },
-  {
-    id: "achievements",
-    label: "Achievements",
-    description: "Goals & milestones",
-    icon: AchievementsIcon,
-    href: "/achievements",
-    notificationCount: 2
   },
 ];
 
@@ -273,7 +298,8 @@ export function Sidebar() {
             const Icon = item.icon;
             const isActive = pathname === item.href ||
               (item.id === "dashboard" && pathname === "/dashboard") ||
-              (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns")));
+              (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
+              (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation"));
 
             return (
               <Link
