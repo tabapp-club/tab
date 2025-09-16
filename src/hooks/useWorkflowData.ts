@@ -2,9 +2,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface WorkflowData {
   activeWorkflows: number;
-  messagesSent: string;
-  openRate: string;
-  responseRate: string;
+  messagesSent: number;
+  openRate: number;
+  responseRate: number;
   totalRevenue: number;
   costSavings: number;
 }
@@ -65,9 +65,9 @@ interface Integration {
 // Mock data for development
 const mockWorkflowData: WorkflowData = {
   activeWorkflows: 12,
-  messagesSent: "24.5K",
-  openRate: "68.2%",
-  responseRate: "23.4%",
+  messagesSent: 24500,
+  openRate: 68.2,
+  responseRate: 23.4,
   totalRevenue: 125000,
   costSavings: 45000
 };
@@ -411,7 +411,7 @@ export const useIntegrations = () => {
 
 export const useCreateWorkflow = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: createWorkflow,
     onSuccess: () => {
@@ -423,9 +423,9 @@ export const useCreateWorkflow = () => {
 
 export const useUpdateWorkflow = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<Workflow> }) => 
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Workflow> }) =>
       updateWorkflow(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workflows'] });
@@ -435,7 +435,7 @@ export const useUpdateWorkflow = () => {
 
 export const useDeleteWorkflow = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteWorkflow,
     onSuccess: () => {
@@ -447,7 +447,7 @@ export const useDeleteWorkflow = () => {
 
 export const useCreateTemplate = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: createTemplate,
     onSuccess: () => {
@@ -458,9 +458,9 @@ export const useCreateTemplate = () => {
 
 export const useUpdateTemplate = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<Template> }) => 
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Template> }) =>
       updateTemplate(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
@@ -470,7 +470,7 @@ export const useUpdateTemplate = () => {
 
 export const useDeleteTemplate = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteTemplate,
     onSuccess: () => {
@@ -481,7 +481,7 @@ export const useDeleteTemplate = () => {
 
 export const useCreateAutomationRule = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: createAutomationRule,
     onSuccess: () => {
@@ -492,9 +492,9 @@ export const useCreateAutomationRule = () => {
 
 export const useUpdateAutomationRule = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<AutomationRule> }) => 
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<AutomationRule> }) =>
       updateAutomationRule(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['automationRules'] });
@@ -504,7 +504,7 @@ export const useUpdateAutomationRule = () => {
 
 export const useDeleteAutomationRule = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteAutomationRule,
     onSuccess: () => {
@@ -515,9 +515,9 @@ export const useDeleteAutomationRule = () => {
 
 export const useUpdateIntegration = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<Integration> }) => 
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Integration> }) =>
       updateIntegration(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['integrations'] });
