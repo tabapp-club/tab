@@ -10,11 +10,11 @@ interface ProductServiceInputProps {
   required?: boolean;
 }
 
-export function ProductServiceInput({ 
-  value, 
-  onChange, 
+export function ProductServiceInput({
+  value,
+  onChange,
   placeholder = "Enter product/service name",
-  required = false 
+  required = false
 }: ProductServiceInputProps) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -33,17 +33,17 @@ export function ProductServiceInput({
             .flatMap((entry: any) => entry.products || [])
             .map((product: any) => product.name)
             .filter((name: string) => name && name.trim() !== '');
-          
+
           // Remove duplicates and sort by frequency
           const productCounts = allProducts.reduce((acc: Record<string, number>, product: string) => {
             acc[product] = (acc[product] || 0) + 1;
             return acc;
           }, {});
-          
+
           const uniqueProducts = Object.keys(productCounts)
             .sort((a, b) => productCounts[b] - productCounts[a])
             .slice(0, 20); // Show top 20 most used products
-          
+
           setSuggestions(uniqueProducts);
         }
       } catch (error) {
@@ -71,10 +71,10 @@ export function ProductServiceInput({
     ];
 
     const allSuggestions = [...commonProducts, ...commonServices];
-    
+
     return allSuggestions
-      .filter(item => 
-        item.toLowerCase().includes(keyword.toLowerCase()) && 
+      .filter(item =>
+        item.toLowerCase().includes(keyword.toLowerCase()) &&
         item.toLowerCase() !== keyword.toLowerCase()
       )
       .slice(0, 8);
@@ -83,7 +83,7 @@ export function ProductServiceInput({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     onChange(inputValue);
-    
+
     if (inputValue.length > 1) {
       setShowSuggestions(true);
       setSelectedIndex(-1);
@@ -101,20 +101,20 @@ export function ProductServiceInput({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions) return;
 
-    const filteredSuggestions = value.length > 1 
+    const filteredSuggestions = value.length > 1
       ? generateNewSuggestions(value)
       : suggestions;
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev < filteredSuggestions.length - 1 ? prev + 1 : 0
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev > 0 ? prev - 1 : filteredSuggestions.length - 1
         );
         break;
@@ -164,7 +164,7 @@ export function ProductServiceInput({
         required={required}
         className="w-full"
       />
-      
+
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto">
           <div className="py-1">
@@ -185,10 +185,10 @@ export function ProductServiceInput({
                 </div>
               </button>
             ))}
-            
+
             {value.length > 1 && filteredSuggestions.length === 0 && (
               <div className="px-3 py-2 text-sm text-gray-500">
-                Press Enter to add "{value}" as new product/service
+                Press Enter to add &quot;{value}&quot; to the list
               </div>
             )}
           </div>

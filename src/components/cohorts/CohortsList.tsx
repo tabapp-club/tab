@@ -94,14 +94,14 @@ export function CohortsList({
   }, [searchTerm, cohorts, onCohortsUpdate]);
 
   return (
-    <div className="space-y-3 sm:space-y-4 mt-4">
+    <div className="space-y-4 mt-6">
       {filteredCohorts.length > 0 ? (
         filteredCohorts.map((cohort) => (
           <CohortCard key={cohort.id} cohort={cohort} />
         ))
       ) : (
-        <div className="text-center py-8 sm:py-12">
-          <p className="text-gray-500 text-sm sm:text-base">
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-base">
             No cohorts found matching &quot;{searchTerm}&quot;
           </p>
         </div>

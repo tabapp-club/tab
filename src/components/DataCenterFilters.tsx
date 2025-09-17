@@ -268,7 +268,14 @@ const DataCenterFilters = ({
         {/* Right side - Filters and Search */}
         <div className={`flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 lg:gap-6 min-w-0 w-full md:w-auto ${alignRight ? 'justify-end' : ''}`}>
           {/* Filter section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 min-w-0 filter-section w-full md:w-auto">
+          <div 
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 min-w-0 filter-section w-full md:w-auto overflow-x-auto sm:overflow-x-visible scrollbar-hide"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitScrollbar: 'none',
+            }}
+          >
             {/* Filter by label with vertical border - hidden on mobile */}
             <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
               <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.891px] text-left text-nowrap tracking-[-0.1px]">
@@ -279,7 +286,15 @@ const DataCenterFilters = ({
             </div>
 
             {/* Filter buttons */}
-            <div className="flex flex-wrap sm:flex-row gap-2 items-start justify-start min-w-0 filter-buttons w-full sm:w-auto">
+            <div 
+              className="flex gap-2 items-start justify-start min-w-0 filter-buttons w-full sm:w-auto overflow-x-auto sm:flex-wrap sm:overflow-x-visible scrollbar-hide pb-1 sm:pb-0"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitScrollbar: 'none',
+                minWidth: 'max-content',
+              }}
+            >
               <FilterDropdown
                 title="Category"
                 options={filters.category}
@@ -344,9 +359,11 @@ const DataCenterFilters = ({
                     onSearchChange('');
                   }
                 }}
-                className="bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button text-[#2a2a2f] text-[13.453px] font-normal"
+                className="bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button flex-shrink-0"
               >
-                Clear filters
+                <span className="text-[13.453px] font-normal text-[#2a2a2f]">
+                  Clear filters
+                </span>
               </button>
             </div>
           </div>

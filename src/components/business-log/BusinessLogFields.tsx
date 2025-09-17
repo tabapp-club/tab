@@ -40,11 +40,11 @@ export function BusinessLogFields() {
       }
     } else {
       // Initialize with default fields only when user first visits this tab
-      const defaultFields = [
-        { id: 'gst', type: 'text', label: 'GST Number', required: false, placeholder: 'Enter GST number' },
-        { id: 'cgst', type: 'number', label: 'CGST (%)', required: false, placeholder: 'Enter CGST percentage' },
-        { id: 'discount', type: 'number', label: 'Discount Amount', required: false, placeholder: 'Enter discount amount' },
-        { id: 'coupon', type: 'text', label: 'Coupon Code', required: false, placeholder: 'Enter coupon code' }
+      const defaultFields: DynamicField[] = [
+        { id: 'gst', type: 'text' as const, label: 'GST Number', required: false, placeholder: 'Enter GST number' },
+        { id: 'cgst', type: 'number' as const, label: 'CGST (%)', required: false, placeholder: 'Enter CGST percentage' },
+        { id: 'discount', type: 'number' as const, label: 'Discount Amount', required: false, placeholder: 'Enter discount amount' },
+        { id: 'coupon', type: 'text' as const, label: 'Coupon Code', required: false, placeholder: 'Enter coupon code' }
       ];
       setCustomFields(defaultFields);
       localStorage.setItem('businessLogCustomFields', JSON.stringify(defaultFields));
@@ -73,7 +73,7 @@ export function BusinessLogFields() {
         options: newField.type === 'select' ? (newField.options && newField.options.length > 0 ? newField.options : ['Option 1', 'Option 2']) : undefined,
         placeholder: newField.placeholder || ''
       };
-      
+
       setCustomFields([...customFields, field]);
       setNewField({ type: 'text', label: '', required: false, placeholder: '' });
       setShowAddField(false);
@@ -81,7 +81,7 @@ export function BusinessLogFields() {
   };
 
   const updateCustomField = (fieldId: string, updates: Partial<DynamicField>) => {
-    setCustomFields(customFields.map(field => 
+    setCustomFields(customFields.map(field =>
       field.id === fieldId ? { ...field, ...updates } : field
     ));
     setEditingField(null);
@@ -111,7 +111,7 @@ export function BusinessLogFields() {
             ))}
           </select>
         );
-      
+
       case 'date':
         return (
           <Input
@@ -120,7 +120,7 @@ export function BusinessLogFields() {
             className="w-full bg-gray-50"
           />
         );
-      
+
       case 'checkbox':
         return (
           <div className="flex items-center">
@@ -134,7 +134,7 @@ export function BusinessLogFields() {
             </label>
           </div>
         );
-      
+
       case 'number':
         return (
           <Input
@@ -144,7 +144,7 @@ export function BusinessLogFields() {
             className="w-full bg-gray-50"
           />
         );
-      
+
       case 'percentage':
         return (
           <div className="relative">
@@ -159,7 +159,7 @@ export function BusinessLogFields() {
             </div>
           </div>
         );
-      
+
       default:
         return (
           <Input
@@ -216,19 +216,19 @@ export function BusinessLogFields() {
                       {field.type}
                     </span>
                   </div>
-                  
+
                   {/* Field Preview */}
                   <div className="max-w-md">
                     {renderFieldPreview(field)}
                   </div>
-                  
+
                   {field.placeholder && (
                     <p className="text-xs text-gray-500 mt-1">
-                      Placeholder: "{field.placeholder}"
+                      Placeholder: &quot;{field.placeholder}&quot;
                     </p>
                   )}
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2 mt-3 sm:mt-0 sm:ml-4">
                   <Button
                     variant="outline"
@@ -241,7 +241,7 @@ export function BusinessLogFields() {
                     </svg>
                     Edit
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -253,7 +253,7 @@ export function BusinessLogFields() {
                     </svg>
                     Duplicate
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -284,7 +284,7 @@ export function BusinessLogFields() {
                         placeholder="Enter field label"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Field Type
@@ -303,7 +303,7 @@ export function BusinessLogFields() {
                         placeholder="Select field type"
                       />
                     </div>
-                    
+
                     {/* Options for dropdown fields */}
                     {field.type === 'select' && (
                       <div>
@@ -358,7 +358,7 @@ export function BusinessLogFields() {
                         <p className="text-xs text-gray-500 mt-1">Add options that will appear in the dropdown</p>
                       </div>
                     )}
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Placeholder Text
@@ -370,7 +370,7 @@ export function BusinessLogFields() {
                         placeholder="Enter placeholder text"
                       />
                     </div>
-                    
+
                     <div className="flex items-center">
                       <input
                         type="checkbox"
@@ -383,7 +383,7 @@ export function BusinessLogFields() {
                       </label>
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-col sm:flex-row justify-end gap-3 mt-4">
                     <Button
                       variant="outline"
@@ -403,7 +403,7 @@ export function BusinessLogFields() {
               )}
             </div>
           ))}
-          
+
           {customFields.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,7 +436,7 @@ export function BusinessLogFields() {
                     placeholder="Enter field label"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Field Type
@@ -456,7 +456,7 @@ export function BusinessLogFields() {
                   />
                 </div>
               </div>
-              
+
               {/* Options for dropdown fields */}
               {newField.type === 'select' && (
                 <div>
@@ -511,7 +511,7 @@ export function BusinessLogFields() {
                   <p className="text-xs text-gray-500 mt-1">Add options that will appear in the dropdown</p>
                 </div>
               )}
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Placeholder Text
@@ -523,7 +523,7 @@ export function BusinessLogFields() {
                   placeholder="Enter placeholder text"
                 />
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -535,7 +535,7 @@ export function BusinessLogFields() {
                   Required field
                 </label>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <Button
                   variant="outline"
@@ -584,7 +584,7 @@ export function BusinessLogFields() {
               <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 mt-0.5">3</div>
               <div>
                 <p className="font-medium text-gray-900">Use in Entries</p>
-                <p>These fields will automatically appear in the "New Entry" form for easy data collection.</p>
+                <p>These fields will automatically appear in the &quot;New Entry&quot; form for easy data collection.</p>
               </div>
             </div>
           </div>

@@ -82,7 +82,7 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
 
   return (
     <div className="bg-white overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto scrollbar-hide">
         <div className="min-w-full">
           {/* Table Header */}
           <div className="bg-[#f6f6f6] border-b border-[#e9e9e9] flex min-w-max">
@@ -119,16 +119,33 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
                       </button>
                     ) : col.key === 'categories' ? (
                       <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full">
-                        {user.categories.slice(0, 2).map((cat, idx) => (
-                          <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium whitespace-nowrap">
-                            {cat}
-                          </span>
-                        ))}
-                        {user.categories.length > 2 && (
-                          <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium whitespace-nowrap">
-                            +{user.categories.length - 2}
-                          </span>
-                        )}
+                        {/* Mobile: Show only 1 category + count */}
+                        <div className="sm:hidden flex items-center gap-1">
+                          {user.categories.slice(0, 1).map((cat, idx) => (
+                            <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 py-0.5 text-xs font-medium whitespace-nowrap">
+                              {cat}
+                            </span>
+                          ))}
+                          {user.categories.length > 1 && (
+                            <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1 py-0.5 text-xs font-medium whitespace-nowrap">
+                              +{user.categories.length - 1}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Desktop: Show up to 2 categories + count */}
+                        <div className="hidden sm:flex flex-wrap gap-1.5">
+                          {user.categories.slice(0, 2).map((cat, idx) => (
+                            <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap">
+                              {cat}
+                            </span>
+                          ))}
+                          {user.categories.length > 2 && (
+                            <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap">
+                              +{user.categories.length - 2}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ) : col.key === 'status' ? (
                       <span className={`px-1 sm:px-1.5 py-0.5 sm:py-1 text-xs font-medium rounded whitespace-nowrap ${user.status === 'Active' ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'}`}>

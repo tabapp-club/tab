@@ -271,9 +271,8 @@ export default function DataCenterClient() {
     <div className="data-center-container flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+        <header className="flex items-center justify-start p-3 sm:p-4 border-b border-gray-200 lg:hidden">
         <MobileMenuToggle />
-          <h1 className="text-base sm:text-lg font-bold truncate">Data Center</h1>
         </header>
         <main
           className={`data-center-main flex-1 transition-all duration-300 min-w-0 ${
@@ -281,7 +280,7 @@ export default function DataCenterClient() {
           }`}
         >
           <div className="h-full flex flex-col min-w-0">
-            <div className="p-2 sm:p-3 lg:p-4 xl:p-6 space-y-3 sm:space-y-4 lg:space-y-6 flex-1 flex flex-col min-w-0">
+            <div className="p-2 sm:p-3 lg:p-4 xl:p-6 space-y-6 flex-1 flex flex-col min-w-0">
               <DataCenterHeader onImportClick={handleImportClick} onExportClick={handleExportClick} />
 
             <DataCenterStats
@@ -290,15 +289,17 @@ export default function DataCenterClient() {
               selectedCard={selectedCard}
             />
               <div className="bg-white rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
-            <DataCenterFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              onFiltersChange={handleFiltersChange}
-              totalUsers={total}
-              visibleUsers={currentTableData.length}
-              categories={categories}
-              isLoading={loading && searchTerm !== debouncedSearchTerm}
-            />
+            <div className="mb-4">
+              <DataCenterFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                onFiltersChange={handleFiltersChange}
+                totalUsers={total}
+                visibleUsers={currentTableData.length}
+                categories={categories}
+                isLoading={loading && searchTerm !== debouncedSearchTerm}
+              />
+            </div>
                 <div className="flex-1 min-h-0 min-w-0">
             {loading && currentTableData.length === 0 ? (
               <div className="text-center py-10 text-[#a1a1a1]">Loading data...</div>
@@ -311,13 +312,15 @@ export default function DataCenterClient() {
             />
             )}
                 </div>
-            <Pagination
-              currentPage={page}
-              itemsPerPage={pageSize}
-              totalItems={total}
-              onPageChange={handlePageChange}
-              onItemsPerPageChange={handlePageSizeChange}
-            />
+            <div className="mt-4">
+              <Pagination
+                currentPage={page}
+                itemsPerPage={pageSize}
+                totalItems={total}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handlePageSizeChange}
+              />
+            </div>
               </div>
             </div>
           </div>

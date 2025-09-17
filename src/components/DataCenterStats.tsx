@@ -74,47 +74,101 @@ const statConfig = [
 
 const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStatsProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
-      {statConfig.map((stat) => {
-        const metric = metrics?.[stat.key as keyof Metrics];
-        const value = metric?.count?.toLocaleString() ?? '-';
-        const change = metric?.change;
-        const isPositive = typeof change === 'number' ? change >= 0 : true;
-        const insights = change !== undefined ? `${change > 0 ? '+' : ''}${change}%` : '-';
-        const isSelected = selectedCard === stat.filterType;
+    <div className="w-full min-w-0">
+      {/* Mobile: Horizontal scroll */}
+      <div 
+        className="flex gap-3 overflow-x-auto sm:hidden scrollbar-hide"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitScrollbar: 'none',
+        }}
+      >
+        {statConfig.map((stat) => {
+          const metric = metrics?.[stat.key as keyof Metrics];
+          const value = metric?.count?.toLocaleString() ?? '-';
+          const change = metric?.change;
+          const isPositive = typeof change === 'number' ? change >= 0 : true;
+          const insights = change !== undefined ? `${change > 0 ? '+' : ''}${change}%` : '-';
+          const isSelected = selectedCard === stat.filterType;
 
-        return (
-        <div
-          key={stat.label}
-          className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 ${
-            isSelected
-              ? 'border-[#7856ff] bg-blue-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-          onClick={() => onCardClick?.(stat.filterType)}
-        >
-          <div className="flex items-center justify-between">
-            <div className="min-w-0 flex-1">
-              <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor} truncate`}>
-                {stat.label}
-              </h3>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{value}</p>
-            </div>
-            <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-              isSelected ? 'bg-[#7856ff]' : 'bg-blue-100'
-            }`}>
-              <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
-                {stat.icon}
+          return (
+          <div
+            key={stat.label}
+            className={`bg-white p-4 rounded-lg border min-w-[140px] flex-shrink-0 cursor-pointer transition-all duration-200 ${
+              isSelected
+                ? 'border-[#7856ff] bg-blue-50'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+            onClick={() => onCardClick?.(stat.filterType)}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="min-w-0 flex-1">
+                <h3 className={`text-xs font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor} truncate`}>
+                  {stat.label}
+                </h3>
+                <p className="text-lg font-bold text-gray-900 mt-1 truncate">{value}</p>
+              </div>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                isSelected ? 'bg-[#7856ff]' : 'bg-blue-100'
+              }`}>
+                <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
+                  {stat.icon}
+                </div>
               </div>
             </div>
+            <div className="flex items-center min-w-0">
+                <span className={`text-xs font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
+              <span className="text-gray-500 text-xs ml-2 truncate">from last month</span>
+            </div>
           </div>
-          <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center min-w-0">
-              <span className={`text-xs sm:text-sm font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
-            <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
+          );
+        })}
+      </div>
+      
+      {/* Desktop: Grid layout */}
+      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
+        {statConfig.map((stat) => {
+          const metric = metrics?.[stat.key as keyof Metrics];
+          const value = metric?.count?.toLocaleString() ?? '-';
+          const change = metric?.change;
+          const isPositive = typeof change === 'number' ? change >= 0 : true;
+          const insights = change !== undefined ? `${change > 0 ? '+' : ''}${change}%` : '-';
+          const isSelected = selectedCard === stat.filterType;
+
+          return (
+          <div
+            key={stat.label}
+            className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 ${
+              isSelected
+                ? 'border-[#7856ff] bg-blue-50'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+            onClick={() => onCardClick?.(stat.filterType)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="min-w-0 flex-1">
+                <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor} truncate`}>
+                  {stat.label}
+                </h3>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{value}</p>
+              </div>
+              <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                isSelected ? 'bg-[#7856ff]' : 'bg-blue-100'
+              }`}>
+                <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
+                  {stat.icon}
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center min-w-0">
+                <span className={`text-xs sm:text-sm font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
+              <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
+            </div>
           </div>
-        </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -121,178 +121,226 @@ export function CohortCard({ cohort }: CohortCardProps) {
   };
 
     return (
-    <div className="cohort-card bg-white border border-[#e9e9e9] rounded-lg min-h-[117px] flex flex-col lg:flex-row overflow-hidden relative">
-      {/* Name Section */}
-      <div className="flex flex-col items-start justify-center min-h-12 sm:min-h-16 p-3 sm:p-4 lg:w-[360px] lg:border-r border-[#e9e9e9] order-1">
-        <div className="flex items-start gap-2 w-full">
-          <div className="w-4 h-4 sm:w-[21px] sm:h-[21px] flex-shrink-0 text-[#7856ff] mt-0.5">
-            <CohortIcon />
-          </div>
-          <div className="flex flex-col gap-1 sm:gap-2 items-start justify-center overflow-hidden">
-            <h3 className="text-xl sm:text-[20px] font-bold text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
-              {cohort.name}
-            </h3>
+    <div className="cohort-card bg-white border border-[#e9e9e9] rounded-lg overflow-hidden relative">
+      {/* Mobile Layout */}
+      <div className="lg:hidden">
+        {/* Header Section - Name and Category */}
+        <div className="p-4 border-b border-[#e9e9e9]">
+          <div className="flex items-start gap-3">
+            <div className="w-5 h-5 flex-shrink-0 text-[#7856ff] mt-0.5">
+              <CohortIcon />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-[#2a2a2f] leading-tight mb-1">
+                {cohort.name}
+              </h3>
+              <p className="text-sm text-[#626266] font-medium">
+                {cohort.category}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile: Combined Count and Created By */}
-      <div className="flex flex-col xs:flex-row lg:hidden border-b lg:border-b-0 border-[#e9e9e9] order-2">
-        {/* Count Section Mobile */}
-        <div className="flex flex-col items-center justify-center px-4 sm:px-6 py-3 sm:py-4 flex-1 border-b xs:border-b-0 xs:border-r border-[#e9e9e9]">
-          <div className="flex items-center justify-center h-5 sm:h-6 rounded-[3px] w-full mb-2">
-            <div className="flex items-center justify-start gap-1 sm:gap-[5px] overflow-hidden">
-              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
-              <span className="text-xs sm:text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+        {/* Stats Section - Count and Created By */}
+        <div className="grid grid-cols-2 border-b border-[#e9e9e9]">
+          {/* Count Section */}
+          <div className="p-4 border-r border-[#e9e9e9]">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-[#7856ff] rounded-sm flex-shrink-0" />
+              <span className="text-xs font-medium text-[#626266]">
                 Purchases
               </span>
             </div>
-          </div>
-          <div className="flex items-center justify-center w-full">
-            <span className="text-xl sm:text-[28px] md:text-[32px] font-bold text-[#2a2a2f] text-center tracking-[-2.88px] leading-[1.4]">
+            <div className="text-2xl font-bold text-[#2a2a2f]">
               {formatNumber(cohort.count)}
-            </span>
+            </div>
           </div>
-        </div>
 
-        {/* Created By Section Mobile */}
-        <div className="flex flex-col items-center justify-center px-4 sm:px-6 py-3 sm:py-4 flex-1">
-          <div className="flex items-center justify-center h-5 sm:h-6 rounded-[3px] w-full mb-2">
-            <div className="flex items-center justify-start gap-1 sm:gap-[5px] overflow-hidden">
-              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
-              <span className="text-xs sm:text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+          {/* Created By Section */}
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-[#7856ff] rounded-sm flex-shrink-0" />
+              <span className="text-xs font-medium text-[#626266]">
                 Created
               </span>
             </div>
-          </div>
-          <div className="flex flex-col items-center justify-center w-full">
-            <div className="text-xs sm:text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px] text-center">
-              {cohort.createdBy}
-            </div>
-            <div className="text-xs sm:text-[13.5625px] font-bold text-[#626266] leading-[19.6px] tracking-[-0.1px] text-center">
-              Date: {cohort.createdDate}
+            <div className="text-sm text-[#626266]">
+              <div className="font-normal">{cohort.createdBy}</div>
+              <div className="font-bold">Date: {cohort.createdDate}</div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Desktop: Count Section */}
-      <div className="hidden lg:flex flex-col items-center justify-center px-6 py-4 w-[181px] border-r border-[#e9e9e9] order-3">
-        <div className="flex items-center justify-center h-6 rounded-[3px] w-full mb-auto">
-          <div className="flex items-center justify-start gap-[5px] overflow-hidden">
-            <div className="w-2.5 h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
-            <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
-              Purchases
+        {/* Description Section */}
+        <div className="p-4 border-b border-[#e9e9e9]">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-[#7856ff] rounded-sm flex-shrink-0" />
+            <span className="text-xs font-medium text-[#626266]">
+              Description
             </span>
           </div>
+          <p className="text-sm text-[#626266] leading-relaxed">
+            {cohort.description}
+          </p>
         </div>
-        <div className="flex-1 flex items-center justify-center w-full">
-          <span className="text-[32px] font-bold text-[#2a2a2f] text-center tracking-[-2.88px] leading-[1.4]">
-            {formatNumber(cohort.count)}
-          </span>
-        </div>
-      </div>
 
-      {/* Desktop: Created By Section */}
-      <div className="hidden lg:flex flex-col items-center justify-center px-6 py-4 w-[166px] border-r border-[#e9e9e9] order-4">
-        <div className="flex items-center justify-start h-6 rounded-[3px] w-full mb-auto">
-          <div className="flex items-center justify-start gap-[5px] overflow-hidden">
-            <div className="w-2.5 h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
-            <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
-              Created
+        {/* Actions Section */}
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#767676] rounded-sm flex-shrink-0" />
+            <span className="text-xs font-medium text-[#626266]">
+              Actions
             </span>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-start justify-center w-full">
-          <div className="text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px] whitespace-nowrap">
-            {cohort.createdBy}
-          </div>
-          <div className="text-[13.5625px] font-bold text-[#626266] leading-[19.6px] tracking-[-0.1px] whitespace-nowrap">
-            Date: {cohort.createdDate}
-          </div>
-        </div>
-      </div>
-
-      {/* Description Section */}
-      <div className="flex-1 lg:border-r border-[#e9e9e9] relative order-5">
-        <div className="flex flex-col justify-center h-full">
-          <div className="flex flex-col items-start justify-center px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-            <div className="flex flex-col items-start justify-center w-full">
-              <div className="flex items-center justify-start h-5 sm:h-6 rounded-[3px] w-full mb-2">
-                <div className="flex items-center justify-start gap-1 sm:gap-2 overflow-hidden">
-                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
-                  <span className="text-xs sm:text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
-                    Description
-                  </span>
-                </div>
-              </div>
-              <div className="text-xs sm:text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px] w-full max-w-[305px]">
-                {cohort.description}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* More Actions Section */}
-      <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-center px-3 sm:px-4 lg:px-6 py-3 sm:py-4 relative order-6 border-t lg:border-t-0 border-[#e9e9e9] z-10">
-        <div className="flex items-center justify-start h-5 sm:h-6 rounded-[3px] lg:w-full lg:mb-auto">
-          <div className="flex items-center justify-start gap-1 sm:gap-[5px] overflow-hidden">
-            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#767676] rounded-sm flex-shrink-0" />
-            <span className="text-xs sm:text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
-              more
-            </span>
-          </div>
-        </div>
-        <div className="flex lg:flex-1 items-center justify-end lg:justify-start">
           <div className="relative" ref={menuRef}>
             <button
               ref={buttonRef}
               onClick={handleMoreClick}
-              className="flex items-start justify-start p-[6px] sm:p-[7px] rounded-md hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-md hover:bg-gray-100 transition-colors"
               aria-label="More actions"
             >
-              <div className="w-4 h-4 sm:w-[18px] sm:h-[18px] overflow-hidden text-[#8f8f91]">
+              <div className="w-4 h-4 text-[#8f8f91]">
                 <MoreIcon />
               </div>
             </button>
           </div>
         </div>
-
-        {/* Dropdown menu rendered in portal */}
-        {showMoreMenu && typeof document !== 'undefined' && createPortal(
-          <div
-            ref={menuRef}
-            className="dropdown-menu fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[120px]"
-            style={{
-              top: menuPosition.top,
-              left: menuPosition.left,
-            }}
-          >
-                <div className="py-1">
-              <button
-                onClick={() => setShowMoreMenu(false)}
-                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                    Edit
-                  </button>
-              <button
-                onClick={() => setShowMoreMenu(false)}
-                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                    Duplicate
-                  </button>
-              <button
-                onClick={() => setShowMoreMenu(false)}
-                className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
-              >
-                    Delete
-                  </button>
-                </div>
-          </div>,
-          document.body
-            )}
       </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex min-h-[117px]">
+        {/* Name Section */}
+        <div className="flex flex-col items-start justify-center p-4 w-[360px] border-r border-[#e9e9e9]">
+          <div className="flex items-start gap-2 w-full">
+            <div className="w-[21px] h-[21px] flex-shrink-0 text-[#7856ff] mt-0.5">
+              <CohortIcon />
+            </div>
+            <div className="flex flex-col gap-2 items-start justify-center overflow-hidden">
+              <h3 className="text-[20px] font-bold text-[#2a2a2f] leading-[1.4] tracking-[-0.1px]">
+                {cohort.name}
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        {/* Count Section */}
+        <div className="flex flex-col items-center justify-center px-6 py-4 w-[181px] border-r border-[#e9e9e9]">
+          <div className="flex items-center justify-center h-6 rounded-[3px] w-full mb-auto">
+            <div className="flex items-center justify-start gap-[5px] overflow-hidden">
+              <div className="w-2.5 h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
+              <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+                Purchases
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 flex items-center justify-center w-full">
+            <span className="text-[32px] font-bold text-[#2a2a2f] text-center tracking-[-2.88px] leading-[1.4]">
+              {formatNumber(cohort.count)}
+            </span>
+          </div>
+        </div>
+
+        {/* Created By Section */}
+        <div className="flex flex-col items-center justify-center px-6 py-4 w-[166px] border-r border-[#e9e9e9]">
+          <div className="flex items-center justify-start h-6 rounded-[3px] w-full mb-auto">
+            <div className="flex items-center justify-start gap-[5px] overflow-hidden">
+              <div className="w-2.5 h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
+              <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+                Created
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col items-start justify-center w-full">
+            <div className="text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px] whitespace-nowrap">
+              {cohort.createdBy}
+            </div>
+            <div className="text-[13.5625px] font-bold text-[#626266] leading-[19.6px] tracking-[-0.1px] whitespace-nowrap">
+              Date: {cohort.createdDate}
+            </div>
+          </div>
+        </div>
+
+        {/* Description Section */}
+        <div className="flex-1 border-r border-[#e9e9e9] relative">
+          <div className="flex flex-col justify-center h-full">
+            <div className="flex flex-col items-start justify-center px-6 py-4">
+              <div className="flex flex-col items-start justify-center w-full">
+                <div className="flex items-center justify-start h-6 rounded-[3px] w-full mb-2">
+                  <div className="flex items-center justify-start gap-2 overflow-hidden">
+                    <div className="w-2.5 h-2.5 bg-[#7856ff] rounded-sm flex-shrink-0" />
+                    <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+                      Description
+                    </span>
+                  </div>
+                </div>
+                <div className="text-[13.5625px] font-normal text-[#626266] leading-[19.6px] tracking-[-0.1px] w-full max-w-[305px]">
+                  {cohort.description}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* More Actions Section */}
+        <div className="flex flex-col items-center justify-center px-6 py-4 relative z-10">
+          <div className="flex items-center justify-start h-6 rounded-[3px] w-full mb-auto">
+            <div className="flex items-center justify-start gap-[5px] overflow-hidden">
+              <div className="w-2.5 h-2.5 bg-[#767676] rounded-sm flex-shrink-0" />
+              <span className="text-[11.0625px] font-medium text-[#626266] leading-[12px] whitespace-nowrap">
+                more
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 flex items-center justify-start">
+            <div className="relative" ref={menuRef}>
+              <button
+                ref={buttonRef}
+                onClick={handleMoreClick}
+                className="flex items-start justify-start p-[7px] rounded-md hover:bg-gray-100 transition-colors"
+                aria-label="More actions"
+              >
+                <div className="w-[18px] h-[18px] overflow-hidden text-[#8f8f91]">
+                  <MoreIcon />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dropdown menu rendered in portal */}
+      {showMoreMenu && typeof document !== 'undefined' && createPortal(
+        <div
+          ref={menuRef}
+          className="dropdown-menu fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[120px]"
+          style={{
+            top: menuPosition.top,
+            left: menuPosition.left,
+          }}
+        >
+          <div className="py-1">
+            <button
+              onClick={() => setShowMoreMenu(false)}
+              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => setShowMoreMenu(false)}
+              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              Duplicate
+            </button>
+            <button
+              onClick={() => setShowMoreMenu(false)}
+              className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+            >
+              Delete
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

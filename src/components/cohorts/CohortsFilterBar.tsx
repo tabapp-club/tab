@@ -31,21 +31,21 @@ export function CohortsFilterBar({
 
   return (
     <div className="bg-white sticky top-0 z-10 rounded-lg border border-[#e9e9e9]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 py-3 sm:py-2 min-h-[60px] px-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6 py-4 sm:py-2 px-4 sm:px-6">
         {/* Cohorts count */}
-        <div className="flex items-center px-1 sm:px-2">
-          <span className="text-sm sm:text-[14px] font-medium text-[#071437] leading-[14px] whitespace-nowrap">
+        <div className="flex items-center">
+          <span className="text-sm font-medium text-[#071437] leading-tight">
             Showing {visibleCohorts} of {totalCohorts} cohorts
           </span>
         </div>
 
         {/* Search input */}
-        <div className="flex items-center justify-end">
-          <div className="relative w-full sm:w-auto sm:min-w-[168px]">
-            <div className="bg-[#f6f6f6] border border-transparent rounded-md h-8 flex items-center px-1 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-20">
+        <div className="flex items-center">
+          <div className="relative w-full sm:w-auto sm:min-w-[200px]">
+            <div className="bg-[#f6f6f6] border border-transparent rounded-md h-9 flex items-center px-3 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-20">
               {/* Search icon */}
-              <div className="flex items-center justify-center pl-1 pr-0">
-                <div className="w-5 h-5 sm:w-[22px] sm:h-[22px] flex items-center justify-center text-[#757575]">
+              <div className="flex items-center justify-center mr-2">
+                <div className="w-4 h-4 flex items-center justify-center text-[#757575]">
                   <SearchIcon />
                 </div>
               </div>
@@ -57,7 +57,7 @@ export function CohortsFilterBar({
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder="Search cohorts"
-                  className="w-full h-[30px] bg-transparent border-none outline-none text-sm sm:text-[13.3438px] font-normal text-[#2a2a2f] placeholder:text-[#757575] px-2 py-[6.5px] rounded-md"
+                  className="w-full h-full bg-transparent border-none outline-none text-sm font-normal text-[#2a2a2f] placeholder:text-[#757575]"
                 />
               </div>
             </div>

@@ -186,38 +186,37 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
     <div className="flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+        <header className="flex items-center justify-start p-3 sm:p-4 border-b border-gray-200 lg:hidden">
           <MobileMenuToggle />
-          <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
         </header>
         <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
           <div className="h-full flex flex-col min-w-0">
             <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
 
-              {/* Header with Back Button and Actions */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => router.back()}
-                    className="p-2 text-[#626266] hover:bg-white rounded-lg transition-colors"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <div>
-                    <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                    <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
-                  </div>
+              {/* Header with Back Button */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => router.push('/data-center')}
+                  className="p-2 text-[#626266] hover:bg-white rounded-lg transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <div>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
                 </div>
-                <div className="flex gap-3">
-                  <button className="px-4 py-2 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
-                    Send Message
-                  </button>
-                  <button className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
-                    Create Campaign
-                  </button>
-                </div>
+              </div>
+
+              {/* Action Buttons - Desktop Only */}
+              <div className="hidden lg:flex gap-3 w-fit">
+                <button className="px-4 py-2 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
+                  Send Message
+                </button>
+                <button className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
+                  Create Campaign
+                </button>
               </div>
 
               {/* Customer Profile Card */}
@@ -231,14 +230,14 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     <div>
                       <h2 className="text-[16px] font-bold text-[#2a2a2f] mb-1">{customerData.name}</h2>
                       <p className="text-[#626266] text-[14px] font-normal mb-2">ID: {customerData.id} • {customerData.mobile}</p>
-                      <div className="flex flex-wrap gap-2">
-                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border ${customerData.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200'}`}>
+                      <div className="flex gap-2 overflow-x-auto sm:flex-wrap scrollbar-hide pb-1 sm:pb-0">
+                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${customerData.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200'}`}>
                           {customerData.status === 'active' ? '🟢 Active' : '🔴 Inactive'}
                         </span>
-                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border ${customerSegment.color}`}>
+                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${customerSegment.color}`}>
                           {customerSegment.icon} {customerSegment.segment}
                         </span>
-                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border ${riskLevel.color}`}>
+                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${riskLevel.color}`}>
                           {riskLevel.level}
                         </span>
                       </div>
@@ -346,7 +345,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
 
               {/* Tab Navigation */}
               <div className="bg-white rounded border border-[#e9e9e9]">
-                <div className="flex">
+                <div className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitScrollbar: 'none' }}>
                   {[
                     { id: 'overview', label: 'Overview', icon: '📊' },
                     { id: 'engagement', label: 'Engagement', icon: '🎯' },
@@ -360,7 +359,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                         setActiveTab(tab.id);
                         updateTabURL(tab.id);
                       }}
-                      className={`flex-1 px-4 py-4 font-medium text-sm transition-all duration-200 relative ${
+                      className={`flex-shrink-0 px-4 py-4 font-medium text-sm transition-all duration-200 relative min-w-fit ${
                         activeTab === tab.id
                           ? 'text-[#6E4EFF] border-b-2 border-[#6E4EFF] bg-[#6E4EFF]/5 rounded-t'
                           : 'text-[#626266] hover:text-[#6E4EFF] hover:bg-gray-50'
@@ -375,9 +374,9 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               {/* Tab Content */}
               <div className="space-y-6">
                 {activeTab === 'overview' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0 overflow-x-auto scrollbar-hide">
                     {/* Purchase History */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6 min-w-0">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-[16px] font-bold text-[#2a2a2f]">Recent Purchases</h3>
                         <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
@@ -386,17 +385,17 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                       </div>
                       <div className="space-y-3">
                         {customerData.purchaseHistory.slice(0, 5).map((purchase) => (
-                          <div key={purchase.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-[#6E4EFF] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                          <div key={purchase.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-[#e9e9e9] min-w-0">
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              <div className="w-8 h-8 bg-[#6E4EFF] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                                 {purchase.category.charAt(0)}
                               </div>
-                              <div>
-                                <p className="font-medium text-[#2a2a2f] text-[14px] font-normal">Order #{purchase.id}</p>
-                                <p className="text-[12px] font-normal text-[#626266]">{purchase.category} • {purchase.items} items</p>
+                              <div className="min-w-0 flex-1">
+                                <p className="font-medium text-[#2a2a2f] text-[14px] font-normal truncate">Order #{purchase.id}</p>
+                                <p className="text-[12px] font-normal text-[#626266] truncate">{purchase.category} • {purchase.items} items</p>
                               </div>
                             </div>
-                            <div className="text-right">
+                            <div className="text-right flex-shrink-0 ml-2">
                               <p className="font-semibold text-[#2a2a2f] text-[14px] font-normal">₹{purchase.amount.toFixed(2)}</p>
                               <p className="text-[12px] font-normal text-[#626266]">{new Date(purchase.date).toLocaleDateString()}</p>
                             </div>
@@ -406,15 +405,15 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     </div>
 
                     {/* Customer Insights */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6 min-w-0">
                       <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Quick Insights</h3>
                       <div className="space-y-3">
                         {customerData.insights.map((insight, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
-                            <span className="text-lg">{insight.type === 'positive' ? '🎯' : insight.type === 'negative' ? '⚠️' : 'ℹ️'}</span>
-                            <div className="flex-1">
-                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal">{insight.title}</p>
-                              <p className="text-[12px] font-normal text-[#626266] mt-1">{insight.description}</p>
+                          <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-[#e9e9e9] min-w-0">
+                            <span className="text-lg flex-shrink-0">{insight.type === 'positive' ? '🎯' : insight.type === 'negative' ? '⚠️' : 'ℹ️'}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal break-words">{insight.title}</p>
+                              <p className="text-[12px] font-normal text-[#626266] mt-1 break-words">{insight.description}</p>
                             </div>
                           </div>
                         ))}
@@ -482,8 +481,8 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                   <div className="space-y-6">
                     {/* Purchase History */}
                     <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-[16px] font-bold text-[#2a2a2f]">Complete Purchase History</h3>
+                      <div className="mb-6">
+                        <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-3">Complete Purchase History</h3>
                         <div className="flex gap-2">
                           <span className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800">
                             {customerData.purchaseHistory.length} Orders
@@ -683,6 +682,16 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Action Buttons - Mobile Only */}
+              <div className="lg:hidden flex gap-3 w-full mt-6">
+                <button className="flex-1 px-4 py-3 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
+                  Send Message
+                </button>
+                <button className="flex-1 px-4 py-3 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
+                  Create Campaign
+                </button>
               </div>
             </div>
           </div>

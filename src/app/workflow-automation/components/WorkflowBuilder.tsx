@@ -165,7 +165,7 @@ export function WorkflowBuilder() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -222,7 +222,7 @@ export function WorkflowBuilder() {
             <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
         <div>
               <h3 className="text-green-800 font-medium">Request Submitted Successfully!</h3>
-              <p className="text-green-700 text-sm">We've received your automation request and will review it within 48 hours.</p>
+              <p className="text-green-700 text-sm">We&apos;ve received your automation request and will review it within 48 hours.</p>
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@ export function WorkflowBuilder() {
         {/* Request Form */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] p-6">
           <h3 className="text-lg font-semibold text-[#2a2a2f] mb-4">Submit New Request</h3>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
               <div>
               <label className="block text-sm font-medium text-[#2a2a2f] mb-1">Request Title</label>
@@ -362,9 +362,9 @@ export function WorkflowBuilder() {
                   </>
                 )}
               </button>
-              
+
               <p className="text-sm text-[#6b7280] text-center">
-                Your request will be reviewed and approved within 48 hours. We'll notify you once it's ready.
+                Your request will be reviewed and approved within 48 hours. We&apos;ll notify you once it&apos;s ready.
               </p>
             </div>
           </form>
@@ -373,7 +373,7 @@ export function WorkflowBuilder() {
         {/* Existing Requests */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] p-6">
           <h3 className="text-lg font-semibold text-[#2a2a2f] mb-4">Your Requests</h3>
-          
+
           <div className="space-y-4">
             {existingRequests.map((req) => (
               <div key={req.id} className="border border-[#e5e7eb] rounded-lg p-4">
@@ -386,9 +386,9 @@ export function WorkflowBuilder() {
                     </span>
                   </div>
                 </div>
-                
+
                 <p className="text-sm text-[#6b7280] mb-3">{req.description}</p>
-                
+
                 <div className="grid grid-cols-2 gap-4 text-xs text-[#6b7280]">
                   <div className="flex items-center gap-1">
                     <Zap className="w-3 h-3" />

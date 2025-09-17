@@ -144,9 +144,8 @@ export function CohortsClient() {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+        <header className="flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50 lg:hidden">
           <MobileMenuToggle />
-          <h1 className="text-base sm:text-lg font-bold truncate">Cohorts</h1>
         </header>
 
         {/* Main Content Area */}
@@ -157,7 +156,7 @@ export function CohortsClient() {
         >
           <div className="flex flex-col min-h-screen">
             {/* Header Section */}
-            <div className="px-2 sm:px-4 lg:px-6 pt-10 pb-0">
+            <div className="px-2 sm:px-4 lg:px-6 pt-16 lg:pt-10 pb-0">
               <CohortsHeader
                 onImportClick={handleImportClick}
                 onExportClick={handleExportClick}

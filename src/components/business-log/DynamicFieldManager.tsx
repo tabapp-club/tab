@@ -40,7 +40,7 @@ export function DynamicFieldManager({
             placeholder="Select an option"
           />
         );
-      
+
       case 'date':
         return (
           <Input
@@ -50,7 +50,7 @@ export function DynamicFieldManager({
             className="w-full"
           />
         );
-      
+
       case 'checkbox':
         return (
           <div className="flex items-center">
@@ -65,7 +65,7 @@ export function DynamicFieldManager({
             </label>
           </div>
         );
-      
+
       case 'number':
         return (
           <Input
@@ -77,7 +77,7 @@ export function DynamicFieldManager({
             className="w-full"
           />
         );
-      
+
       case 'percentage':
         return (
           <div className="relative">
@@ -96,7 +96,7 @@ export function DynamicFieldManager({
             </div>
           </div>
         );
-      
+
       default:
         return (
           <Input
@@ -115,7 +115,7 @@ export function DynamicFieldManager({
       <CardHeader>
         <CardTitle className="text-lg font-semibold">Additional Fields</CardTitle>
         <p className="text-sm text-gray-600 mt-1">
-          Manage custom fields in the "Manage Fields" tab
+          Manage custom fields in the &quot;Additional Fields&quot; section
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -129,7 +129,7 @@ export function DynamicFieldManager({
             {renderFieldInput(field)}
           </div>
         ))}
-        
+
       </CardContent>
     </Card>
   );

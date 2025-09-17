@@ -103,7 +103,7 @@ const FilterDropdown = ({
       <button
         ref={buttonRef}
         onClick={onToggle}
-        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 ${
+        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 flex-shrink-0 ${
           selectedCount > 0
             ? 'border-[#7856ff] bg-[#7856ff]/5'
             : 'border-[#e9e9e9]'

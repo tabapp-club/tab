@@ -444,10 +444,10 @@ export function NewCampaignContent() {
     <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Mobile Menu Toggle */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      {/* Mobile Header with Menu Toggle */}
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
         <MobileMenuToggle />
-      </div>
+      </header>
 
       <div className="w-full max-w-full overflow-x-hidden">
         {/* Navigation Bar */}

@@ -161,14 +161,14 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
         {filteredData.map((entry) => (
           <Card key={entry.id} className="hover:border-gray-300 transition-colors">
             <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+              <div className="flex justify-between items-start gap-4 mb-4">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900">
                     {entry.customerName}
                   </h3>
                   <p className="text-sm text-gray-600">{entry.customerPhone}</p>
                 </div>
-                <div className="flex flex-col sm:items-end gap-2">
+                <div className="flex flex-col items-end gap-2">
                   <div className="text-lg font-bold text-[#7856ff]">
                     ₹{entry.totalAmount.toFixed(2)}
                   </div>

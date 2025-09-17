@@ -149,7 +149,7 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row lg:flex-row lg:items-center lg:justify-between px-2 sm:px-3 lg:px-4 py-2 sm:py-3 gap-2 sm:gap-3 lg:gap-4 min-w-0">
+    <div className="flex flex-col sm:flex-row lg:flex-row lg:items-center lg:justify-between px-2 sm:px-3 lg:px-4 py-2 sm:py-3 gap-2 sm:gap-3 lg:gap-4 min-w-0 items-center sm:items-start">
       {/* Show per page */}
       <div className="flex items-center gap-1 sm:gap-2 relative min-w-0" ref={dropdownRef}>
         <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
@@ -198,7 +198,7 @@ const Pagination = ({
       </div>
 
       {/* Page info and navigation */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
+      <div className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
         <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
           {startItem}-{endItem} of {totalItems}
         </span>

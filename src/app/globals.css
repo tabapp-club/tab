@@ -711,6 +711,20 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
   display: none;  /* Safari and Chrome */
 }
 
+/* Additional specificity for filter sections */
+.data-center-filters .scrollbar-hide,
+.data-center-filters .filter-section,
+.data-center-filters .filter-buttons {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.data-center-filters .scrollbar-hide::-webkit-scrollbar,
+.data-center-filters .filter-section::-webkit-scrollbar,
+.data-center-filters .filter-buttons::-webkit-scrollbar {
+  display: none !important;
+}
+
 /* Fix flexbox overflow issues */
 
 /* Cohorts page responsive improvements */
