@@ -264,15 +264,15 @@ export function DashboardContent() {
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Mobile Menu Toggle */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      {/* Mobile Header with Menu Toggle */}
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
         <MobileMenuToggle />
-      </div>
+      </header>
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
         {/* Header */}
         <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start">
             <div>
               <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
                 {getGreeting()}, {user?.name || 'User'}
@@ -283,10 +283,10 @@ export function DashboardContent() {
             </div>
             <a 
               href="/business-log" 
-              className="bg-[#7856ff] hover:bg-[#6d46e5] text-white px-4 py-2 rounded text-sm font-medium transition-all duration-200 flex items-center gap-2"
+              className="bg-[#7856ff] hover:bg-[#6d46e5] text-white px-4 py-2 rounded text-sm font-medium transition-all duration-200 flex items-center gap-2 mt-4 lg:mt-0 w-fit"
             >
               <Pencil className="w-4 h-4" />
-              Business Log
+              Add Business Records
             </a>
           </div>
         </header>
@@ -567,11 +567,14 @@ export function DashboardContent() {
           {/* Bottom Footer */}
           <div className="border-t border-[#e5e7eb] pt-6 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-6">
-                <span className="text-[12px] text-[#696969]">© 2024 TabApp. All rights reserved.</span>
-                <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Privacy</a>
-                <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Terms</a>
-                <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Cookies</a>
+              {/* Mobile: Privacy links first, then copyright */}
+              <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-6">
+                <div className="flex items-center space-x-6">
+                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Privacy</a>
+                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Terms</a>
+                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Cookies</a>
+                </div>
+                <span className="text-[12px] text-[#696969]">© 2025 tribly. All rights reserved.</span>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-[12px] text-[#696969]">v1.0.0</span>

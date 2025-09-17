@@ -186,7 +186,7 @@ const menuItems = [
   },
   {
     id: "ai-services",
-    label: "Tab AI",
+    label: "tribly AI for business",
     description: "AI-powered insights",
     icon: AIServicesIcon,
     href: "/ai-services",
