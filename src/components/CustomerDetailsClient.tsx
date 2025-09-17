@@ -345,7 +345,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
 
               {/* Tab Navigation */}
               <div className="bg-white rounded border border-[#e9e9e9]">
-                <div className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitScrollbar: 'none' }}>
+                <div className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
                   {[
                     { id: 'overview', label: 'Overview', icon: '📊' },
                     { id: 'engagement', label: 'Engagement', icon: '🎯' },

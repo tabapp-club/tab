@@ -273,8 +273,7 @@ const DataCenterFilters = ({
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
-              WebkitScrollbar: 'none',
-            }}
+            } as React.CSSProperties}
           >
             {/* Filter by label with vertical border - hidden on mobile */}
             <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
@@ -291,9 +290,8 @@ const DataCenterFilters = ({
               style={{
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
-                WebkitScrollbar: 'none',
                 minWidth: 'max-content',
-              }}
+              } as React.CSSProperties}
             >
               <FilterDropdown
                 title="Category"

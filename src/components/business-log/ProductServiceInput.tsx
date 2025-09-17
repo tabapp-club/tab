@@ -152,7 +152,7 @@ export function ProductServiceInput({
 
   return (
     <div className="relative" ref={suggestionsRef}>
-      <Input
+      <input
         ref={inputRef}
         type="text"
         value={value}
@@ -162,11 +162,11 @@ export function ProductServiceInput({
         onFocus={() => value.length > 1 && setShowSuggestions(true)}
         placeholder={placeholder}
         required={required}
-        className="w-full"
+        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
       />
 
       {showSuggestions && filteredSuggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-[#e9e9e9] rounded shadow-lg max-h-60 overflow-y-auto">
           <div className="py-1">
             {filteredSuggestions.map((suggestion, index) => (
               <button
@@ -174,7 +174,7 @@ export function ProductServiceInput({
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
                 className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
-                  index === selectedIndex ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+                  index === selectedIndex ? 'bg-[#6E4EFF]/5 text-[#6E4EFF]' : 'text-[#2a2a2f]'
                 }`}
               >
                 <div className="flex items-center justify-between">

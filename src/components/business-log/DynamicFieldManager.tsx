@@ -120,15 +120,52 @@ export function DynamicFieldManager({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Existing Custom Fields */}
-        {customFields.map((field) => (
-          <div key={field.id} className="p-4 border border-gray-200 rounded-lg">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            {renderFieldInput(field)}
-          </div>
-        ))}
+        {(() => {
+          const gstField = customFields.find(field => field.label.toLowerCase().includes('gst') && !field.label.toLowerCase().includes('cgst'));
+          const cgstField = customFields.find(field => field.label.toLowerCase().includes('cgst'));
+          const otherFields = customFields.filter(field => 
+            !field.label.toLowerCase().includes('gst') && !field.label.toLowerCase().includes('cgst')
+          );
+
+          return (
+            <>
+              {/* GST and CGST side by side */}
+              {(gstField || cgstField) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {gstField && (
+                    <div className="p-4 border border-gray-200 rounded-lg">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                        {gstField.label}
+                        {gstField.required && <span className="text-red-500 ml-1">*</span>}
+                      </label>
+                      {renderFieldInput(gstField)}
+                    </div>
+                  )}
+                  {cgstField && (
+                    <div className="p-4 border border-gray-200 rounded-lg">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                        {cgstField.label}
+                        {cgstField.required && <span className="text-red-500 ml-1">*</span>}
+                      </label>
+                      {renderFieldInput(cgstField)}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Other fields in single column */}
+              {otherFields.map((field) => (
+                <div key={field.id} className="p-4 border border-gray-200 rounded-lg">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    {field.label}
+                    {field.required && <span className="text-red-500 ml-1">*</span>}
+                  </label>
+                  {renderFieldInput(field)}
+                </div>
+              ))}
+            </>
+          );
+        })()}
 
       </CardContent>
     </Card>

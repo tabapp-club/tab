@@ -81,8 +81,7 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStats
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          WebkitScrollbar: 'none',
-        }}
+        } as React.CSSProperties}
       >
         {statConfig.map((stat) => {
           const metric = metrics?.[stat.key as keyof Metrics];
