@@ -334,20 +334,22 @@ export function BusinessLogForm() {
                 <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="tel"
-                  value={formData.customerPhone}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-                    if (value.length <= 10) {
-                      handleInputChange('customerPhone', value);
-                    }
-                  }}
-                  placeholder="Enter 10-digit phone number"
-                  required
-                  className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
-                  maxLength={10}
-                />
+                <div className="p-1">
+                  <input
+                    type="tel"
+                    value={formData.customerPhone}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                      if (value.length <= 10) {
+                        handleInputChange('customerPhone', value);
+                      }
+                    }}
+                    placeholder="Enter 10-digit phone number"
+                    required
+                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                    maxLength={10}
+                  />
+                </div>
                 <CustomerValidation validation={customerValidation} />
               </div>
               
@@ -355,14 +357,16 @@ export function BusinessLogForm() {
                 <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                   Customer Name <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={formData.customerName}
-                  onChange={(e) => handleInputChange('customerName', e.target.value)}
-                  placeholder="Enter customer name"
-                  required
-                  className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
-                />
+                <div className="p-1">
+                  <input
+                    type="text"
+                    value={formData.customerName}
+                    onChange={(e) => handleInputChange('customerName', e.target.value)}
+                    placeholder="Enter customer name"
+                    required
+                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                  />
+                </div>
               </div>
             </div>
           </CardContent>
@@ -393,29 +397,33 @@ export function BusinessLogForm() {
                     <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                       Quantity <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="number"
-                      value={product.quantity}
-                      onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 1)}
-                      min="1"
-                      required
-                      className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
-                    />
+                    <div className="p-1">
+                      <input
+                        type="number"
+                        value={product.quantity}
+                        onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 1)}
+                        min="1"
+                        required
+                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                      />
+                    </div>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                       Price (₹) <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="number"
-                      value={product.price}
-                      onChange={(e) => handleProductChange(index, 'price', parseFloat(e.target.value) || 0)}
-                      min="0"
-                      step="0.01"
-                      required
-                      className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
-                    />
+                    <div className="p-1">
+                      <input
+                        type="number"
+                        value={product.price}
+                        onChange={(e) => handleProductChange(index, 'price', parseFloat(e.target.value) || 0)}
+                        min="0"
+                        step="0.01"
+                        required
+                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                      />
+                    </div>
                   </div>
                 </div>
                 

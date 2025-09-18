@@ -151,7 +151,7 @@ export function ProductServiceInput({
   const filteredSuggestions = getFilteredSuggestions();
 
   return (
-    <div className="relative" ref={suggestionsRef}>
+    <div className="relative p-1" ref={suggestionsRef}>
       <input
         ref={inputRef}
         type="text"

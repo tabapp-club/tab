@@ -138,7 +138,9 @@ export function DynamicFieldManager({
                         {gstField.label}
                         {gstField.required && <span className="text-red-500 ml-1">*</span>}
                       </label>
-                      {renderFieldInput(gstField)}
+                      <div className="p-1">
+                        {renderFieldInput(gstField)}
+                      </div>
                     </div>
                   )}
                   {cgstField && (
@@ -147,7 +149,9 @@ export function DynamicFieldManager({
                         {cgstField.label}
                         {cgstField.required && <span className="text-red-500 ml-1">*</span>}
                       </label>
-                      {renderFieldInput(cgstField)}
+                      <div className="p-1">
+                        {renderFieldInput(cgstField)}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -160,7 +164,9 @@ export function DynamicFieldManager({
                     {field.label}
                     {field.required && <span className="text-red-500 ml-1">*</span>}
                   </label>
-                  {renderFieldInput(field)}
+                  <div className="p-1">
+                    {renderFieldInput(field)}
+                  </div>
                 </div>
               ))}
             </>
