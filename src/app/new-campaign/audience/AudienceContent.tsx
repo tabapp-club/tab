@@ -2,18 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
+import { CampaignStepper } from "@/components/campaign/CampaignStepper";
+import { CampaignFooter } from "@/components/campaign/CampaignFooter";
+import { CampaignHeader } from "@/components/campaign/CampaignHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCampaign } from "@/contexts/CampaignContext";
 import CustomCheckbox from "@/components/ui/CustomCheckbox";
 
-// Icons for the stepper
-const CampaignIcon = () => (
-  <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M21.0996 13.0009H19.0996C18.8163 13.0009 18.5789 12.9049 18.3876 12.7129C18.1963 12.5209 18.1003 12.2836 18.0996 12.0009C18.0989 11.7182 18.1949 11.4809 18.3876 11.2889C18.5803 11.0969 18.8176 11.0009 19.0996 11.0009H21.0996C21.3829 11.0009 21.6206 11.0969 21.8126 11.2889C22.0046 11.4809 22.1003 11.7182 22.0996 12.0009C22.0989 12.2836 22.0029 12.5212 21.8116 12.7139C21.6203 12.9066 21.3829 13.0022 21.0996 13.0009ZM16.6996 16.8009C16.8663 16.5676 17.0829 16.4342 17.3496 16.4009C17.6163 16.3676 17.8663 16.4342 18.0996 16.6009L19.6996 17.8009C19.9329 17.9676 20.0663 18.1842 20.0996 18.4509C20.1329 18.7176 20.0663 18.9676 19.8996 19.2009C19.7329 19.4342 19.5163 19.5676 19.2496 19.6009C18.9829 19.6342 18.7329 19.5676 18.4996 19.4009L16.8996 18.2009C16.6663 18.0342 16.5329 17.8176 16.4996 17.5509C16.4663 17.2842 16.5329 17.0342 16.6996 16.8009ZM19.6996 6.20091L18.0996 7.40091C17.8663 7.56758 17.6163 7.63424 17.3496 7.60091C17.0829 7.56758 16.8663 7.43424 16.6996 7.20091C16.5329 6.96758 16.4663 6.71758 16.4996 6.45091C16.5329 6.18424 16.6663 5.96758 16.8996 5.80091L18.4996 4.60091C18.7329 4.43424 18.9829 4.36758 19.2496 4.40091C19.5163 4.43424 19.7329 4.56758 19.8996 4.80091C20.0663 5.03424 20.1329 5.28424 20.0996 5.55091C20.0663 5.81758 19.9329 6.03424 19.6996 6.20091ZM5.09961 15.0009H4.09961C3.54961 15.0009 3.07894 14.8052 2.68761 14.4139C2.29628 14.0226 2.10028 13.5516 2.09961 13.0009V11.0009C2.09961 10.4509 2.29561 9.98024 2.68761 9.58891C3.07961 9.19758 3.55028 9.00158 4.09961 9.00091H8.09961L11.5746 6.90091C11.9079 6.70091 12.2456 6.70091 12.5876 6.90091C12.9296 7.10091 13.1003 7.39258 13.0996 7.77591V16.2259C13.0996 16.6092 12.9286 16.9009 12.5866 17.1009C12.2446 17.3009 11.9073 17.3009 11.5746 17.1009L8.09961 15.0009H7.09961V18.0009C7.09961 18.2842 7.00361 18.5219 6.81161 18.7139C6.61961 18.9059 6.38228 19.0016 6.09961 19.0009C5.81694 19.0002 5.57961 18.9042 5.38761 18.7129C5.19561 18.5216 5.09961 18.2842 5.09961 18.0009V15.0009ZM14.0996 15.3509V8.65091C14.5496 9.05091 14.9123 9.53858 15.1876 10.1139C15.4629 10.6892 15.6003 11.3182 15.5996 12.0009C15.5989 12.6836 15.4613 13.3129 15.1866 13.8889C14.9119 14.4649 14.5496 14.9522 14.0996 15.3509Z" fill="#04B440"/>
-  </svg>
-);
 
 const MoneyIcon = () => (
   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -377,31 +373,10 @@ export function AudienceContent() {
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Mobile Header with Menu Toggle */}
-      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
-      </header>
+      <CampaignHeader onBack={handleClose} />
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">
-        {/* Progress Indicator - Stepper */}
-        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
-          <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
-            {stepperSteps.map((step, index) => (
-              <StepperStep
-                key={index}
-                title={step.title}
-                icon={step.icon}
-                isCompleted={step.isCompleted}
-                isCurrent={step.isCurrent}
-                stepIndex={index + 1}
-                totalSteps={5}
-                timeEstimate={step.timeEstimate}
-                description={step.description}
-              />
-            ))}
-          </div>
-          <StepperProgressBar currentStep={2} totalSteps={5} />
-        </section>
+        <CampaignStepper currentStep={2} />
 
         {/* Header Section */}
         <div className="mb-6">
@@ -1469,46 +1444,21 @@ export function AudienceContent() {
         </div>
         </div>
 
-        {/* Navigation Bar */}
-        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
-          isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
-        }`}>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
-            <div className="flex flex-row gap-2 sm:gap-4 items-center">
-              <button
-                onClick={() => router.push('/campaigns')}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-              >
-                Close
-              </button>
-              <div className="text-[#2a2a2f] text-[12px] sm:text-[14px] font-medium hidden sm:block">
-                Audience: {
-                  audienceType === 'all' ? `All ${totalUsers.toLocaleString()} customers` :
-                  audienceType === 'custom' ? 'Custom audience' :
-                  audienceType === 'ai_inactive' ? 'AI: Inactive Users Reactivation' :
-                  audienceType === 'ai_vip' ? 'AI: VIP Customer Retention' :
-                  audienceType === 'ai_cart' ? 'AI: Cart Abandonment Recovery' :
-                  'Custom audience'
-                }
-              </div>
-            </div>
-            <div className="flex flex-row gap-2 sm:gap-4 items-center">
-              <button
-                onClick={() => router.push(`/new-campaign?type=${campaignType}`)}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-              >
-                Back
-              </button>
-              <button
-                onClick={handleProceed}
-                className="h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg"
-              >
-                <span className="hidden sm:inline">Proceed to next step</span>
-                <span className="sm:hidden">Next</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <CampaignFooter
+          onClose={handleClose}
+          onNext={handleProceed}
+          onPrevious={() => router.push(`/new-campaign?type=${campaignType}`)}
+          nextLabel="Proceed to next step"
+          showPrevious={true}
+          saveMessage={`Audience: ${
+            audienceType === 'all' ? `All ${totalUsers.toLocaleString()} customers` :
+            audienceType === 'custom' ? 'Custom audience' :
+            audienceType === 'ai_inactive' ? 'AI: Inactive Users Reactivation' :
+            audienceType === 'ai_vip' ? 'AI: VIP Customer Retention' :
+            audienceType === 'ai_cart' ? 'AI: Cart Abandonment Recovery' :
+            'Custom audience'
+          }`}
+        />
       </div>
     </main>
   );

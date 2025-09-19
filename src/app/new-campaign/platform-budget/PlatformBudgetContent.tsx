@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
+import { CampaignStepper } from "@/components/campaign/CampaignStepper";
+import { CampaignFooter } from "@/components/campaign/CampaignFooter";
+import { CampaignHeader } from "@/components/campaign/CampaignHeader";
 import { useCampaign, BudgetAllocation } from "@/contexts/CampaignContext";
 
 import CustomCheckbox from "@/components/ui/CustomCheckbox";
@@ -657,31 +659,10 @@ export function PlatformBudgetContent() {
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Mobile Header with Menu Toggle */}
-      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
-      </header>
+      <CampaignHeader onBack={() => router.push('/campaigns')} />
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">
-        {/* Progress Indicator - Stepper */}
-        <section className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
-          <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
-            {stepperSteps.map((step, index) => (
-              <StepperStep
-                key={index}
-                title={step.title}
-                icon={step.icon}
-                isCompleted={step.isCompleted}
-                isCurrent={step.isCurrent}
-                stepIndex={index + 1}
-                totalSteps={5}
-                timeEstimate={step.timeEstimate}
-                description={step.description}
-              />
-            ))}
-          </div>
-          <StepperProgressBar currentStep={3} totalSteps={5} />
-        </section>
+        <CampaignStepper currentStep={3} />
 
         {/* Main Title */}
         <div className="mb-6">
@@ -1694,36 +1675,13 @@ export function PlatformBudgetContent() {
           </section>
         </div>
 
-        {/* Navigation Bar */}
-        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
-          isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
-        }`}>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
-            <div className="flex flex-row gap-2 sm:gap-4 items-center">
-              <button
-                onClick={() => router.push('/campaigns')}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-              >
-                Close
-              </button>
-            </div>
-            <div className="flex flex-row gap-2 sm:gap-4 items-center">
-              <button
-                onClick={() => router.push(`/new-campaign/audience?type=${campaignType}`)}
-                className="h-9 px-3 sm:px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:bg-gray-50"
-              >
-                Back
-              </button>
-              <button
-                onClick={handleProceed}
-                className="h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg"
-              >
-                <span className="hidden sm:inline">Design Campaign</span>
-                <span className="sm:hidden">Next</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <CampaignFooter
+          onClose={() => router.push('/campaigns')}
+          onNext={handleProceed}
+          onPrevious={() => router.push(`/new-campaign/audience?type=${campaignType}`)}
+          nextLabel="Design Campaign"
+          showPrevious={true}
+        />
       </div>
     </main>
   );
