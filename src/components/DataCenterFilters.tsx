@@ -266,7 +266,7 @@ const DataCenterFilters = ({
         )}
 
         {/* Right side - Filters and Search */}
-        <div className={`flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 lg:gap-6 min-w-0 w-full md:w-auto ${alignRight ? 'justify-end' : ''}`}>
+        <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-4 lg:gap-6 min-w-0 w-full md:w-auto ${alignRight ? 'justify-end' : ''}`}>
           {/* Filter section */}
           <div 
             className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 min-w-0 filter-section w-full md:w-auto overflow-x-auto sm:overflow-x-visible scrollbar-hide"
@@ -370,8 +370,8 @@ const DataCenterFilters = ({
           {showSearchBar && (
             <div className="flex flex-row items-center justify-start w-full sm:w-auto sm:min-w-[168px] relative shrink-0 search-input">
               <div className="flex flex-col items-start justify-start relative w-full sm:w-auto">
-                <div className="bg-[#f6f6f6] flex flex-row h-8 items-center justify-start p-px relative rounded-md shrink-0 w-full sm:w-[168px] sm:min-w-[168px]">
-                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1">
+                <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#6E4EFF] focus-within:ring-2 focus-within:ring-[#6E4EFF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full sm:w-[168px] sm:min-w-[168px] transition-all duration-200">
+                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#6E4EFF] transition-colors duration-200">
                     {isLoading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#6E4EFF] border-t-transparent"></div>
                     ) : (
@@ -385,7 +385,7 @@ const DataCenterFilters = ({
                         placeholder="Search customers"
                         value={currentSearchTerm}
                         onChange={(e) => handleSearchChange(e.target.value)}
-                        className="w-full h-full bg-transparent border-none outline-none text-[#757575] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px]"
+                        className="w-full h-full bg-transparent border-none outline-none text-[#2a2a2f] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px] focus:text-[#2a2a2f] transition-colors duration-200"
                       />
                     </div>
                   </div>
@@ -399,17 +399,18 @@ const DataCenterFilters = ({
   );
 };
 
-const SearchIcon = () => (
+const SearchIcon = ({ className }: { className?: string }) => (
   <svg
     width="18"
     height="18"
     viewBox="0 0 22 22"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
     <path
       d="M11.5 11.5L14.5 14.5"
-      stroke="#757575"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -418,7 +419,7 @@ const SearchIcon = () => (
       cx="7"
       cy="7"
       r="5"
-      stroke="#757575"
+      stroke="currentColor"
       strokeWidth="1.5"
     />
   </svg>

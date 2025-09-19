@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
+import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { TrendingUp, Users, Target, BarChart3 } from "lucide-react";
@@ -74,7 +74,7 @@ export function UpsellCrossSellContent() {
     }`}>
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
+        <MobileHeaderButton />
       </header>
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">

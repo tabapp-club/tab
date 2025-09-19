@@ -22,6 +22,18 @@ export default function LoginPage() {
   const { sendOTP, verifyOTP, isAuthenticated } = useAuth();
   const router = useRouter();
 
+  // Focus first OTP input when OTP screen appears
+  React.useEffect(() => {
+    if (isOtpSent && !isOtpVerified) {
+      setTimeout(() => {
+        const firstInput = document.getElementById('otp-0');
+        if (firstInput) {
+          firstInput.focus();
+        }
+      }, 100);
+    }
+  }, [isOtpSent, isOtpVerified]);
+
   // Carousel data
   const carouselSlides = [
     {
@@ -258,23 +270,32 @@ export default function LoginPage() {
 
   // Handle individual OTP digit input
   const handleOtpDigitChange = (index: number, value: string) => {
+    // Only allow single digit
+    const digit = value.replace(/\D/g, '').slice(-1);
+    
     const newOtp = otp.split('');
-    newOtp[index] = value.replace(/\D/g, '');
+    newOtp[index] = digit;
     const updatedOtp = newOtp.join('');
-    if (updatedOtp.length <= 6) {
-      setOtp(updatedOtp);
-      setOtpError('');
-      
-      // Auto-focus next input
-      if (value && index < 5) {
+    
+    setOtp(updatedOtp);
+    setOtpError('');
+    
+    // Auto-focus next input if digit was entered
+    if (digit && index < 5) {
+      // Use multiple timing strategies for better compatibility
+      setTimeout(() => {
         const nextInput = document.getElementById(`otp-${index + 1}`);
-        nextInput?.focus();
-      }
-      
-      // Auto-validate when all 6 digits are entered
-      if (updatedOtp.length === 6) {
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }, 10);
+    }
+    
+    // Auto-validate when all 6 digits are entered
+    if (updatedOtp.length === 6 && updatedOtp.replace(/\s/g, '').length === 6) {
+      setTimeout(() => {
         handleAutoVerifyOTP(updatedOtp);
-      }
+      }, 300);
     }
   };
 
@@ -330,9 +351,63 @@ export default function LoginPage() {
 
   // Handle OTP input keydown for navigation
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === 'Backspace') {
+      if (!otp[index] && index > 0) {
+        // If current field is empty, go to previous field
+        e.preventDefault();
+        const prevInput = document.getElementById(`otp-${index - 1}`);
+        if (prevInput) {
+          prevInput.focus();
+        }
+      } else if (otp[index]) {
+        // If current field has value, clear it first
+        const newOtp = otp.split('');
+        newOtp[index] = '';
+        setOtp(newOtp.join(''));
+      }
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
       const prevInput = document.getElementById(`otp-${index - 1}`);
-      prevInput?.focus();
+      if (prevInput) {
+        prevInput.focus();
+      }
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      e.preventDefault();
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      if (nextInput) {
+        nextInput.focus();
+      }
+    } else if (e.key === 'Delete') {
+      // Handle delete key
+      const newOtp = otp.split('');
+      newOtp[index] = '';
+      setOtp(newOtp.join(''));
+    }
+  };
+
+  // Handle OTP paste
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '');
+    if (pastedData.length <= 6) {
+      setOtp(pastedData);
+      setOtpError('');
+      
+      // Focus the next empty field or the last field
+      const nextIndex = Math.min(pastedData.length, 5);
+      requestAnimationFrame(() => {
+        const nextInput = document.getElementById(`otp-${nextIndex}`);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      });
+      
+      // Auto-verify if all 6 digits are pasted
+      if (pastedData.length === 6) {
+        setTimeout(() => {
+          handleAutoVerifyOTP(pastedData);
+        }, 200);
+      }
     }
   };
 
@@ -432,15 +507,19 @@ export default function LoginPage() {
                           <input
                             id={`otp-${index}`}
                             type="tel"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={otp[index] || ''}
                             onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                             onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                            onPaste={handleOtpPaste}
                             disabled={isLoading}
                             className={`w-full h-full text-center text-[#6e4eff] text-xl font-bold tracking-widest bg-transparent outline-none ${
                               isLoading ? 'opacity-50' : ''
                             }`}
                             maxLength={1}
                             autoComplete="off"
+                            autoFocus={index === 0 && isOtpSent && !isOtpVerified}
                           />
                           {isLoading && index === 5 && (
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -915,7 +994,7 @@ export default function LoginPage() {
       {/* Mobile Layout */}
       <div className="md:hidden flex flex-col min-h-screen">
         {/* Mobile Header */}
-        <div className="flex justify-end items-center p-4 border-b border-gray-200">
+        <div className="flex justify-end items-center p-4">
           {/* Mobile Top Buttons */}
           {!showHelpModal && !showContactSales && (
             <div className="flex gap-2">
@@ -1034,12 +1113,17 @@ export default function LoginPage() {
                               <input
                                 id={`otp-${index}`}
                                 type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 maxLength={1}
                                 value={otp[index] || ''}
                                 onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                                onPaste={handleOtpPaste}
                                 className="w-full h-full text-center text-[#6e4eff] text-lg font-bold tracking-widest bg-transparent outline-none border-none"
                                 disabled={isLoading}
+                                autoComplete="off"
+                                autoFocus={index === 0 && isOtpSent && !isOtpVerified}
                               />
                             </div>
                           ))}
@@ -1263,48 +1347,6 @@ export default function LoginPage() {
             )}
           </div>
 
-          {/* Mobile Carousel Section */}
-          <div className="bg-[#f6f6f6] border-t border-black p-6 flex-shrink-0">
-            <div className="flex flex-col items-center justify-center">
-              {/* Carousel Content */}
-              <div className="text-center text-[#2a2a2f] mb-6">
-                <div className="text-xl font-semibold leading-tight mb-3">
-                  {carouselSlides[currentSlide].title}
-                </div>
-                <div className="text-sm font-normal leading-relaxed">
-                  {carouselSlides[currentSlide].description}
-                </div>
-              </div>
-              
-              {/* Carousel Image */}
-              <div className="w-48 h-40 flex items-center justify-center mb-4">
-                <img 
-                  src={carouselSlides[currentSlide].image} 
-                  alt={`${carouselSlides[currentSlide].title} Illustration`} 
-                  className="max-w-full max-h-full object-contain" 
-                />
-              </div>
-              
-              {/* Carousel Dots */}
-              <div className="flex gap-2">
-                {carouselSlides.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? 'bg-[#6e4eff] scale-125'
-                        : 'bg-[#d1d5db] hover:bg-[#9ca3af] hover:scale-110'
-                    }`}
-                  >
-                    {index === currentSlide && (
-                      <div className="absolute inset-0 rounded-full bg-[#6e4eff] opacity-30 blur-sm"></div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

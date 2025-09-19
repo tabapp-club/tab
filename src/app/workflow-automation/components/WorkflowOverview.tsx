@@ -183,9 +183,9 @@ export function WorkflowOverview() {
         </div>
       </div>
 
-      {/* Recent Workflows */}
-      <div className="bg-white rounded-lg border border-[#e5e7eb] flex-1 flex flex-col min-h-0 min-w-0">
-        <div className="flex items-center justify-between p-4 border-b border-[#e5e7eb]">
+        {/* Recent Workflows */}
+        <div className="lg:bg-white lg:rounded-lg lg:border lg:border-[#e5e7eb] flex-1 flex flex-col min-h-0 min-w-0">
+          <div className="flex items-center justify-between p-4 lg:border-b lg:border-[#e5e7eb]">
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-semibold text-[#2a2a2f]">Recent Workflows</h2>
             <p className="text-sm text-[#6b7280]">Monitor and manage your automation workflows</p>
@@ -203,7 +203,47 @@ export function WorkflowOverview() {
         </div>
         
         <div className="flex-1 min-h-0 min-w-0">
-          <div className="overflow-x-auto h-full">
+          {/* Mobile: Card Layout */}
+          <div className="lg:hidden space-y-3 px-4">
+            {recentWorkflows.map((workflow) => (
+              <div 
+                key={workflow.id} 
+                className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:bg-[#f9fafb] cursor-pointer transition-colors duration-150"
+                onClick={() => handleWorkflowClick(workflow.id.toString())}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-[#2a2a2f] text-sm truncate">{workflow.name}</h3>
+                    <p className="text-xs text-[#6b7280] mt-1">{workflow.type}</p>
+                  </div>
+                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                    workflow.status === "active" ? "bg-[#10b981] text-white" : "bg-[#f59e0b] text-white"
+                  }`}>
+                    {workflow.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <span className="text-[#6b7280]">Messages:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">
+                      {workflow.messages > 1000 ? `${(workflow.messages / 1000).toFixed(1)}K` : workflow.messages}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#6b7280]">Open Rate:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">{workflow.openRate}%</span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-[#6b7280]">Last Run:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">{workflow.lastRun}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: Table Layout */}
+          <div className="hidden lg:block overflow-x-auto h-full">
             <div className="min-w-full">
               {/* Table Header */}
               <div className="bg-[#f6f6f6] border-b border-[#e9e9e9] flex min-w-max">

@@ -3,7 +3,7 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from './Sidebar';
-import { MobileMenuToggle } from './MobileMenuToggle';
+import { MobileHeaderButton } from './MobileHeaderButton';
 import DataCenterStats from './DataCenterStats';
 import DataCenterFilters from './DataCenterFilters';
 import DataTable from './DataTable';
@@ -271,8 +271,8 @@ export default function DataCenterClient() {
     <div className="data-center-container flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-start p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-        <MobileMenuToggle />
+        <header className="flex items-center justify-start p-3 sm:p-4 lg:hidden">
+        <MobileHeaderButton />
         </header>
         <main
           className={`data-center-main flex-1 transition-all duration-300 min-w-0 ${
@@ -288,7 +288,7 @@ export default function DataCenterClient() {
               onCardClick={handleCardClick}
               selectedCard={selectedCard}
             />
-              <div className="bg-white rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
+              <div className="lg:bg-white lg:rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
             <div className="mb-4">
               <DataCenterFilters
                 searchTerm={searchTerm}

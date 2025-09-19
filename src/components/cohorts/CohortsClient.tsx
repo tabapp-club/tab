@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Sidebar } from '../Sidebar';
-import { MobileMenuToggle } from '../MobileMenuToggle';
+import { MobileHeaderButton } from '../MobileHeaderButton';
 import { CohortsHeader } from './CohortsHeader';
 import { CohortsFilterBar } from './CohortsFilterBar';
 import { CohortsList } from './CohortsList';
@@ -145,7 +145,7 @@ export function CohortsClient() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
         <header className="flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50 lg:hidden">
-          <MobileMenuToggle />
+          <MobileHeaderButton />
         </header>
 
         {/* Main Content Area */}

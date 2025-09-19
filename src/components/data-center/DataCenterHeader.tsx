@@ -7,10 +7,10 @@ interface DataCenterHeaderProps {
 
 const DataCenterHeader = ({ onImportClick, onExportClick }: DataCenterHeaderProps) => {
   return (
-    <header className="mb-6 sm:mb-8 lg:mb-12 pt-12 lg:pt-0">
+    <header className="mb-6 sm:mb-8 lg:mb-12 pt-4 lg:pt-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 min-w-0">
         <div className="flex flex-col gap-1">
-          <h1 className="text-[20px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
+          <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">
             Data centre
           </h1>
           <p className="text-[14px] font-normal text-[#626266] leading-tight">

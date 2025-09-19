@@ -253,6 +253,31 @@ export function Sidebar() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
+  // Function to close mobile sidebar
+  const closeMobileSidebar = () => {
+    if (isMobile) {
+      const sidebar = document.querySelector('.sidebar-mobile');
+      const overlay = document.querySelector('.sidebar-overlay');
+      const body = document.body;
+
+      if (sidebar && overlay && body) {
+        // Restore scroll position
+        const scrollY = body.style.top;
+        body.style.top = '';
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+        
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        body.classList.remove('sidebar-open');
+        
+        // Dispatch custom event to notify MobileMenuToggle
+        window.dispatchEvent(new CustomEvent('sidebar-closed'));
+      }
+    }
+  };
+
   return (
     <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#FFFFFF] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
       actualIsCollapsed ? 'w-16' : 'w-[232px]'
@@ -276,6 +301,18 @@ export function Sidebar() {
                   Business Manager
                 </div>
               </div>
+              {/* Cross icon for mobile */}
+              {isMobile && (
+                <button
+                  onClick={closeMobileSidebar}
+                  className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0"
+                  aria-label="Close menu"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              )}
             </div>
           )}
           {actualIsCollapsed && (
@@ -293,7 +330,7 @@ export function Sidebar() {
 
       {/* Navigation Menu */}
       <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className="space-y-2 sm:space-y-3">
+        <div className="space-y-2.5 sm:space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href ||
@@ -361,7 +398,7 @@ export function Sidebar() {
       </nav>
 
       {/* Privacy Message */}
-      <div className={`px-3 py-1 transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
+      <div className={`px-3 py-1 transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''} ${isMobile ? 'mb-4' : ''}`}>
         <div className={`transition-all duration-300 ease-in-out ${
           actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
         }`}>
@@ -374,9 +411,9 @@ export function Sidebar() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="border-t border-[#e9e9e9] p-1 mt-auto">
+      <div className={`border-t border-[#e9e9e9] p-1 mt-auto ${isMobile ? 'pb-10' : ''}`}>
         <div className={`flex items-center p-1 transition-all duration-300 ease-in-out ${
-          actualIsCollapsed ? 'flex-col gap-0.5' : 'justify-between'
+          actualIsCollapsed ? 'flex-col gap-0.5' : isMobile ? 'justify-center' : 'justify-between'
         }`}>
           <div className={`flex items-center gap-0.5 transition-all duration-300 ease-in-out ${
             actualIsCollapsed ? 'flex-col' : ''

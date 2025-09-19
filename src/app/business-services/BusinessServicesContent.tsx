@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
+import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 
 export function BusinessServicesContent() {
@@ -16,7 +16,7 @@ export function BusinessServicesContent() {
     }`}>
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
+        <MobileHeaderButton />
       </header>
 
       {/* Main Content */}

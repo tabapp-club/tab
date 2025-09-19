@@ -3,16 +3,11 @@
 import { useState, useEffect } from "react";
 
 const MenuIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.33301 12H26.6663M5.33301 20H18.6663" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const CloseIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
 
 export function MobileMenuToggle() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +19,21 @@ export function MobileMenuToggle() {
 
     if (sidebar && overlay && body) {
       if (isOpen) {
+        // Store current scroll position
+        const scrollY = window.scrollY;
+        body.style.top = `-${scrollY}px`;
+        
         sidebar.classList.add('open');
         overlay.classList.add('open');
         body.classList.add('sidebar-open');
       } else {
+        // Restore scroll position
+        const scrollY = body.style.top;
+        body.style.top = '';
+        if (scrollY) {
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+        
         sidebar.classList.remove('open');
         overlay.classList.remove('open');
         body.classList.remove('sidebar-open');
@@ -37,6 +43,7 @@ export function MobileMenuToggle() {
     // Cleanup on unmount
     return () => {
       if (body) {
+        body.style.top = '';
         body.classList.remove('sidebar-open');
       }
     };
@@ -79,6 +86,16 @@ export function MobileMenuToggle() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
+  // Listen for sidebar closed event from within the sidebar
+  useEffect(() => {
+    const handleSidebarClosed = () => {
+      setIsOpen(false);
+    };
+
+    window.addEventListener('sidebar-closed', handleSidebarClosed);
+    return () => window.removeEventListener('sidebar-closed', handleSidebarClosed);
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -87,11 +104,11 @@ export function MobileMenuToggle() {
     <>
       <button
         onClick={toggleMenu}
-                    className="mobile-menu-toggle w-10 h-10 bg-white border border-[#e9e9e9] rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="mobile-menu-toggle w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition-colors"
         aria-label="Toggle menu"
         aria-expanded={isOpen}
       >
-        {isOpen ? <CloseIcon /> : <MenuIcon />}
+        <MenuIcon />
       </button>
 
       {/* Overlay */}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
+import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/Button";
@@ -440,7 +440,7 @@ export function AIServicesContent() {
     }`}>
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
+        <MobileHeaderButton />
       </header>
 
       {/* Main Content */}
@@ -641,7 +641,7 @@ export function AIServicesContent() {
             </div>
 
             {/* Mobile Fixed Input Field - Always visible on mobile */}
-            <div className={`lg:hidden fixed bottom-0 left-0 right-0 bg-[#F6F6F6] p-3 z-20 ${
+            <div className={`lg:hidden fixed bottom-0 left-0 right-0 bg-[#F6F6F6] p-3 pb-8 z-20 ${
               currentSessionId && currentSession && currentSession.messages.length > 0 ? 'block' : 'block'
             }`}>
               <div className="max-w-full mx-auto px-2">

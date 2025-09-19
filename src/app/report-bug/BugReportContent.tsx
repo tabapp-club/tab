@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSidebar } from '@/components/SidebarContext';
-import { MobileMenuToggle } from '@/components/MobileMenuToggle';
+import { MobileHeaderButton } from '@/components/MobileHeaderButton';
 
 interface BugReportData {
   title: string;
@@ -86,7 +86,7 @@ export function BugReportContent() {
       }`}>
         {/* Mobile Menu Toggle */}
         <div className="lg:hidden fixed top-4 left-4 z-50">
-          <MobileMenuToggle />
+          <MobileHeaderButton />
         </div>
 
         <div className="h-full flex items-center justify-center p-4">
@@ -111,7 +111,7 @@ export function BugReportContent() {
     }`}>
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
+        <MobileHeaderButton />
       </header>
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">

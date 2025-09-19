@@ -125,12 +125,12 @@ export default function ConfirmationDialog({
     <>
       {/* Overlay */}
       <div 
-        className="fixed inset-0 bg-black/50 z-50"
+        className="fixed inset-0 bg-black/50 z-[60]"
         onClick={onClose}
       />
       
       {/* Dialog */}
-      <div className={`fixed z-50 ${positionStyles}`} style={customStyles}>
+      <div className={`fixed z-[60] ${positionStyles}`} style={customStyles}>
         <div 
           className={`w-80 h-80 border rounded-lg shadow-xl ${styles.container} transform transition-all duration-300 ${
             isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'

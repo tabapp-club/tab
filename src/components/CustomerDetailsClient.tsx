@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from './Sidebar';
-import { MobileMenuToggle } from './MobileMenuToggle';
+import { MobileHeaderButton } from './MobileHeaderButton';
 import { useSidebar } from './SidebarContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCustomerData } from '@/hooks/useCustomerData';
@@ -108,7 +108,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-            <MobileMenuToggle />
+            <MobileHeaderButton />
             <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
@@ -130,7 +130,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-            <MobileMenuToggle />
+            <MobileHeaderButton />
             <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
@@ -159,7 +159,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-            <MobileMenuToggle />
+            <MobileHeaderButton />
             <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
@@ -187,7 +187,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="flex items-center justify-start p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-          <MobileMenuToggle />
+          <MobileHeaderButton />
         </header>
         <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
           <div className="h-full flex flex-col min-w-0">

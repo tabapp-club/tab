@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Sidebar } from '../Sidebar';
-import { MobileMenuToggle } from '../MobileMenuToggle';
+import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { TemplatesHeader } from './TemplatesHeader';
 import { TemplatesStats } from './TemplatesStats';
@@ -58,7 +58,7 @@ export function TemplatesClient() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
         <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-          <MobileMenuToggle />
+          <MobileHeaderButton />
           <h1 className="text-base sm:text-lg font-bold truncate">Templates</h1>
         </header>
 

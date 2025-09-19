@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Business Dashboard",
   description: "A modern business analytics dashboard with real-time insights",
   manifest: "/manifest.json",
-  themeColor: "#9747FF",
+  themeColor: "#f6f6f6",
   viewport: {
     width: "device-width",
     initialScale: 1,
@@ -62,7 +62,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#9747FF" />
+        <meta name="theme-color" content="#f6f6f6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Business Dashboard" />

@@ -31,7 +31,7 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterNewCustomers, setFilterNewCustomers] = useState<boolean | null>(null);
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<BusinessLogEntry>>({});
 
   const filteredData = data?.filter(entry => {
     const matchesSearch = 
@@ -44,26 +44,92 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
     return matchesSearch && matchesFilter;
   }) || [];
 
-  const handleDeleteEntry = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
-      try {
-        const existing = localStorage.getItem('businessLogEntries');
-        if (existing) {
-          const entries = JSON.parse(existing);
-          const filtered = entries.filter((entry: BusinessLogEntry) => entry.id !== id);
-          localStorage.setItem('businessLogEntries', JSON.stringify(filtered));
-          
-          // Trigger a custom event to notify other components
-          window.dispatchEvent(new CustomEvent('businessLogUpdated'));
-          
-          // Show success message
-          alert('Entry deleted successfully!');
-        }
-      } catch (error) {
-        console.error('Error deleting entry:', error);
-        alert('Error deleting entry. Please try again.');
+  const handleEditEntry = (entry: BusinessLogEntry) => {
+    setEditingEntry(entry.id);
+    setEditForm({
+      customerName: entry.customerName,
+      customerPhone: entry.customerPhone,
+      products: entry.products,
+      totalAmount: entry.totalAmount,
+      customFields: entry.customFields,
+      isNewCustomer: entry.isNewCustomer
+    });
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    try {
+      const existing = localStorage.getItem('businessLogEntries');
+      if (existing) {
+        const entries = JSON.parse(existing);
+        const updatedEntries = entries.map((entry: BusinessLogEntry) => 
+          entry.id === id 
+            ? { ...entry, ...editForm, timestamp: new Date() }
+            : entry
+        );
+        localStorage.setItem('businessLogEntries', JSON.stringify(updatedEntries));
+        
+        // Trigger a custom event to notify other components
+        window.dispatchEvent(new CustomEvent('businessLogUpdated'));
+        
+        // Reset edit state
+        setEditingEntry(null);
+        setEditForm({});
+        
+        // Show success message
+        alert('Entry updated successfully!');
       }
+    } catch (error) {
+      console.error('Error updating entry:', error);
+      alert('Error updating entry. Please try again.');
     }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingEntry(null);
+    setEditForm({});
+  };
+
+  const handleProductChange = (index: number, field: string, value: string | number) => {
+    if (!editForm.products) return;
+    
+    const updatedProducts = [...editForm.products];
+    updatedProducts[index] = { ...updatedProducts[index], [field]: value };
+    
+    // Recalculate total amount
+    const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+    
+    setEditForm({
+      ...editForm,
+      products: updatedProducts,
+      totalAmount
+    });
+  };
+
+  const addProduct = () => {
+    if (!editForm.products) return;
+    
+    const newProduct = { name: '', quantity: 1, price: 0 };
+    const updatedProducts = [...editForm.products, newProduct];
+    const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+    
+    setEditForm({
+      ...editForm,
+      products: updatedProducts,
+      totalAmount
+    });
+  };
+
+  const removeProduct = (index: number) => {
+    if (!editForm.products || editForm.products.length <= 1) return;
+    
+    const updatedProducts = editForm.products.filter((_, i) => i !== index);
+    const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+    
+    setEditForm({
+      ...editForm,
+      products: updatedProducts,
+      totalAmount
+    });
   };
 
   if (loading) {
@@ -112,55 +178,60 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <Card>
-        <CardContent className="p-2">
-          <div className="space-y-3">
-            <div>
-              <Input
-                type="text"
-                placeholder="Search by customer name, phone, or product..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
+      <div className="space-y-3">
+        <div>
+          <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#6E4EFF] focus-within:ring-2 focus-within:ring-[#6E4EFF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full transition-all duration-200">
+            <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#6E4EFF] transition-colors duration-200">
+              <SearchIcon />
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant={filterNewCustomers === null ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFilterNewCustomers(null)}
-                className={`${filterNewCustomers === null ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
-              >
-                All
-              </Button>
-              <Button
-                variant={filterNewCustomers === true ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFilterNewCustomers(true)}
-                className={`${filterNewCustomers === true ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
-              >
-                <span className="hidden sm:inline">New Customers</span>
-                <span className="sm:hidden">New</span>
-              </Button>
-              <Button
-                variant={filterNewCustomers === false ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFilterNewCustomers(false)}
-                className={`${filterNewCustomers === false ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
-              >
-                <span className="hidden sm:inline">Existing</span>
-                <span className="sm:hidden">Existing</span>
-              </Button>
+            <div className="flex-1 flex items-center h-full min-w-0">
+              <div className="flex-1 flex items-center h-full px-1 py-0">
+                <input
+                  type="text"
+                  placeholder="Search by customer name, phone, or product..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full h-full bg-transparent border-none outline-none text-[#2a2a2f] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px] focus:text-[#2a2a2f] transition-colors duration-200"
+                />
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={filterNewCustomers === null ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterNewCustomers(null)}
+            className={`${filterNewCustomers === null ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+          >
+            All
+          </Button>
+          <Button
+            variant={filterNewCustomers === true ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterNewCustomers(true)}
+            className={`${filterNewCustomers === true ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+          >
+            <span className="hidden sm:inline">New Customers</span>
+            <span className="sm:hidden">New</span>
+          </Button>
+          <Button
+            variant={filterNewCustomers === false ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterNewCustomers(false)}
+            className={`${filterNewCustomers === false ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+          >
+            <span className="hidden sm:inline">Existing</span>
+            <span className="sm:hidden">Existing</span>
+          </Button>
+        </div>
+      </div>
 
       {/* Entries List */}
       <div className="space-y-3">
         {filteredData.map((entry) => (
           <Card key={entry.id} className="hover:border-[#7856ff]/30 transition-all duration-200 group overflow-hidden">
-            <CardContent className="p-0">
+            <CardContent className="p-0 px-2">
               {/* Header Section - Customer Info & Amount */}
               <div className="p-2 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
                 <div className="flex items-center justify-between gap-2">
@@ -196,6 +267,129 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                   </div>
                 </div>
               </div>
+
+              {/* Edit Form */}
+              {editingEntry === entry.id && (
+                <div className="p-3 bg-blue-50 border-b border-blue-100">
+                  <div className="space-y-4">
+                    {/* Customer Info Edit */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Customer Name</label>
+                        <input
+                          type="text"
+                          value={editForm.customerName || ''}
+                          onChange={(e) => setEditForm({...editForm, customerName: e.target.value})}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
+                        <input
+                          type="text"
+                          value={editForm.customerPhone || ''}
+                          onChange={(e) => setEditForm({...editForm, customerPhone: e.target.value})}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Products Edit */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block text-xs font-medium text-gray-700">Products/Services</label>
+                        <button
+                          onClick={addProduct}
+                          className="text-xs text-[#7856ff] hover:text-[#6d46e5] font-medium"
+                        >
+                          + Add Product
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        {editForm.products?.map((product, index) => (
+                          <div key={index} className="flex gap-2 items-center">
+                            <input
+                              type="text"
+                              placeholder="Product name"
+                              value={product.name}
+                              onChange={(e) => handleProductChange(index, 'name', e.target.value)}
+                              className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Qty"
+                              value={product.quantity}
+                              onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 0)}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Price"
+                              value={product.price}
+                              onChange={(e) => handleProductChange(index, 'price', parseFloat(e.target.value) || 0)}
+                              className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                            />
+                            {editForm.products && editForm.products.length > 1 && (
+                              <button
+                                onClick={() => removeProduct(index)}
+                                className="text-red-500 hover:text-red-700 p-1"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Customer Type */}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-2">Customer Type</label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setEditForm({...editForm, isNewCustomer: true})}
+                          className={`px-3 py-1 text-xs rounded ${
+                            editForm.isNewCustomer 
+                              ? 'bg-[#7856ff] text-white' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          New Customer
+                        </button>
+                        <button
+                          onClick={() => setEditForm({...editForm, isNewCustomer: false})}
+                          className={`px-3 py-1 text-xs rounded ${
+                            !editForm.isNewCustomer 
+                              ? 'bg-[#7856ff] text-white' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          Existing Customer
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        onClick={() => handleSaveEdit(entry.id)}
+                        className="bg-[#7856ff] hover:bg-[#6d46e5] text-white text-xs px-3 py-1"
+                      >
+                        Save Changes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelEdit}
+                        className="text-xs px-3 py-1"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Content Section */}
               <div className="p-2">
@@ -341,27 +535,13 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        // TODO: Implement edit functionality
-                        console.log('Edit entry:', entry.id);
-                      }}
+                      onClick={() => handleEditEntry(entry)}
                       className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
                     >
                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                       Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteEntry(entry.id)}
-                      className="h-6 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-200 transition-colors group/delete"
-                    >
-                      <svg className="w-2.5 h-2.5 mr-0.5 group-hover/delete:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete
                     </Button>
                   </div>
                 </div>
@@ -384,3 +564,29 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
     </div>
   );
 }
+
+const SearchIcon = ({ className }: { className?: string }) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path
+      d="M11.5 11.5L14.5 14.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="7"
+      cy="7"
+      r="5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
+  </svg>
+);

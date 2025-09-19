@@ -149,90 +149,92 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row lg:flex-row lg:items-center lg:justify-between px-2 sm:px-3 lg:px-4 py-2 sm:py-3 gap-2 sm:gap-3 lg:gap-4 min-w-0 items-center sm:items-start">
-      {/* Show per page */}
-      <div className="flex items-center gap-1 sm:gap-2 relative min-w-0" ref={dropdownRef}>
-        <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
-          Show
-        </span>
+    <div className="flex flex-col sm:flex-row lg:flex-row lg:items-center lg:justify-center px-2 sm:px-3 lg:px-4 py-2 sm:py-3 gap-4 sm:gap-3 lg:gap-4 min-w-0 items-center sm:items-center">
+      {/* Mobile: Centered Show per page and page info */}
+      <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 min-w-0 justify-center sm:justify-start">
+        {/* Show per page */}
+        <div className="flex items-center gap-1 sm:gap-2 relative min-w-0" ref={dropdownRef}>
+          <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
+            Show
+          </span>
 
-        <div className="relative">
-          <button
-            ref={buttonRef}
-            onClick={() => setShowPerPageDropdown(!showPerPageDropdown)}
-            className="bg-[#fcfcfc] border border-[#dbdfe9] rounded-md px-1.5 sm:px-2 py-1 sm:py-1.5 flex items-center gap-1 sm:gap-2 hover:bg-gray-50 transition-colors"
-          >
-            <span className="text-xs sm:text-[11px] font-normal text-[#2a2a2f] leading-[12px]">
-              {itemsPerPage}
-            </span>
-            <ChevronDownIcon />
-          </button>
-
-          {/* Dropdown */}
-          {showPerPageDropdown && (
-            <div
-              className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#dbdfe9] rounded-md z-50 min-w-full max-h-[200px] overflow-y-auto`}
-              style={{
-                position: 'absolute',
-                zIndex: 9999
-              }}
+          <div className="relative">
+            <button
+              ref={buttonRef}
+              onClick={() => setShowPerPageDropdown(!showPerPageDropdown)}
+              className="bg-[#fcfcfc] border border-[#dbdfe9] rounded-md px-1.5 sm:px-2 py-1 sm:py-1.5 flex items-center gap-1 sm:gap-2 hover:bg-gray-50 transition-colors"
             >
-              {perPageOptions.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => handlePerPageChange(option)}
-                  className={`w-full px-1.5 sm:px-2 py-1 sm:py-1.5 text-left text-xs sm:text-[11px] hover:bg-gray-50 transition-colors whitespace-nowrap ${
-                    option === itemsPerPage ? 'bg-gray-100 text-[#2a2a2f]' : 'text-[#2a2a2f]'
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          )}
+              <span className="text-xs sm:text-[11px] font-normal text-[#2a2a2f] leading-[12px]">
+                {itemsPerPage}
+              </span>
+              <ChevronDownIcon />
+            </button>
+
+            {/* Dropdown */}
+            {showPerPageDropdown && (
+              <div
+                className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#dbdfe9] rounded-md z-50 min-w-full max-h-[200px] overflow-y-auto`}
+                style={{
+                  position: 'absolute',
+                  zIndex: 9999
+                }}
+              >
+                {perPageOptions.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handlePerPageChange(option)}
+                    className={`w-full px-1.5 sm:px-2 py-1 sm:py-1.5 text-left text-xs sm:text-[11px] hover:bg-gray-50 transition-colors whitespace-nowrap ${
+                      option === itemsPerPage ? 'bg-gray-100 text-[#2a2a2f]' : 'text-[#2a2a2f]'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
+            per page
+          </span>
         </div>
 
-        <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
-          per page
-        </span>
-      </div>
-
-      {/* Page info and navigation */}
-      <div className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 lg:gap-4 min-w-0">
+        {/* Page info */}
         <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
           {startItem}-{endItem} of {totalItems}
         </span>
+      </div>
 
-        <div className="flex items-center gap-0.5 sm:gap-0.5 min-w-0">
-          {/* Previous button */}
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className={`h-7 w-7 sm:h-8 sm:w-8 lg:h-[30px] lg:w-[30px] flex items-center justify-center transition-colors touch-manipulation flex-shrink-0 ${
-              currentPage === 1
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-[#2a2a2f] hover:bg-gray-100'
-            }`}
-          >
-            <ChevronLeftIcon />
-          </button>
+      {/* Navigation - separate on mobile, inline on larger screens */}
+      <div className="flex items-center gap-0.5 sm:gap-0.5 min-w-0">
+        {/* Previous button */}
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`h-7 w-7 sm:h-8 sm:w-8 lg:h-[30px] lg:w-[30px] flex items-center justify-center transition-colors touch-manipulation flex-shrink-0 ${
+            currentPage === 1
+              ? 'text-gray-300 cursor-not-allowed'
+              : 'text-[#2a2a2f] hover:bg-gray-100'
+          }`}
+        >
+          <ChevronLeftIcon />
+        </button>
 
-          {/* Page numbers */}
-          {renderPageNumbers()}
+        {/* Page numbers */}
+        {renderPageNumbers()}
 
-          {/* Next button */}
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className={`h-7 w-7 sm:h-8 sm:w-8 lg:h-[30px] lg:w-[30px] flex items-center justify-center transition-colors touch-manipulation flex-shrink-0 ${
-              currentPage === totalPages
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-[#2a2a2f] hover:bg-gray-100'
-            }`}
-          >
-            <ChevronRightIcon />
-          </button>
-        </div>
+        {/* Next button */}
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`h-7 w-7 sm:h-8 sm:w-8 lg:h-[30px] lg:w-[30px] flex items-center justify-center transition-colors touch-manipulation flex-shrink-0 ${
+            currentPage === totalPages
+              ? 'text-gray-300 cursor-not-allowed'
+              : 'text-[#2a2a2f] hover:bg-gray-100'
+          }`}
+        >
+          <ChevronRightIcon />
+        </button>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from '../Sidebar';
-import { MobileMenuToggle } from '../MobileMenuToggle';
+import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { CampaignsHeader } from './CampaignsHeader';
 import { CampaignsStats } from './CampaignsStats';
@@ -85,7 +85,7 @@ export function CampaignsClient() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
         <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
-          <MobileMenuToggle />
+          <MobileHeaderButton />
           <h1 className="text-base sm:text-lg font-bold truncate">Campaigns</h1>
         </header>
 

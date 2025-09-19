@@ -81,8 +81,87 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
   ];
 
   return (
-    <div className="bg-white overflow-hidden">
-      <div className="overflow-x-auto scrollbar-hide">
+    <div className="lg:bg-white overflow-hidden">
+      {/* Mobile: Card Layout */}
+      <div className="lg:hidden">
+        {sortedData.length === 0 ? (
+          <div className="text-center py-8 text-[#a1a1a1]">No data available.</div>
+        ) : (
+          <div className="space-y-3 p-4">
+            {sortedData.map((user, index) => (
+              <div 
+                key={index} 
+                className="bg-white border border-[#e9e9e9] rounded-lg p-4 hover:bg-[#f9fafb] cursor-pointer transition-colors duration-150"
+                onClick={() => handleAction('view', user)}
+              >
+                {/* Header with User ID and Status */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-[#2a2a2f] text-sm truncate">User ID: {user.id}</h3>
+                    <p className="text-xs text-[#6b7280] mt-1">Mobile: {user.mobile}</p>
+                  </div>
+                  <span className={`px-2 py-1 text-xs font-medium rounded whitespace-nowrap ${
+                    user.status === 'Active' 
+                      ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' 
+                      : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'
+                  }`}>
+                    {user.status}
+                  </span>
+                </div>
+
+                {/* Categories */}
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    {user.categories.slice(0, 3).map((cat, idx) => (
+                      <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-2 py-1 text-xs font-medium whitespace-nowrap">
+                        {cat}
+                      </span>
+                    ))}
+                    {user.categories.length > 3 && (
+                      <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-2 py-1 text-xs font-medium whitespace-nowrap">
+                        +{user.categories.length - 3}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Bottom row with User Type, Visits, and Added On */}
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <span className="text-[#6b7280]">User Type:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">{user.userType}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#6b7280]">Visits:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">{user.visits}</span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-[#6b7280]">Added On:</span>
+                    <span className="ml-1 text-[#2a2a2f] font-medium">{user.addedOn}</span>
+                  </div>
+                </div>
+
+                {/* View button */}
+                <div className="mt-3 pt-3 border-t border-[#f3f4f6]">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction('view', user);
+                    }}
+                    className="flex items-center gap-2 text-[#6E4EFF] hover:text-[#5a3fd9] transition-colors text-sm font-medium"
+                  >
+                    <ViewIcon />
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Table Layout */}
+      <div className="hidden lg:block overflow-x-auto scrollbar-hide">
         <div className="min-w-full">
           {/* Table Header */}
           <div className="bg-[#f6f6f6] border-b border-[#e9e9e9] flex min-w-max">
@@ -119,22 +198,8 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
                       </button>
                     ) : col.key === 'categories' ? (
                       <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full">
-                        {/* Mobile: Show only 1 category + count */}
-                        <div className="sm:hidden flex items-center gap-1">
-                          {user.categories.slice(0, 1).map((cat, idx) => (
-                            <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1 py-0.5 text-xs font-medium whitespace-nowrap">
-                              {cat}
-                            </span>
-                          ))}
-                          {user.categories.length > 1 && (
-                            <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1 py-0.5 text-xs font-medium whitespace-nowrap">
-                              +{user.categories.length - 1}
-                            </span>
-                          )}
-                        </div>
-                        
                         {/* Desktop: Show up to 2 categories + count */}
-                        <div className="hidden sm:flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-1.5">
                           {user.categories.slice(0, 2).map((cat, idx) => (
                             <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap">
                               {cat}
