@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MobileMenuToggle } from "@/components/MobileMenuToggle";
 import { useSidebar } from "@/components/SidebarContext";
+import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 
 interface CampaignType {
   id: string;
@@ -444,16 +444,69 @@ export function NewCampaignContent() {
     <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      {/* Mobile Header with Menu Toggle */}
+      {/* Mobile Header with Back Button */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileMenuToggle />
+        <MobileHeaderButton />
       </header>
 
       <div className="w-full max-w-full overflow-x-hidden">
         {/* Navigation Bar */}
-        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] px-4 sm:px-6 lg:px-12 py-3 z-50 ${
+        <div className={`fixed bottom-0 bg-white border-t border-[#e9e9e9] z-50 ${
           isMobile ? 'left-0 right-0' : actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
         }`}>
+          {/* Mobile Navigation */}
+          <div className="lg:hidden px-4 py-4">
+            <div className="flex flex-col gap-3">
+              {/* Progress Info */}
+              <div className="text-center">
+                <div className="text-[12px] text-[#626266] font-medium mb-1">
+                  Step 1 of 5 • Choose Campaign Type
+                </div>
+                <div className="text-[11px] text-[#10b981] font-medium">
+                  ✓ All changes are saved automatically
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleClose}
+                  className="flex-1 h-9 px-4 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[16px] transition-colors hover:bg-gray-50 active:bg-gray-100 touch-manipulation"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleProceedToNextStep}
+                  disabled={!selectedCampaignType || isNavigating}
+                  className={`flex-[2] h-9 px-6 rounded font-medium text-[16px] transition-all duration-200 touch-manipulation ${
+                    selectedCampaignType && !isNavigating
+                      ? 'bg-gradient-to-r from-[#6e4eff] to-[#8B6AFF] text-white hover:from-[#5a3de8] hover:to-[#7856ff] active:scale-[0.98]'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  {isNavigating ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                      </svg>
+                      Loading...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      Continue
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Navigation - Original */}
+          <div className="hidden lg:block px-4 sm:px-6 lg:px-12 py-3">
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
             <div className="flex flex-row gap-2 sm:gap-4 items-center">
               <button
@@ -470,11 +523,11 @@ export function NewCampaignContent() {
               <button
                 onClick={handleProceedToNextStep}
                 disabled={!selectedCampaignType || isNavigating}
-                className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
-                  selectedCampaignType && !isNavigating
-                    ? 'bg-[#6e4eff] text-white hover:bg-[#5a3de8] shadow-sm'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
+                  className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
+                    selectedCampaignType && !isNavigating
+                      ? 'bg-[#6e4eff] text-white hover:bg-[#5a3de8]'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
               >
                 {isNavigating ? (
                   <span className="flex items-center gap-2">
@@ -488,14 +541,39 @@ export function NewCampaignContent() {
                   'Proceed to next step'
                 )}
               </button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="px-4 py-4 lg:px-8 lg:py-8 pb-32">
-          {/* Stepper */}
-          <div className="mb-8 bg-white border border-[#e9e9e9] rounded-md p-2 overflow-x-auto relative">
+        <div className="px-4 pt-20 pb-40 py-4 lg:px-8 lg:py-8 lg:pb-20 lg:pt-8">
+          {/* Mobile-First Stepper */}
+          <div className="mb-6 lg:mb-8 bg-white border border-[#e9e9e9] rounded-md overflow-hidden relative">
+            {/* Mobile Stepper - Simplified */}
+            <div className="lg:hidden">
+              <div className="flex items-center p-4 bg-gradient-to-r from-[#7856ff]/5 to-[#8B6AFF]/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] flex items-center justify-center text-white font-bold text-sm">
+                    1
+                  </div>
+                  <div>
+                    <div className="text-[16px] font-semibold text-[#2a2a2f] font-manrope">
+                      Choose Campaign Type
+                    </div>
+                    <div className="text-[12px] text-[#626266] font-manrope">
+                      Step 1 of 5 • 2-3 min
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="h-1 bg-gray-200">
+                <div className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500" style={{ width: '20%' }}></div>
+              </div>
+            </div>
+
+            {/* Desktop Stepper - Original */}
+            <div className="hidden lg:block p-2 overflow-x-auto relative">
             <div className="box-border content-stretch flex flex-row items-start justify-start p-0 relative rounded-md size-full">
               <StepperStep
                 title="Choose campaign type"
@@ -540,11 +618,124 @@ export function NewCampaignContent() {
               />
             </div>
             <StepperProgressBar currentStep={1} totalSteps={5} />
+            </div>
           </div>
 
           {/* Campaign Selection */}
           <div className="flex flex-col gap-6 items-start justify-start">
-            <div className="flex gap-6 items-start justify-start w-full">
+            {/* Mobile Layout */}
+            <div className="lg:hidden w-full space-y-4">
+              {/* Campaign Cards - Mobile Stack */}
+              <div className="space-y-3">
+                {campaignTypes.map((campaignType) => (
+                  <div key={campaignType.id}>
+                    {/* Campaign Card */}
+                    <div 
+                      className={`bg-[#ffffff] relative rounded w-full cursor-pointer transition-all duration-200 border touch-manipulation ${
+                        selectedCampaignType?.id === campaignType.id
+                          ? 'ring-2 ring-[#7856ff]/20 border-[#7856ff]'
+                          : 'border-[#e9e9e9] hover:border-[#7856ff]/50 active:border-[#7856ff]/70'
+                      }`}
+                      onClick={() => handleCampaignTypeSelect(campaignType)}
+                    >
+                      <div className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="flex-shrink-0">
+                            <div className="w-12 h-12 flex items-center justify-center">
+                              {campaignType.icon}
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-[16px] font-semibold text-[#2a2a2f] font-manrope leading-tight">
+                              {campaignType.title}
+                            </h3>
+                            <p className="text-[14px] text-[#626266] font-manrope leading-tight mt-1">
+                              {campaignType.description}
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0">
+                            {selectedCampaignType?.id === campaignType.id ? (
+                              <div className="w-6 h-6 rounded-full bg-[#7856ff] flex items-center justify-center text-white">
+                                <CheckIcon />
+                              </div>
+                            ) : (
+                              <div className="w-6 h-6 rounded-full border-2 border-[#e9e9e9]"></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expandable Benefits - Mobile */}
+                    {selectedCampaignType?.id === campaignType.id && (
+                      <div className="mt-3 bg-white rounded border border-[#e9e9e9] p-4 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                        {/* ROI Badge */}
+                        <div className="text-center">
+                          <div className="inline-flex items-center px-4 py-2 rounded-full text-[14px] font-medium" style={{ 
+                            backgroundColor: `${campaignType.color}15`, 
+                            color: campaignType.color 
+                          }}>
+                            {campaignType.detailedBenefits.roi}
+                          </div>
+                        </div>
+
+                        {/* Quick Stats */}
+                        <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded p-4 border border-gray-200">
+                          <div className="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                              <div className="text-[16px] font-semibold text-slate-700 mb-1">
+                                {campaignType.type === 'engagement' ? '15K+' : 
+                                 campaignType.type === 'feedback' ? '8K+' :
+                                 campaignType.type === 'retention' ? '12K+' : '20K+'}
+                              </div>
+                              <div className="text-[10px] text-slate-600 font-medium">Active campaigns</div>
+                            </div>
+                            <div>
+                              <div className="text-[16px] font-semibold text-slate-700 mb-1">
+                                {campaignType.type === 'engagement' ? '98%' : 
+                                 campaignType.type === 'feedback' ? '95%' :
+                                 campaignType.type === 'retention' ? '97%' : '99%'}
+                              </div>
+                              <div className="text-[10px] text-slate-600 font-medium">Success rate</div>
+                            </div>
+                            <div>
+                              <div className="text-[16px] font-semibold text-slate-700 mb-1">50K+</div>
+                              <div className="text-[10px] text-slate-600 font-medium">Businesses</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Key Benefits */}
+                        <div className="space-y-3">
+                          <h4 className="text-[14px] font-semibold text-[#2a2a2f] flex items-center gap-2">
+                            ✨ Key Benefits
+                          </h4>
+                          <div className="space-y-2">
+                            {campaignType.detailedBenefits.keyMetrics.slice(0, 3).map((metric, index) => (
+                              <div key={index} className="flex items-start gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: campaignType.color }}></div>
+                                <span className="text-[13px] text-[#626266] leading-relaxed">{metric}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Trust Indicator */}
+                        <div className="pt-3 border-t border-gray-100 text-center">
+                          <div className="text-[11px] text-[#626266] flex items-center justify-center gap-1">
+                            <span>🔒</span>
+                            <span>GDPR compliant & secure</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Layout - Original */}
+            <div className="hidden lg:flex gap-6 items-start justify-start w-full">
                               <div className="flex flex-col gap-2 items-start justify-start w-full max-w-[300px]">
                 {campaignTypes.map((campaignType) => (
                   <div 
@@ -560,11 +751,8 @@ export function NewCampaignContent() {
                   >
                     <div className="box-border flex gap-4 items-center justify-start overflow-clip p-[12px] relative w-full">
                       <div className="flex gap-2.5 items-center justify-center relative shrink-0">
-                        <div className="relative shrink-0 size-11">
-                          <div className={`absolute inset-0 rounded-lg`} style={{ background: `linear-gradient(135deg, ${campaignType.color}20, ${campaignType.color}10)` }}></div>
-                          <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]">
-                            {campaignType.icon}
-                          </div>
+                        <div className="relative shrink-0 size-11 flex items-center justify-center">
+                          {campaignType.icon}
                         </div>
                       </div>
                       <div className="flex gap-1 flex-1 items-center justify-between">
@@ -585,9 +773,9 @@ export function NewCampaignContent() {
                 ))}
               </div>
               
-              {/* Benefits Panel */}
+              {/* Benefits Panel - Desktop */}
               {hoveredCampaignType && (
-                <div className="flex-1 ml-6 bg-white rounded-lg border border-[#e9e9e9] p-6 transition-all duration-300 max-h-[600px] overflow-y-auto">
+                <div className="flex-1 ml-6 bg-white rounded border border-[#e9e9e9] p-6 transition-all duration-300 max-h-[600px] overflow-y-auto">
                   <div className="space-y-4">
                     {/* Header */}
                     <div className="border-b border-gray-100 pb-3">
@@ -641,7 +829,7 @@ export function NewCampaignContent() {
                     {/* Social Proof Section */}
                     <div className="border-t border-gray-100 pt-4">
                       {/* Usage Statistics */}
-                      <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
+                      <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded p-4 border border-gray-200 mb-4">
                         <div className="flex items-center justify-between">
                           <div className="flex-1 text-center">
                             <div className="text-[18px] font-semibold text-slate-700 mb-1">
@@ -675,7 +863,6 @@ export function NewCampaignContent() {
                           <span>GDPR compliant</span>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
