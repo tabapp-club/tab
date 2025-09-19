@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { BottomSheet } from './ui/BottomSheet';
 
 interface FilterOption {
   id: string;
@@ -30,10 +32,16 @@ const FilterDropdown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState<'down' | 'up'>('down');
+  const [portalPosition, setPortalPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      // Check if click is outside both the dropdown and the button
+      if (dropdownRef.current && !dropdownRef.current.contains(target) &&
+          buttonRef.current && !buttonRef.current.contains(target)) {
         onToggle();
       }
     };
@@ -48,11 +56,33 @@ const FilterDropdown = ({
   }, [isOpen, onToggle]);
 
   useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+    };
+    
+    // Set initial state
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
     const handleDropdownPosition = () => {
       if (buttonRef.current) {
         const buttonRect = buttonRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         const dropdownHeight = (options.length * 40) + 60; // Approximate height per option + header
+
+        // For mobile, use portal positioning
+        if (isMobile) {
+          setPortalPosition({
+            top: buttonRect.bottom + window.scrollY,
+            left: buttonRect.left + window.scrollX,
+            width: buttonRect.width
+          });
+        }
 
         // Check if there's enough space below
         const spaceBelow = viewportHeight - buttonRect.bottom;
@@ -60,6 +90,13 @@ const FilterDropdown = ({
 
         if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
           setDropdownPosition('up');
+          if (isMobile) {
+            setPortalPosition({
+              top: buttonRect.top + window.scrollY - dropdownHeight,
+              left: buttonRect.left + window.scrollX,
+              width: buttonRect.width
+            });
+          }
         } else {
           setDropdownPosition('down');
         }
@@ -69,7 +106,7 @@ const FilterDropdown = ({
     if (isOpen) {
       handleDropdownPosition();
     }
-  }, [isOpen, options.length]);
+  }, [isOpen, options.length, isMobile]);
 
     const handleOptionChange = (optionId: string) => {
     let newSelectedIds;
@@ -102,7 +139,10 @@ const FilterDropdown = ({
       {/* Filter Button */}
       <button
         ref={buttonRef}
-        onClick={onToggle}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
         className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 flex-shrink-0 ${
           selectedCount > 0
             ? 'border-[#7856ff] bg-[#7856ff]/5'
@@ -126,56 +166,124 @@ const FilterDropdown = ({
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div
-          className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded z-50 w-[180px] sm:min-w-[180px] max-h-[300px] overflow-y-auto`}
-          style={{
-            position: 'absolute',
-            zIndex: 9999
-          }}
-        >
-          {/* Header */}
-          <div className="px-4 py-2 bg-white border-b border-gray-100">
-            <div className="flex justify-between items-center">
-              <span className="text-[12px] text-[#626266]">Filter by {title}</span>
-              <button className="text-[12px] text-[#626266] opacity-0 hover:opacity-100">
-                Reset
-              </button>
-            </div>
-          </div>
-
-          {/* Options */}
-          <div className="py-2">
-            {options.map((option) => (
-              <label
-                key={option.id}
-                className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={option.checked}
-                    onChange={() => handleOptionChange(option.id)}
-                    className="sr-only"
-                  />
-                  <div className={`w-[18px] h-[18px] flex items-center justify-center ${
-                    option.checked
-                      ? 'text-[#7856ff]'
-                      : 'text-[#e9e9e9]'
-                  }`}>
-                    {option.checked && (
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    )}
-                  </div>
+        <>
+          {isMobile ? (
+            <BottomSheet
+              isOpen={isOpen}
+              onClose={onToggle}
+              title={`Filter by ${title}`}
+            >
+              <div className="py-2">
+                {options.map((option) => (
+                  <label
+                    key={option.id}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer active:bg-gray-100 transition-colors"
+                  >
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={option.checked}
+                        onChange={() => handleOptionChange(option.id)}
+                        className="sr-only"
+                      />
+                      <div className={`w-5 h-5 flex items-center justify-center border-2 rounded ${
+                        option.checked
+                          ? 'bg-[#6E4EFF] border-[#6E4EFF] text-white'
+                          : 'border-gray-300 text-transparent'
+                      } transition-all duration-200`}>
+                        {option.checked && (
+                          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-base text-gray-900 font-medium">
+                      {option.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              
+              {/* Apply/Reset buttons */}
+              <div className="p-4 border-t border-gray-200 bg-gray-50">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      // Reset all options
+                      options.forEach(option => {
+                        if (option.checked) {
+                          handleOptionChange(option.id);
+                        }
+                      });
+                    }}
+                    className="flex-1 py-2 px-4 bg-white border border-gray-300 rounded text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={onToggle}
+                    className="flex-1 py-2 px-4 bg-[#6E4EFF] text-white rounded font-medium hover:bg-[#5D3EE8] transition-colors"
+                  >
+                    Apply
+                  </button>
                 </div>
-                <span className="text-[14px] text-[#2a2a2f] tracking-[0.15px]">
-                  {option.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
+              </div>
+            </BottomSheet>
+          ) : (
+            <div
+              ref={dropdownRef}
+              className={`absolute ${dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'} left-0 bg-white border border-[#e9e9e9] rounded shadow-lg w-[180px] sm:min-w-[180px] max-h-[300px] overflow-y-auto`}
+              style={{
+                position: 'absolute',
+                zIndex: 99999
+              }}
+            >
+              {/* Header */}
+              <div className="px-4 py-2 bg-white border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                  <span className="text-[12px] text-[#626266]">Filter by {title}</span>
+                  <button className="text-[12px] text-[#626266] opacity-0 hover:opacity-100">
+                    Reset
+                  </button>
+                </div>
+              </div>
+
+              {/* Options */}
+              <div className="py-2">
+                {options.map((option) => (
+                  <label
+                    key={option.id}
+                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                  >
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={option.checked}
+                        onChange={() => handleOptionChange(option.id)}
+                        className="sr-only"
+                      />
+                      <div className={`w-[18px] h-[18px] flex items-center justify-center ${
+                        option.checked
+                          ? 'text-[#7856ff]'
+                          : 'text-[#e9e9e9]'
+                      }`}>
+                        {option.checked && (
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-[14px] text-[#2a2a2f] tracking-[0.15px]">
+                      {option.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

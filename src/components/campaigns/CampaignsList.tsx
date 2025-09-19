@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { CampaignCard } from './CampaignCard';
 import { CampaignData } from './CampaignsClient';
 import Pagination from '../Pagination';
@@ -146,6 +146,8 @@ export function CampaignsList({
   searchTerm = '',
   onCampaignsUpdate
 }: CampaignsListProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
   // Filter campaigns based on search term
   const filteredCampaigns = useMemo(() => {
     return campaignsMockData.filter(campaign => {
@@ -160,6 +162,18 @@ export function CampaignsList({
     });
   }, [searchTerm]);
 
+  // Paginate the filtered campaigns
+  const paginatedCampaigns = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredCampaigns.slice(startIndex, endIndex);
+  }, [filteredCampaigns, currentPage, itemsPerPage]);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   // Update parent component with filtered campaigns
   useEffect(() => {
     if (onCampaignsUpdate) {
@@ -171,7 +185,7 @@ export function CampaignsList({
     <div className="flex flex-col h-full min-h-0">
       {/* Campaigns Grid */}
       <div className="flex-1 min-h-0">
-        {filteredCampaigns.length === 0 ? (
+        {paginatedCampaigns.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,7 +202,7 @@ export function CampaignsList({
           </div>
         ) : (
           <div className="space-y-4 w-full min-w-0">
-            {filteredCampaigns.map((campaign) => (
+            {paginatedCampaigns.map((campaign) => (
               <CampaignCard key={campaign.id} campaign={campaign} />
             ))}
           </div>
@@ -197,11 +211,18 @@ export function CampaignsList({
 
       {/* Pagination */}
       {filteredCampaigns.length > 0 && (
-        <div className="border border-gray-200 bg-white rounded-lg mt-4">
+        <div className="mt-4">
           <Pagination
-            currentPage={1}
-            itemsPerPage={12}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
             totalItems={filteredCampaigns.length}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+            }}
+            onItemsPerPageChange={(items) => {
+              setItemsPerPage(items);
+              setCurrentPage(1); // Reset to first page when changing items per page
+            }}
           />
         </div>
       )}

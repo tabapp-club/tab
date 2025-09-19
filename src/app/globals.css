@@ -932,6 +932,69 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
   -webkit-line-clamp: 2;
 }
 
+/* Enhanced mobile scrolling for campaigns */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scrolling for mobile filter bars */
+@media (max-width: 1023px) {
+  .campaigns-filters-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .campaigns-stats-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better touch targets for mobile */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Improved mobile card spacing */
+  .campaigns-mobile-card {
+    min-height: auto;
+    touch-action: manipulation;
+  }
+}
+
+/* Responsive breakpoint for extra small screens */
+@media (max-width: 375px) {
+  .campaigns-mobile-compact {
+    padding: 12px;
+  }
+  
+  .campaigns-mobile-text {
+    font-size: 14px;
+  }
+}
+
+/* Fix dropdown overflow issues on mobile */
+@media (max-width: 1023px) {
+  .campaigns-filters-container {
+    overflow: visible !important;
+  }
+  
+  .filter-dropdown-mobile {
+    position: relative;
+    z-index: 99999;
+  }
+  
+  .filter-dropdown-mobile .dropdown-panel {
+    position: fixed !important;
+    z-index: 99999 !important;
+  }
+}
+
 /* AI Services page specific styles */
 .ai-services-container {
   height: 100vh;

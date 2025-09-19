@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { CampaignData } from './CampaignsClient';
 
 // Campaign type icons (updated to match new-campaign page)
@@ -58,18 +57,10 @@ interface CampaignCardProps {
 
 export function CampaignCard({ campaign }: CampaignCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleMoreClick = () => {
-    if (moreButtonRef.current) {
-      const rect = moreButtonRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.right + window.scrollX - 120, // 120px is approximate dropdown width
-      });
-    }
     setShowDropdown(!showDropdown);
   };
 
@@ -167,150 +158,246 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     }
   };
 
-  const dropdownMenu = showDropdown && (
-    <div
-      ref={dropdownRef}
-      style={{
-        position: 'fixed',
-        top: `${dropdownPosition.top}px`,
-        left: `${dropdownPosition.left}px`,
-        zIndex: 9999,
-      }}
-      className="bg-white rounded-md shadow-lg border border-gray-200 py-1 min-w-[120px]"
-    >
-      <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-        <ViewIcon />
-        View Details
-      </button>
-      <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-        <EditIcon />
-        Edit Campaign
-      </button>
-      <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-        <DuplicateIcon />
-        Duplicate
-      </button>
-      <hr className="my-1" />
-      <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
-        <DeleteIcon />
-        Delete
-      </button>
-    </div>
-  );
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-all duration-200 min-w-0 relative">
-        <div className="flex items-center gap-4">
-          {/* Left Side - Campaign Information */}
-          <div className="flex-1 min-w-0">
-            {/* Header */}
-            <div className="flex items-start gap-3 min-w-0">
-              <div className="flex-shrink-0 w-11 h-11 flex items-center justify-center">
-                <div className="scale-100">
-                  {getTypeIcon(campaign.type)}
+      <div className="bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all duration-200 min-w-0 relative">
+        {/* Mobile Layout */}
+        <div className="block lg:hidden">
+          <div className="p-4">
+            {/* Header Row */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center">
+                  <div className="scale-90">
+                    {getTypeIcon(campaign.type)}
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900 truncate">
+                    {campaign.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-xs text-gray-500 capitalize">
+                      {campaign.type.replace(/([A-Z])/g, ' $1')}
+                    </p>
+                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(campaign.status)}`}>
+                      {campaign.status}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold text-gray-900 truncate">
-                  {campaign.name}
-                </h3>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <p className="text-xs text-gray-500 capitalize">
-                    {campaign.type.replace(/([A-Z])/g, ' $1')}
-                  </p>
-                  <span className={`px-1 py-0.5 text-xs font-medium rounded border ${getStatusColor(campaign.status)}`}>
-                    {campaign.status}
-                  </span>
-                </div>
-                {/* Dates under the status tag */}
-                <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                  <span>Created: {campaign.createdDate}</span>
-                  <span>Ends: {campaign.endDate}</span>
-                </div>
+              <div className="relative">
+                <button
+                  ref={moreButtonRef}
+                  onClick={handleMoreClick}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0 -mt-1 -mr-1"
+                >
+                  <MoreIcon />
+                </button>
+                {/* Mobile Dropdown Menu */}
+                {showDropdown && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 py-1 w-[161px] z-50 lg:hidden"
+                  >
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <ViewIcon />
+                      View Details
+                    </button>
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <EditIcon />
+                      Edit Campaign
+                    </button>
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <DuplicateIcon />
+                      Duplicate
+                    </button>
+                    <hr className="my-1" />
+                    <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                      <DeleteIcon />
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
+            </div>
+
+            {/* Key Metrics Row */}
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="text-center p-2 bg-blue-50 rounded-lg">
+                <div className="text-lg font-bold text-blue-900">{formatNumber(campaign.audience)}</div>
+                <div className="text-xs text-blue-600 mt-0.5">Audience</div>
+              </div>
+              <div className="text-center p-2 bg-green-50 rounded-lg">
+                <div className="text-lg font-bold text-green-900">{campaign.conversion.toFixed(1)}%</div>
+                <div className="text-xs text-green-600 mt-0.5">Conversion</div>
+              </div>
+              <div className="text-center p-2 bg-purple-50 rounded-lg">
+                <div className="text-lg font-bold text-purple-900">{formatCurrency(campaign.budget)}</div>
+                <div className="text-xs text-purple-600 mt-0.5">Budget</div>
+              </div>
+            </div>
+
+            {/* Secondary Metrics Row */}
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                <div className="text-sm font-semibold text-gray-900">{formatNumber(campaign.sent)}</div>
+                <div className="text-xs text-gray-600 mt-0.5">Sent</div>
+              </div>
+              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                <div className="text-sm font-semibold text-gray-900">{formatNumber(campaign.opened)}</div>
+                <div className="text-xs text-gray-600 mt-0.5">Opened</div>
+              </div>
+              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                <div className="text-sm font-semibold text-gray-900">{formatNumber(campaign.clicked)}</div>
+                <div className="text-xs text-gray-600 mt-0.5">Clicked</div>
+              </div>
+            </div>
+
+            {/* Dates Row */}
+            <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+              <span>Created: {campaign.createdDate}</span>
+              <span>Ends: {campaign.endDate}</span>
             </div>
           </div>
+        </div>
 
-          {/* Center - All Metrics in Single Line */}
-          <div className="flex items-center">
-            {/* Audience */}
-            <div className="text-center px-4 py-1 min-w-[60px]">
-              <div className="text-base text-gray-900">
-                {formatNumber(campaign.audience)}
+        {/* Desktop Layout */}
+        <div className="hidden lg:block">
+          <div className="p-5">
+            <div className="flex items-center gap-4">
+              {/* Left Side - Campaign Information */}
+              <div className="flex-1 min-w-0">
+                {/* Header */}
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="flex-shrink-0 w-11 h-11 flex items-center justify-center">
+                    <div className="scale-100">
+                      {getTypeIcon(campaign.type)}
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-semibold text-gray-900 truncate">
+                      {campaign.name}
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <p className="text-xs text-gray-500 capitalize">
+                        {campaign.type.replace(/([A-Z])/g, ' $1')}
+                      </p>
+                      <span className={`px-1 py-0.5 text-xs font-medium rounded border ${getStatusColor(campaign.status)}`}>
+                        {campaign.status}
+                      </span>
+                    </div>
+                    {/* Dates under the status tag */}
+                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                      <span>Created: {campaign.createdDate}</span>
+                      <span>Ends: {campaign.endDate}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text-xs text-gray-500">Audience</div>
-            </div>
-            
-            {/* Separator */}
-            <div className="w-px h-8 bg-gray-200"></div>
-            
-            {/* Conversion */}
-            <div className="text-center px-4 py-1 min-w-[50px]">
-              <div className="text-base text-gray-900">
-                {campaign.conversion.toFixed(1)}%
-              </div>
-              <div className="text-xs text-gray-500">Conv.</div>
-            </div>
-            
-            {/* Separator */}
-            <div className="w-px h-8 bg-gray-200"></div>
-            
-            {/* Budget */}
-            <div className="text-center px-4 py-1 min-w-[60px]">
-              <div className="text-base text-gray-900">
-                {formatCurrency(campaign.budget)}
-              </div>
-              <div className="text-xs text-gray-500">Budget</div>
-            </div>
-            
-            {/* Separator */}
-            <div className="w-px h-8 bg-gray-200"></div>
-            
-            {/* Spent */}
-            <div className="text-center px-4 py-1 min-w-[60px]">
-              <div className="text-base text-gray-900">
-                {formatCurrency(campaign.spent)}
-              </div>
-              <div className="text-xs text-gray-500">Spent</div>
-            </div>
-            
-            {/* Sent */}
-            <div className="text-center px-4 py-1 bg-blue-50 rounded min-w-[50px]">
-              <div className="text-base text-blue-900">{formatNumber(campaign.sent)}</div>
-              <div className="text-xs text-blue-600">Sent</div>
-            </div>
-            
-            {/* Opened */}
-            <div className="text-center px-4 py-1 bg-green-50 rounded min-w-[50px]">
-              <div className="text-base text-green-900">{formatNumber(campaign.opened)}</div>
-              <div className="text-xs text-green-600">Opened</div>
-            </div>
-            
-            {/* Clicked */}
-            <div className="text-center px-4 py-1 bg-purple-50 rounded min-w-[50px]">
-              <div className="text-base text-purple-900">{formatNumber(campaign.clicked)}</div>
-              <div className="text-xs text-purple-600">Clicked</div>
-            </div>
-          </div>
 
+              {/* Center - All Metrics in Single Line */}
+              <div className="flex items-center">
+                {/* Audience */}
+                <div className="text-center px-4 py-1 min-w-[60px]">
+                  <div className="text-base text-gray-900">
+                    {formatNumber(campaign.audience)}
+                  </div>
+                  <div className="text-xs text-gray-500">Audience</div>
+                </div>
+                
+                {/* Separator */}
+                <div className="w-px h-8 bg-gray-200"></div>
+                
+                {/* Conversion */}
+                <div className="text-center px-4 py-1 min-w-[50px]">
+                  <div className="text-base text-gray-900">
+                    {campaign.conversion.toFixed(1)}%
+                  </div>
+                  <div className="text-xs text-gray-500">Conv.</div>
+                </div>
+                
+                {/* Separator */}
+                <div className="w-px h-8 bg-gray-200"></div>
+                
+                {/* Budget */}
+                <div className="text-center px-4 py-1 min-w-[60px]">
+                  <div className="text-base text-gray-900">
+                    {formatCurrency(campaign.budget)}
+                  </div>
+                  <div className="text-xs text-gray-500">Budget</div>
+                </div>
+                
+                {/* Separator */}
+                <div className="w-px h-8 bg-gray-200"></div>
+                
+                {/* Spent */}
+                <div className="text-center px-4 py-1 min-w-[60px]">
+                  <div className="text-base text-gray-900">
+                    {formatCurrency(campaign.spent)}
+                  </div>
+                  <div className="text-xs text-gray-500">Spent</div>
+                </div>
+                
+                {/* Sent */}
+                <div className="text-center px-4 py-1 bg-blue-50 rounded min-w-[50px]">
+                  <div className="text-base text-blue-900">{formatNumber(campaign.sent)}</div>
+                  <div className="text-xs text-blue-600">Sent</div>
+                </div>
+                
+                {/* Opened */}
+                <div className="text-center px-4 py-1 bg-green-50 rounded min-w-[50px]">
+                  <div className="text-base text-green-900">{formatNumber(campaign.opened)}</div>
+                  <div className="text-xs text-green-600">Opened</div>
+                </div>
+                
+                {/* Clicked */}
+                <div className="text-center px-4 py-1 bg-purple-50 rounded min-w-[50px]">
+                  <div className="text-base text-purple-900">{formatNumber(campaign.clicked)}</div>
+                  <div className="text-xs text-purple-600">Clicked</div>
+                </div>
+              </div>
 
-
-          {/* Kebab Menu - Fixed Position */}
-          <div className="flex-shrink-0">
-            <button
-              ref={moreButtonRef}
-              onClick={handleMoreClick}
-              className="p-0.5 hover:bg-gray-100 rounded transition-colors"
-            >
-              <MoreIcon />
-            </button>
+              {/* Kebab Menu - Fixed Position */}
+              <div className="flex-shrink-0 relative">
+                <button
+                  ref={moreButtonRef}
+                  onClick={handleMoreClick}
+                  className="p-0.5 hover:bg-gray-100 rounded transition-colors"
+                >
+                  <MoreIcon />
+                </button>
+                {/* Desktop Dropdown Menu */}
+                {showDropdown && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 py-1 w-[161px] z-50 hidden lg:block"
+                  >
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <ViewIcon />
+                      View Details
+                    </button>
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <EditIcon />
+                      Edit Campaign
+                    </button>
+                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                      <DuplicateIcon />
+                      Duplicate
+                    </button>
+                    <hr className="my-1" />
+                    <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                      <DeleteIcon />
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Render dropdown using portal */}
-      {showDropdown && dropdownMenu && createPortal(dropdownMenu, document.body)}
     </>
   );
 }

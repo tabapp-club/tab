@@ -45,25 +45,51 @@ const CampaignsStats = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
-      {stats.map((stat) => (
-        <div key={stat.label} className="bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border border-gray-200 min-w-0">
-          <div className="flex items-center justify-between">
-            <div className="min-w-0 flex-1">
-              <h3 className={`text-xs sm:text-sm font-medium ${stat.labelColor} truncate`}>{stat.label}</h3>
-              <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{stat.value}</p>
+    <>
+      {/* Mobile Layout - 2 columns with horizontal scroll for 5 items */}
+      <div className="block lg:hidden">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          {stats.map((stat) => (
+            <div key={stat.label} className="bg-white p-4 rounded-lg border border-gray-200 min-w-[140px] flex-shrink-0">
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-8 h-8 ${stat.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                  {stat.icon}
+                </div>
+                <span className="text-green-600 text-xs font-medium">{stat.insights}</span>
+              </div>
+              <div>
+                <p className="text-xl font-bold text-gray-900 mb-1">{stat.value}</p>
+                <h3 className={`text-xs font-medium ${stat.labelColor} mb-1`}>{stat.label}</h3>
+                <span className="text-gray-500 text-xs">vs last month</span>
+              </div>
             </div>
-            <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 ${stat.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
-              {stat.icon}
-            </div>
-          </div>
-          <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center min-w-0">
-            <span className="text-green-600 text-xs sm:text-sm font-medium flex-shrink-0">{stat.insights}</span>
-            <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:block">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
+          {stats.map((stat) => (
+            <div key={stat.label} className="bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border border-gray-200 min-w-0">
+              <div className="flex items-center justify-between">
+                <div className="min-w-0 flex-1">
+                  <h3 className={`text-xs sm:text-sm font-medium ${stat.labelColor} truncate`}>{stat.label}</h3>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{stat.value}</p>
+                </div>
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 ${stat.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                  {stat.icon}
+                </div>
+              </div>
+              <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center min-w-0">
+                <span className="text-green-600 text-xs sm:text-sm font-medium flex-shrink-0">{stat.insights}</span>
+                <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
