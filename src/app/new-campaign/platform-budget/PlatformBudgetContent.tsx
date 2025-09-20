@@ -682,7 +682,7 @@ export function PlatformBudgetContent() {
               {errors.platforms && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-[14px] text-red-600">{errors.platforms}</p>
-                </div>
+          </div>
               )}
               
               {/* Mobile Card Layout */}
@@ -777,6 +777,99 @@ export function PlatformBudgetContent() {
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#25D366]/10 text-[#25D366]">Global</span>
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#25D366]/10 text-[#25D366]">Rich Media</span>
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#25D366]/10 text-[#25D366]">Verified</span>
+                  </div>
+                </div>
+
+                {/* SMS Platform Card */}
+                <div className={`border rounded-lg p-4 transition-all ${
+                  selectedPlatforms.includes('sms') 
+                    ? 'border-[#FF6B35] bg-[#FF6B35]/5' 
+                    : 'border-[#e9e9e9] bg-white hover:border-[#FF6B35]/50'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-[#FF6B35] rounded-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z" fill="white"/>
+                          <path d="M7 9H17V11H7V9ZM7 12H14V14H7V12Z" fill="white"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-[18px] font-semibold text-[#2a2a2f]">SMS</div>
+                        <div className="text-[14px] text-[#a1a1a1]">Universal delivery</div>
+                        <div className="flex items-center gap-1 mt-1">
+                          <div className="text-[14px] font-semibold text-[#2a2a2f]">3.8/5</div>
+                          <div className="text-[12px] text-[#a1a1a1]">• 1.2k reviews</div>
+                        </div>
+                      </div>
+                    </div>
+                    <CustomCheckbox
+                      checked={selectedPlatforms.includes('sms')}
+                      onChange={() => togglePlatform('sms')}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-[16px] font-bold text-[#2a2a2f]">₹0.03</div>
+                      <div className="text-[12px] text-[#a1a1a1]">per message</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-[16px] font-bold text-[#2a2a2f]">95%</div>
+                      <div className="text-[12px] text-[#a1a1a1]">open rate</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#FF6B35]/10 text-[#FF6B35]">Universal</span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#FF6B35]/10 text-[#FF6B35]">Reliable</span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#FF6B35]/10 text-[#FF6B35]">Instant</span>
+                  </div>
+                </div>
+
+                {/* Email Platform Card */}
+                <div className={`border rounded-lg p-4 transition-all ${
+                  selectedPlatforms.includes('email') 
+                    ? 'border-[#4285F4] bg-[#4285F4]/5' 
+                    : 'border-[#e9e9e9] bg-white hover:border-[#4285F4]/50'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-[#4285F4] rounded-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-[18px] font-semibold text-[#2a2a2f]">Email</div>
+                        <div className="text-[14px] text-[#a1a1a1]">Cost effective</div>
+                        <div className="flex items-center gap-1 mt-1">
+                          <div className="text-[14px] font-semibold text-[#2a2a2f]">3.5/5</div>
+                          <div className="text-[12px] text-[#a1a1a1]">• 3.4k reviews</div>
+                        </div>
+                      </div>
+                    </div>
+                    <CustomCheckbox
+                      checked={selectedPlatforms.includes('email')}
+                      onChange={() => togglePlatform('email')}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-[16px] font-bold text-[#2a2a2f]">₹0.01</div>
+                      <div className="text-[12px] text-[#a1a1a1]">per message</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-[16px] font-bold text-[#2a2a2f]">25%</div>
+                      <div className="text-[12px] text-[#a1a1a1]">open rate</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#4285F4]/10 text-[#4285F4]">Cost Effective</span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#4285F4]/10 text-[#4285F4]">Rich Content</span>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#4285F4]/10 text-[#4285F4]">Analytics</span>
                   </div>
                 </div>
               </div>
@@ -991,7 +1084,7 @@ export function PlatformBudgetContent() {
                     </tr>
                   </tbody>
                 </table>
-              </div>
+          </div>
             </div>
           </div>
         </section>
