@@ -452,11 +452,11 @@ export function ScheduleContent() {
           onClose={() => router.push('/campaigns', { scroll: false })}
           onNext={handlePublishCampaign}
           onPrevious={() => {
-            // Preserve query parameters when going back
-            const searchParams = new URLSearchParams(window.location.search);
-            const campaignType = searchParams.get('type') || 'advertise';
-            router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
-          }}
+                  // Preserve query parameters when going back
+                  const searchParams = new URLSearchParams(window.location.search);
+                  const campaignType = searchParams.get('type') || 'advertise';
+                  router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
+                }}
           nextLabel={isPublishing ? "Publishing..." : isPublished ? "Published!" : "Publish"}
           nextDisabled={isPublishing || isPublished}
           showPrevious={true}
