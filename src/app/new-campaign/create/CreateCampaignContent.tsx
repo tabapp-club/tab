@@ -145,23 +145,13 @@ export function CreateCampaignContent() {
   };
 
   return (
-      <main className={`flex-1 transition-sidebar h-full ${
+      <main className={`flex-1 transition-sidebar overflow-y-auto ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
       <CampaignHeader onBack={() => router.push('/campaigns')} />
 
-      <div className="w-full max-w-full overflow-x-hidden h-full flex flex-col">
-        <CampaignFooter
-          onClose={handleClose}
-          onNext={handleProceedToNextStep}
-          onPrevious={handleBack}
-          nextLabel="Proceed to next step"
-          showPrevious={true}
-        />
-
-        {/* Main Content */}
-        <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32">
-          <CampaignStepper currentStep={4} />
+      <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6] pt-16 lg:pt-4 relative">
+        <CampaignStepper currentStep={4} />
 
           {/* Main Title */}
           <div className="mb-6">
@@ -189,7 +179,14 @@ export function CreateCampaignContent() {
               Advanced campaign creation tools with templates, design options, and customization features will be available in future updates.
             </p>
           </div>
-        </div>
+
+        <CampaignFooter
+          onClose={handleClose}
+          onNext={handleProceedToNextStep}
+          onPrevious={handleBack}
+          nextLabel="Proceed to next step"
+          showPrevious={true}
+        />
       </div>
     </main>
   );
