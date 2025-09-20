@@ -247,6 +247,10 @@ export function AudienceContent() {
     router.push(`/new-campaign/platform-budget?type=${campaignType}`);
     };
 
+  const handleClose = () => {
+    router.push('/campaigns');
+    };
+
   return (
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
@@ -1329,12 +1333,12 @@ export function AudienceContent() {
           nextLabel="Proceed to next step"
           showPrevious={true}
           saveMessage={`Audience: ${
-            audienceType === 'all' ? `All ${totalUsers.toLocaleString()} customers` :
-            audienceType === 'custom' ? 'Custom audience' :
-            audienceType === 'ai_inactive' ? 'AI: Inactive Users Reactivation' :
-            audienceType === 'ai_vip' ? 'AI: VIP Customer Retention' :
-            audienceType === 'ai_cart' ? 'AI: Cart Abandonment Recovery' :
-            'Custom audience'
+                  audienceType === 'all' ? `All ${totalUsers.toLocaleString()} customers` :
+                  audienceType === 'custom' ? 'Custom audience' :
+                  audienceType === 'ai_inactive' ? 'AI: Inactive Users Reactivation' :
+                  audienceType === 'ai_vip' ? 'AI: VIP Customer Retention' :
+                  audienceType === 'ai_cart' ? 'AI: Cart Abandonment Recovery' :
+                  'Custom audience'
           }`}
         />
       </div>
