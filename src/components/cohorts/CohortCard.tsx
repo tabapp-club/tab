@@ -3,6 +3,63 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CohortData } from "./CohortsList";
+// import { BottomSheet } from "../ui/BottomSheet";
+
+// Simple inline BottomSheet component to avoid import issues
+const SimpleBottomSheet = ({ isOpen, onClose, title, children }: {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[99999] sm:hidden">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={onClose}
+      />
+      
+      {/* Bottom Sheet */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl">
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M15 5L5 15M5 5L15 15"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="max-h-[60vh] overflow-y-auto">
+          {children}
+        </div>
+
+        {/* Safe area for iOS */}
+        <div className="pb-safe" />
+      </div>
+    </div>,
+    document.body
+  );
+};
 
 // Icons for the cohort card
 const CohortIcon = () => (
@@ -24,35 +81,53 @@ interface CohortCardProps {
 
 export function CohortCard({ cohort }: CohortCardProps) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMoreClick = () => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const menuWidth = 120; // Menu width
-      const viewportWidth = window.innerWidth;
-      
-      // Calculate left position to keep menu within viewport
-      let leftPosition = rect.right + window.scrollX - menuWidth - 56;
-      
-      // If menu would go outside right edge, align it to the right of the button
-      if (leftPosition + menuWidth > viewportWidth) {
-        leftPosition = rect.left + window.scrollX - menuWidth - 56;
+    if (isMobile) {
+      setShowBottomSheet(true);
+    } else {
+      if (buttonRef.current) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        const menuWidth = 120; // Menu width
+        const viewportWidth = window.innerWidth;
+        
+        // Calculate left position to keep menu within viewport
+        let leftPosition = rect.right + window.scrollX - menuWidth - 56;
+        
+        // If menu would go outside right edge, align it to the right of the button
+        if (leftPosition + menuWidth > viewportWidth) {
+          leftPosition = rect.left + window.scrollX - menuWidth - 56;
+        }
+        
+        // Ensure menu doesn't go outside left edge
+        if (leftPosition < 0) {
+          leftPosition = 0;
+        }
+        
+        setMenuPosition({
+          top: rect.bottom + window.scrollY + 4,
+          left: leftPosition
+        });
       }
-      
-      // Ensure menu doesn't go outside left edge
-      if (leftPosition < 0) {
-        leftPosition = 0;
-      }
-      
-      setMenuPosition({
-        top: rect.bottom + window.scrollY + 4,
-        left: leftPosition
-      });
+      setShowMoreMenu(!showMoreMenu);
     }
-    setShowMoreMenu(!showMoreMenu);
   };
 
   // Close dropdown when clicking outside
@@ -118,6 +193,12 @@ export function CohortCard({ cohort }: CohortCardProps) {
 
   const formatNumber = (num: number) => {
     return num.toLocaleString();
+  };
+
+  const handleAction = (action: string) => {
+    console.log(`${action} cohort:`, cohort.name);
+    setShowBottomSheet(false);
+    setShowMoreMenu(false);
   };
 
     return (
@@ -308,8 +389,8 @@ export function CohortCard({ cohort }: CohortCardProps) {
         </div>
       </div>
 
-      {/* Dropdown menu rendered in portal */}
-      {showMoreMenu && typeof document !== 'undefined' && createPortal(
+      {/* Dropdown menu rendered in portal for desktop */}
+      {showMoreMenu && !isMobile && typeof document !== 'undefined' && createPortal(
         <div
           ref={menuRef}
           className="dropdown-menu fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[120px]"
@@ -320,19 +401,19 @@ export function CohortCard({ cohort }: CohortCardProps) {
         >
           <div className="py-1">
             <button
-              onClick={() => setShowMoreMenu(false)}
+              onClick={() => handleAction('Edit')}
               className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
               Edit
             </button>
             <button
-              onClick={() => setShowMoreMenu(false)}
+              onClick={() => handleAction('Duplicate')}
               className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
               Duplicate
             </button>
             <button
-              onClick={() => setShowMoreMenu(false)}
+              onClick={() => handleAction('Delete')}
               className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
             >
               Delete
@@ -341,6 +422,57 @@ export function CohortCard({ cohort }: CohortCardProps) {
         </div>,
         document.body
       )}
+
+      {/* Bottom Sheet for mobile */}
+      <SimpleBottomSheet
+        isOpen={showBottomSheet}
+        onClose={() => setShowBottomSheet(false)}
+        title="Cohort Actions"
+      >
+        <div className="py-2">
+          <button
+            onClick={() => handleAction('Edit')}
+            className="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors text-gray-900"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 text-gray-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <span className="font-medium">Edit Cohort</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => handleAction('Duplicate')}
+            className="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors text-gray-900"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 text-gray-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span className="font-medium">Duplicate Cohort</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={() => handleAction('Delete')}
+            className="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors text-red-600"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 text-red-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <span className="font-medium">Delete Cohort</span>
+            </div>
+          </button>
+        </div>
+      </SimpleBottomSheet>
     </div>
   );
 }

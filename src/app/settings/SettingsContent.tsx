@@ -17,7 +17,6 @@ import { useSidebar } from "@/components/SidebarContext";
  * - /settings?section=payments-billing
  * - /settings?section=data-privacy
  * - /settings?section=help-support
- * - /settings/browse-integrations (dedicated integrations page)
  */
 export function SettingsContent() {
   const router = useRouter();
@@ -25,7 +24,6 @@ export function SettingsContent() {
   const { isCollapsed, isMobile } = useSidebar();
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
-  const [preferencesTab, setPreferencesTab] = useState('notifications');
   const [showContent, setShowContent] = useState(false);
   
   // Help & Support form state
@@ -99,6 +97,31 @@ export function SettingsContent() {
     gstNumber: userData.gstNumber,
     businessId: userData.businessId,
     primaryPOC: userData.primaryPOC,
+    // Additional business profile fields
+    businessType: '',
+    website: '',
+    description: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'India',
+    bankName: '',
+    accountNumber: '',
+    ifscCode: '',
+    foundedYear: '',
+    employeeCount: '',
+    termsAndConditions: '',
+    privacyPolicy: '',
+    refundPolicy: '',
+    shippingPolicy: '',
+    // POS Details
+    posSystem: '',
+    posVersion: '',
+    posProvider: '',
+    posSerialNumber: '',
+    posInstallationDate: '',
+    posLicenseKey: '',
+    posTerminalId: '',
   });
   const [savedProfile, setSavedProfile] = useState(profile);
   const [savedBusiness, setSavedBusiness] = useState(business);
@@ -106,48 +129,6 @@ export function SettingsContent() {
   // Preferences
   const [prefs, setPrefs] = useState({ email: true, push: false, marketing: true });
 
-  // Extended notification preferences
-  const [notifications, setNotifications] = useState({
-    email: {
-      campaigns: true,
-      reports: true,
-      system: true,
-      marketing: false,
-      security: true,
-      billing: true
-    },
-    push: {
-      campaigns: false,
-      reports: true,
-      system: true,
-      marketing: false,
-      security: true,
-      billing: false
-    },
-    sms: {
-      campaigns: false,
-      reports: false,
-      system: true,
-      marketing: false,
-      security: true,
-      billing: false
-    },
-    inApp: {
-      campaigns: true,
-      reports: true,
-      system: true,
-      marketing: true,
-      security: true,
-      billing: true
-    }
-  });
-
-  // Invoice preferences
-  const [invoicePrefs, setInvoicePrefs] = useState({
-    syncWithTabEngage: true,
-    sendViaTabApp: true,
-    smsBackup: false
-  });
 
   // Kebab menu state
   const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
@@ -160,6 +141,11 @@ export function SettingsContent() {
     quickbooks: false,
     clover: false,
     toast: false,
+    chromeExtension: false,
+    chromeAnalytics: false,
+    localAgent: false,
+    xero: false,
+    freshbooks: false,
   });
 
   // Manual integrations state
@@ -259,7 +245,9 @@ export function SettingsContent() {
       stripe: 'https://stripe.com/docs',
       quickbooks: 'https://developer.intuit.com/docs',
       clover: 'https://docs.clover.com',
-      toast: 'https://developer.toasttab.com/docs'
+      toast: 'https://developer.toasttab.com/docs',
+      xero: 'https://developer.xero.com/documentation',
+      freshbooks: 'https://developers.freshbooks.com/docs'
     };
 
     const url = docsUrls[integrationId as keyof typeof docsUrls];
@@ -354,17 +342,24 @@ export function SettingsContent() {
   useEffect(() => {
     const section = searchParams.get('section');
     const tab = searchParams.get('tab');
-    const validSections = ['account-settings', 'preferences', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
+    const validSections = ['account-settings', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
     const validTabs = ['user-profile', 'business-profile'];
 
     if (section && validSections.includes(section)) {
       setActiveSection(section);
+      // On mobile, show content when there's a section parameter
+      if (isMobile) {
+        setShowContent(true);
+      }
+    } else if (isMobile) {
+      // On mobile, if no section parameter, show the settings menu
+      setShowContent(false);
     }
 
     if (tab && validTabs.includes(tab)) {
       setActiveTab(tab);
     }
-  }, [searchParams]);
+  }, [searchParams, isMobile]);
 
   // Function to update URL when section changes
   const updateURL = (section: string) => {
@@ -391,10 +386,6 @@ export function SettingsContent() {
         title: 'Account settings',
         description: 'Personal & business profile information'
       },
-      'preferences': {
-        title: 'Preferences',
-        description: 'Notifications & invoice delivery settings'
-      },
       'integrations': {
         title: 'Integrations',
         description: 'Connect POS systems & third-party apps'
@@ -405,7 +396,7 @@ export function SettingsContent() {
       },
       'login-security': {
         title: 'Login and security',
-        description: 'Password, 2FA & session management'
+        description: 'Password & session management'
       },
       'payments-billing': {
         title: 'Payments & Billing',
@@ -413,7 +404,7 @@ export function SettingsContent() {
       },
       'data-privacy': {
         title: 'Data & Privacy',
-        description: 'Export data, privacy settings & account deletion'
+        description: 'Privacy settings & cookie preferences'
       },
       'help-support': {
         title: 'Help & Support',
@@ -458,7 +449,6 @@ export function SettingsContent() {
   const [showEditRoleDropdown, setShowEditRoleDropdown] = useState(false);
 
   // Security
-  const [twoFAEnabled, setTwoFAEnabled] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
   const [showSessions, setShowSessions] = useState(false);
@@ -470,17 +460,6 @@ export function SettingsContent() {
   const [showInvoices, setShowInvoices] = useState(false);
 
   // Data & Privacy
-  const handleExportData = () => {
-    const blob = new Blob([
-      JSON.stringify({ profile: savedProfile, business: savedBusiness, prefs, integrations }, null, 2)
-    ], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'tab-dashboard-export.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -491,14 +470,20 @@ export function SettingsContent() {
     }`}>
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileHeaderButton />
+        <MobileHeaderButton 
+          onClick={isMobile && showContent ? () => {
+            setShowContent(false);
+            // Clear URL parameters when going back to settings menu
+            router.push('/settings', { scroll: false });
+          } : undefined}
+        />
       </header>
 
       {/* Main Content */}
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden h-screen bg-[#f6f6f6]">
         <div className="pt-12 lg:pt-0 h-full flex">
           {/* Settings Sidebar */}
-          <div className={`${isMobile ? (showContent ? 'hidden' : 'w-full') : 'w-[272px]'} bg-white border-r border-[#e9e9e9] px-4 py-0 pt-8 h-full transition-all duration-300 overflow-y-auto ${
+          <div className={`${isMobile ? (showContent ? 'hidden' : 'w-full') : 'w-[272px]'} ${isMobile ? 'bg-[#f6f6f6]' : 'bg-white'} border-r border-[#e9e9e9] px-4 py-0 pt-8 h-full transition-all duration-300 overflow-y-auto ${
             isMobile 
               ? 'relative top-0 left-0' // Mobile: relative positioning, full width
               : actualIsCollapsed 
@@ -528,45 +513,6 @@ export function SettingsContent() {
                 </div>
               </button>
 
-              <button
-                onClick={() => {
-                  setActiveSection('preferences');
-                  updateURL('preferences');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'preferences'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Preferences</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Notifications & invoice delivery settings
-                  </span>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveSection('integrations');
-                  updateURL('integrations');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'integrations'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Integrations</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Connect POS systems & third-party apps
-                  </span>
-                </div>
-              </button>
 
               <button
                 onClick={() => {
@@ -603,7 +549,27 @@ export function SettingsContent() {
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">Login and security</span>
                   <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Password, 2FA & session management
+                    Password & session management
+                  </span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveSection('integrations');
+                  updateURL('integrations');
+                  if (isMobile) setShowContent(true);
+                }}
+                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
+                  activeSection === 'integrations'
+                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
+                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                }`}
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">Integrations</span>
+                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
+                    Connect POS systems & third-party apps
                   </span>
                 </div>
               </button>
@@ -643,7 +609,7 @@ export function SettingsContent() {
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">Data & Privacy</span>
                   <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Export data, privacy settings & account deletion
+                    Privacy settings & cookie preferences
                   </span>
                 </div>
               </button>
@@ -681,20 +647,6 @@ export function SettingsContent() {
           }`}>
             {/* Fixed Header Area */}
             <div className="px-2 pt-2 pb-3 bg-[#f6f6f6] border-b border-[#e9e9e9] -mt-2">
-            {/* Mobile Back Button */}
-            {isMobile && showContent && (
-              <div className="mb-4">
-                <button
-                  onClick={() => setShowContent(false)}
-                  className="flex items-center space-x-2 text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  <span className="text-sm font-medium">Back to Settings</span>
-                </button>
-              </div>
-            )}
             {/* Header */}
             <div className="mb-4">
                 <h1 className="text-[20px] leading-[28px] tracking-[-0.1px] font-bold text-[#2a2a2f]">
@@ -737,60 +689,36 @@ export function SettingsContent() {
             </div>
               )}
 
-              {activeSection === 'preferences' && (
-                <div className="mb-4 flex gap-2">
-                  <button
-                    onClick={() => setPreferencesTab('notifications')}
-                    className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
-                      preferencesTab === 'notifications'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
-                    }`}
-                  >
-                    Notifications
-                  </button>
-                  <button
-                    onClick={() => setPreferencesTab('invoices')}
-                    className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
-                      preferencesTab === 'invoices'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
-                    }`}
-                  >
-                    Invoices
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto px-2 py-3">
+              {/* Main container - Only show for user profile or other sections */}
+              {!(activeSection === 'account-settings' && activeTab === 'business-profile') && (
               <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 min-h-[400px]">
-              {activeSection === 'account-settings' && (
+                  {activeSection === 'account-settings' && activeTab === 'user-profile' && (
                 <div className="space-y-4">
                   <div>
                     <h2 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-0">
-                      {activeTab === 'user-profile' ? 'Personal Information' : 'Business Information'}
+                          Personal Information
                     </h2>
                     <p className="text-[#626266] text-[12px] leading-[16px] tracking-[-0.1px] font-normal">
-                      Update your {activeTab === 'user-profile' ? 'personal' : 'business'} details and contact information.
+                          Update your personal details and contact information.
                     </p>
                   </div>
 
-                  {/* Profile Form */}
+                      {/* User Profile Form */}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                        {activeTab === 'user-profile' ? 'Full Name' : 'Business Name'}
+                            Full Name
                       </label>
                       <input
                         type="text"
-                        value={activeTab === 'user-profile' ? profile.name : business.businessName}
-                        onChange={(e) => activeTab === 'user-profile'
-                          ? setProfile(v => ({ ...v, name: e.target.value }))
-                          : setBusiness(v => ({ ...v, businessName: e.target.value }))}
+                            value={profile.name}
+                            onChange={(e) => setProfile(v => ({ ...v, name: e.target.value }))}
                         className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                        placeholder={activeTab === 'user-profile' ? 'Enter your full name' : 'Enter business name'}
+                            placeholder="Enter your full name"
                       />
                     </div>
 
@@ -846,234 +774,6 @@ export function SettingsContent() {
                       />
                     </div>
 
-                    {activeTab === 'business-profile' && (
-                      <>
-                        {/* Business Email IDs */}
-                      <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                            Business Email IDs
-                          </label>
-                          <div className="space-y-2">
-                            {business.businessEmails.map((email, index) => (
-                              <div key={index} className="flex gap-2">
-                                <input
-                                  type="email"
-                                  value={email}
-                                  onChange={(e) => {
-                                    const newEmails = [...business.businessEmails];
-                                    newEmails[index] = e.target.value;
-                                    setBusiness(v => ({ ...v, businessEmails: newEmails }));
-                                  }}
-                                  className="flex-1 px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                  placeholder="Enter business email"
-                                />
-                                {business.businessEmails.length > 1 && (
-                                  <button
-                                    onClick={() => {
-                                      const newEmails = business.businessEmails.filter((_, i) => i !== index);
-                                      setBusiness(v => ({ ...v, businessEmails: newEmails }));
-                                    }}
-                                    className="px-3 py-2 text-red-600 hover:text-red-700 transition-colors"
-                                  >
-                                    Remove
-                                  </button>
-                                )}
-                              </div>
-                            ))}
-                            {business.businessEmails.length < 3 && (
-                              <button
-                                onClick={() => {
-                                  setBusiness(v => ({
-                                    ...v,
-                                    businessEmails: [...v.businessEmails, '']
-                                  }));
-                                }}
-                                className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
-                              >
-                                + Add Email ID
-                              </button>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Business Phone Numbers */}
-                        <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                            Business Phone Numbers
-                          </label>
-                          <div className="space-y-2">
-                            {business.businessPhones.map((phone, index) => (
-                              <div key={index} className="flex gap-2">
-                                <input
-                                  type="tel"
-                                  value={phone}
-                                  onChange={(e) => {
-                                    const newPhones = [...business.businessPhones];
-                                    newPhones[index] = e.target.value;
-                                    setBusiness(v => ({ ...v, businessPhones: newPhones }));
-                                  }}
-                                  className="flex-1 px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                  placeholder="Enter business phone number"
-                                />
-                                {business.businessPhones.length > 1 && (
-                                  <button
-                                    onClick={() => {
-                                      const newPhones = business.businessPhones.filter((_, i) => i !== index);
-                                      setBusiness(v => ({ ...v, businessPhones: newPhones }));
-                                    }}
-                                    className="px-3 py-2 text-red-600 hover:text-red-700 transition-colors"
-                                  >
-                                    Remove
-                                  </button>
-                                )}
-                              </div>
-                            ))}
-                            {business.businessPhones.length < 3 && (
-                              <button
-                                onClick={() => {
-                                  setBusiness(v => ({
-                                    ...v,
-                                    businessPhones: [...v.businessPhones, '']
-                                  }));
-                                }}
-                                className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
-                              >
-                                + Add Phone Number
-                              </button>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Business Address */}
-                        <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                          Business Address
-                        </label>
-                        <textarea
-                            value={business.businessAddress}
-                            onChange={(e) => setBusiness(v => ({ ...v, businessAddress: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                          rows={3}
-                          placeholder="Enter business address"
-                        />
-                      </div>
-
-                        {/* Business PAN */}
-                        <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                            Business PAN
-                          </label>
-                          <input
-                            type="text"
-                            value={business.businessPAN}
-                            onChange={(e) => setBusiness(v => ({ ...v, businessPAN: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                            placeholder="Enter business PAN"
-                          />
-                        </div>
-
-                        {/* GST Number */}
-                        <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                            GST Number
-                          </label>
-                          <input
-                            type="text"
-                            value={business.gstNumber}
-                            onChange={(e) => setBusiness(v => ({ ...v, gstNumber: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                            placeholder="Enter GST number"
-                          />
-                        </div>
-
-                        {/* Business ID */}
-                        <div>
-                          <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                            Business ID
-                          </label>
-                          <input
-                            type="text"
-                            value={business.businessId}
-                            onChange={(e) => setBusiness(v => ({ ...v, businessId: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                            placeholder="Enter business ID"
-                          />
-                        </div>
-
-                        {/* Primary POC Details */}
-                        <div className="border-t pt-4 mt-4">
-                          <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">
-                            Primary POC Details
-                          </h3>
-                          <div className="space-y-4">
-                            <div>
-                              <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                                POC Name
-                              </label>
-                              <input
-                                type="text"
-                                value={business.primaryPOC.name}
-                                onChange={(e) => setBusiness(v => ({
-                                  ...v,
-                                  primaryPOC: { ...v.primaryPOC, name: e.target.value }
-                                }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                placeholder="Enter POC name"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                                POC Email
-                              </label>
-                              <input
-                                type="email"
-                                value={business.primaryPOC.email}
-                                onChange={(e) => setBusiness(v => ({
-                                  ...v,
-                                  primaryPOC: { ...v.primaryPOC, email: e.target.value }
-                                }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                placeholder="Enter POC email"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                                POC Phone
-                              </label>
-                              <input
-                                type="tel"
-                                value={business.primaryPOC.phone}
-                                onChange={(e) => setBusiness(v => ({
-                                  ...v,
-                                  primaryPOC: { ...v.primaryPOC, phone: e.target.value }
-                                }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                placeholder="Enter POC phone number"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
-                                POC Designation
-                              </label>
-                              <input
-                                type="text"
-                                value={business.primaryPOC.designation}
-                                onChange={(e) => setBusiness(v => ({
-                                  ...v,
-                                  primaryPOC: { ...v.primaryPOC, designation: e.target.value }
-                                }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
-                                placeholder="Enter POC designation"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
                     <div className="pt-4 flex gap-3">
                       <button
                         onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
@@ -1092,256 +792,6 @@ export function SettingsContent() {
                 </div>
               )}
 
-              {activeSection === 'preferences' && (
-                <div className="space-y-4">
-                  {preferencesTab === 'notifications' && (
-                  <div className="space-y-4">
-                      <div>
-                        <h2 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-2">
-                          Notification Preferences
-                        </h2>
-                        <p className="text-[#626266] text-[13.563px] leading-[19.6px] tracking-[-0.1px]">
-                          Choose how you want to receive notifications for different types of activities.
-                        </p>
-                      </div>
-
-                      {/* Email Notifications */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
-                          <span className="w-8 h-8 bg-blue-100 rounded-[4px] flex items-center justify-center mr-3">
-                            📧
-                          </span>
-                          Email Notifications
-                        </h3>
-                        <div className="space-y-3">
-                          {Object.entries({
-                            campaigns: 'Campaign updates and status changes',
-                            reports: 'Weekly and monthly reports',
-                            system: 'System maintenance and updates',
-                            marketing: 'New features and promotional offers',
-                            security: 'Security alerts and login notifications',
-                            billing: 'Payment confirmations and invoices'
-                          }).map(([key, description]) => (
-                            <div key={key} className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-900 capitalize">{key}</p>
-                                <p className="text-xs text-gray-500">{description}</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="sr-only peer"
-                                  checked={notifications.email[key as keyof typeof notifications.email]}
-                                  onChange={() => setNotifications(v => ({
-                                    ...v,
-                                    email: { ...v.email, [key]: !v.email[key as keyof typeof v.email] }
-                                  }))}
-                                />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
-                      </label>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-
-                      {/* Push Notifications */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
-                          <span className="w-8 h-8 bg-green-100 rounded-[4px] flex items-center justify-center mr-3">
-                            🔔
-                          </span>
-                          Push Notifications
-                        </h3>
-                        <div className="space-y-3">
-                          {Object.entries({
-                            campaigns: 'Real-time campaign alerts',
-                            reports: 'Report generation completed',
-                            system: 'System status updates',
-                            marketing: 'Feature announcements',
-                            security: 'Security alerts',
-                            billing: 'Payment reminders'
-                          }).map(([key, description]) => (
-                            <div key={key} className="flex items-center justify-between">
-                      <div>
-                                <p className="text-sm font-medium text-gray-900 capitalize">{key}</p>
-                                <p className="text-xs text-gray-500">{description}</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="sr-only peer"
-                                  checked={notifications.push[key as keyof typeof notifications.push]}
-                                  onChange={() => setNotifications(v => ({
-                                    ...v,
-                                    push: { ...v.push, [key]: !v.push[key as keyof typeof v.push] }
-                                  }))}
-                                />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
-                      </label>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-
-                      {/* SMS Notifications */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
-                          <span className="w-8 h-8 bg-yellow-100 rounded-[4px] flex items-center justify-center mr-3">
-                            💬
-                          </span>
-                          SMS Notifications
-                        </h3>
-                        <div className="space-y-3">
-                          {Object.entries({
-                            campaigns: 'Critical campaign alerts only',
-                            reports: 'Monthly summary via SMS',
-                            system: 'Emergency system notifications',
-                            marketing: 'Special offers and promotions',
-                            security: 'Security breach alerts',
-                            billing: 'Payment due reminders'
-                          }).map(([key, description]) => (
-                            <div key={key} className="flex items-center justify-between">
-                      <div>
-                                <p className="text-sm font-medium text-gray-900 capitalize">{key}</p>
-                                <p className="text-xs text-gray-500">{description}</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="sr-only peer"
-                                  checked={notifications.sms[key as keyof typeof notifications.sms]}
-                                  onChange={() => setNotifications(v => ({
-                                    ...v,
-                                    sms: { ...v.sms, [key]: !v.sms[key as keyof typeof v.sms] }
-                                  }))}
-                                />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* In-App Notifications */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
-                          <span className="w-8 h-8 bg-purple-100 rounded-[4px] flex items-center justify-center mr-3">
-                            🔕
-                          </span>
-                          In-App Notifications
-                        </h3>
-                        <div className="space-y-3">
-                          {Object.entries({
-                            campaigns: 'Campaign status updates in dashboard',
-                            reports: 'Report availability notifications',
-                            system: 'System announcements in app',
-                            marketing: 'Feature highlights and tips',
-                            security: 'Security notifications in app',
-                            billing: 'Billing status in dashboard'
-                          }).map(([key, description]) => (
-                            <div key={key} className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-gray-900 capitalize">{key}</p>
-                                <p className="text-xs text-gray-500">{description}</p>
-                              </div>
-                              <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="sr-only peer"
-                                  checked={notifications.inApp[key as keyof typeof notifications.inApp]}
-                                  onChange={() => setNotifications(v => ({
-                                    ...v,
-                                    inApp: { ...v.inApp, [key]: !v.inApp[key as keyof typeof v.inApp] }
-                                  }))}
-                                />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Save Button */}
-                      <div className="pt-4 flex gap-3">
-                        <button className="bg-[#6E4EFF] text-white px-4 py-2 rounded-[4px] hover:bg-[#5A3FD9] transition-colors font-medium">
-                          Save Notification Preferences
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                                    {preferencesTab === 'invoices' && (
-                  <div className="space-y-4">
-                      <div>
-                        <h2 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-2">
-                          Invoice Delivery Settings
-                        </h2>
-                        <p className="text-[#626266] text-[13.563px] leading-[19.6px] tracking-[-0.1px]">
-                          Configure how invoices are synchronized and delivered to your users.
-                        </p>
-                      </div>
-
-                      {/* Sync with tab-engage */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <h3 className="text-sm font-medium text-gray-900">Sync invoices with tab-engage</h3>
-                            <p className="text-xs text-gray-500 mt-1">Automatically synchronize all invoices with the tab-engage platform for seamless integration</p>
-                            <p className="text-xs text-orange-600 mt-2 font-medium">Contact support to disable this feature</p>
-                          </div>
-                          <div className="relative inline-flex items-center">
-                            <div className="w-11 h-6 bg-[#6E4EFF] rounded-full relative">
-                              <div className="absolute top-[2px] right-[2px] bg-white border border-gray-300 rounded-full h-5 w-5 transition-all"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Send via tab-app */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <h3 className="text-sm font-medium text-gray-900">Send invoices to user via tab-app</h3>
-                            <p className="text-xs text-gray-500 mt-1">Deliver invoices directly through the tab-app mobile application for instant access</p>
-                            <p className="text-xs text-orange-600 mt-2 font-medium">Contact support to disable this feature</p>
-                          </div>
-                          <div className="relative inline-flex items-center">
-                            <div className="w-11 h-6 bg-[#6E4EFF] rounded-full relative">
-                              <div className="absolute top-[2px] right-[2px] bg-white border border-gray-300 rounded-full h-5 w-5 transition-all"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* SMS backup */}
-                      <div className="border border-gray-200 rounded-[4px] p-4">
-                        <div className="flex items-center justify-between">
-                      <div>
-                            <h3 className="text-sm font-medium text-gray-900">SMS backup delivery</h3>
-                            <p className="text-xs text-gray-500 mt-1">If the app is not installed on the user&apos;s device, send invoice via SMS as a backup delivery method</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              className="sr-only peer"
-                              checked={invoicePrefs.smsBackup}
-                              onChange={() => setInvoicePrefs(v => ({ ...v, smsBackup: !v.smsBackup }))}
-                            />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                      </label>
-                    </div>
-                  </div>
-
-                      {/* Save Button */}
-                      <div className="pt-4 flex gap-3">
-                        <button className="bg-[#6E4EFF] text-white px-4 py-2 rounded-[4px] hover:bg-[#5A3FD9] transition-colors font-medium">
-                          Save Invoice Settings
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
 
               {activeSection === 'integrations' && (
                 <div className="space-y-6">
@@ -1360,58 +810,9 @@ export function SettingsContent() {
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           {Object.values(integrations).filter(Boolean).length} Connected
                         </span>
-                        <button
-                          onClick={() => router.push('/settings/browse-integrations')}
-                          className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6E4EFF]"
-                        >
-                          Browse All
-                        </button>
                       </div>
                     </div>
                   </div>
-
-                  {/* Quick Stats */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-lg p-4">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                          <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">POS Systems</p>
-                          <p className="text-xs text-gray-500">3 available</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-lg p-4">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                          <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"/>
-                            </svg>
-                          </div>
-                          <div>
-                          <p className="text-sm font-medium text-gray-900">Payments</p>
-                          <p className="text-xs text-gray-500">2 available</p>
-                          </div>
-                        </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 rounded-lg p-4">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                          <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zm-2 1a1 1 0 011-1h.01a1 1 0 110 2H12a1 1 0 01-1-1zm-2-1a1 1 0 100 2h.01a1 1 0 100-2H9zm-2 1a1 1 0 011-1h.01a1 1 0 110 2H8a1 1 0 01-1-1z" clipRule="evenodd"/>
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Accounting</p>
-                          <p className="text-xs text-gray-500">1 available</p>
-                        </div>
-                      </div>
-                      </div>
-                    </div>
 
                   {/* Manual Integrations Section */}
                   <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
@@ -1579,254 +980,223 @@ export function SettingsContent() {
                     </div>
                   </div>
 
-                  {/* Featured Integrations */}
-                  <div>
-                    <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4 flex items-center">
-                      <span className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-2"></span>
-                      Featured Integrations
-                    </h3>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {/* Square POS */}
-                      <div className="group relative bg-white border border-gray-200 rounded-lg p-6 hover:border-[#6E4EFF]/30 hover:shadow-md transition-all duration-300">
-                        {/* Header */}
-                        <div className="flex items-start gap-4 mb-4">
-                          <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                              <div className="w-5 h-5 bg-black rounded flex items-center justify-center">
-                                <div className="w-2.5 h-2.5 bg-white rounded-sm"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-base font-semibold text-gray-900 mb-1">Square POS</h4>
-                            <p className="text-sm text-gray-500">Point of sale & payment processing</p>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                          Sync sales data, inventory, and customer information from your Square POS system in real-time.
-                        </p>
-
-
-
-                                                {/* Actions */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                                                        {!integrations.square ? (
-                              <button
-                                onClick={() => connectIntegration('square')}
-                                disabled={loadingStates.square}
-                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                {loadingStates.square ? (
-                                  <div className="flex items-center gap-2">
-                                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Connecting...
-                                  </div>
-                                ) : 'Connect'}
-                              </button>
-                            ) : (
-                              <span className="px-3 py-1.5 bg-green-50 text-green-700 rounded text-sm font-medium border border-green-200">
-                                ✓ Connected
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Kebab Menu */}
-                          <div className="relative kebab-menu-container">
-                            <button
-                              onClick={() => setOpenKebabMenu(openKebabMenu === 'square' ? null : 'square')}
-                              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-                              aria-label="More options"
-                            >
-                              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-                              </svg>
-                            </button>
-
-                            {openKebabMenu === 'square' && (
-                              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                <div className="py-1">
-                                  <button
-                                    onClick={() => {
-                                      viewIntegrationDocs('square');
-                                      setOpenKebabMenu(null);
-                                    }}
-                                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                                  >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                    </svg>
-                                    View Documentation
-                                  </button>
-                                  {integrations.square && (
-                                    <>
-                                      <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
-                                        Settings
-                                      </button>
-                                      <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                        </svg>
-                                        Sync Now
-                                      </button>
-                                      <div className="border-t border-gray-100">
-                                        <button
-                                          onClick={() => {
-                                            disconnectIntegration('square');
-                                            setOpenKebabMenu(null);
-                                          }}
-                                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                                        >
-                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
-                                          </svg>
-                                          Disconnect
-                                        </button>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                      </div>
-                    </div>
-
-                      {/* Shopify */}
-                      <div className="group relative bg-white border border-gray-200 rounded-lg p-6 hover:border-[#6E4EFF]/30 hover:shadow-md transition-all duration-300">
-                        {/* Header */}
-                        <div className="flex items-start gap-4 mb-4">
-                                                     <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200">
-                             <svg width="32" height="36" viewBox="0 0 64 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-                               <g clipPath="url(#clip0_1177_7483)">
-                                 <path d="M55.9433 14.3346C55.893 13.9696 55.5733 13.7676 55.309 13.7453C53.3605 13.5989 51.4119 13.4537 49.4633 13.3096C49.4633 13.3096 45.5865 9.46084 45.161 9.03484C44.7353 8.60909 43.9038 8.73859 43.581 8.83359C43.5335 8.84759 42.734 9.09434 41.4115 9.50359C40.1165 5.77709 37.831 2.35259 33.8103 2.35259C33.6993 2.35259 33.585 2.35709 33.4708 2.36359C32.3273 0.851336 30.9108 0.194336 29.6873 0.194336C20.321 0.194336 15.8463 11.9031 14.4433 17.8531C10.8038 18.9808 8.21828 19.7826 7.88803 19.8863C5.85653 20.5236 5.79228 20.5876 5.52553 22.5018C5.32478 23.9511 0.00927734 65.0583 0.00927734 65.0583L41.4288 72.8188L63.8713 67.9638C63.8713 67.9638 55.9928 14.6996 55.9433 14.3346ZM39.1223 10.2116L35.6175 11.2963C35.6188 11.0493 35.62 10.8063 35.62 10.5406C35.62 8.22459 35.2985 6.35984 34.7828 4.88159C36.8545 5.14159 38.2343 7.49884 39.1223 10.2116ZM32.2128 5.34084C32.7888 6.78409 33.1633 8.85534 33.1633 11.6503C33.1633 11.7933 33.162 11.9241 33.1608 12.0563C30.8815 12.7623 28.4048 13.5288 25.9225 14.2978C27.3163 8.91884 29.9288 6.32084 32.2128 5.34084ZM29.43 2.70659C29.8343 2.70659 30.2415 2.84384 30.6313 3.11209C27.6295 4.52459 24.412 8.08209 23.0533 15.1863L17.3318 16.9583C18.9233 11.5396 22.7025 2.70659 29.43 2.70659Z" fill="#95BF46"/>
-                                 <path d="M55.3094 13.746C53.3609 13.5996 51.4123 13.4543 49.4637 13.3102C49.4637 13.3102 45.5869 9.46149 45.1614 9.03549C45.0022 8.87699 44.7874 8.79574 44.5629 8.76074L41.4312 72.819L63.8717 67.9645C63.8717 67.9645 55.9932 14.7002 55.9437 14.3352C55.8934 13.9702 55.5737 13.7682 55.3094 13.746Z" fill="#5E8E3E"/>
-                                 <path d="M33.8104 26.146L31.0432 34.3775C31.0432 34.3775 28.6187 33.0835 25.6467 33.0835C21.2897 33.0835 21.0704 35.8178 21.0704 36.5068C21.0704 40.2663 30.8704 41.7068 30.8704 50.5128C30.8704 57.441 26.4762 61.9023 20.5512 61.9023C13.4412 61.9023 9.80518 57.4773 9.80518 57.4773L11.7089 51.1873C11.7089 51.1873 15.4464 54.396 18.6002 54.396C20.6609 54.396 21.4992 52.7735 21.4992 51.588C21.4992 46.684 13.4592 46.4653 13.4592 38.407C13.4592 31.6248 18.3272 25.0615 28.1537 25.0615C31.9399 25.0615 33.8104 26.146 33.8104 26.146Z" fill="white"/>
-                               </g>
-                               <defs>
-                                 <clipPath id="clip0_1177_7483">
-                                   <rect width="64" height="73" fill="white"/>
-                                 </clipPath>
-                               </defs>
-                            </svg>
-                          </div>
-                                                    <div className="flex-1 min-w-0">
-                            <h4 className="text-base font-semibold text-gray-900 mb-1">Shopify</h4>
-                            <p className="text-sm text-gray-500">E-commerce platform</p>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                          Connect your online store to sync products, orders, and customer data automatically across all channels.
-                        </p>
-
-
-
-                                                {/* Actions */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                                                        {!integrations.shopify ? (
-                              <button
-                                onClick={() => connectIntegration('shopify')}
-                                disabled={loadingStates.shopify}
-                                className="px-4 py-2 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-sm font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                {loadingStates.shopify ? (
-                                  <div className="flex items-center gap-2">
-                                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Connecting...
-                                  </div>
-                                ) : 'Connect'}
-                              </button>
-                            ) : (
-                              <span className="px-3 py-1.5 bg-green-50 text-green-700 rounded text-sm font-medium border border-green-200">
-                                ✓ Connected
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Kebab Menu */}
-                          <div className="relative kebab-menu-container">
-                            <button
-                              onClick={() => setOpenKebabMenu(openKebabMenu === 'shopify' ? null : 'shopify')}
-                              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-                              aria-label="More options"
-                            >
-                              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-                              </svg>
-                            </button>
-
-                            {openKebabMenu === 'shopify' && (
-                              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                <div className="py-1">
-                                  <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                    </svg>
-                                    View Documentation
-                                  </button>
-                                  {integrations.shopify && (
-                                    <>
-                                      <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
-                                        Settings
-                                      </button>
-                                      <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                        </svg>
-                                        Sync Now
-                                      </button>
-                                      <div className="border-t border-gray-100">
-                                        <button
-                                          onClick={() => {
-                                            setIntegrations(v => ({ ...v, shopify: !v.shopify }));
-                                            setOpenKebabMenu(null);
-                                          }}
-                                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                                        >
-                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
-                                          </svg>
-                                          Disconnect
-                                        </button>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      </div>
-                    </div>
 
                   {/* All Integrations by Category */}
                   <div className="space-y-6">
-                    {/* Payment Processing */}
+                    {/* Chrome Extensions */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] flex items-center">
+                          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span>
+                          Chrome Extensions
+                        </h3>
+                        <span className="text-xs text-gray-500">2 available</span>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        {/* Tab Data Capture Extension */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">Tab Data Capture</h4>
+                                <p className="text-xs text-gray-500">Capture customer data from any website</p>
+                              </div>
+                              {!integrations.chromeExtension ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, chromeExtension: !v.chromeExtension }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Install
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Installed
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Tab Analytics Extension */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">Tab Analytics</h4>
+                                <p className="text-xs text-gray-500">Track website performance and user behavior</p>
+                              </div>
+                              {!integrations.chromeAnalytics ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, chromeAnalytics: !v.chromeAnalytics }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Install
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Installed
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Local Agent */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] flex items-center">
+                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></span>
+                          Local Agent
+                        </h3>
+                        <span className="text-xs text-gray-500">1 available</span>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        {/* Tab Desktop Agent */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-green-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">Tab Desktop Agent</h4>
+                                <p className="text-xs text-gray-500">Local data processing and synchronization</p>
+                              </div>
+                              {!integrations.localAgent ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, localAgent: !v.localAgent }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Download
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Installed
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Accounting Software */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] flex items-center">
+                          <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></span>
+                          Accounting Software
+                        </h3>
+                        <span className="text-xs text-gray-500">3 available</span>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        {/* QuickBooks */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-purple-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">QB</span>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">QuickBooks</h4>
+                                <p className="text-xs text-gray-500">Accounting & financial management</p>
+                              </div>
+                              {!integrations.quickbooks ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Connect
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Connected
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Xero */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-purple-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">Xero</h4>
+                                <p className="text-xs text-gray-500">Cloud-based accounting software</p>
+                              </div>
+                              {!integrations.xero ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, xero: !v.xero }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Connect
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Connected
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* FreshBooks */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-purple-200 hover:shadow-sm transition-all duration-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-900">FreshBooks</h4>
+                                <p className="text-xs text-gray-500">Small business accounting & invoicing</p>
+                              </div>
+                              {!integrations.freshbooks ? (
+                                <button
+                                  onClick={() => setIntegrations(v => ({ ...v, freshbooks: !v.freshbooks }))}
+                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                >
+                                  Connect
+                                </button>
+                              ) : (
+                                <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
+                                  ✓ Connected
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment Gateways */}
                           <div>
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] flex items-center">
                           <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></span>
-                          Payment Processing
+                          Payment Gateways
                         </h3>
                         <span className="text-xs text-gray-500">2 available</span>
                           </div>
@@ -1850,7 +1220,7 @@ export function SettingsContent() {
                               <div className="flex items-center gap-3 flex-1">
                           <div>
                                   <h4 className="text-sm font-medium text-gray-900">Stripe</h4>
-                                  <p className="text-xs text-gray-500">Payment processing platform</p>
+                                  <p className="text-xs text-gray-500">Payment gateway</p>
                           </div>
                                 {!integrations.stripe ? (
                                                                     <button
@@ -1926,91 +1296,6 @@ export function SettingsContent() {
                       </div>
                     </div>
 
-                                                {/* QuickBooks */}
-                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-orange-200 hover:shadow-sm transition-all duration-200">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3 flex-1">
-                              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">qb</span>
-                              </div>
-                              <div className="flex items-center gap-3 flex-1">
-                          <div>
-                                  <h4 className="text-sm font-medium text-gray-900">QuickBooks</h4>
-                                  <p className="text-xs text-gray-500">Accounting & financial management</p>
-                          </div>
-                                {!integrations.quickbooks ? (
-                                                                    <button
-                                    onClick={() => setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }))}
-                                    className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
-                                  >
-                                    Connect
-                                  </button>
-                                ) : (
-                                  <span className="ml-auto px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium border border-green-200">
-                                    ✓ Connected
-                                  </span>
-                                )}
-                      </div>
-                    </div>
-
-                            {/* Kebab Menu */}
-                            <div className="relative kebab-menu-container ml-2">
-                              <button
-                                onClick={() => setOpenKebabMenu(openKebabMenu === 'quickbooks' ? null : 'quickbooks')}
-                                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-                                aria-label="More options"
-                              >
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-                            </svg>
-                              </button>
-
-                              {openKebabMenu === 'quickbooks' && (
-                                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                  <div className="py-1">
-                                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                      </svg>
-                                      View Documentation
-                                    </button>
-                                    {integrations.quickbooks && (
-                                      <>
-                                        <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                          </svg>
-                                          Settings
-                                        </button>
-                                        <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                          </svg>
-                                          Sync Now
-                                        </button>
-                                        <div className="border-t border-gray-100">
-                                          <button
-                                            onClick={() => {
-                                              setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }));
-                                              setOpenKebabMenu(null);
-                                            }}
-                                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                                          >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                            Disconnect
-                        </button>
-                          </div>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
 
@@ -2234,16 +1519,13 @@ export function SettingsContent() {
                       </div>
                     </div>
                   </div>
+
                 </div>
               )}
 
               {activeSection === 'user-management' && (
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h2 className="text-lg font-semibold text-gray-900">Employee Management</h2>
-                      <p className="text-gray-600 text-sm">Manage team members and their access permissions.</p>
-                    </div>
+                  <div className="flex justify-end items-center">
                       <button onClick={() => setShowAddMember(!showAddMember)} className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
                         {showAddMember ? 'Close' : 'Add Employee'}
                     </button>
@@ -2580,9 +1862,6 @@ export function SettingsContent() {
 
               {activeSection === 'login-security' && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Login and Security</h2>
-                  <p className="text-gray-600 text-sm">Manage your login credentials and security settings.</p>
-
                   <div className="space-y-4">
                     <div className="border border-gray-200 rounded-[4px] p-4">
                       <div className="flex items-center justify-between">
@@ -2602,15 +1881,6 @@ export function SettingsContent() {
                       )}
                     </div>
 
-                    <div className="border border-gray-200 rounded-[4px] p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h3>
-                          <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-                        </div>
-                        <button onClick={() => setTwoFAEnabled(v => !v)} className="text-blue-600 hover:text-blue-700 text-sm font-medium">{twoFAEnabled ? 'Disable' : 'Enable'}</button>
-                      </div>
-                    </div>
 
                     <div className="border border-gray-200 rounded-[4px] p-4">
                       <div className="flex items-center justify-between">
@@ -2649,9 +1919,6 @@ export function SettingsContent() {
 
               {activeSection === 'payments-billing' && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Payments & Billing</h2>
-                  <p className="text-gray-600 text-sm">Manage your payment methods and billing information.</p>
-
                   <div className="space-y-4">
                     <div className="border border-gray-200 rounded-[4px] p-4">
                       <div className="flex items-center justify-between">
@@ -2689,71 +1956,33 @@ export function SettingsContent() {
                       )}
                     </div>
 
-                    <div className="border border-gray-200 rounded-[4px] p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Tax Information</h3>
-                          <p className="text-sm text-gray-500">Manage your tax settings and documents</p>
-                        </div>
-                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          Configure
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
 
               {activeSection === 'data-privacy' && (
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Data & Privacy</h2>
-                  <p className="text-gray-600 text-sm">Manage your data and privacy settings.</p>
-
-                  <div className="space-y-4">
-                    <div className="border border-gray-200 rounded-[4px] p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Data Export</h3>
-                          <p className="text-sm text-gray-500">Download a copy of your data in JSON format</p>
-                        </div>
-                        <button onClick={handleExportData} className="text-blue-600 hover:text-blue-700 text-sm font-medium">Export</button>
+                <div className="space-y-3">
+                  <div className="border border-gray-200 rounded-[4px] p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-900">Privacy Policy</h3>
+                        <p className="text-sm text-gray-500">Read our privacy policy and data handling practices</p>
                       </div>
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        View
+                      </button>
                     </div>
+                  </div>
 
-                    <div className="border border-gray-200 rounded-[4px] p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Privacy Policy</h3>
-                          <p className="text-sm text-gray-500">Read our privacy policy and data handling practices</p>
-                        </div>
-                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          View
-                        </button>
+                  <div className="border border-gray-200 rounded-[4px] p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-900">Cookie Preferences</h3>
+                        <p className="text-sm text-gray-500">Manage your cookie and tracking preferences</p>
                       </div>
-                    </div>
-
-                    <div className="border border-gray-200 rounded-[4px] p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Cookie Preferences</h3>
-                          <p className="text-sm text-gray-500">Manage your cookie and tracking preferences</p>
-                        </div>
-                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          Configure
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="border border-red-200 rounded-[4px] p-4 bg-red-50">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-red-900">Delete Account</h3>
-                          <p className="text-sm text-red-700">Permanently delete your account and all associated data</p>
-                        </div>
-                        <button className="text-red-600 hover:text-red-700 text-sm font-medium">
-                          Delete
-                        </button>
-                      </div>
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        Configure
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -3086,6 +2315,668 @@ export function SettingsContent() {
                 </div>
               )}
               </div>
+              )}
+
+
+              {/* Basic Information Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Basic Information</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Brand Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={business.businessName}
+                          onChange={(e) => setBusiness(v => ({ ...v, businessName: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Enter your brand name"
+                          required
+                        />
+            </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Business Type
+                        </label>
+                        <select
+                          value={business.businessType || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, businessType: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        >
+                          <option value="">Select business type</option>
+                          <option value="retail">Retail</option>
+                          <option value="restaurant">Restaurant</option>
+                          <option value="services">Services</option>
+                          <option value="manufacturing">Manufacturing</option>
+                          <option value="wholesale">Wholesale</option>
+                          <option value="ecommerce">E-commerce</option>
+                          <option value="consulting">Consulting</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Website
+                      </label>
+                      <input
+                        type="url"
+                        value={business.website || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, website: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="https://www.yourwebsite.com"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Business Description
+                      </label>
+                      <textarea
+                        value={business.description || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, description: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={3}
+                        placeholder="Describe your business..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Contact Information Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Contact Information</h3>
+                  <div className="space-y-4">
+                    {/* Business Email IDs */}
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Business Email IDs
+                      </label>
+                      <div className="space-y-2">
+                        {business.businessEmails.map((email, index) => (
+                          <div key={index} className="flex gap-2">
+                            <input
+                              type="email"
+                              value={email}
+                              onChange={(e) => {
+                                const newEmails = [...business.businessEmails];
+                                newEmails[index] = e.target.value;
+                                setBusiness(v => ({ ...v, businessEmails: newEmails }));
+                              }}
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                              placeholder="Enter business email"
+                            />
+                            {business.businessEmails.length > 1 && (
+                              <button
+                                onClick={() => {
+                                  const newEmails = business.businessEmails.filter((_, i) => i !== index);
+                                  setBusiness(v => ({ ...v, businessEmails: newEmails }));
+                                }}
+                                className="px-3 py-2 text-red-600 hover:text-red-700 transition-colors"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        {business.businessEmails.length < 3 && (
+                          <button
+                            onClick={() => {
+                              setBusiness(v => ({
+                                ...v,
+                                businessEmails: [...v.businessEmails, '']
+                              }));
+                            }}
+                            className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
+                          >
+                            + Add Email ID
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Business Phone Numbers */}
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Business Phone Numbers
+                      </label>
+                      <div className="space-y-2">
+                        {business.businessPhones.map((phone, index) => (
+                          <div key={index} className="flex gap-2">
+                            <div className="flex">
+                              <div className="flex items-center px-3 py-2 bg-gray-50 border border-gray-300 border-r-0 rounded-l-[4px] text-[14px] font-normal text-gray-700">
+                                +91
+                              </div>
+                              <input
+                                type="tel"
+                                value={phone}
+                                onChange={(e) => {
+                                  const newPhones = [...business.businessPhones];
+                                  newPhones[index] = e.target.value;
+                                  setBusiness(v => ({ ...v, businessPhones: newPhones }));
+                                }}
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-r-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                                placeholder="9876543210"
+                              />
+                            </div>
+                            {business.businessPhones.length > 1 && (
+                              <button
+                                onClick={() => {
+                                  const newPhones = business.businessPhones.filter((_, i) => i !== index);
+                                  setBusiness(v => ({ ...v, businessPhones: newPhones }));
+                                }}
+                                className="px-3 py-2 text-red-600 hover:text-red-700 transition-colors"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        {business.businessPhones.length < 3 && (
+                          <button
+                            onClick={() => {
+                              setBusiness(v => ({
+                                ...v,
+                                businessPhones: [...v.businessPhones, '']
+                              }));
+                            }}
+                            className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
+                          >
+                            + Add Phone Number
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Business Address Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Business Address</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Street Address
+                      </label>
+                      <textarea
+                        value={business.businessAddress}
+                        onChange={(e) => setBusiness(v => ({ ...v, businessAddress: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={3}
+                        placeholder="123 Main Street, Building Name"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          value={business.city || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, city: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Mumbai"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          State
+                        </label>
+                        <input
+                          type="text"
+                          value={business.state || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, state: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Maharashtra"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          ZIP Code
+                        </label>
+                        <input
+                          type="text"
+                          value={business.zipCode || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, zipCode: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="400001"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Country
+                      </label>
+                      <select
+                        value={business.country || 'India'}
+                        onChange={(e) => setBusiness(v => ({ ...v, country: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                      >
+                        <option value="India">India</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Germany">Germany</option>
+                        <option value="France">France</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Business Registration Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Business Registration</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          GST Number
+                        </label>
+                        <input
+                          type="text"
+                          value={business.gstNumber}
+                          onChange={(e) => setBusiness(v => ({ ...v, gstNumber: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="22ABCDE1234F1Z5"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          PAN Number
+                        </label>
+                        <input
+                          type="text"
+                          value={business.businessPAN}
+                          onChange={(e) => setBusiness(v => ({ ...v, businessPAN: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="ABCDE1234F"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Business Registration Number
+                      </label>
+                      <input
+                        type="text"
+                        value={business.businessId}
+                        onChange={(e) => setBusiness(v => ({ ...v, businessId: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="U74999MH2014PTC123456"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* POS System Details Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">POS System Details</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          POS System
+                        </label>
+                        <select
+                          value={business.posSystem || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posSystem: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        >
+                          <option value="">Select POS system</option>
+                          <option value="square">Square</option>
+                          <option value="shopify-pos">Shopify POS</option>
+                          <option value="clover">Clover</option>
+                          <option value="toast">Toast</option>
+                          <option value="lightspeed">Lightspeed</option>
+                          <option value="revel">Revel Systems</option>
+                          <option value="ncr-silver">NCR Silver</option>
+                          <option value="vend">Vend</option>
+                          <option value="quickbooks-pos">QuickBooks POS</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          POS Provider
+                        </label>
+                        <input
+                          type="text"
+                          value={business.posProvider || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posProvider: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Enter POS provider name"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Version
+                        </label>
+                        <input
+                          type="text"
+                          value={business.posVersion || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posVersion: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="e.g., v2.1.5"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Terminal ID
+                        </label>
+                        <input
+                          type="text"
+                          value={business.posTerminalId || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posTerminalId: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Enter terminal ID"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Serial Number
+                        </label>
+                        <input
+                          type="text"
+                          value={business.posSerialNumber || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posSerialNumber: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="Enter serial number"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Installation Date
+                        </label>
+                        <input
+                          type="date"
+                          value={business.posInstallationDate || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, posInstallationDate: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        License Key
+                      </label>
+                      <input
+                        type="text"
+                        value={business.posLicenseKey || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, posLicenseKey: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="Enter license key (if applicable)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Banking Information Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Banking Information</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Bank Name
+                        </label>
+                        <input
+                          type="text"
+                          value={business.bankName || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, bankName: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="State Bank of India"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Account Number
+                        </label>
+                        <input
+                          type="text"
+                          value={business.accountNumber || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, accountNumber: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="1234567890"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        IFSC Code
+                      </label>
+                      <input
+                        type="text"
+                        value={business.ifscCode || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, ifscCode: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="SBIN0001234"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Information Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Additional Information</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Founded Year
+                        </label>
+                        <input
+                          type="number"
+                          value={business.foundedYear || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, foundedYear: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                          placeholder="2020"
+                          min="1900"
+                          max="2024"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                          Employee Count
+                        </label>
+                        <select
+                          value={business.employeeCount || ''}
+                          onChange={(e) => setBusiness(v => ({ ...v, employeeCount: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        >
+                          <option value="">Select employee count</option>
+                          <option value="1-10">1-10</option>
+                          <option value="11-50">11-50</option>
+                          <option value="51-200">51-200</option>
+                          <option value="201-500">201-500</option>
+                          <option value="500+">500+</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Primary POC Details Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">
+                    Primary POC Details
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        POC Name
+                      </label>
+                      <input
+                        type="text"
+                        value={business.primaryPOC.name}
+                        onChange={(e) => setBusiness(v => ({
+                          ...v,
+                          primaryPOC: { ...v.primaryPOC, name: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="Enter POC name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        POC Email
+                      </label>
+                      <input
+                        type="email"
+                        value={business.primaryPOC.email}
+                        onChange={(e) => setBusiness(v => ({
+                          ...v,
+                          primaryPOC: { ...v.primaryPOC, email: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="Enter POC email"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        POC Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={business.primaryPOC.phone}
+                        onChange={(e) => setBusiness(v => ({
+                          ...v,
+                          primaryPOC: { ...v.primaryPOC, phone: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="Enter POC phone number"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        POC Designation
+                      </label>
+                      <input
+                        type="text"
+                        value={business.primaryPOC.designation}
+                        onChange={(e) => setBusiness(v => ({
+                          ...v,
+                          primaryPOC: { ...v.primaryPOC, designation: e.target.value }
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        placeholder="Enter POC designation"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Save buttons for POC Details */}
+                  <div className="pt-4 flex gap-3">
+                    <button
+                      onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
+                      className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={() => { setProfile(savedProfile); setBusiness(savedBusiness); }}
+                      className="bg-gray-100 text-gray-700 px-4 py-2 rounded-[4px] hover:bg-gray-200 transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Terms and Policies Card - Outside main container */}
+              {activeSection === 'account-settings' && activeTab === 'business-profile' && (
+                <div className="bg-white border border-[#e9e9e9] rounded-[4px] p-4 mt-4">
+                  <h3 className="text-[16px] font-semibold text-[#2a2a2f] tracking-[-0.1px] mb-4">Terms and Policies</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Terms and Conditions
+                      </label>
+                      <textarea
+                        value={business.termsAndConditions || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, termsAndConditions: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={4}
+                        placeholder="Enter your terms and conditions..."
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Privacy Policy
+                      </label>
+                      <textarea
+                        value={business.privacyPolicy || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, privacyPolicy: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={4}
+                        placeholder="Enter your privacy policy..."
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Refund Policy
+                      </label>
+                      <textarea
+                        value={business.refundPolicy || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, refundPolicy: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={4}
+                        placeholder="Enter your refund policy..."
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[12px] leading-[16px] tracking-[-0.1px] font-normal text-gray-700 mb-1">
+                        Shipping Policy
+                      </label>
+                      <textarea
+                        value={business.shippingPolicy || ''}
+                        onChange={(e) => setBusiness(v => ({ ...v, shippingPolicy: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-[14px] font-normal"
+                        rows={4}
+                        placeholder="Enter your shipping policy..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         </div>

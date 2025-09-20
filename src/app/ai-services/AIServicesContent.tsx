@@ -6,6 +6,7 @@ import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/Button";
+import { History } from 'lucide-react';
 
 interface ChatMessage {
   id: string;
@@ -40,6 +41,7 @@ export function AIServicesContent() {
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [showFeatures, setShowFeatures] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -439,9 +441,16 @@ export function AIServicesContent() {
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
       {/* Mobile Header with Menu Toggle */}
-      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
-        <MobileHeaderButton />
-      </header>
+        <header className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
+          <MobileHeaderButton />
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition-colors rounded-lg"
+            aria-label="Toggle chat history"
+          >
+            <History className="w-5 h-5 text-[#2a2a2f]" />
+          </button>
+        </header>
 
       {/* Main Content */}
               <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-8 overflow-x-hidden h-screen ai-services-content lg:pr-[280px]">
@@ -539,7 +548,7 @@ export function AIServicesContent() {
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
                           placeholder="Ask me anything about your business..."
-                          className="w-full bg-transparent text-[#2a2a2f] text-sm sm:text-base placeholder-gray-400 focus:outline-none"
+                          className="w-full bg-transparent text-[#2a2a2f] text-sm sm:text-base placeholder-gray-400 placeholder:text-sm placeholder:font-normal focus:outline-none"
                           aria-label="Type your business question"
                         />
                       </div>
@@ -645,8 +654,8 @@ export function AIServicesContent() {
               currentSessionId && currentSession && currentSession.messages.length > 0 ? 'block' : 'block'
             }`}>
               <div className="max-w-full mx-auto px-2">
-                <div className="bg-white border border-gray-200 rounded-[8px] p-3 transition-all duration-300 focus-within:border-[#6E4EFF]/30">
-                  <div className="flex items-center gap-2">
+                <div className="bg-white border border-gray-200 rounded-[8px] p-3 transition-all duration-300 focus-within:border-[#6E4EFF]/30 min-h-[80px] flex items-center">
+                  <div className="flex items-center gap-2 w-full">
                     <div className="flex-shrink-0">
                       <div className="w-7 h-7 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
                         <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -662,7 +671,7 @@ export function AIServicesContent() {
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder={currentSessionId && currentSession && currentSession.messages.length > 0 ? "Ask a follow-up question..." : "Ask me anything about your business..."}
-                        className="w-full bg-transparent text-[#2a2a2f] text-sm placeholder-gray-400 focus:outline-none"
+                        className="w-full bg-transparent text-[#2a2a2f] text-sm placeholder-gray-400 placeholder:text-sm placeholder:font-normal focus:outline-none"
                         disabled={isLoading}
                         aria-label="Type your business question"
                       />
@@ -774,11 +783,63 @@ export function AIServicesContent() {
           </div>
         </div>
 
+        {/* Mobile Chat History Sidebar */}
+        {showHistory && (
+          <div className="lg:hidden fixed inset-0 z-50" style={{ background: 'rgba(0, 0, 0, 0.5)' }} onClick={() => setShowHistory(false)}>
+            <div className="fixed right-0 top-0 h-full w-[280px] bg-[#f6f6f6] border-l border-gray-200" onClick={(e) => e.stopPropagation()}>
+              <div className="flex flex-col h-full">
+                {/* Mobile Header */}
+                <div className="p-4 border-b border-gray-100 bg-[#f6f6f6] flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Chat History</h3>
+                  <button
+                    onClick={() => setShowHistory(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Close chat history"
+                  >
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Mobile Content - Same as desktop but with mobile padding */}
+                <div className="flex-1 overflow-y-auto p-4">
+                  <div className="space-y-3">
+                    {chatSessions.map((session) => (
+                      <div
+                        key={session.id}
+                        onClick={() => loadChatSession(session.id)}
+                        className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                          currentSessionId === session.id
+                            ? 'bg-[#6E4EFF] text-white'
+                            : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium truncate">
+                            {session.title || 'New Chat'}
+                          </span>
+                          <span className="text-xs opacity-70">
+                            {new Date(session.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-xs opacity-70 truncate">
+                          {session.messages.length} messages
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Redesigned Right Sidebar - Chat History */}
-      <div className="hidden lg:block fixed right-0 top-0 h-full w-[280px] bg-white border-l border-gray-200 ai-services-sidebar">
+      <div className="hidden lg:block fixed right-0 top-0 h-full w-[280px] bg-[#f6f6f6] border-l border-gray-200 ai-services-sidebar">
         <div className="flex flex-col h-full">
           {/* Header with Search */}
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+          <div className="p-6 border-b border-gray-100 bg-[#f6f6f6]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Chat History</h3>
                <button
@@ -802,7 +863,7 @@ export function AIServicesContent() {
               <input
                 type="text"
                 placeholder="Search conversations..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-[#6E4EFF]"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder:text-sm placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-[#6E4EFF]"
               />
             </div>
           </div>

@@ -107,15 +107,25 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
       <div className="flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+          <header className="flex items-center justify-start p-3 sm:p-4 lg:hidden">
             <MobileHeaderButton />
-            <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6E4EFF] mx-auto mb-4"></div>
-                <p className="text-[#626266]">Loading customer data...</p>
+            <div className="h-full flex flex-col min-w-0">
+              <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
+                {/* Header */}
+                <div>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                </div>
+                
+                {/* Loading Content */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6E4EFF] mx-auto mb-4"></div>
+                    <p className="text-[#626266]">Loading customer data...</p>
+                  </div>
+                </div>
               </div>
             </div>
           </main>
@@ -129,22 +139,32 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
       <div className="flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+          <header className="flex items-center justify-start p-3 sm:p-4 lg:hidden">
             <MobileHeaderButton />
-            <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Error Loading Customer Data</h2>
-                <p className="text-[#626266] mb-4">{error.message}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
-                >
-                  Try Again
-                </button>
+            <div className="h-full flex flex-col min-w-0">
+              <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
+                {/* Header */}
+                <div>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                </div>
+                
+                {/* Error Content */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Error Loading Customer Data</h2>
+                    <p className="text-[#626266] mb-4">{error.message}</p>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </main>
@@ -158,22 +178,32 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
       <div className="flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+          <header className="flex items-center justify-start p-3 sm:p-4 lg:hidden">
             <MobileHeaderButton />
-            <h1 className="text-base sm:text-lg font-bold truncate">Customer Intelligence</h1>
           </header>
           <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-gray-500 text-6xl mb-4">👤</div>
-                <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Customer Not Found</h2>
-                <p className="text-[#626266] mb-4">The customer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
-                <button
-                  onClick={() => router.back()}
-                  className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
-                >
-                  Go Back
-                </button>
+            <div className="h-full flex flex-col min-w-0">
+              <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
+                {/* Header */}
+                <div>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                </div>
+                
+                {/* Not Found Content */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-gray-500 text-6xl mb-4">👤</div>
+                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Customer Not Found</h2>
+                    <p className="text-[#626266] mb-4">The customer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+                    <button
+                      onClick={() => router.push('/data-center')}
+                      className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
+                    >
+                      Go Back
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </main>
@@ -186,31 +216,21 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
     <div className="flex bg-[#f6f6f6] font-sans min-h-screen overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-start p-3 sm:p-4 border-b border-gray-200 lg:hidden">
+        <header className="flex items-center justify-start p-3 sm:p-4 lg:hidden">
           <MobileHeaderButton />
         </header>
         <main className={`flex-1 transition-all duration-300 min-w-0 ${actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'}`}>
           <div className="h-full flex flex-col min-w-0">
             <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
 
-              {/* Header with Back Button */}
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push('/data-center')}
-                  className="p-2 text-[#626266] hover:bg-white rounded-lg transition-colors"
-                >
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <div>
-                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
-                </div>
+              {/* Header */}
+              <div>
+                <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
+                <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
               </div>
 
               {/* Action Buttons - Desktop Only */}
-              <div className="hidden lg:flex gap-3 w-fit">
+              <div className="hidden lg:flex gap-3 w-fit pb-10">
                 <button className="px-4 py-2 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
                   Send Message
                 </button>
@@ -685,7 +705,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               </div>
 
               {/* Action Buttons - Mobile Only */}
-              <div className="lg:hidden flex gap-3 w-full mt-6">
+              <div className="lg:hidden flex gap-3 w-full mt-6 pb-10">
                 <button className="flex-1 px-4 py-3 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
                   Send Message
                 </button>

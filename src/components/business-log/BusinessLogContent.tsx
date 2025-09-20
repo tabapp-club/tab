@@ -7,13 +7,12 @@ import { BusinessLogForm } from "./BusinessLogForm";
 import { BusinessLogList } from "./BusinessLogList";
 import { BusinessLogStats } from "./BusinessLogStats";
 import { BusinessLogFields } from "./BusinessLogFields";
-import { BusinessDetails } from "./BusinessDetails";
 import { useBusinessLogData } from "@/hooks/useBusinessLogData";
-import { Plus, History, Settings, Building2 } from "lucide-react";
+import { Plus, History, Settings } from "lucide-react";
 
 export function BusinessLogContent() {
   const { isCollapsed, isMobile } = useSidebar();
-  const [activeTab, setActiveTab] = useState<'entry' | 'history' | 'fields' | 'business'>('entry');
+  const [activeTab, setActiveTab] = useState<'entry' | 'history' | 'fields'>('entry');
   const { data: businessLogData, isLoading, error, refetch } = useBusinessLogData();
 
   // Only refresh data when switching to history tab if data is stale
@@ -57,7 +56,7 @@ export function BusinessLogContent() {
             <div className="flex space-x-2 sm:space-x-8 min-w-max">
               <button
                 onClick={() => setActiveTab('entry')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
+                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'entry'
                     ? 'border-[#7856ff] text-[#7856ff]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -71,7 +70,7 @@ export function BusinessLogContent() {
               </button>
               <button
                 onClick={() => setActiveTab('history')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
+                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'history'
                     ? 'border-[#7856ff] text-[#7856ff]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -85,7 +84,7 @@ export function BusinessLogContent() {
               </button>
               <button
                 onClick={() => setActiveTab('fields')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
+                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'fields'
                     ? 'border-[#7856ff] text-[#7856ff]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -95,20 +94,6 @@ export function BusinessLogContent() {
                   <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Manage Fields</span>
                   <span className="sm:hidden">Fields</span>
-                </div>
-              </button>
-              <button
-                onClick={() => setActiveTab('business')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
-                  activeTab === 'business'
-                    ? 'border-[#7856ff] text-[#7856ff]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <Building2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Business Details</span>
-                  <span className="sm:hidden">Business</span>
                 </div>
               </button>
             </div>
@@ -121,9 +106,7 @@ export function BusinessLogContent() {
               <BusinessLogList data={businessLogData} loading={isLoading} error={error} />
             ) : activeTab === 'fields' ? (
               <BusinessLogFields />
-            ) : (
-              <BusinessDetails />
-            )}
+            ) : null}
           </div>
         </section>
       </div>

@@ -212,22 +212,22 @@ const menuItems = [
     notificationCount: 7
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
-  {
-    id: "upsell-cross-sell",
-    label: "Upsell & cross sell",
-    description: "Sell products & services",
-    icon: UpsellCrossSellIcon,
-    href: "/upsell-cross-sell",
-    notificationCount: 0
-  },
-  {
-    id: "business-services",
-    label: "Business services",
-    description: "Enterprise solutions",
-    icon: BusinessServicesIcon,
-    href: "/business-services",
-    notificationCount: 0
-  },
+  // {
+  //   id: "upsell-cross-sell",
+  //   label: "Upsell & cross sell",
+  //   description: "Sell products & services",
+  //   icon: UpsellCrossSellIcon,
+  //   href: "/upsell-cross-sell",
+  //   notificationCount: 0
+  // },
+  // {
+  //   id: "business-services",
+  //   label: "Business services",
+  //   description: "Enterprise solutions",
+  //   icon: BusinessServicesIcon,
+  //   href: "/business-services",
+  //   notificationCount: 0
+  // },
 ];
 
 export function Sidebar() {
@@ -266,7 +266,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
+    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
       actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
     }`}>
       {/* User Profile Section */}

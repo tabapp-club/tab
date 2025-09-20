@@ -312,7 +312,7 @@ export default function DataCenterClient() {
             />
             )}
                 </div>
-            <div className="mt-4">
+            <div className="mt-4 pb-6 sm:pb-0">
               <Pagination
                 currentPage={page}
                 itemsPerPage={pageSize}

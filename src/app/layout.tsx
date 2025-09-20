@@ -16,8 +16,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Business Dashboard",
-  description: "A modern business analytics dashboard with real-time insights",
+  title: "tribly",
+  description: "tribly - A modern business analytics platform with real-time insights",
   manifest: "/manifest.json",
   themeColor: "#f6f6f6",
   viewport: {
@@ -30,16 +30,16 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Business Dashboard",
+    title: "tribly",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Business Dashboard",
-    title: "Business Dashboard",
-    description: "A modern business analytics dashboard with real-time insights",
+    siteName: "tribly",
+    title: "tribly",
+    description: "tribly - A modern business analytics platform with real-time insights",
   },
   icons: {
     icon: [
@@ -65,7 +65,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#f6f6f6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Business Dashboard" />
+        <meta name="apple-mobile-web-app-title" content="tribly" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-152x152.svg" />

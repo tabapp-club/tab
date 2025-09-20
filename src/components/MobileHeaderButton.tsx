@@ -21,7 +21,34 @@ export function MobileHeaderButton({ onClick }: MobileHeaderButtonProps) {
   const isDashboard = pathname === "/dashboard";
   
   const handleBack = onClick || (() => {
-    router.back();
+    // Define proper back navigation based on current page
+    const backRoutes: Record<string, string> = {
+      '/data-center': '/dashboard',
+      '/customer': '/data-center',
+      '/campaigns': '/dashboard',
+      '/new-campaign': '/campaigns',
+      '/new-campaign/audience': '/new-campaign',
+      '/new-campaign/platform-budget': '/new-campaign/audience',
+      '/new-campaign/create': '/new-campaign/platform-budget',
+      '/new-campaign/schedule': '/new-campaign/create',
+      '/cohorts': '/dashboard',
+      '/templates': '/dashboard',
+      '/upsell-cross-sell': '/dashboard',
+      '/workflow-automation': '/dashboard',
+      '/ai-services': '/dashboard',
+      '/business-log': '/dashboard',
+      '/settings': '/dashboard',
+      '/achievements': '/dashboard',
+      '/report-bug': '/dashboard',
+    };
+
+    const backRoute = backRoutes[pathname];
+    if (backRoute) {
+      router.push(backRoute);
+    } else {
+      // Fallback to browser back if no specific route is defined
+      router.back();
+    }
   });
 
   if (isDashboard) {

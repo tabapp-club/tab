@@ -150,16 +150,16 @@ export function AchievementsContent() {
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
       {/* Mobile Header with Menu Toggle */}
-      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-white fixed top-0 left-0 right-0 z-50">
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#f6f6f6] fixed top-0 left-0 right-0 z-50">
         <MobileHeaderButton />
       </header>
 
       {/* Main Content */}
-        <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden bg-white">
+        <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden bg-[#f6f6f6] lg:bg-white">
         <div className="pt-12 lg:pt-0 space-y-8">
 
                                 {/* 1. Top Section - Cover Page with Summary */}
-          <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-8 border border-slate-100 mb-20">
+          <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-8 border border-slate-300 mb-20">
                          <div className="flex flex-col items-center gap-8">
                <div className="flex-1 text-center">
                                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
@@ -169,19 +169,19 @@ export function AchievementsContent() {
                     Track your progress, celebrate successes, and discover AI-powered insights to accelerate your business growth
                   </p>
                                   <div className="flex flex-wrap gap-4 justify-center">
-                   <div className="bg-white rounded-lg px-4 py-3 border border-purple-200">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-purple-600">
                      <div className="text-2xl font-bold text-purple-600">
                        {loading ? '...' : milestones.length}
                      </div>
                      <div className="text-sm text-gray-600">Active Targets</div>
                    </div>
-                   <div className="bg-white rounded-lg px-4 py-3 border border-purple-200">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-green-600">
                      <div className="text-2xl font-bold text-green-600">
                        {loading ? '...' : milestones.length > 0 ? Math.round(milestones.reduce((acc, m) => acc + m.progress, 0) / milestones.length) : 0}%
                      </div>
                      <div className="text-sm text-gray-600">Avg Progress</div>
                    </div>
-                   <div className="bg-white rounded-lg px-4 py-3 border border-purple-200">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-blue-600">
                      <div className="text-2xl font-bold text-blue-600">
                        {loading ? '...' : aiTargets.length}
                      </div>
@@ -200,18 +200,18 @@ export function AchievementsContent() {
               <div>
                 <div className="flex gap-2 overflow-x-auto pb-2 px-1 py-1 lg:flex-wrap lg:overflow-x-visible lg:pb-0 lg:px-0 lg:py-0 scrollbar-hide">
                   {[
-                    { value: 'all', label: 'All Categories', icon: '📊', color: 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200' },
-                    { value: 'sales', label: 'Sales', icon: '💰', color: 'bg-white text-green-700 hover:bg-green-50 border border-green-200' },
-                    { value: 'customers', label: 'Customers', icon: '👥', color: 'bg-white text-blue-700 hover:bg-blue-50 border border-blue-200' },
-                    { value: 'engagement', label: 'Engagement', icon: '📈', color: 'bg-white text-purple-700 hover:bg-purple-50 border border-purple-200' },
-                    { value: 'retention', label: 'Retention', icon: '🔄', color: 'bg-white text-orange-700 hover:bg-orange-50 border border-orange-200' }
+                    { value: 'all', label: 'All Categories', icon: '📊', color: 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200', selectedColor: 'bg-gray-100 text-gray-900 border border-gray-400' },
+                    { value: 'sales', label: 'Sales', icon: '💰', color: 'bg-white text-green-700 hover:bg-green-50 border border-green-200', selectedColor: 'bg-green-100 text-green-800 border border-green-400' },
+                    { value: 'customers', label: 'Customers', icon: '👥', color: 'bg-white text-blue-700 hover:bg-blue-50 border border-blue-200', selectedColor: 'bg-blue-100 text-blue-800 border border-blue-400' },
+                    { value: 'engagement', label: 'Engagement', icon: '📈', color: 'bg-white text-purple-700 hover:bg-purple-50 border border-purple-200', selectedColor: 'bg-purple-100 text-purple-800 border border-purple-400' },
+                    { value: 'retention', label: 'Retention', icon: '🔄', color: 'bg-white text-orange-700 hover:bg-orange-50 border border-orange-200', selectedColor: 'bg-orange-100 text-orange-800 border border-orange-400' }
                   ].map((category) => (
                     <button
                       key={category.value}
                       onClick={() => setSelectedCategory(category.value)}
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 flex-shrink-0 ${
                         selectedCategory === category.value
-                          ? category.color.replace('hover:', '') + ' ring-2 ring-offset-2 ring-purple-500'
+                          ? category.selectedColor
                           : category.color
                       }`}
                     >
@@ -315,15 +315,15 @@ export function AchievementsContent() {
                 )}
               </div>
 
-              <Button
+              <button
                 onClick={() => setShowCreateTarget(true)}
-                variant="default"
+                className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-medium text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200 flex items-center gap-2"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 Create New Target
-              </Button>
+              </button>
             </div>
           </div>
 

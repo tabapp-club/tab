@@ -1,7 +1,7 @@
 {
-  "name": "Business Dashboard",
-  "short_name": "Dashboard",
-  "description": "A modern business analytics dashboard with real-time insights",
+  "name": "tribly",
+  "short_name": "tribly",
+  "description": "tribly - A modern business analytics platform with real-time insights",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -58,6 +58,12 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "maskable any"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon",
+      "purpose": "any"
     }
   ],
   "screenshots": [
@@ -66,14 +72,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Business Dashboard Desktop View"
+      "label": "tribly Desktop View"
     },
     {
       "src": "/screenshots/mobile-screenshot.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Business Dashboard Mobile View"
+      "label": "tribly Mobile View"
     }
   ],
   "shortcuts": [
@@ -84,8 +90,9 @@
       "url": "/dashboard",
       "icons": [
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-96x96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
         }
       ]
     },
@@ -96,8 +103,9 @@
       "url": "/campaigns",
       "icons": [
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-96x96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
         }
       ]
     },
@@ -108,8 +116,9 @@
       "url": "/new-campaign",
       "icons": [
         {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
+          "src": "/icons/icon-96x96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
         }
       ]
     }

@@ -13,10 +13,7 @@ import { format, subDays, subMonths, subYears } from 'date-fns';
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { useWorkflowAnalytics } from "@/hooks/useWorkflowAnalytics";
 import { useWorkflowData } from "@/hooks/useWorkflowData";
-import { WhatsAppSMSComparisonChart } from "@/app/workflow-automation/components/WhatsAppSMSComparisonChart";
 import { 
-  MessageSquare, 
-  Smartphone, 
   BarChart3, 
   Brain, 
   TrendingUp, 
@@ -331,106 +328,6 @@ export function DashboardContent() {
         {/* Workflow Automation Section */}
         <section className="mb-6 sm:mb-8 lg:mb-12">
 
-          {/* Communication Analytics */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] p-6 mb-6">
-            <h3 className="text-lg font-semibold text-[#1e293b] flex items-center gap-2 mb-6">
-              <MessageSquare size={20} className="text-[#6E4EFF]" />
-              Communication Analytics
-            </h3>
-            
-            {/* WhatsApp vs SMS Performance Chart */}
-            <div className="mb-6">
-              <WhatsAppSMSComparisonChart />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-lg border border-[#e2e8f0] p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg">
-                      <MessageSquare size={20} className="text-[#6E4EFF]" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-[#475569]">WhatsApp Messages</h4>
-                      <p className="text-xs text-[#64748b]">Total messages sent</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-[#1e293b] mb-1">
-                      {workflowAnalyticsData?.whatsapp.messages.toLocaleString() || "1,247"}
-                    </div>
-                    <div className="flex items-center justify-end gap-1 text-xs font-medium text-[#059669]">
-                      <TrendingUp size={12} />
-                      +12.5%
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#059669]">
-                      {workflowAnalyticsData?.whatsapp.deliveryRate.toFixed(1) || "95.2"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Delivery</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#2563eb]">
-                      {workflowAnalyticsData?.whatsapp.readRate.toFixed(1) || "87.3"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Read Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#6E4EFF]">
-                      {workflowAnalyticsData?.whatsapp.responseRate.toFixed(1) || "24.1"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Response</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] rounded-lg border border-[#e2e8f0] p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg">
-                      <Smartphone size={20} className="text-[#6E4EFF]" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-[#475569]">SMS Messages</h4>
-                      <p className="text-xs text-[#64748b]">Total messages sent</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-[#1e293b] mb-1">
-                      {workflowAnalyticsData?.sms.messages.toLocaleString() || "892"}
-                    </div>
-                    <div className="flex items-center justify-end gap-1 text-xs font-medium text-[#059669]">
-                      <TrendingUp size={12} />
-                      +8.3%
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#059669]">
-                      {workflowAnalyticsData?.sms.deliveryRate.toFixed(1) || "98.7"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Delivery</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#2563eb]">
-                      {workflowAnalyticsData?.sms.readRate.toFixed(1) || "92.1"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Read Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold text-[#6E4EFF]">
-                      {workflowAnalyticsData?.sms.responseRate.toFixed(1) || "18.9"}%
-                    </div>
-                    <div className="text-xs text-[#64748b]">Response</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* AI-Powered Insights */}
           <div className="bg-white rounded-lg border border-[#e5e7eb] p-6">

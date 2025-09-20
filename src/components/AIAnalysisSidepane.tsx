@@ -7,6 +7,7 @@ import {
   SheetClose,
   SheetTitle
 } from "@/components/ui/sheet";
+import { BottomSheet } from "@/components/ui/BottomSheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { format } from 'date-fns';
 import { useAIAnalysis } from "@/hooks/useAIAnalysis";
@@ -303,18 +304,18 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className={`bg-white rounded-2xl border border-gray-100 p-8 transition-all duration-500 ${
+        <div className={`bg-white rounded-2xl border border-gray-100 p-8 transition-all duration-500 ${
         isComplete ? 'scale-105' : 'scale-100'
       }`}>
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Analysis in Progress</h3>
-          <p className="text-sm text-gray-600">Processing your customer data with advanced analytics</p>
+          <h3 className="text-lg font-semibold text-[#2a2a2f] mb-2">AI Analysis in Progress</h3>
+          <p className="text-sm text-[#626266]">Processing your customer data with advanced analytics</p>
         </div>
 
         {/* Task Steps */}
@@ -327,9 +328,9 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
                 <div className="flex-shrink-0">
                   <div className={`w-4 h-4 rounded-full border-2 transition-all duration-500 ${
                     (currentStep > index) || (index === 2 && isComplete)
-                      ? 'bg-green-500 border-green-500 shadow-sm'
+                      ? 'bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] border-[#6E4EFF] shadow-sm'
                       : currentStep === index
-                        ? 'bg-blue-500 border-blue-500 animate-pulse shadow-md'
+                        ? 'bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] border-[#6E4EFF] animate-pulse shadow-md'
                         : 'bg-gray-100 border-gray-200'
                   }`} />
                 </div>
@@ -339,12 +340,12 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h4 className={`text-sm font-semibold transition-all duration-500 ${
-                        currentStep >= index ? 'text-gray-900' : 'text-gray-400'
+                        currentStep >= index ? 'text-[#2a2a2f]' : 'text-gray-400'
                       }`}>
                         {task.title}
                       </h4>
                       <p className={`text-xs leading-relaxed mt-1 transition-all duration-500 ${
-                        currentStep >= index ? 'text-gray-600' : 'text-gray-300'
+                        currentStep >= index ? 'text-[#626266]' : 'text-gray-300'
                       }`}>
                         {task.description}
                       </p>
@@ -353,12 +354,12 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
                     {/* Time indicator */}
                     <div className="flex items-center space-x-2 ml-6">
                       <div className={`p-1.5 rounded-lg transition-all duration-300 ${
-                        currentStep >= index ? 'bg-gray-50' : 'bg-transparent'
+                        currentStep >= index ? 'bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10' : 'bg-transparent'
                       }`}>
                         <ClockIcon />
                       </div>
                       <span className={`text-xs font-mono font-medium transition-all duration-300 ${
-                        currentStep >= index ? 'text-gray-700' : 'text-gray-300'
+                        currentStep >= index ? 'text-[#2a2a2f]' : 'text-gray-300'
                       }`}>
                         {elapsedTimes[index]}s
                       </span>
@@ -390,6 +391,7 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showLoader, setShowLoader] = useState(false);
   const [loaderCompleted, setLoaderCompleted] = useState(false);
+  const [isLanguageBottomSheetOpen, setIsLanguageBottomSheetOpen] = useState(false);
 
   // Use React Query for AI analysis
   const { data: aiResponse, isLoading, error, refetch } = useAIAnalysis({
@@ -428,31 +430,27 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
   const shouldShowResults = (aiResponse || error) && loaderCompleted;
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <>
+      <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <SheetContent
         side="right"
-        className="w-full max-w-full sm:w-[480px] sm:max-w-xl md:w-[600px] md:max-w-2xl lg:w-1/2 lg:max-w-none p-0 overflow-y-auto [&>button]:hidden"
+        className="w-full max-w-full sm:w-[480px] sm:max-w-xl md:w-[600px] md:max-w-2xl lg:w-1/2 lg:max-w-none p-0 overflow-y-auto [&>button]:hidden bg-[#f6f6f6]"
       >
-        <SheetTitle className="sr-only">Tab AI Analysis</SheetTitle>
+        <SheetTitle className="sr-only">Tribly AI Analysis</SheetTitle>
         <div className="flex flex-col h-full">
           <div className="flex-1 p-6">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-            <h2 className="text-xl font-semibold text-gray-800">Tab AI Analysis</h2>
+            <h2 className="text-base font-semibold text-gray-800">Tribly AI Analysis</h2>
             <div className="flex items-center gap-4">
               {/* Language Selector */}
-              <div className="relative">
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
-                  className="appearance-none bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 pr-8 text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent hover:bg-gray-50 transition-colors"
-                  aria-label="Select language for analysis results"
-                >
-                  {languages.map((lang) => (
-                    <option key={lang} value={lang}>{lang}</option>
-                  ))}
-                </select>
-                <Languages className="absolute right-2 top-1.5 w-4 h-4 text-gray-500 pointer-events-none" />
-              </div>
+              <button
+                onClick={() => setIsLanguageBottomSheetOpen(true)}
+                className="flex items-center gap-2 bg-secondary text-secondary-foreground rounded px-3 py-1.5 text-sm font-medium hover:bg-secondary/80 transition-colors"
+                aria-label="Select language for analysis results"
+              >
+                <span>{selectedLanguage}</span>
+                <Languages className="w-4 h-4 text-gray-500" />
+              </button>
 
               {/* Close Button */}
               <button
@@ -467,10 +465,10 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
             </div>
           </div>
 
-          {showLoader ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <TaskLoader onComplete={handleLoaderComplete} />
-            </div>
+            {showLoader ? (
+              <div className="flex flex-col items-center justify-center py-12 -mt-16">
+                <TaskLoader onComplete={handleLoaderComplete} />
+              </div>
           ) : shouldShowResults && error ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="text-red-500 text-center">
@@ -487,34 +485,34 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               </div>
             </div>
           ) : shouldShowResults && analysis && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out">
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out -mt-6">
             <div className="space-y-5">
               {/* Business Summary */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-2 bg-blue-50 rounded-xl">
-                    <BarChart3 className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 rounded-xl">
+                    <BarChart3 className="w-5 h-5 text-[#6E4EFF]" />
                   </div>
-                  <h3 className="font-bold text-gray-800">{translations[selectedLanguage as keyof typeof translations].businessSummary}</h3>
+                  <h3 className="font-bold text-[#2a2a2f]">{translations[selectedLanguage as keyof typeof translations].businessSummary}</h3>
                 </div>
 
                 {/* Compact Metrics Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Current Value</p>
-                    <p className="text-sm font-semibold text-[#2a2a2f]">
+                    <p className="text-sm font-semibold text-[#6E4EFF]">
                       {analysis.business_summary.current_value}
                     </p>
                   </div>
-                  <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Previous Value</p>
-                    <p className="text-sm font-semibold text-[#2a2a2f]">
+                    <p className="text-sm font-semibold text-[#6E4EFF]">
                       {analysis.business_summary.previous_value}
                     </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-100 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Change</p>
-                    <p className="text-sm font-semibold text-[#2a2a2f]">
+                    <p className="text-sm font-semibold text-[#6E4EFF]">
                       {analysis.business_summary.percentage_change}
                     </p>
                   </div>
@@ -627,24 +625,24 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               {/* Smart Actions */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="p-2 bg-purple-50 rounded-xl">
-                    <Target className="w-5 h-5 text-purple-600" />
+                  <div className="p-2 bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 rounded-xl">
+                    <Target className="w-5 h-5 text-[#6E4EFF]" />
                   </div>
                   <h3 className="font-bold text-[#2a2a2f] text-[16px]">{translations[selectedLanguage as keyof typeof translations].smartActions}</h3>
                 </div>
                 <div className="space-y-4">
                   {analysis.smart_actions.map((action: any, index: number) => (
-                    <div key={index} className="border border-gray-100 rounded-xl p-4 bg-white hover:bg-gray-50 transition-colors">
+                    <div key={index} className="border border-gray-100 rounded-xl p-4 bg-white hover:bg-gradient-to-r hover:from-[#6E4EFF]/5 hover:to-[#8B6AFF]/5 transition-colors">
                       <div className="flex items-start justify-between mb-6">
                         <span className="font-semibold text-[#2a2a2f] pr-2 text-[14px]">
                           {action.action}
                         </span>
                         <span className={`text-xs px-3 py-1.5 rounded-full font-medium whitespace-nowrap ${
                           action.priority.toLowerCase() === 'high' ?
-                          'bg-red-100 text-red-500 border border-red-200' :
+                          'bg-red-100 text-red-600 border border-red-200' :
                           action.priority.toLowerCase() === 'medium' ?
                           'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                          'bg-green-100 text-green-500 border border-green-200'
+                          'bg-green-100 text-green-600 border border-green-200'
                         }`}>
                           {action.priority.charAt(0).toUpperCase() + action.priority.slice(1)}
                         </span>
@@ -690,5 +688,35 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
         </div>
       </SheetContent>
     </Sheet>
+
+    {/* Language Selection Bottom Sheet */}
+    <BottomSheet
+      isOpen={isLanguageBottomSheetOpen}
+      onClose={() => setIsLanguageBottomSheetOpen(false)}
+      title="Select Language"
+    >
+      <div className="py-2">
+        {languages.map((lang) => (
+          <button
+            key={lang}
+            onClick={() => {
+              setSelectedLanguage(lang);
+              setIsLanguageBottomSheetOpen(false);
+            }}
+            className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors ${
+              selectedLanguage === lang ? 'bg-blue-50 text-blue-600' : 'text-gray-900'
+            }`}
+          >
+            <span className="font-medium">{lang}</span>
+            {selectedLanguage === lang && (
+              <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            )}
+          </button>
+        ))}
+      </div>
+    </BottomSheet>
+    </>
   );
 }
