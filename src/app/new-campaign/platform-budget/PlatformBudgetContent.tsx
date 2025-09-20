@@ -656,10 +656,9 @@ export function PlatformBudgetContent() {
   };
 
   return (
-    <main className="flex-1 transition-sidebar overflow-y-auto main-content">
-      <CampaignHeader onBack={() => router.push('/campaigns')} />
-      <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6] pt-16 lg:pt-4 relative">
-        <CampaignStepper currentStep={3} />
+    <div>
+      <p>Test content</p>
+      <CampaignStepper currentStep={3} />
 
         {/* Main Title */}
         <div className="mb-6 hidden lg:block">
@@ -2036,7 +2035,6 @@ export function PlatformBudgetContent() {
           nextLabel="Design Campaign"
           showPrevious={true}
         />
-      </div>
-    </main>
+            </div>
   );
 }
