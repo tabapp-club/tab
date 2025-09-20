@@ -656,19 +656,20 @@ export function PlatformBudgetContent() {
   };
 
   return (
-    <div>
-      <p>Test content</p>
-      <CampaignStepper currentStep={3} />
+    <main className="flex-1 transition-sidebar overflow-y-auto main-content">
+      <CampaignHeader onBack={() => router.push('/campaigns')} />
+      <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6] pt-16 lg:pt-4 relative">
+        <CampaignStepper currentStep={3} />
 
         {/* Main Title */}
         <div className="mb-6 hidden lg:block">
           <h1 className="text-[#2a2a2f] text-[20px] font-bold tracking-[-0.1px] leading-[1.4]">
             Choose Your Platform & Set Budget
-              </h1>
+          </h1>
           <p className="text-[#a1a1a1] text-[14px] mt-[2px]">
             Compare platforms and select the best channels for your campaign
           </p>
-            </div>
+        </div>
 
         {/* Platform Comparison Section */}
         <section className="mb-8">
@@ -2035,6 +2036,7 @@ export function PlatformBudgetContent() {
           nextLabel="Design Campaign"
           showPrevious={true}
         />
-            </div>
+      </div>
+    </main>
   );
 }
