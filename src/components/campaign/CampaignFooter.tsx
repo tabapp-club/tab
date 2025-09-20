@@ -47,7 +47,7 @@ export function CampaignFooter({
             onClick={handleClose}
             className="flex-1 h-9 px-4 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[16px] transition-colors hover:bg-gray-50 active:bg-gray-100 touch-manipulation"
           >
-            Close
+            Back
           </button>
           <button
             onClick={onNext}
@@ -68,7 +68,7 @@ export function CampaignFooter({
             onClick={handleClose}
             className="h-9 px-4 py-1 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[14px] transition-colors hover:bg-gray-50"
           >
-            Close
+            Back
           </button>
           {showSaveMessage && (
             <div className="text-[#2a2a2f] text-[14px] font-medium">
