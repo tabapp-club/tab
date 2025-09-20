@@ -39,33 +39,57 @@ const FilterDropdown = ({
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Check if click is outside both the dropdown and the button
-      if (dropdownRef.current && !dropdownRef.current.contains(target) &&
-          buttonRef.current && !buttonRef.current.contains(target)) {
-        onToggle();
+      // Only handle click outside for desktop dropdowns
+      if (!isMobile) {
+        // Check if click is outside both the dropdown and the button
+        if (dropdownRef.current && !dropdownRef.current.contains(target) &&
+            buttonRef.current && !buttonRef.current.contains(target)) {
+          onToggle();
+        }
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !isMobile) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, onToggle]);
+  }, [isOpen, onToggle, isMobile]);
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 1024;
+      // Use CSS media query for more reliable detection
+      const mediaQuery = window.matchMedia('(max-width: 767px)');
+      const isMobileWidth = mediaQuery.matches;
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      // Use multiple detection methods for better reliability
+      const mobile = isMobileWidth || (isMobileUserAgent && isTouchDevice);
       setIsMobile(mobile);
+      
+      // Debug logging
+      if (process.env.NODE_ENV === 'development') {
+        console.log('FilterDropdown mobile detection:', {
+          windowWidth: window.innerWidth,
+          mediaQueryMatch: mediaQuery.matches,
+          isMobileUserAgent,
+          isTouchDevice,
+          mobile
+        });
+      }
     };
     
     // Set initial state
     checkMobile();
-    window.addEventListener('resize', checkMobile);
     
-    return () => window.removeEventListener('resize', checkMobile);
+    // Listen to media query changes
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    mediaQuery.addEventListener('change', checkMobile);
+    
+    return () => mediaQuery.removeEventListener('change', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -167,7 +191,19 @@ const FilterDropdown = ({
       {/* Dropdown Panel */}
       {isOpen && (
         <>
-          {isMobile ? (
+          {(() => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('FilterDropdown rendering:', { 
+                isMobile, 
+                isOpen, 
+                title, 
+                windowWidth: window.innerWidth,
+                mediaQuery: window.matchMedia('(max-width: 767px)').matches
+              });
+            }
+            return null;
+          })()}
+          {(isMobile || window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches) ? (
             <BottomSheet
               isOpen={isOpen}
               onClose={onToggle}
@@ -181,19 +217,26 @@ const FilterDropdown = ({
                   >
                     <div className="relative">
                       <input
-                        type="checkbox"
+                        type={singleSelect ? "radio" : "checkbox"}
+                        name={singleSelect ? title : undefined}
                         checked={option.checked}
                         onChange={() => handleOptionChange(option.id)}
                         className="sr-only"
                       />
                       <div className={`w-5 h-5 flex items-center justify-center border-2 rounded ${
+                        singleSelect ? 'rounded-full' : 'rounded'
+                      } ${
                         option.checked
                           ? 'bg-[#6E4EFF] border-[#6E4EFF] text-white'
                           : 'border-gray-300 text-transparent'
                       } transition-all duration-200`}>
                         {option.checked && (
                           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                            <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            {singleSelect ? (
+                              <circle cx="8" cy="8" r="3" fill="currentColor"/>
+                            ) : (
+                              <path d="M3 8L7 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            )}
                           </svg>
                         )}
                       </div>
@@ -211,11 +254,10 @@ const FilterDropdown = ({
                   <button
                     onClick={() => {
                       // Reset all options
-                      options.forEach(option => {
-                        if (option.checked) {
-                          handleOptionChange(option.id);
-                        }
-                      });
+                      const checkedOptions = options.filter(option => option.checked);
+                      if (checkedOptions.length > 0) {
+                        onSelectionChange([]);
+                      }
                     }}
                     className="flex-1 py-2 px-4 bg-white border border-gray-300 rounded text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                   >

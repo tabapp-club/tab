@@ -1326,58 +1326,25 @@ export function PlatformBudgetContent() {
                     </div>
                   </div>
                 ) : (
-                                                      // Suggested Budgets Cards - List View
+                                                      // Suggested Budgets Cards - Mobile Optimized
                   <div className="space-y-4">
                     {/* Conservative Budget */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 sm:p-6 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'conservative'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('conservative')}
                     >
-                      <div className="flex items-center justify-between">
-                        {/* Left Side - Strategy Info */}
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <div className="flex items-center gap-3 mb-1">
-                              <h3 className="text-[14px] font-bold text-[#2a2a2f]">Conservative</h3>
-                              <span className="px-2 py-1 bg-[#04b440]/10 text-[#04b440] text-[10px] font-medium rounded-full uppercase tracking-wide">Low Risk</span>
-                </div>
-                            <p className="text-[14px] text-[#626266]">Perfect for testing market response with minimal investment</p>
-                  </div>
-                </div>
-
-                        {/* Right Side - Budget & Metrics */}
-                        <div className="flex items-center gap-6">
-                          {/* Key Metrics */}
-                          <div className="flex gap-4">
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
-              </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">~2.5K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
-                            </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#04b440]">3.2%</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
-                            </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-            </div>
-
-                          {/* Budget */}
-                          <div className="text-center">
-                            <div className="text-[14px] font-bold text-[#2a2a2f]">₹2,500</div>
-                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                      {/* Mobile Layout - Stacked */}
+                      <div className="block sm:hidden">
+                        {/* Header with title and selection indicator */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-[16px] font-bold text-[#2a2a2f]">Conservative</h3>
+                            <span className="px-2 py-1 bg-[#04b440]/10 text-[#04b440] text-[10px] font-medium rounded-full uppercase tracking-wide">Low Risk</span>
                           </div>
-
-                          {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             selectedBudgetType === 'conservative'
                               ? 'border-[#7856ff] bg-[#7856ff]'
@@ -1390,59 +1357,111 @@ export function PlatformBudgetContent() {
                             )}
                           </div>
                         </div>
+                        
+                        {/* Description */}
+                        <p className="text-[14px] text-[#626266] mb-4">Perfect for testing market response with minimal investment</p>
+                        
+                        {/* Budget - Prominent display */}
+                        <div className="bg-white rounded-lg p-3 mb-3 border border-[#f0f0f0]">
+                          <div className="text-center">
+                            <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">₹2,500</div>
+                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                          </div>
+                        </div>
+                        
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Audience</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">~2.5K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Reach</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#04b440]">3.2%</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Conversion</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout - Original */}
+                      <div className="hidden sm:block">
+                        <div className="flex items-center justify-between">
+                          {/* Left Side - Strategy Info */}
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-[14px] font-bold text-[#2a2a2f]">Conservative</h3>
+                                <span className="px-2 py-1 bg-[#04b440]/10 text-[#04b440] text-[10px] font-medium rounded-full uppercase tracking-wide">Low Risk</span>
+                              </div>
+                              <p className="text-[14px] text-[#626266]">Perfect for testing market response with minimal investment</p>
+                            </div>
+                          </div>
+
+                          {/* Right Side - Budget & Metrics */}
+                          <div className="flex items-center gap-6">
+                            {/* Key Metrics */}
+                            <div className="flex gap-4">
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~2.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#04b440]">3.2%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                            </div>
+
+                            {/* Budget */}
+                            <div className="text-center">
+                              <div className="text-[14px] font-bold text-[#2a2a2f]">₹2,500</div>
+                              <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                            </div>
+
+                            {/* Selection Indicator */}
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                              selectedBudgetType === 'conservative'
+                                ? 'border-[#7856ff] bg-[#7856ff]'
+                                : 'border-[#e9e9e9]'
+                            }`}>
+                              {selectedBudgetType === 'conservative' && (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     {/* Balanced Budget */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 sm:p-6 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'balanced'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('balanced')}
                     >
-                      <div className="flex items-center justify-between">
-                        {/* Left Side - Strategy Info */}
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <div className="flex items-center gap-3 mb-1">
-                              <h3 className="text-[14px] font-bold text-[#2a2a2f]">Balanced</h3>
-                              <span className="px-2 py-1 bg-[#7856ff]/10 text-[#7856ff] text-[10px] font-medium rounded-full uppercase tracking-wide">Medium Risk</span>
-                            </div>
-                            <p className="text-[14px] text-[#626266]">Optimal balance of reach and performance for scaling businesses</p>
+                      {/* Mobile Layout - Stacked */}
+                      <div className="block sm:hidden">
+                        {/* Header with title and selection indicator */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-[16px] font-bold text-[#2a2a2f]">Balanced</h3>
+                            <span className="px-2 py-1 bg-[#7856ff]/10 text-[#7856ff] text-[10px] font-medium rounded-full uppercase tracking-wide">Medium Risk</span>
                           </div>
-                        </div>
-
-                        {/* Right Side - Budget & Metrics */}
-                        <div className="flex items-center gap-6">
-                          {/* Key Metrics */}
-                          <div className="flex gap-4">
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
-                            </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">~5.2K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
-                            </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#04b440]">4.8%</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
-                            </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                          </div>
-
-                          {/* Budget */}
-                          <div className="text-center">
-                            <div className="text-[14px] font-bold text-[#2a2a2f]">₹5,000</div>
-                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
-                          </div>
-
-                          {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             selectedBudgetType === 'balanced'
                               ? 'border-[#7856ff] bg-[#7856ff]'
@@ -1455,59 +1474,111 @@ export function PlatformBudgetContent() {
                             )}
                           </div>
                         </div>
+                        
+                        {/* Description */}
+                        <p className="text-[14px] text-[#626266] mb-4">Optimal balance of reach and performance for scaling businesses</p>
+                        
+                        {/* Budget - Prominent display */}
+                        <div className="bg-white rounded-lg p-3 mb-3 border border-[#f0f0f0]">
+                          <div className="text-center">
+                            <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">₹5,000</div>
+                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                          </div>
+                        </div>
+                        
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Audience</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">~5.2K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Reach</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#04b440]">4.8%</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Conversion</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout - Original */}
+                      <div className="hidden sm:block">
+                        <div className="flex items-center justify-between">
+                          {/* Left Side - Strategy Info */}
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-[14px] font-bold text-[#2a2a2f]">Balanced</h3>
+                                <span className="px-2 py-1 bg-[#7856ff]/10 text-[#7856ff] text-[10px] font-medium rounded-full uppercase tracking-wide">Medium Risk</span>
+                              </div>
+                              <p className="text-[14px] text-[#626266]">Optimal balance of reach and performance for scaling businesses</p>
+                            </div>
+                          </div>
+
+                          {/* Right Side - Budget & Metrics */}
+                          <div className="flex items-center gap-6">
+                            {/* Key Metrics */}
+                            <div className="flex gap-4">
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~5.2K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#04b440]">4.8%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                            </div>
+
+                            {/* Budget */}
+                            <div className="text-center">
+                              <div className="text-[14px] font-bold text-[#2a2a2f]">₹5,000</div>
+                              <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                            </div>
+
+                            {/* Selection Indicator */}
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                              selectedBudgetType === 'balanced'
+                                ? 'border-[#7856ff] bg-[#7856ff]'
+                                : 'border-[#e9e9e9]'
+                            }`}>
+                              {selectedBudgetType === 'balanced' && (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     {/* Aggressive Budget */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 sm:p-6 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'aggressive'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('aggressive')}
                     >
-                      <div className="flex items-center justify-between">
-                        {/* Left Side - Strategy Info */}
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <div className="flex items-center gap-3 mb-1">
-                              <h3 className="text-[14px] font-bold text-[#2a2a2f]">Aggressive</h3>
-                              <span className="px-2 py-1 bg-[#ff6b35]/10 text-[#ff6b35] text-[10px] font-medium rounded-full uppercase tracking-wide">High Risk</span>
-                    </div>
-                            <p className="text-[14px] text-[#626266]">Maximum market penetration and rapid growth for established brands</p>
+                      {/* Mobile Layout - Stacked */}
+                      <div className="block sm:hidden">
+                        {/* Header with title and selection indicator */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-[16px] font-bold text-[#2a2a2f]">Aggressive</h3>
+                            <span className="px-2 py-1 bg-[#ff6b35]/10 text-[#ff6b35] text-[10px] font-medium rounded-full uppercase tracking-wide">High Risk</span>
                           </div>
-                          </div>
-
-                        {/* Right Side - Budget & Metrics */}
-                        <div className="flex items-center gap-6">
-                          {/* Key Metrics */}
-                          <div className="flex gap-4">
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
-                        </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#2a2a2f]">~10.5K</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
-                      </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                            <div className="text-center">
-                              <div className="text-[14px] font-semibold text-[#04b440]">6.2%</div>
-                              <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
-                    </div>
-                            <div className="w-px bg-[#e9e9e9] h-10"></div>
-                  </div>
-
-                          {/* Budget */}
-                          <div className="text-center">
-                            <div className="text-[14px] font-bold text-[#2a2a2f]">₹10,000</div>
-                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
-                  </div>
-
-                          {/* Selection Indicator */}
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             selectedBudgetType === 'aggressive'
                               ? 'border-[#7856ff] bg-[#7856ff]'
@@ -1518,9 +1589,94 @@ export function PlatformBudgetContent() {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
                               </svg>
                             )}
-                </div>
-                    </div>
-                  </div>
+                          </div>
+                        </div>
+                        
+                        {/* Description */}
+                        <p className="text-[14px] text-[#626266] mb-4">Maximum market penetration and rapid growth for established brands</p>
+                        
+                        {/* Budget - Prominent display */}
+                        <div className="bg-white rounded-lg p-3 mb-3 border border-[#f0f0f0]">
+                          <div className="text-center">
+                            <div className="text-[20px] font-bold text-[#2a2a2f] mb-1">₹10,000</div>
+                            <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                          </div>
+                        </div>
+                        
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Audience</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#2a2a2f]">~10.5K</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Reach</div>
+                          </div>
+                          <div className="text-center bg-[#f8f9fa] rounded-lg p-2">
+                            <div className="text-[14px] font-semibold text-[#04b440]">6.2%</div>
+                            <div className="text-[10px] text-[#a1a1a1]">Conversion</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout - Original */}
+                      <div className="hidden sm:block">
+                        <div className="flex items-center justify-between">
+                          {/* Left Side - Strategy Info */}
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-[14px] font-bold text-[#2a2a2f]">Aggressive</h3>
+                                <span className="px-2 py-1 bg-[#ff6b35]/10 text-[#ff6b35] text-[10px] font-medium rounded-full uppercase tracking-wide">High Risk</span>
+                              </div>
+                              <p className="text-[14px] text-[#626266]">Maximum market penetration and rapid growth for established brands</p>
+                            </div>
+                          </div>
+
+                          {/* Right Side - Budget & Metrics */}
+                          <div className="flex items-center gap-6">
+                            {/* Key Metrics */}
+                            <div className="flex gap-4">
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Total Audience</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~10.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Expected Reach</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                              <div className="text-center">
+                                <div className="text-[14px] font-semibold text-[#04b440]">6.2%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion Rate</div>
+                              </div>
+                              <div className="w-px bg-[#e9e9e9] h-10"></div>
+                            </div>
+
+                            {/* Budget */}
+                            <div className="text-center">
+                              <div className="text-[14px] font-bold text-[#2a2a2f]">₹10,000</div>
+                              <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                            </div>
+
+                            {/* Selection Indicator */}
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                              selectedBudgetType === 'aggressive'
+                                ? 'border-[#7856ff] bg-[#7856ff]'
+                                : 'border-[#e9e9e9]'
+                            }`}>
+                              {selectedBudgetType === 'aggressive' && (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

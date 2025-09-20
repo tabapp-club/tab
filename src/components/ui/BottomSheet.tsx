@@ -14,6 +14,13 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
   const [mounted, setMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Debug logging
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('BottomSheet render:', { isOpen, title, mounted });
+    }
+  }, [isOpen, title, mounted]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -42,13 +49,25 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
   if (!mounted || !isOpen) return null;
 
   const bottomSheet = (
-    <div className="fixed inset-0 z-[99999] lg:hidden">
+    <div 
+      className="fixed inset-0 z-[99999] sm:hidden" 
+      style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        bottom: 0,
+        zIndex: 99999,
+        display: 'block'
+      }}
+    >
       {/* Backdrop */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-300 ${
           isAnimating ? 'opacity-50' : 'opacity-0'
         }`}
         onClick={handleBackdropClick}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       />
       
       {/* Bottom Sheet */}
@@ -56,6 +75,16 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
         className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl transform transition-transform duration-300 ease-out ${
           isAnimating ? 'translate-y-0' : 'translate-y-full'
         }`}
+        style={{ 
+          position: 'absolute', 
+          bottom: 0, 
+          left: 0, 
+          right: 0,
+          width: '100%',
+          maxHeight: '80vh',
+          transform: isAnimating ? 'translateY(0)' : 'translateY(100%)',
+          zIndex: 100000
+        }}
       >
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-2">

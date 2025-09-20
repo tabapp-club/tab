@@ -9,16 +9,20 @@ const BackIcon = () => (
   </svg>
 );
 
-export function MobileHeaderButton() {
+interface MobileHeaderButtonProps {
+  onClick?: () => void;
+}
+
+export function MobileHeaderButton({ onClick }: MobileHeaderButtonProps) {
   const pathname = usePathname();
   const router = useRouter();
   
   // Check if we're on the dashboard
   const isDashboard = pathname === "/dashboard";
   
-  const handleBack = () => {
+  const handleBack = onClick || (() => {
     router.back();
-  };
+  });
 
   if (isDashboard) {
     return <MobileMenuToggle />;

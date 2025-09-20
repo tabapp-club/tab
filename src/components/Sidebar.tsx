@@ -7,7 +7,7 @@ import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
-import { ShoppingCart, Zap } from "lucide-react";
+import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft } from "lucide-react";
 
 // SVG Icons as React components
 const DashboardIcon = ({colorCode}: {colorCode: string}) => (
@@ -116,24 +116,15 @@ const WorkflowAutomationIcon = ({colorCode}: {colorCode: string}) => (
 
 
 const SettingsIcon = ({colorCode}: {colorCode: string}) => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11 13.778C12.5342 13.778 13.778 12.5342 13.778 11C13.778 9.46574 12.5342 8.22198 11 8.22198C9.46575 8.22198 8.222 9.46574 8.222 11C8.222 12.5342 9.46575 13.778 11 13.778Z" stroke={colorCode} strokeWidth="1.5"/>
-<path d="M9.587 3.974C10.06 2.644 11.94 2.644 12.413 3.974L12.548 4.354C12.6184 4.55161 12.7296 4.73224 12.8742 4.88423C13.0188 5.03622 13.1936 5.15619 13.3875 5.23639C13.5813 5.31659 13.7899 5.35523 13.9996 5.34983C14.2093 5.34442 14.4155 5.29508 14.605 5.205L14.969 5.033C16.243 4.427 17.573 5.757 16.967 7.031L16.795 7.395C16.7049 7.58453 16.6556 7.79084 16.6503 8.00061C16.645 8.21037 16.6837 8.41893 16.764 8.61279C16.8443 8.80666 16.9644 8.98151 17.1165 9.12607C17.2686 9.27063 17.4493 9.38166 17.647 9.452L18.026 9.587C19.356 10.06 19.356 11.94 18.026 12.413L17.646 12.548C17.4484 12.6184 17.2678 12.7296 17.1158 12.8742C16.9638 13.0188 16.8438 13.1936 16.7636 13.3875C16.6834 13.5813 16.6448 13.7899 16.6502 13.9996C16.6556 14.2093 16.7049 14.4155 16.795 14.605L16.967 14.969C17.573 16.243 16.243 17.573 14.969 16.967L14.605 16.795C14.4155 16.7049 14.2092 16.6556 13.9994 16.6503C13.7896 16.645 13.5811 16.6837 13.3872 16.764C13.1933 16.8443 13.0185 16.9644 12.8739 17.1165C12.7294 17.2686 12.6183 17.4493 12.548 17.647L12.413 18.026C11.94 19.356 10.06 19.356 9.587 18.026L9.452 17.646C9.38156 17.4484 9.27045 17.2678 9.12585 17.1158C8.98125 16.9638 8.80637 16.8438 8.61252 16.7636C8.41867 16.6834 8.21015 16.6448 8.00043 16.6502C7.79072 16.6556 7.58446 16.7049 7.395 16.795L7.031 16.967C5.757 17.573 4.427 16.243 5.033 14.969L5.205 14.605C5.29506 14.4155 5.34435 14.2092 5.34969 13.9994C5.35504 13.7896 5.31631 13.5811 5.23601 13.3872C5.15571 13.1933 5.03563 13.0185 4.88353 12.8739C4.73143 12.7294 4.5507 12.6183 4.353 12.548L3.974 12.413C2.644 11.94 2.644 10.06 3.974 9.587L4.354 9.452C4.55161 9.38156 4.73224 9.27045 4.88423 9.12585C5.03622 8.98125 5.15619 8.80637 5.23639 8.61252C5.31659 8.41867 5.35523 8.21015 5.34983 8.00043C5.34442 7.79072 5.29508 7.58446 5.205 7.395L5.033 7.031C4.427 5.757 5.757 4.427 7.031 5.033L7.395 5.205C7.58453 5.29506 7.79084 5.34435 8.00061 5.34969C8.21037 5.35504 8.41893 5.31631 8.61279 5.23601C8.80666 5.15571 8.98151 5.03563 9.12607 4.88353C9.27063 4.73143 9.38166 4.5507 9.452 4.353L9.587 3.974Z" stroke={colorCode} strokeWidth="1.5" strokeLinejoin="bevel"/>
-</svg>
-
+  <Settings size={20} color={colorCode} />
 );
 
 const LogoutIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.2578 12.8672H14.0221C13.9377 12.8672 13.8586 12.9041 13.8059 12.9692C13.6828 13.1186 13.551 13.2627 13.4121 13.3998C12.8442 13.9684 12.1714 14.4215 11.431 14.734C10.664 15.058 9.83965 15.2242 9.00703 15.2227C8.16503 15.2227 7.34941 15.0574 6.583 14.734C5.84265 14.4215 5.1699 13.9684 4.60195 13.3998C4.03298 12.8332 3.57929 12.1616 3.26601 11.4223C2.94081 10.6559 2.77734 9.84202 2.77734 9.00003C2.77734 8.15803 2.94257 7.34417 3.26601 6.57776C3.5789 5.83772 4.0289 5.17151 4.60195 4.60022C5.17499 4.02893 5.84121 3.57893 6.583 3.26604C7.34941 2.9426 8.16503 2.77737 9.00703 2.77737C9.84902 2.77737 10.6646 2.94085 11.431 3.26604C12.1728 3.57893 12.8391 4.02893 13.4121 4.60022C13.551 4.73909 13.681 4.88323 13.8059 5.03089C13.8586 5.09592 13.9394 5.13284 14.0221 5.13284H15.2578C15.3685 5.13284 15.4371 5.00979 15.3756 4.91663C14.0273 2.82132 11.6684 1.4344 8.98769 1.44143C4.77597 1.45198 1.39921 4.87093 1.4414 9.07737C1.48359 13.217 4.85507 16.5586 9.00703 16.5586C11.6807 16.5586 14.0291 15.1735 15.3756 13.0834C15.4353 12.9903 15.3685 12.8672 15.2578 12.8672ZM16.8205 8.88928L14.3262 6.92053C14.233 6.84671 14.0977 6.9135 14.0977 7.03128V8.36721H8.57812C8.50078 8.36721 8.43749 8.43049 8.43749 8.50784V9.49221C8.43749 9.56956 8.50078 9.63284 8.57812 9.63284H14.0977V10.9688C14.0977 11.0865 14.2348 11.1533 14.3262 11.0795L16.8205 9.11077C16.8373 9.09761 16.8509 9.08081 16.8603 9.06162C16.8696 9.04243 16.8745 9.02137 16.8745 9.00003C16.8745 8.97868 16.8696 8.95762 16.8603 8.93843C16.8509 8.91925 16.8373 8.90244 16.8205 8.88928Z" fill="#2A2A2F"/>
-</svg>
-
+  <LogOut size={18} color="#2A2A2F" />
 );
 
 const BugIcon = ({colorCode}: {colorCode: string}) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.8334 11.6667H17.5001C17.7211 11.6667 17.9331 11.5789 18.0893 11.4226C18.2456 11.2663 18.3334 11.0543 18.3334 10.8333C18.3334 10.6123 18.2456 10.4003 18.0893 10.2441C17.9331 10.0878 17.7211 9.99999 17.5001 9.99999H15.8334V9.16666C15.8255 8.78279 15.7667 8.40168 15.6584 8.03332C16.4417 7.73301 17.1161 7.20325 17.5934 6.51335C18.0707 5.82345 18.3286 5.00554 18.3334 4.16666C18.3334 3.94564 18.2456 3.73368 18.0893 3.5774C17.9331 3.42112 17.7211 3.33332 17.5001 3.33332C17.2791 3.33332 17.0671 3.42112 16.9108 3.5774C16.7545 3.73368 16.6667 3.94564 16.6667 4.16666C16.666 4.70403 16.4922 5.22686 16.1709 5.65765C15.8497 6.08845 15.3982 6.40428 14.8834 6.55832C14.4724 6.03163 13.9408 5.61149 13.3334 5.33332C13.342 5.22238 13.342 5.11094 13.3334 4.99999C13.3334 4.11593 12.9822 3.26809 12.3571 2.64297C11.732 2.01785 10.8841 1.66666 10.0001 1.66666C9.11603 1.66666 8.26818 2.01785 7.64306 2.64297C7.01794 3.26809 6.66675 4.11593 6.66675 4.99999C6.65819 5.11094 6.65819 5.22238 6.66675 5.33332C6.04726 5.60692 5.5038 6.02739 5.08341 6.55832C4.57481 6.39838 4.13067 6.08002 3.81583 5.64975C3.50099 5.21947 3.33196 4.69981 3.33341 4.16666C3.33341 3.94564 3.24562 3.73368 3.08934 3.5774C2.93306 3.42112 2.7211 3.33332 2.50008 3.33332C2.27907 3.33332 2.06711 3.42112 1.91083 3.5774C1.75455 3.73368 1.66675 3.94564 1.66675 4.16666C1.67155 5.00554 1.92947 5.82345 2.40675 6.51335C2.88403 7.20325 3.55844 7.73301 4.34175 8.03332C4.23346 8.40168 4.17462 8.78279 4.16675 9.16666V9.99999H2.50008C2.27907 9.99999 2.06711 10.0878 1.91083 10.2441C1.75455 10.4003 1.66675 10.6123 1.66675 10.8333C1.66675 11.0543 1.75455 11.2663 1.91083 11.4226C2.06711 11.5789 2.27907 11.6667 2.50008 11.6667H4.16675V12.5C4.16747 12.8862 4.20655 13.2715 4.28341 13.65C3.51365 13.9585 2.85344 14.4896 2.3873 15.1755C1.92115 15.8614 1.67026 16.6707 1.66675 17.5C1.66675 17.721 1.75455 17.933 1.91083 18.0892C2.06711 18.2455 2.27907 18.3333 2.50008 18.3333C2.7211 18.3333 2.93306 18.2455 3.08934 18.0892C3.24562 17.933 3.33341 17.721 3.33341 17.5C3.33567 17.014 3.47954 16.5392 3.74742 16.1336C4.01531 15.7281 4.3956 15.4094 4.84175 15.2167C5.33734 16.1552 6.07959 16.9407 6.98855 17.4886C7.89751 18.0366 8.93874 18.3261 10.0001 18.3261C11.0614 18.3261 12.1026 18.0366 13.0116 17.4886C13.9206 16.9407 14.6628 16.1552 15.1584 15.2167C15.6046 15.4094 15.9849 15.7281 16.2527 16.1336C16.5206 16.5392 16.6645 17.014 16.6667 17.5C16.6667 17.721 16.7545 17.933 16.9108 18.0892C17.0671 18.2455 17.2791 18.3333 17.5001 18.3333C17.7211 18.3333 17.9331 18.2455 18.0893 18.0892C18.2456 17.933 18.3334 17.721 18.3334 17.5C18.3299 16.6707 18.079 15.8614 17.6129 15.1755C17.1467 14.4896 16.4865 13.9585 15.7167 13.65C15.7936 13.2715 15.8327 12.8862 15.8334 12.5V11.6667ZM9.16675 16.5833C8.22561 16.3912 7.37975 15.8798 6.77233 15.1357C6.1649 14.3916 5.83322 13.4605 5.83341 12.5V9.16666C5.83341 8.50362 6.09681 7.86773 6.56565 7.39889C7.03449 6.93005 7.67037 6.66666 8.33341 6.66666H9.16675V16.5833ZM8.33341 4.99999C8.33341 4.55796 8.50901 4.13404 8.82157 3.82148C9.13413 3.50892 9.55805 3.33332 10.0001 3.33332C10.4421 3.33332 10.866 3.50892 11.1786 3.82148C11.4912 4.13404 11.6667 4.55796 11.6667 4.99999H8.33341ZM14.1667 12.5C14.1669 13.4605 13.8353 14.3916 13.2278 15.1357C12.6204 15.8798 11.7746 16.3912 10.8334 16.5833V6.66666H11.6667C12.3298 6.66666 12.9657 6.93005 13.4345 7.39889C13.9034 7.86773 14.1667 8.50362 14.1667 9.16666V12.5Z" fill={colorCode}/>
-  </svg>
+  <Bug size={20} color={colorCode} />
 );
 
 const PlusIcon = ({colorCode}: {colorCode: string}) => (
@@ -144,11 +135,7 @@ const PlusIcon = ({colorCode}: {colorCode: string}) => (
 );
 
 const CollapseIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M9 11L12.5 7M9 11H17M9 11L12.5 15" stroke="#2A2A2F" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-  <path d="M5.75 6.75V15.25" stroke="#2A2A2F" strokeWidth="1.5" strokeLinecap="round"/>
-</svg>
-
+  <ChevronLeft size={22} color="#2A2A2F" />
 );
 
 // Notification Badge Component
@@ -279,8 +266,8 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#FFFFFF] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
-      actualIsCollapsed ? 'w-16' : 'w-[232px]'
+    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] border-r border-[#e9e9e9] flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
+      actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
     }`}>
       {/* User Profile Section */}
       <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
@@ -330,13 +317,15 @@ export function Sidebar() {
 
       {/* Navigation Menu */}
       <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
-        <div className="space-y-2.5 sm:space-y-3">
+        <div className="space-y-4 sm:space-y-5">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href ||
+            const isActive = 
               (item.id === "dashboard" && pathname === "/dashboard") ||
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
-              (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation"));
+              (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
+              (item.id === "cohorts" && pathname === "/cohorts") ||
+              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
 
             return (
               <Link
@@ -372,19 +361,15 @@ export function Sidebar() {
                 </div>
                                 <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
-                } ${
-                  isActive || hoveredItem === item.id ? 'justify-center' : 'justify-start'
-                }`}>
-                  <span className={`text-[14px] font-manrope leading-[1.2] whitespace-nowrap ${
-                    isActive ? 'font-semibold' : 'font-medium group-hover:font-semibold'
+                } justify-start`}>
+                  <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
+                    isActive ? 'text-[#6E4EFF]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
                 }`}>
                   {item.label}
                 </span>
-                  {!(isActive || hoveredItem === item.id) && (
-                    <span className="text-[11px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-[#8f8f91]">
-                      {item.description}
-                    </span>
-                  )}
+                  <span className="text-[12px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-[#8f8f91]">
+                    {item.description}
+                  </span>
                 </div>
                 <div className={`transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
@@ -411,12 +396,12 @@ export function Sidebar() {
       </div>
 
       {/* Bottom Actions */}
-      <div className={`border-t border-[#e9e9e9] p-1 mt-auto ${isMobile ? 'pb-10' : ''}`}>
+      <div className={`border-t border-[#e9e9e9] p-1 mt-auto ${isMobile ? 'pb-6' : ''}`}>
         <div className={`flex items-center p-1 transition-all duration-300 ease-in-out ${
           actualIsCollapsed ? 'flex-col gap-0.5' : isMobile ? 'justify-center' : 'justify-between'
         }`}>
-          <div className={`flex items-center gap-0.5 transition-all duration-300 ease-in-out ${
-            actualIsCollapsed ? 'flex-col' : ''
+          <div className={`flex items-center transition-all duration-300 ease-in-out ${
+            actualIsCollapsed ? 'flex-col gap-0.5' : isMobile ? 'gap-6' : 'gap-0.5'
           }`}>
 
             <Link
