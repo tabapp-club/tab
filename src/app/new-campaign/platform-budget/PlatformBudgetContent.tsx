@@ -1095,17 +1095,34 @@ export function PlatformBudgetContent() {
           <section className="lg:col-span-7">
           <div className="bg-white border border-[#e9e9e9] rounded-lg overflow-hidden h-full">
             <div className="p-4 border-b border-[#e9e9e9]">
-              <div className="flex items-center justify-between mb-0">
-                <div>
-                <h2 className="text-[18px] font-semibold text-[#2a2a2f]">Budget Configuration</h2>
+              {/* Mobile Layout - Button below title */}
+              <div className="lg:hidden">
+                <div className="mb-4">
+                  <h2 className="text-[18px] font-semibold text-[#2a2a2f]">Budget Configuration</h2>
                   <p className="text-[#a1a1a1] text-[14px] mt-0">Set your campaign budget and spending limits</p>
                 </div>
                 <button
                   onClick={() => setSelectedBudgetType(selectedBudgetType === 'custom' ? 'balanced' : 'custom')}
-                  className="h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
+                  className="w-full h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
                 >
                   {selectedBudgetType === 'custom' ? 'Try AI Suggested Budgets' : 'Create Custom Budget'}
                 </button>
+              </div>
+
+              {/* Desktop Layout - Button next to title */}
+              <div className="hidden lg:block">
+                <div className="flex items-center justify-between mb-0">
+                  <div>
+                    <h2 className="text-[18px] font-semibold text-[#2a2a2f]">Budget Configuration</h2>
+                    <p className="text-[#a1a1a1] text-[14px] mt-0">Set your campaign budget and spending limits</p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedBudgetType(selectedBudgetType === 'custom' ? 'balanced' : 'custom')}
+                    className="h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
+                  >
+                    {selectedBudgetType === 'custom' ? 'Try AI Suggested Budgets' : 'Create Custom Budget'}
+                  </button>
+                </div>
               </div>
         </div>
 
