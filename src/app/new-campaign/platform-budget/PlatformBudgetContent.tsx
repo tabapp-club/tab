@@ -1089,12 +1089,27 @@ export function PlatformBudgetContent() {
           </div>
         </section>
 
-        {/* Split Screen Layout - Budget Configuration and Campaign Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 mb-8">
-          {/* Left Side - Budget Configuration (70%) */}
-          <section className="lg:col-span-7">
-          <div className="bg-white border border-[#e9e9e9] rounded-lg overflow-hidden h-full">
-            <div className="p-4 border-b border-[#e9e9e9]">
+        {/* Budget Configuration Section */}
+        <section className="mb-8">
+          <div className="bg-white border border-[#e9e9e9] rounded-lg overflow-hidden">
+            {/* Mobile Header */}
+            <div className="lg:hidden p-4 border-b border-[#e9e9e9]">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h2 className="text-[18px] font-semibold text-[#2a2a2f] mb-1">Budget Configuration</h2>
+                  <p className="text-[#a1a1a1] text-[14px]">Set your campaign budget and spending limits</p>
+                </div>
+                <button
+                  onClick={() => setSelectedBudgetType(selectedBudgetType === 'custom' ? 'balanced' : 'custom')}
+                  className="h-9 px-4 py-1 rounded font-semibold text-[12px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50"
+                >
+                  {selectedBudgetType === 'custom' ? 'AI Budgets' : 'Custom'}
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop Header */}
+            <div className="hidden lg:block p-4 border-b border-[#e9e9e9]">
               <div className="flex items-center justify-between mb-0">
                 <div>
                 <h2 className="text-[18px] font-semibold text-[#2a2a2f]">Budget Configuration</h2>
@@ -1309,17 +1324,67 @@ export function PlatformBudgetContent() {
                     </div>
                   </div>
                 ) : (
-                                                      // Suggested Budgets Cards - List View
+                  // Suggested Budgets Cards - Mobile Optimized
                   <div className="space-y-4">
-                    {/* Conservative Budget */}
+                    {/* Conservative Budget - Mobile Card */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'conservative'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('conservative')}
                     >
+                      {/* Mobile Layout */}
+                      <div className="lg:hidden">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-[16px] font-bold text-[#2a2a2f]">Conservative</h3>
+                              <span className="px-2 py-1 bg-[#04b440]/10 text-[#04b440] text-[10px] font-medium rounded-full uppercase tracking-wide">Low Risk</span>
+                            </div>
+                            <p className="text-[14px] text-[#626266] mb-3">Perfect for testing market response with minimal investment</p>
+                            
+                            {/* Key Metrics Grid */}
+                            <div className="grid grid-cols-3 gap-3 mb-3">
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Audience</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~2.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Reach</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#04b440]">3.2%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion</div>
+                              </div>
+                            </div>
+                            
+                            {/* Budget Display */}
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-[18px] font-bold text-[#2a2a2f]">₹2,500</div>
+                                <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                              </div>
+                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                selectedBudgetType === 'conservative'
+                                  ? 'border-[#7856ff] bg-[#7856ff]'
+                                  : 'border-[#e9e9e9]'
+                              }`}>
+                                {selectedBudgetType === 'conservative' && (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden lg:block">
                       <div className="flex items-center justify-between">
                         {/* Left Side - Strategy Info */}
                         <div className="flex items-center gap-4">
@@ -1371,20 +1436,71 @@ export function PlatformBudgetContent() {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
                               </svg>
                             )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Balanced Budget */}
+                    {/* Balanced Budget - Mobile Card */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'balanced'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('balanced')}
                     >
+                      {/* Mobile Layout */}
+                      <div className="lg:hidden">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-[16px] font-bold text-[#2a2a2f]">Balanced</h3>
+                              <span className="px-2 py-1 bg-[#7856ff]/10 text-[#7856ff] text-[10px] font-medium rounded-full uppercase tracking-wide">Medium Risk</span>
+                            </div>
+                            <p className="text-[14px] text-[#626266] mb-3">Optimal balance of reach and performance for scaling businesses</p>
+                            
+                            {/* Key Metrics Grid */}
+                            <div className="grid grid-cols-3 gap-3 mb-3">
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Audience</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~5.2K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Reach</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#04b440]">4.8%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion</div>
+                              </div>
+                            </div>
+                            
+                            {/* Budget Display */}
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-[18px] font-bold text-[#2a2a2f]">₹5,000</div>
+                                <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                              </div>
+                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                selectedBudgetType === 'balanced'
+                                  ? 'border-[#7856ff] bg-[#7856ff]'
+                                  : 'border-[#e9e9e9]'
+                              }`}>
+                                {selectedBudgetType === 'balanced' && (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden lg:block">
                       <div className="flex items-center justify-between">
                         {/* Left Side - Strategy Info */}
                         <div className="flex items-center gap-4">
@@ -1436,20 +1552,71 @@ export function PlatformBudgetContent() {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
                               </svg>
                             )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Aggressive Budget */}
+                    {/* Aggressive Budget - Mobile Card */}
                     <div
-                      className={`border rounded-lg p-6 transition-all duration-200 cursor-pointer ${
+                      className={`border rounded-lg p-4 transition-all duration-200 cursor-pointer ${
                         selectedBudgetType === 'aggressive'
                           ? 'border-[#7856ff] bg-[#7856ff]/5'
                           : 'border-[#e9e9e9] hover:border-[#7856ff] hover:bg-[#f8f9fa]'
                       }`}
                       onClick={() => handleSuggestedBudget('aggressive')}
                     >
+                      {/* Mobile Layout */}
+                      <div className="lg:hidden">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-[16px] font-bold text-[#2a2a2f]">Aggressive</h3>
+                              <span className="px-2 py-1 bg-[#ff6b35]/10 text-[#ff6b35] text-[10px] font-medium rounded-full uppercase tracking-wide">High Risk</span>
+                            </div>
+                            <p className="text-[14px] text-[#626266] mb-3">Maximum market penetration and rapid growth for established brands</p>
+                            
+                            {/* Key Metrics Grid */}
+                            <div className="grid grid-cols-3 gap-3 mb-3">
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">25.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Audience</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#2a2a2f]">~10.5K</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Reach</div>
+                              </div>
+                              <div className="text-center p-2 bg-gray-50 rounded-lg">
+                                <div className="text-[14px] font-semibold text-[#04b440]">6.2%</div>
+                                <div className="text-[11px] text-[#a1a1a1]">Conversion</div>
+                              </div>
+                            </div>
+                            
+                            {/* Budget Display */}
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-[18px] font-bold text-[#2a2a2f]">₹10,000</div>
+                                <div className="text-[12px] text-[#a1a1a1]">Total Budget</div>
+                              </div>
+                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                selectedBudgetType === 'aggressive'
+                                  ? 'border-[#7856ff] bg-[#7856ff]'
+                                  : 'border-[#e9e9e9]'
+                              }`}>
+                                {selectedBudgetType === 'aggressive' && (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden lg:block">
                       <div className="flex items-center justify-between">
                         {/* Left Side - Strategy Info */}
                         <div className="flex items-center gap-4">
@@ -1501,6 +1668,7 @@ export function PlatformBudgetContent() {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="white"/>
                               </svg>
                             )}
+                            </div>
                 </div>
                     </div>
                   </div>
