@@ -142,7 +142,7 @@ export function ScheduleContent() {
 
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
-          <div className="flex flex-col gap-[2px]">
+          <div className="flex flex-col gap-[2px] hidden lg:block">
             <h1 className="text-[#2a2a2f] text-[20px] font-bold tracking-[-0.1px] leading-[1.4]">
               Schedule Your Campaign
             </h1>
