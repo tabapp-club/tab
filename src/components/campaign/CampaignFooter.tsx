@@ -44,8 +44,11 @@ export function CampaignFooter({
         {/* Mobile Layout */}
         <div className="lg:hidden flex gap-3 w-full">
           <button
-            onClick={handleClose}
-            className="flex-1 h-9 px-4 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[16px] transition-colors hover:bg-gray-50 active:bg-gray-100 touch-manipulation"
+            onClick={onPrevious || handleClose}
+            disabled={!onPrevious}
+            className={`flex-1 h-9 px-4 border border-[#e9e9e9] rounded font-medium text-[#2a2a2f] text-[16px] transition-colors hover:bg-gray-50 active:bg-gray-100 touch-manipulation ${
+              !onPrevious ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             Back
           </button>
