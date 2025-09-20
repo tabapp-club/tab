@@ -261,7 +261,7 @@ export function AudienceContent() {
         <CampaignStepper currentStep={2} />
 
         {/* Header Section */}
-        <div className="mb-6">
+        <div className="mb-6 hidden lg:block">
           <h1 className="text-[#2a2a2f] text-[20px] font-bold tracking-[-0.1px] leading-[1.4]">
                   Choose Your Audience
                 </h1>
