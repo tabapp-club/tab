@@ -52,14 +52,14 @@ export function AIServicesContent() {
   const [isLoadingFromURL, setIsLoadingFromURL] = useState(false);
   // Store pending session ID from URL when sessions aren't loaded yet
   const [pendingSessionId, setPendingSessionId] = useState<string | null>(null);
-  
+
   // Load state from URL parameters (only on mount and URL changes)
   useEffect(() => {
     setIsLoadingFromURL(true);
-    
+
     const sessionId = searchParams.get('session');
     const features = searchParams.get('features');
-    
+
     // Only update session if it's different and exists
     if (sessionId && sessionId !== currentSessionId) {
       const sessionExists = chatSessions.find(session => session.id === sessionId);
@@ -77,7 +77,7 @@ export function AIServicesContent() {
       setShowFeatures(true);
       setPendingSessionId(null);
     }
-    
+
     // Handle features parameter
     if (features === 'false') {
       setShowFeatures(false);
@@ -87,7 +87,7 @@ export function AIServicesContent() {
         setShowFeatures(true);
       }
     }
-    
+
     setTimeout(() => setIsLoadingFromURL(false), 0);
   }, [searchParams]); // Remove currentSessionId and chatSessions from deps
 
@@ -109,18 +109,18 @@ export function AIServicesContent() {
   // Function to update URL with current state (only when not loading from URL)
   const updateURL = useCallback(() => {
     if (isLoadingFromURL) return; // Prevent updates while loading from URL
-    
+
     const currentParams = new URLSearchParams(searchParams.toString());
     const newParams = new URLSearchParams();
-    
+
     if (currentSessionId) {
       newParams.set('session', currentSessionId);
     }
-    
+
     if (!showFeatures && currentSessionId) {
       newParams.set('features', 'false');
     }
-    
+
     // Only update URL if parameters have actually changed
     if (currentParams.toString() !== newParams.toString()) {
       const queryString = newParams.toString();
@@ -132,7 +132,7 @@ export function AIServicesContent() {
   // Update URL when state changes (debounced to prevent excessive updates)
   useEffect(() => {
     if (isLoadingFromURL) return; // Don't update URL while loading from URL
-    
+
     const timer = setTimeout(() => {
       updateURL();
     }, 100); // Small debounce to batch state changes
@@ -808,7 +808,7 @@ export function AIServicesContent() {
                     {chatSessions.map((session) => (
                       <div
                         key={session.id}
-                        onClick={() => loadChatSession(session.id)}
+                        onClick={() => selectChatSession(session.id)}
                         className={`p-3 rounded-lg cursor-pointer transition-colors ${
                           currentSessionId === session.id
                             ? 'bg-[#6E4EFF] text-white'
