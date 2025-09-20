@@ -1845,7 +1845,7 @@ export function PlatformBudgetContent() {
                                <div key={platformId} className="transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform origin-top">
                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
                                    <div className="flex items-center gap-3">
-                                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center`} style={{ backgroundColor: platform.color }}>
+                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: platform.color }}>
                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                          {platformId === 'tab' && (
                                            <>
