@@ -6,6 +6,7 @@ import { useSidebar } from "@/components/SidebarContext";
 import { usePopup } from "@/contexts/PopupContext";
 import { CampaignStepper } from "@/components/campaign/CampaignStepper";
 import { CampaignFooter } from "@/components/campaign/CampaignFooter";
+import { CampaignHeader } from "@/components/campaign/CampaignHeader";
 import { DashboardDatePicker } from "@/components/ui/DashboardDatePicker";
 import { DashboardTimePicker } from "@/components/ui/DashboardTimePicker";
 
@@ -132,6 +133,7 @@ export function ScheduleContent() {
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
+      <CampaignHeader onBack={() => router.push('/campaigns')} />
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">
 
@@ -450,11 +452,11 @@ export function ScheduleContent() {
           onClose={() => router.push('/campaigns', { scroll: false })}
           onNext={handlePublishCampaign}
           onPrevious={() => {
-                  // Preserve query parameters when going back
-                  const searchParams = new URLSearchParams(window.location.search);
-                  const campaignType = searchParams.get('type') || 'advertise';
-                  router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
-                }}
+            // Preserve query parameters when going back
+            const searchParams = new URLSearchParams(window.location.search);
+            const campaignType = searchParams.get('type') || 'advertise';
+            router.push(`/new-campaign/create?type=${campaignType}`, { scroll: false });
+          }}
           nextLabel={isPublishing ? "Publishing..." : isPublished ? "Published!" : "Publish"}
           nextDisabled={isPublishing || isPublished}
           showPrevious={true}

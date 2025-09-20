@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSidebar } from "@/components/SidebarContext";
 import { CampaignStepper } from "@/components/campaign/CampaignStepper";
 import { CampaignFooter } from "@/components/campaign/CampaignFooter";
+import { CampaignHeader } from "@/components/campaign/CampaignHeader";
 
 
 
@@ -147,6 +148,7 @@ export function CreateCampaignContent() {
       <main className={`flex-1 transition-sidebar h-full ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
+      <CampaignHeader onBack={() => router.push('/campaigns')} />
 
       <div className="w-full max-w-full overflow-x-hidden h-full flex flex-col">
         <CampaignFooter

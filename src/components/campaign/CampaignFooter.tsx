@@ -49,19 +49,6 @@ export function CampaignFooter({
           >
             Close
           </button>
-          {showPrevious && onPrevious && (
-            <button
-              onClick={onPrevious}
-              disabled={previousDisabled || isNavigating}
-              className={`flex-1 h-9 px-4 rounded font-medium text-[16px] transition-all duration-200 touch-manipulation ${
-                !previousDisabled && !isNavigating
-                  ? 'bg-gray-100 text-[#2a2a2f] hover:bg-gray-200'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {previousLabel}
-            </button>
-          )}
           <button
             onClick={onNext}
             disabled={nextDisabled || isNavigating}
