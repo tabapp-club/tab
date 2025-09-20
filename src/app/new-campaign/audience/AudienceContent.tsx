@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSidebar } from "@/components/SidebarContext";
 import { CampaignStepper } from "@/components/campaign/CampaignStepper";
 import { CampaignFooter } from "@/components/campaign/CampaignFooter";
-import { CampaignHeader } from "@/components/campaign/CampaignHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCampaign } from "@/contexts/CampaignContext";
 import CustomCheckbox from "@/components/ui/CustomCheckbox";
@@ -255,7 +254,6 @@ export function AudienceContent() {
     <main className={`flex-1 transition-sidebar ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
-      <CampaignHeader onBack={handleClose} />
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6]">
         <CampaignStepper currentStep={2} />
