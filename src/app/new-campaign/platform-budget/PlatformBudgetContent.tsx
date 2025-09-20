@@ -656,9 +656,7 @@ export function PlatformBudgetContent() {
   };
 
   return (
-    <main className={`flex-1 transition-sidebar overflow-y-auto ${
-      actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
-    }`}>
+    <main className={`flex-1 transition-sidebar overflow-y-auto ${actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'}`}>
       <CampaignHeader onBack={() => router.push('/campaigns')} />
 
       <div className="w-full max-w-full px-4 py-4 lg:px-8 lg:py-8 overflow-x-hidden min-h-screen pb-32 bg-[#f6f6f6] pt-16 lg:pt-4 relative">
