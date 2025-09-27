@@ -34,41 +34,39 @@ export function IntegrationSettings() {
   const [configErrors, setConfigErrors] = useState<any>({});
 
 
-  // Mock data for development (will be replaced by API data)
-  const mockIntegrations: Integration[] = [
-    {
-      id: "1",
-      name: "WhatsApp Business API",
-      type: "whatsapp",
-      status: "connected",
-      provider: "Meta",
-      config: {
-        apiKey: "wab_****_****_****",
-        webhookUrl: "https://api.tabapp.com/webhook/whatsapp",
-        phoneNumber: "+91 98765 43210"
-      },
-      lastSync: "2024-01-20 14:30:00",
-      messageCount: 15420,
-      errorRate: 0.2
-    },
-    {
-      id: "2",
-      name: "SMS Gateway",
-      type: "sms",
-      status: "connected",
-      provider: "TextLocal",
-      config: {
-        apiKey: "tl_****_****_****",
-        senderId: "TABAPP"
-      },
-      lastSync: "2024-01-20 14:25:00",
-      messageCount: 8930,
-      errorRate: 0.1
-    }
-  ];
-
   // Load integrations from API or use mock data
   useEffect(() => {
+    const mockIntegrations: Integration[] = [
+      {
+        id: "1",
+        name: "WhatsApp Business API",
+        type: "whatsapp",
+        status: "connected",
+        provider: "Meta",
+        config: {
+          apiKey: "wab_****_****_****",
+          webhookUrl: "https://api.tabapp.com/webhook/whatsapp",
+          phoneNumber: "+91 98765 43210"
+        },
+        lastSync: "2024-01-20 14:30:00",
+        messageCount: 15420,
+        errorRate: 0.2
+      },
+      {
+        id: "2",
+        name: "SMS Gateway",
+        type: "sms",
+        status: "connected",
+        provider: "TextLocal",
+        config: {
+          apiKey: "tl_****_****_****",
+          senderId: "TABAPP"
+        },
+        lastSync: "2024-01-20 14:25:00",
+        messageCount: 8930,
+        errorRate: 0.1
+      }
+    ];
     if (integrationsData && integrationsData.length > 0) {
       // Use API data if available and not empty
       setIntegrations(integrationsData);

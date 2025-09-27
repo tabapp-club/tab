@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 
-interface BusinessLogEntry {
+export interface BusinessLogEntry {
   id: string;
   customerPhone: string;
   customerName: string;
@@ -23,37 +23,74 @@ interface BusinessLogEntry {
 
 
 // API functions
-const fetchBusinessLogEntries = async (token: string, businessId: string, limit?: number, cursor?: string): Promise<{ data: BusinessLogEntry[]; next_cursor?: string }> => {
-  const response = await api.business.getBusinessEntries(token, businessId, limit, cursor);
-  const entries = response.data.map((entry: any) => ({
-    id: entry._id,
-    customerPhone: entry.buyer?.contact?.phone || '',
-    customerName: entry.buyer?.legal_name || '',
-    products: [], // Items not included in this response, would need separate call if needed
-    totalAmount: entry.totals?.grand_total || 0,
-    customFields: {
-      gst: entry.buyer?.gstin,
-      discount: entry.totals?.discounts_total || 0,
-      ...entry.entry
-    },
-    timestamp: (() => {
-      const dateStr = entry.entry?.issued_at || entry.created_at;
-      let date;
-      try {
-        // Try to parse as ISO string, append Z if needed
-        const isoStr = dateStr.includes('T') ? dateStr : dateStr.replace(' ', 'T');
-        date = new Date(isoStr + (isoStr.includes('Z') || isoStr.includes('+') || isoStr.includes('-') ? '' : 'Z'));
-        if (isNaN(date.getTime())) {
-          throw new Error('Invalid date');
-        }
-      } catch (e) {
-        console.warn('Failed to parse date:', dateStr, e);
-        date = new Date(); // fallback to now
+const fetchBusinessLogEntries = async (
+  token: string,
+  businessId: string,
+  limit = 10,
+  cursor?: string
+): Promise<{ data: BusinessLogEntry[]; next_cursor?: string }> => {
+  const response = await api.business.getBusinessLogEntries(token, businessId, limit, cursor);
+  const rawEntries = Array.isArray(response?.data) ? response.data : [];
+  const normalizeDate = (value?: string | null): Date => {
+    if (!value) {
+      return new Date();
+    }
+
+    const trimmed = value.trim();
+
+    try {
+      const isoCandidate = trimmed.includes('T') ? trimmed : trimmed.replace(' ', 'T');
+      const hasZone = /([Zz]|[\+\-]\d{2}:?\d{2})$/.test(isoCandidate);
+      const normalized = hasZone ? isoCandidate : `${isoCandidate}Z`;
+      const parsed = new Date(normalized);
+      if (!isNaN(parsed.getTime())) {
+        return parsed;
       }
-      return date;
-    })(),
-    isNewCustomer: false // Default, could be derived from data
-  }));
+    } catch (error) {
+      console.warn('Failed to normalise date', value, error);
+    }
+
+    const fallback = new Date(trimmed);
+    return isNaN(fallback.getTime()) ? new Date() : fallback;
+  };
+
+  const entries = rawEntries.map((entry: any) => {
+    const issuedAt = entry?.entry?.issued_at || entry?.issued_date || entry?.created_at;
+
+    const timestamp = normalizeDate(issuedAt);
+
+    const products = Array.isArray(entry?.items)
+      ? entry.items.map((item: any) => {
+          const rawQuantity = Number(item?.quantity) || 0;
+          const rawUnitPrice = typeof item?.unit_price === 'number'
+            ? item.unit_price
+            : (typeof item?.amounts?.line_total === 'number' && rawQuantity > 0)
+              ? item.amounts.line_total / rawQuantity
+              : 0;
+
+          return {
+            name: item?.name || 'Unnamed item',
+            quantity: rawQuantity,
+            price: rawUnitPrice,
+          };
+        })
+      : [];
+
+    return {
+      id: String(entry?._id || entry?.id || Date.now()),
+      customerPhone: entry?.buyer?.contact?.phone || '',
+      customerName: entry?.buyer?.legal_name || '',
+      products,
+      totalAmount: Number(entry?.totals?.grand_total) || 0,
+      customFields: {
+        gst: entry?.seller?.gstin || entry?.buyer?.gstin || '',
+        discount: Number(entry?.totals?.discounts_total) || 0,
+        issued_at: timestamp.toISOString(),
+      },
+      timestamp,
+      isNewCustomer: false,
+    };
+  });
   return {
     data: entries,
     next_cursor: response.next_cursor
@@ -129,7 +166,7 @@ const deleteBusinessLogEntry = async (token: string, businessId: string, id: str
   await api.business.deleteBusinessEntry(token, businessId, id);
 };
 
-export function useBusinessLogData(limit?: number, cursor?: string) {
+export function useBusinessLogData(limit = 10, cursor?: string) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const token = user?.accessToken;

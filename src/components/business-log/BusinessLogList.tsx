@@ -2,39 +2,33 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { format } from 'date-fns';
-import { useBusinessLogData } from "@/hooks/useBusinessLogData";
-
-interface BusinessLogEntry {
-  id: string;
-  customerPhone: string;
-  customerName: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  customFields: Record<string, any>;
-  timestamp: Date;
-  isNewCustomer: boolean;
-}
+import type { BusinessLogEntry } from '@/hooks/useBusinessLogData';
 
 interface BusinessLogListProps {
   data: BusinessLogEntry[] | undefined;
   loading: boolean;
   error: any;
-  nextCursor?: string;
   onNextPage: () => void;
   onPrevPage: () => void;
   hasNextPage: boolean;
   hasPrevPage: boolean;
+  onUpdateEntry: ({ id, updates }: { id: string; updates: Partial<BusinessLogEntry> }) => Promise<unknown>;
+  onDeleteEntry: (id: string) => Promise<unknown>;
 }
 
-export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, hasNextPage, hasPrevPage }: BusinessLogListProps) {
-  const { updateEntry, deleteEntry } = useBusinessLogData();
+export function BusinessLogList({
+  data,
+  loading,
+  error,
+  onNextPage,
+  onPrevPage,
+  hasNextPage,
+  hasPrevPage,
+  onUpdateEntry,
+  onDeleteEntry,
+}: BusinessLogListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterNewCustomers, setFilterNewCustomers] = useState<boolean | null>(null);
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
@@ -69,7 +63,7 @@ export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, 
 
   const handleSaveEdit = async (id: string) => {
     try {
-      await updateEntry({ id, updates: editForm });
+      await onUpdateEntry({ id, updates: editForm });
 
       // Reset edit state
       setEditingEntry(null);
@@ -441,8 +435,8 @@ export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, 
                                 {discountField && (
                                   <div className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
                                     <div className="flex-1 min-w-0">
-                                      <span className="text-xs font-medium text-gray-900 truncate">
-                                        {discountField[0].replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
+                                       <span className="text-xs font-medium text-gray-900 truncate">
+                                         Discount: {
                                           typeof discountField[1] === 'boolean' ? (
                                             <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
                                               discountField[1] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -480,25 +474,27 @@ export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, 
                             )}
                             
                             {/* Other fields in single column */}
-                            {otherFields.map(([key, value]) => (
-                              <div key={key} className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                <div className="flex-1 min-w-0">
-                                  <span className="text-xs font-medium text-gray-900 truncate">
-                                    {key.replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
-                                      typeof value === 'boolean' ? (
-                                        <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                          value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                        }`}>
-                                          {value ? 'Yes' : 'No'}
-                                        </span>
-                                      ) : (
-                                        <span className="text-gray-600 ml-1">{String(value)}</span>
-                                      )
-                                    }
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                             {otherFields.map(([key, value]) => (
+                               <div key={key} className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
+                                 <div className="flex-1 min-w-0">
+                                   <span className="text-xs font-medium text-gray-900 truncate">
+                                     {key === 'issued_at' ? 'Issued At' : key === 'gst' ? 'GST' : key.replace(/([A-Z])/g, ' $1').toLowerCase().trim().replace(/^\w/, c => c.toUpperCase())}: {
+                                       key === 'issued_at' ? (
+                                         <span className="text-gray-600 ml-1">{format(new Date(value), 'dd-MM-yyyy hh:mm a')}</span>
+                                       ) : typeof value === 'boolean' ? (
+                                         <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
+                                           value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                         }`}>
+                                           {value ? 'Yes' : 'No'}
+                                         </span>
+                                       ) : (
+                                         <span className="text-gray-600 ml-1">{String(value)}</span>
+                                       )
+                                     }
+                                   </span>
+                                 </div>
+                               </div>
+                             ))}
                           </>
                         );
                       })()}
@@ -546,7 +542,7 @@ export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, 
                        size="sm"
                        onClick={() => {
                          if (confirm('Are you sure you want to delete this entry?')) {
-                           deleteEntry(entry.id);
+                           onDeleteEntry(entry.id);
                          }
                        }}
                        className="h-6 px-2 text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors group/delete"

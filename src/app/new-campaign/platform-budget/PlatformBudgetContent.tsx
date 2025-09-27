@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSidebar } from "@/components/SidebarContext";
 import { CampaignStepper } from "@/components/campaign/CampaignStepper";
@@ -65,7 +65,7 @@ const DurationDropdown = ({ value, onChange }: { value: number; onChange: (value
     if (isOpen) {
       handleDropdownPosition();
     }
-  }, [isOpen]);
+  }, [isOpen, durationOptions.length]);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -161,7 +161,7 @@ const StrategyDropdown = ({ value, onChange }: { value: string; onChange: (value
     if (isOpen) {
       handleDropdownPosition();
     }
-  }, [isOpen]);
+  }, [isOpen, strategyOptions.length]);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -481,7 +481,7 @@ export function PlatformBudgetContent() {
   };
 
   // Calculate budget allocations with different strategies
-  const calculateBudgetAllocationsWithStrategy = () => {
+  const calculateBudgetAllocationsWithStrategy = useCallback(() => {
     const selectedPlatformsData = campaignData.platforms.filter(p =>
       selectedPlatforms.includes(p.id)
     );
@@ -563,7 +563,7 @@ export function PlatformBudgetContent() {
 
     // Update campaign budget with new allocations
     updateBudget({ allocations });
-  };
+  }, [selectedPlatforms, campaignData.platforms, budgetInputs.allocationStrategy, budgetInputs.total, campaignData.budget.allocations, updateBudget]);
 
   // Handle manual allocation changes
   const handleManualAllocationChange = (platformId: string, field: 'amount' | 'percentage', value: number) => {
@@ -636,12 +636,12 @@ export function PlatformBudgetContent() {
   // Calculate budget allocations when platforms, budget, or allocation strategy changes
   useEffect(() => {
     calculateBudgetAllocationsWithStrategy();
-  }, [selectedPlatforms, budgetInputs.total, budgetInputs.allocationStrategy]);
+  }, [selectedPlatforms, budgetInputs.total, budgetInputs.allocationStrategy, calculateBudgetAllocationsWithStrategy]);
 
   // Update campaign budget when inputs change
   useEffect(() => {
     updateBudget(budgetInputs);
-  }, [budgetInputs]);
+  }, [budgetInputs, updateBudget]);
 
   const handleProceed = () => {
     if (!validateForm()) {

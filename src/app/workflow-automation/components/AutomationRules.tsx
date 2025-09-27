@@ -25,48 +25,46 @@ export function AutomationRules() {
   const [selectedTemplate, setSelectedTemplate] = useState<AutomationTemplate | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize templates data
-  const initialTemplates: AutomationTemplate[] = [
-    {
-      id: "1",
-      name: "Welcome Message Automation",
-      description: "Automatically send welcome messages to new customers",
-      category: "welcome",
-      channels: ["whatsapp", "sms"],
-      trigger: "New customer registration",
-      message: "Welcome to our platform! We're excited to have you on board. Get started with 20% off your first order.",
-      isActive: true,
-      usage: 1250,
-      lastUsed: "2 hours ago"
-    },
-    {
-      id: "2",
-      name: "Reminder Message Automation",
-      description: "Send reminder messages for appointments, payments, and deadlines",
-      category: "reminder",
-      channels: ["whatsapp", "sms"],
-      trigger: "24 hours before appointment",
-      message: "Reminder: You have an appointment tomorrow at 2:00 PM. Please confirm your attendance.",
-      isActive: true,
-      usage: 890,
-      lastUsed: "1 hour ago"
-    },
-    {
-      id: "3",
-      name: "Follow-up Message Automation",
-      description: "Follow up with customers after purchases or interactions",
-      category: "followup",
-      channels: ["whatsapp", "sms"],
-      trigger: "3 days after purchase",
-      message: "How was your experience with us? We'd love to hear your feedback and help with any questions.",
-      isActive: false,
-      usage: 567,
-      lastUsed: "1 day ago"
-    }
-  ];
-
   // Initialize templates on component mount
   React.useEffect(() => {
+    const initialTemplates: AutomationTemplate[] = [
+      {
+        id: "1",
+        name: "Welcome Message Automation",
+        description: "Automatically send welcome messages to new customers",
+        category: "welcome",
+        channels: ["whatsapp", "sms"],
+        trigger: "New customer registration",
+        message: "Welcome to our platform! We're excited to have you on board. Get started with 20% off your first order.",
+        isActive: true,
+        usage: 1250,
+        lastUsed: "2 hours ago"
+      },
+      {
+        id: "2",
+        name: "Reminder Message Automation",
+        description: "Send reminder messages for appointments, payments, and deadlines",
+        category: "reminder",
+        channels: ["whatsapp", "sms"],
+        trigger: "24 hours before appointment",
+        message: "Reminder: You have an appointment tomorrow at 2:00 PM. Please confirm your attendance.",
+        isActive: true,
+        usage: 890,
+        lastUsed: "1 hour ago"
+      },
+      {
+        id: "3",
+        name: "Follow-up Message Automation",
+        description: "Follow up with customers after purchases or interactions",
+        category: "followup",
+        channels: ["whatsapp", "sms"],
+        trigger: "3 days after purchase",
+        message: "How was your experience with us? We'd love to hear your feedback and help with any questions.",
+        isActive: false,
+        usage: 567,
+        lastUsed: "1 day ago"
+      }
+    ];
     setTemplates(initialTemplates);
   }, []);
 

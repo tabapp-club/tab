@@ -7,22 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DynamicFieldManager } from "./DynamicFieldManager";
 import { CustomerValidation } from "./CustomerValidation";
 import { ProductServiceInput } from "./ProductServiceInput";
-import { useBusinessLogData } from "@/hooks/useBusinessLogData";
-
-interface BusinessLogEntry {
-  id: string;
-  customerPhone: string;
-  customerName: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  customFields: Record<string, any>;
-  timestamp: Date;
-  isNewCustomer: boolean;
-}
+import { useBusinessLogData, type BusinessLogEntry } from "@/hooks/useBusinessLogData";
 
 interface FormData {
   customerPhone: string;

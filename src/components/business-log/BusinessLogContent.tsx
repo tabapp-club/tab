@@ -15,7 +15,7 @@ export function BusinessLogContent() {
   const [activeTab, setActiveTab] = useState<'entry' | 'history' | 'fields'>('entry');
   const [currentCursor, setCurrentCursor] = useState<string | undefined>();
   const [cursorHistory, setCursorHistory] = useState<string[]>([]);
-  const { data: businessLogData, nextCursor, isLoading, error, refetch } = useBusinessLogData(2, currentCursor);
+  const { data: businessLogData, nextCursor, isLoading, error, refetch, updateEntry, deleteEntry } = useBusinessLogData(10, currentCursor);
 
 
 
@@ -119,7 +119,6 @@ export function BusinessLogContent() {
                   data={businessLogData}
                   loading={isLoading}
                   error={error}
-                  nextCursor={nextCursor}
                   onNextPage={() => {
                     if (nextCursor) {
                       setCursorHistory(prev => [...prev, currentCursor || '']);
@@ -133,8 +132,10 @@ export function BusinessLogContent() {
                       setCurrentCursor(prevCursor || undefined);
                     }
                   }}
-                  hasNextPage={!!nextCursor}
+                  hasNextPage={!!nextCursor && businessLogData && businessLogData.length === 10}
                   hasPrevPage={cursorHistory.length > 0}
+                  onUpdateEntry={updateEntry}
+                  onDeleteEntry={deleteEntry}
                 />
               ) : activeTab === 'fields' ? (
               <BusinessLogFields />

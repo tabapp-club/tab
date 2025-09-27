@@ -90,7 +90,7 @@ export function AIServicesContent() {
     }
 
     setTimeout(() => setIsLoadingFromURL(false), 0);
-  }, [searchParams]); // Remove currentSessionId and chatSessions from deps
+   }, [searchParams, chatSessions, currentSessionId]);
 
   // Handle pending session ID when sessions are loaded
   useEffect(() => {
