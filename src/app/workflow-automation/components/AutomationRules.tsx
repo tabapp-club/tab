@@ -109,7 +109,6 @@ export function AutomationRules() {
         )
       );
     } catch (error) {
-      console.error("Failed to toggle template status:", error);
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +238,6 @@ export function AutomationRules() {
                       {selectedTemplate.isActive ? "Deactivate" : "Activate"}
                     </button>
                     <button
-                      onClick={() => console.log('Configure template')}
                       className="border border-[#d1d5db] text-[#6b7280] px-4 py-2 rounded hover:bg-[#f9fafb] transition-colors flex items-center gap-2"
                     >
                       <Settings className="w-4 h-4" />

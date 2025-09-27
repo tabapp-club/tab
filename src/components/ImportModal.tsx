@@ -101,7 +101,6 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
       }
 
             const result = await response.json();
-      console.log('Upload successful:', result);
 
             setUploadSuccess(true);
       setUploadResult(result.data);
@@ -112,7 +111,6 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
       }
 
     } catch (error: any) {
-      console.error('Upload error:', error);
       setUploadError(error.message || 'Failed to upload file. Please try again.');
     } finally {
       setIsUploading(false);

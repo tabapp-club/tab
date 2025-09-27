@@ -131,7 +131,6 @@ export function CohortsClient() {
 
   const handleCreateCohort = useCallback(() => {
     // TODO: Implement create cohort functionality
-    console.log("Create cohort clicked");
   }, []);
 
   const handleSearchChange = useCallback((query: string) => {

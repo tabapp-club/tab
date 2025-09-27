@@ -13,7 +13,19 @@ import { Plus, History, Settings } from "lucide-react";
 export function BusinessLogContent() {
   const { isCollapsed, isMobile } = useSidebar();
   const [activeTab, setActiveTab] = useState<'entry' | 'history' | 'fields'>('entry');
-  const { data: businessLogData, isLoading, error, refetch } = useBusinessLogData();
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
+  const [cursorHistory, setCursorHistory] = useState<string[]>([]);
+  const { data: businessLogData, nextCursor, isLoading, error, refetch } = useBusinessLogData(2, currentCursor);
+
+
+
+  // Reset pagination when switching tabs
+  useEffect(() => {
+    if (activeTab !== 'history') {
+      setCurrentCursor(undefined);
+      setCursorHistory([]);
+    }
+  }, [activeTab]);
 
   // Only refresh data when switching to history tab if data is stale
   useEffect(() => {
@@ -102,9 +114,29 @@ export function BusinessLogContent() {
           <div className="p-3 sm:p-6">
             {activeTab === 'entry' ? (
               <BusinessLogForm />
-            ) : activeTab === 'history' ? (
-              <BusinessLogList data={businessLogData} loading={isLoading} error={error} />
-            ) : activeTab === 'fields' ? (
+             ) : activeTab === 'history' ? (
+                <BusinessLogList
+                  data={businessLogData}
+                  loading={isLoading}
+                  error={error}
+                  nextCursor={nextCursor}
+                  onNextPage={() => {
+                    if (nextCursor) {
+                      setCursorHistory(prev => [...prev, currentCursor || '']);
+                      setCurrentCursor(nextCursor);
+                    }
+                  }}
+                  onPrevPage={() => {
+                    if (cursorHistory.length > 0) {
+                      const prevCursor = cursorHistory[cursorHistory.length - 1];
+                      setCursorHistory(prev => prev.slice(0, -1));
+                      setCurrentCursor(prevCursor || undefined);
+                    }
+                  }}
+                  hasNextPage={!!nextCursor}
+                  hasPrevPage={cursorHistory.length > 0}
+                />
+              ) : activeTab === 'fields' ? (
               <BusinessLogFields />
             ) : null}
           </div>

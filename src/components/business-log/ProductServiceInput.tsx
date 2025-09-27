@@ -47,7 +47,6 @@ export function ProductServiceInput({
           setSuggestions(uniqueProducts);
         }
       } catch (error) {
-        console.error('Error loading previous products:', error);
       }
     };
 

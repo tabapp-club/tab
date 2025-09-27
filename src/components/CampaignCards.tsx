@@ -123,7 +123,6 @@ export function CampaignCards() {
             // Route to audience page to start the journey
             await router.push(`/new-campaign/audience?type=${campaignType}&source=dashboard`, { scroll: false });
         } catch (error) {
-            console.error('Navigation error:', error);
             setLoadingCardId(null);
         }
     };

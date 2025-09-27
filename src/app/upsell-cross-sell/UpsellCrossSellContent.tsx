@@ -61,10 +61,8 @@ export function UpsellCrossSellContent() {
   const handleGetStarted = () => {
     if (selectedService === 'upsell') {
       // Navigate to upsell campaign creation
-      console.log('Starting upsell campaign...');
     } else if (selectedService === 'cross-sell') {
       // Navigate to cross-sell campaign creation
-      console.log('Starting cross-sell campaign...');
     }
   };
 

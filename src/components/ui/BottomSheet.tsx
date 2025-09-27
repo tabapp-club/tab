@@ -14,12 +14,7 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
   const [mounted, setMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Debug logging
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('BottomSheet render:', { isOpen, title, mounted });
-    }
-  }, [isOpen, title, mounted]);
+  // Removed debug logging
 
   useEffect(() => {
     setMounted(true);

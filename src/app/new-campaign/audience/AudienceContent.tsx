@@ -25,7 +25,6 @@ export function AudienceContent() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
-  console.log('AudienceContent: Component rendering', { campaignType, user: !!user });
 
   // Handle source information and campaign type on component mount
   useEffect(() => {
@@ -45,11 +44,10 @@ export function AudienceContent() {
             timestamp: parsedSourceData.timestamp
           });
         } catch (error) {
-          console.error('Error parsing source data:', error);
         }
       }
     }
-  }, [campaignType, source]); // Remove updateCampaignType and updateSource from dependencies
+  }, [campaignType, source, updateCampaignType, updateSource]);
 
   // Simple audience selection state
   const [audienceType, setAudienceType] = useState<'all' | 'custom' | 'ai_inactive' | 'ai_vip' | 'ai_cart'>('all');

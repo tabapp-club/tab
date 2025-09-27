@@ -19,14 +19,6 @@ export const metadata: Metadata = {
   title: "tribly",
   description: "tribly - A modern business analytics platform with real-time insights",
   manifest: "/manifest.json",
-  themeColor: "#f6f6f6",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -51,6 +43,15 @@ export const metadata: Metadata = {
     ],
   },
 };
+
+export const generateViewport = () => ({
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#f6f6f6",
+});
 
 
 export default function RootLayout({
@@ -93,10 +94,10 @@ export default function RootLayout({
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
-                      console.log('SW registered: ', registration);
+                      // SW registered successfully
                     })
                     .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                      // SW registration failed
                     });
                 });
               }

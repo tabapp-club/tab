@@ -70,16 +70,7 @@ const FilterDropdown = ({
       const mobile = isMobileWidth || (isMobileUserAgent && isTouchDevice);
       setIsMobile(mobile);
       
-      // Debug logging
-      if (process.env.NODE_ENV === 'development') {
-        console.log('FilterDropdown mobile detection:', {
-          windowWidth: window.innerWidth,
-          mediaQueryMatch: mediaQuery.matches,
-          isMobileUserAgent,
-          isTouchDevice,
-          mobile
-        });
-      }
+      // Removed debug logging
     };
     
     // Set initial state
@@ -192,15 +183,7 @@ const FilterDropdown = ({
       {isOpen && (
         <>
           {(() => {
-            if (process.env.NODE_ENV === 'development') {
-              console.log('FilterDropdown rendering:', { 
-                isMobile, 
-                isOpen, 
-                title, 
-                windowWidth: window.innerWidth,
-                mediaQuery: window.matchMedia('(max-width: 767px)').matches
-              });
-            }
+            // Removed debug logging
             return null;
           })()}
           {(isMobile || window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches) ? (

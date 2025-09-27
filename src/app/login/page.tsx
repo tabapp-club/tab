@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -173,7 +174,6 @@ export default function LoginPage() {
       setIsResendDisabled(true);
       setError('');
     } catch (error: any) {
-      console.error('OTP sending failed:', error);
       setError(error.message || 'Failed to send OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -211,7 +211,6 @@ export default function LoginPage() {
         }
       }
     } catch (error: any) {
-      console.error('OTP verification failed:', error);
       setOtpError(error.message || 'Failed to verify OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -231,7 +230,6 @@ export default function LoginPage() {
       setOtp('');
       setOtpAttempts(0);
     } catch (error: any) {
-      console.error('Resend OTP failed:', error);
       setError(error.message || 'Failed to resend OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -259,27 +257,18 @@ export default function LoginPage() {
     }
   };
 
-  // Handle OTP input change
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 6) {
-      setOtp(value);
-      setOtpError('');
-    }
-  };
-
   // Handle individual OTP digit input
   const handleOtpDigitChange = (index: number, value: string) => {
     // Only allow single digit
     const digit = value.replace(/\D/g, '').slice(-1);
-    
+
     const newOtp = otp.split('');
     newOtp[index] = digit;
     const updatedOtp = newOtp.join('');
-    
+
     setOtp(updatedOtp);
     setOtpError('');
-    
+
     // Auto-focus next input if digit was entered
     if (digit && index < 5) {
       // Use multiple timing strategies for better compatibility
@@ -290,62 +279,12 @@ export default function LoginPage() {
         }
       }, 10);
     }
-    
+
     // Auto-validate when all 6 digits are entered
     if (updatedOtp.length === 6 && updatedOtp.replace(/\s/g, '').length === 6) {
       setTimeout(() => {
         handleAutoVerifyOTP(updatedOtp);
       }, 300);
-    }
-  };
-
-  // Auto-verify OTP when all digits are entered
-  const handleAutoVerifyOTP = async (otpCode: string) => {
-    setOtpError('');
-    setIsLoading(true);
-    
-    try {
-      const isValid = await verifyOTP(phoneNumber, otpCode);
-      if (isValid) {
-        setIsOtpVerified(true);
-        setOtpError('');
-        // Redirect to dashboard after successful verification
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
-      } else {
-        setOtpAttempts(prev => prev + 1);
-        if (otpAttempts >= 2) {
-          setOtpError('Too many failed attempts. Please request a new OTP.');
-          setIsOtpSent(false);
-          setOtp('');
-          setOtpAttempts(0);
-          // Focus back to first input
-          setTimeout(() => {
-            const firstInput = document.getElementById('otp-0');
-            firstInput?.focus();
-          }, 100);
-        } else {
-          setOtpError('Invalid OTP. Please try again.');
-          // Clear OTP and focus first input
-          setOtp('');
-          setTimeout(() => {
-            const firstInput = document.getElementById('otp-0');
-            firstInput?.focus();
-          }, 100);
-        }
-      }
-    } catch (error: any) {
-      console.error('Auto OTP verification failed:', error);
-      setOtpError('Failed to verify OTP. Please try again.');
-      // Clear OTP and focus first input
-      setOtp('');
-      setTimeout(() => {
-        const firstInput = document.getElementById('otp-0');
-        firstInput?.focus();
-      }, 100);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -384,6 +323,61 @@ export default function LoginPage() {
       setOtp(newOtp.join(''));
     }
   };
+
+
+
+
+
+  // Auto-verify OTP when all digits are entered
+  const handleAutoVerifyOTP = async (otpCode: string) => {
+    setOtpError('');
+    setIsLoading(true);
+    
+    try {
+      const isValid = await verifyOTP(phoneNumber, otpCode);
+      if (isValid) {
+        setIsOtpVerified(true);
+        setOtpError('');
+        // Redirect to dashboard after successful verification
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        setOtpAttempts(prev => prev + 1);
+        if (otpAttempts >= 2) {
+          setOtpError('Too many failed attempts. Please request a new OTP.');
+          setIsOtpSent(false);
+          setOtp('');
+          setOtpAttempts(0);
+          // Focus back to first input
+          setTimeout(() => {
+            const firstInput = document.getElementById('otp-0');
+            firstInput?.focus();
+          }, 100);
+        } else {
+          setOtpError('Invalid OTP. Please try again.');
+          // Clear OTP and focus first input
+          setOtp('');
+          setTimeout(() => {
+            const firstInput = document.getElementById('otp-0');
+            firstInput?.focus();
+          }, 100);
+        }
+      }
+    } catch (error: any) {
+      setOtpError('Failed to verify OTP. Please try again.');
+      // Clear OTP and focus first input
+      setOtp('');
+      setTimeout(() => {
+        const firstInput = document.getElementById('otp-0');
+        firstInput?.focus();
+      }, 100);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
 
   // Handle OTP paste
   const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -433,12 +427,12 @@ export default function LoginPage() {
                 <path d="M413.878 334.245H473.684V350.245H407.567L413.878 334.245Z" fill="#AB6AFF"/>
                 <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                 <defs>
-                <linearGradient id="paint0_linear_7845_13502" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#9747FF"/>
-                <stop offset="0.289538" stop-color="#6420BD"/>
-                <stop offset="0.684985" stop-color="#6420BD"/>
-                <stop offset="0.966994" stop-color="#9747FF"/>
-                </linearGradient>
+                  <linearGradient id="paint0_linear_7845_13502" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#9747FF" />
+                    <stop offset="0.289538" stopColor="#6420BD" />
+                    <stop offset="0.684985" stopColor="#6420BD" />
+                    <stop offset="0.966994" stopColor="#9747FF" />
+                  </linearGradient>
                 </defs>
               </svg>
             </div>
@@ -504,12 +498,11 @@ export default function LoginPage() {
                         <div
                           key={index}
                           className={`w-12 h-12 border flex items-center justify-center p-3 relative transition-colors ${
-                            otpError ? 'border-red-500' : 
-                            isLoading ? 'border-[#6e4eff]' : 
+                            otpError ? 'border-red-500' :
+                            isLoading ? 'border-[#6e4eff]' :
                             'border-[#e9e9e9] focus-within:border-[#6e4eff]'
                           }`}
-                          data-name="text input field" 
-                          data-node-id="340:6560"
+                          data-name="otp input field"
                         >
                           <input
                             id={`otp-${index}`}
@@ -755,7 +748,6 @@ export default function LoginPage() {
               <button
                 onClick={() => {
                   // Handle form submission
-                  console.log('Sales form submitted:', salesForm);
                   // Reset form
                   setSalesForm({
                     fullName: '',
@@ -943,7 +935,14 @@ export default function LoginPage() {
                   </div>
                 </div>
                 <div className="w-64 h-56 flex items-center justify-center transition-all duration-300" data-name="caitiao问卷101caitiao20230608-01" data-node-id="340:6594">
-                  <img src={slide.image} alt={`${slide.title} Illustration`} className="max-w-full max-h-full object-contain" />
+                  <Image
+                    src={slide.image}
+                    alt={`${slide.title} Illustration`}
+                    width={256}
+                    height={224}
+                    className="max-w-full max-h-full object-contain"
+                    priority={currentSlide === index}
+                  />
                 </div>
               </div>
             ))}
@@ -1049,10 +1048,10 @@ export default function LoginPage() {
                     <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                     <defs>
                     <linearGradient id="paint0_linear_7845_13502_mobile" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#9747FF"/>
-                    <stop offset="0.289538" stop-color="#6420BD"/>
-                    <stop offset="0.684985" stop-color="#6420BD"/>
-                    <stop offset="0.966994" stop-color="#9747FF"/>
+                 <stop stopColor="#9747FF"/>
+                 <stop offset="0.289538" stopColor="#6420BD"/>
+                 <stop offset="0.684985" stopColor="#6420BD"/>
+                 <stop offset="0.966994" stopColor="#9747FF"/>
                     </linearGradient>
                     </defs>
                   </svg>
@@ -1120,25 +1119,43 @@ export default function LoginPage() {
                           Enter the OTP sent to {formatPhoneNumber(phoneNumber)}
                         </div>
                         
-                        {/* OTP Input Boxes */}
-                        <div className="flex gap-2 justify-center mb-4">
+                        {/* Individual OTP Input Boxes */}
+                        <div className="flex gap-3 justify-center mb-4">
                           {[0, 1, 2, 3, 4, 5].map((index) => (
-                            <div key={index} className="w-10 h-10 border border-[#e9e9e9] focus-within:border-[#6e4eff] transition-colors flex items-center justify-center">
+                            <div
+                              key={index}
+                              className={`w-12 h-12 border flex items-center justify-center p-3 relative transition-colors ${
+                                otpError ? 'border-red-500' :
+                                isLoading ? 'border-[#6e4eff]' :
+                                'border-[#e9e9e9] focus-within:border-[#6e4eff]'
+                              }`}
+                              data-name="otp input field"
+                            >
                               <input
                                 id={`otp-${index}`}
-                                type="text"
+                                type="tel"
                                 inputMode="numeric"
                                 pattern="[0-9]*"
-                                maxLength={1}
                                 value={otp[index] || ''}
                                 onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
                                 onPaste={handleOtpPaste}
-                                className="w-full h-full text-center text-[#6e4eff] text-lg font-bold tracking-widest bg-transparent outline-none border-none"
                                 disabled={isLoading}
+                                className={`w-full h-full text-center text-[#6e4eff] text-xl font-bold tracking-widest bg-transparent outline-none ${
+                                  isLoading ? 'opacity-50' : ''
+                                }`}
+                                maxLength={1}
                                 autoComplete="off"
                                 autoFocus={index === 0 && isOtpSent && !isOtpVerified}
                               />
+                              {isLoading && index === 5 && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg className="animate-spin h-4 w-4 text-[#6e4eff]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                  </svg>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -1239,12 +1256,12 @@ export default function LoginPage() {
                   </span>
                 </button>
 
-                <div className="text-center">
-                  <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Sales</h2>
-                  <p className="text-sm text-[#a1a1a1] mb-6">Get in touch with our sales team</p>
-                  
-                  <form onSubmit={(e) => { e.preventDefault(); console.log('Sales form submitted:', salesForm); setSalesForm({ fullName: '', email: '', phoneNumber: '', requirement: '' }); }}>
-                    <div className="space-y-4 mb-6">
+                 <div className="text-center">
+                   <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Sales</h2>
+                   <p className="text-sm text-[#a1a1a1] mb-6">Get in touch with our sales team</p>
+
+                   <form onSubmit={(e) => { e.preventDefault(); }}>
+                     <div className="space-y-4 mb-6">
                       <input
                         type="text"
                         placeholder="Full Name"
@@ -1366,3 +1383,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

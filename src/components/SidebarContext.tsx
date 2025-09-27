@@ -7,6 +7,9 @@ interface SidebarContextType {
   toggleSidebar: () => void;
   setIsCollapsed: (collapsed: boolean) => void;
   isMobile: boolean;
+  isMobileOpen: boolean;
+  setIsMobileOpen: (open: boolean) => void;
+  closeMobileSidebar: () => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -18,6 +21,7 @@ interface SidebarProviderProps {
 export function SidebarProvider({ children }: SidebarProviderProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Check if we're on mobile
   useEffect(() => {
@@ -66,8 +70,20 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
     }
   };
 
+  const closeMobileSidebar = () => {
+    setIsMobileOpen(false);
+  };
+
   return (
-    <SidebarContext.Provider value={{ isCollapsed, toggleSidebar, setIsCollapsed, isMobile }}>
+    <SidebarContext.Provider value={{
+      isCollapsed,
+      toggleSidebar,
+      setIsCollapsed,
+      isMobile,
+      isMobileOpen,
+      setIsMobileOpen,
+      closeMobileSidebar
+    }}>
       {children}
     </SidebarContext.Provider>
   );

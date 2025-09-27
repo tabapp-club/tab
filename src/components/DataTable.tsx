@@ -40,7 +40,6 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
     if (action === 'view') {
       router.push(`/customer/${user.id}`, { scroll: false });
     }
-    console.log(`${action} for user:`, user);
   };
 
   const filteredData = useMemo(() => {

@@ -70,7 +70,6 @@ export function ScheduleContent() {
         setEndDate(data.endDate ? new Date(data.endDate) : undefined);
         setEndTime(data.endTime || '');
       } catch (error) {
-        console.error('Error loading schedule data from session storage:', error);
       }
     }
   }, []);

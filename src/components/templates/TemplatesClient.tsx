@@ -40,12 +40,10 @@ export function TemplatesClient() {
 
   const handleImportClick = useCallback(() => {
     // Handle import functionality
-    console.log('Import templates');
   }, []);
 
   const handleExportClick = useCallback(() => {
     // Handle export functionality
-    console.log('Export templates');
   }, []);
 
   const handleTemplatesUpdate = useCallback((templates: TemplateData[]) => {

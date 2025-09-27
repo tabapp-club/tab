@@ -64,7 +64,6 @@ export function BusinessLogForm() {
           const parsed = JSON.parse(savedFields);
           setCustomFields(Array.isArray(parsed) ? parsed : []);
         } catch (error) {
-          console.error('Error parsing custom fields:', error);
           setCustomFields([]);
         }
       } else {
@@ -181,7 +180,6 @@ export function BusinessLogForm() {
         }
       }, 800);
     } catch (error) {
-      console.error('Error validating customer:', error);
       setCustomerValidation({
         isValidating: false,
         customerFound: false,
@@ -266,16 +264,14 @@ export function BusinessLogForm() {
     try {
       const totals = calculateTotal();
       
-      const entry: BusinessLogEntry = {
-        id: Date.now().toString(),
-        customerPhone: formData.customerPhone,
-        customerName: formData.customerName,
-        products: formData.products,
-        totalAmount: totals.total,
-        customFields: formData.customFields,
-        timestamp: new Date(),
-        isNewCustomer: !customerValidation.customerFound
-      };
+       const entry: Omit<BusinessLogEntry, 'id' | 'timestamp'> = {
+         customerPhone: formData.customerPhone,
+         customerName: formData.customerName,
+         products: formData.products,
+         totalAmount: totals.total,
+         customFields: formData.customFields,
+         isNewCustomer: !customerValidation.customerFound
+       };
 
       await addEntry(entry);
       
@@ -299,7 +295,6 @@ export function BusinessLogForm() {
       
       setTimeout(() => setSubmitSuccess(false), 3000);
     } catch (error) {
-      console.error('Error submitting entry:', error);
       alert('Error submitting entry. Please try again.');
     } finally {
       setIsSubmitting(false);

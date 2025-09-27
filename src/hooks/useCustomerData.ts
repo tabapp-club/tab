@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { mapApiDataToTable, UserData } from './useDataCenterData';
+import { api } from '@/lib/api';
 
 export interface CustomerData {
   id: string;
@@ -72,25 +73,10 @@ export function useCustomerData({ customerId }: UseCustomerDataProps) {
       }
 
       // First, try to get all data center data to find the specific customer
-      const params = new URLSearchParams();
-      params.append('page', '1');
-      params.append('page_size', '100'); // Get more results to find the customer
-
-      const dataCenterUrl = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
-      
-      const dataCenterResponse = await fetch(dataCenterUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
-        }
+      const dataCenterResult = await api.dataCenter.getCustomers(user.accessToken, {
+        page: 1,
+        page_size: 100, // Get more results to find the customer
       });
-
-      if (!dataCenterResponse.ok) {
-        throw new Error(`Failed to fetch customer data: ${dataCenterResponse.status}`);
-      }
-
-      const dataCenterResult = await dataCenterResponse.json();
       
       if (!dataCenterResult.data || dataCenterResult.data.length === 0) {
         throw new Error('No customer data available');
@@ -101,7 +87,6 @@ export function useCustomerData({ customerId }: UseCustomerDataProps) {
       
       if (!customer) {
         // If customer not found, use the first customer as template but with the requested ID
-        console.log(`Customer ${customerId} not found, using first customer as template`);
         const firstCustomer = dataCenterResult.data[0];
         customer = {
           ...firstCustomer,
@@ -138,9 +123,6 @@ export function useCustomerData({ customerId }: UseCustomerDataProps) {
         addedOn: mappedData.addedOn,
       };
 
-      console.log('Original customer data:', customer);
-      console.log('Mapped data (same as data-center):', mappedData);
-      console.log('Transformed customer data:', transformedData);
 
       return transformedData;
     },

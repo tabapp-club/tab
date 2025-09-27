@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDataCenterData } from './useDataCenterData';
+import { DataCenterFilters } from '@/lib/api';
 
 export interface Milestone {
   id: string;
@@ -50,7 +51,14 @@ export function useAchievementsData() {
   const { data: dataCenterData } = useDataCenterData({
     page: 1,
     pageSize: 100,
-    filters: {}
+    filters: {
+      category: undefined,
+      user_type: undefined,
+      no_of_visits_from: undefined,
+      no_of_visits_to: undefined,
+      status: undefined,
+      search: undefined,
+    } as any // Type assertion since the hook expects different interface
   });
 
   useEffect(() => {

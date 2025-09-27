@@ -71,12 +71,10 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      console.log('Creating campaign:', campaignData);
 
       // Close modal on success
       onClose();
     } catch (error) {
-      console.error('Failed to create campaign:', error);
     } finally {
       setIsSubmitting(false);
     }

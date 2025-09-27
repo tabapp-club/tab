@@ -232,7 +232,7 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
+  const { isCollapsed, toggleSidebar, isMobile, isMobileOpen, setIsMobileOpen, closeMobileSidebar } = useSidebar();
   const { logout, user } = useAuth();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -240,35 +240,12 @@ export function Sidebar() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
-  // Function to close mobile sidebar
-  const closeMobileSidebar = () => {
-    if (isMobile) {
-      const sidebar = document.querySelector('.sidebar-mobile');
-      const overlay = document.querySelector('.sidebar-overlay');
-      const body = document.body;
-
-      if (sidebar && overlay && body) {
-        // Restore scroll position
-        const scrollY = body.style.top;
-        body.style.top = '';
-        if (scrollY) {
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        }
-        
-        sidebar.classList.remove('open');
-        overlay.classList.remove('open');
-        body.classList.remove('sidebar-open');
-        
-        // Dispatch custom event to notify MobileMenuToggle
-        window.dispatchEvent(new CustomEvent('sidebar-closed'));
-      }
-    }
-  };
+  // Close mobile sidebar using context
 
   return (
     <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
       actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
-    }`}>
+    } ${isMobile && isMobileOpen ? 'open' : ''}`}>
       {/* User Profile Section */}
       <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className={`transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
@@ -285,7 +262,7 @@ export function Sidebar() {
                   {user?.name || 'User'}
                 </div>
                 <div className="text-xs text-[#6b7280] font-manrope leading-tight">
-                  Business Manager
+                  {user?.user_type || 'Loading...'}
                 </div>
               </div>
               {/* Cross icon for mobile */}

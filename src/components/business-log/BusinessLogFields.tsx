@@ -35,7 +35,6 @@ export function BusinessLogFields() {
         const parsed = JSON.parse(savedFields);
         setCustomFields(Array.isArray(parsed) ? parsed : []);
       } catch (error) {
-        console.error('Error parsing custom fields:', error);
         setCustomFields([]);
       }
     } else {

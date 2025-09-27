@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
+import { api } from '@/lib/api';
 
 interface BusinessLogEntry {
   id: string;
@@ -18,280 +20,206 @@ interface BusinessLogEntry {
   isNewCustomer: boolean;
 }
 
-// Dummy data for demonstration
-const generateDummyData = (): BusinessLogEntry[] => {
-  const dummyEntries: BusinessLogEntry[] = [
-    {
-      id: '1',
-      customerPhone: '9876543210',
-      customerName: 'John Doe',
-      products: [
-        { name: 'Coffee', quantity: 2, price: 120 },
-        { name: 'Sandwich', quantity: 1, price: 150 }
-      ],
-      totalAmount: 390,
-      customFields: {
-        gst: '22ABCDE1234F1Z5',
-        discount: 30,
-        coupon: 'WELCOME10'
-      },
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      isNewCustomer: false
-    },
-    {
-      id: '2',
-      customerPhone: '9876543211',
-      customerName: 'Jane Smith',
-      products: [
-        { name: 'Pizza', quantity: 1, price: 299 },
-        { name: 'Soft Drink', quantity: 2, price: 50 }
-      ],
-      totalAmount: 399,
-      customFields: {
-        gst: '22ABCDE1234F1Z6',
-        cgst: 18,
-        discount: 0
-      },
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-      isNewCustomer: true
-    },
-    {
-      id: '3',
-      customerPhone: '9876543212',
-      customerName: 'Bob Johnson',
-      products: [
-        { name: 'Burger', quantity: 2, price: 180 },
-        { name: 'Fries', quantity: 1, price: 80 }
-      ],
-      totalAmount: 440,
-      customFields: {
-        gst: '22ABCDE1234F1Z7',
-        cgst: 12,
-        discount: 20
-      },
-      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-      isNewCustomer: false
-    },
-    {
-      id: '4',
-      customerPhone: '9876543213',
-      customerName: 'Alice Brown',
-      products: [
-        { name: 'Pasta', quantity: 1, price: 250 },
-        { name: 'Salad', quantity: 1, price: 120 }
-      ],
-      totalAmount: 370,
-      customFields: {
-        gst: '22ABCDE1234F1Z8',
-        cgst: 18,
-        discount: 0,
-        coupon: 'SAVE20'
-      },
-      timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-      isNewCustomer: true
-    },
-    {
-      id: '5',
-      customerPhone: '9876543214',
-      customerName: 'Charlie Wilson',
-      products: [
-        { name: 'Steak', quantity: 1, price: 450 },
-        { name: 'Wine', quantity: 1, price: 300 }
-      ],
-      totalAmount: 750,
-      customFields: {
-        gst: '22ABCDE1234F1Z9',
-        cgst: 18,
-        discount: 50
-      },
-      timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      isNewCustomer: false
-    },
-    {
-      id: '6',
-      customerPhone: '9876543215',
-      customerName: 'Diana Prince',
-      products: [
-        { name: 'Sushi Roll', quantity: 2, price: 200 },
-        { name: 'Miso Soup', quantity: 1, price: 80 }
-      ],
-      totalAmount: 480,
-      customFields: {
-        gst: '22ABCDE1234F1Z0',
-        cgst: 18,
-        discount: 0
-      },
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      isNewCustomer: true
-    }
-  ];
 
-  return dummyEntries;
-};
 
-// Mock API functions
-const fetchBusinessLogEntries = async (): Promise<BusinessLogEntry[]> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  try {
-    // Get from localStorage
-    const stored = localStorage.getItem('businessLogEntries');
-    
-    if (stored && stored !== 'null' && stored !== '') {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        // Return existing data, even if empty array
-        return parsed.map((entry: any) => ({
-          ...entry,
-          timestamp: new Date(entry.timestamp)
-        }));
+// API functions
+const fetchBusinessLogEntries = async (token: string, businessId: string, limit?: number, cursor?: string): Promise<{ data: BusinessLogEntry[]; next_cursor?: string }> => {
+  const response = await api.business.getBusinessEntries(token, businessId, limit, cursor);
+  const entries = response.data.map((entry: any) => ({
+    id: entry._id,
+    customerPhone: entry.buyer?.contact?.phone || '',
+    customerName: entry.buyer?.legal_name || '',
+    products: [], // Items not included in this response, would need separate call if needed
+    totalAmount: entry.totals?.grand_total || 0,
+    customFields: {
+      gst: entry.buyer?.gstin,
+      discount: entry.totals?.discounts_total || 0,
+      ...entry.entry
+    },
+    timestamp: (() => {
+      const dateStr = entry.entry?.issued_at || entry.created_at;
+      let date;
+      try {
+        // Try to parse as ISO string, append Z if needed
+        const isoStr = dateStr.includes('T') ? dateStr : dateStr.replace(' ', 'T');
+        date = new Date(isoStr + (isoStr.includes('Z') || isoStr.includes('+') || isoStr.includes('-') ? '' : 'Z'));
+        if (isNaN(date.getTime())) {
+          throw new Error('Invalid date');
+        }
+      } catch (e) {
+        console.warn('Failed to parse date:', dateStr, e);
+        date = new Date(); // fallback to now
       }
-    }
-    
-    // Only initialize with dummy data if localStorage is completely empty
-    // This should only happen on first visit
-    const dummyData = generateDummyData();
-    localStorage.setItem('businessLogEntries', JSON.stringify(dummyData));
-    return dummyData;
-  } catch (error) {
-    console.error('Error fetching business log entries:', error);
-    // Return empty array on error, don't overwrite existing data
-    return [];
-  }
-};
-
-const addBusinessLogEntry = async (entry: Omit<BusinessLogEntry, 'id'>): Promise<BusinessLogEntry> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  const newEntry: BusinessLogEntry = {
-    ...entry,
-    id: Date.now().toString()
+      return date;
+    })(),
+    isNewCustomer: false // Default, could be derived from data
+  }));
+  return {
+    data: entries,
+    next_cursor: response.next_cursor
   };
-  
-  try {
-    // Get existing entries
-    const existing = localStorage.getItem('businessLogEntries');
-    let entries: BusinessLogEntry[] = [];
-    
-    if (existing && existing !== 'null') {
-      const parsed = JSON.parse(existing);
-      entries = Array.isArray(parsed) ? parsed : [];
-    }
-    
-    // Add new entry at the beginning
-    entries.unshift(newEntry);
-    
-    // Save to localStorage
-    localStorage.setItem('businessLogEntries', JSON.stringify(entries));
-    
-    return newEntry;
-  } catch (error) {
-    console.error('Error adding business log entry:', error);
-    throw new Error('Failed to save entry');
-  }
 };
 
-const updateBusinessLogEntry = async (id: string, updates: Partial<BusinessLogEntry>): Promise<BusinessLogEntry> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  try {
-    const existing = localStorage.getItem('businessLogEntries');
-    let entries: BusinessLogEntry[] = [];
-    
-    if (existing && existing !== 'null') {
-      const parsed = JSON.parse(existing);
-      entries = Array.isArray(parsed) ? parsed : [];
-    }
-    
-    const index = entries.findIndex((entry: BusinessLogEntry) => entry.id === id);
-    if (index === -1) {
-      throw new Error('Entry not found');
-    }
-    
-    entries[index] = { ...entries[index], ...updates };
-    localStorage.setItem('businessLogEntries', JSON.stringify(entries));
-    
-    return entries[index];
-  } catch (error) {
-    console.error('Error updating business log entry:', error);
-    throw new Error('Failed to update entry');
-  }
+const addBusinessLogEntry = async (token: string, businessId: string, entry: Omit<BusinessLogEntry, 'id'>): Promise<BusinessLogEntry> => {
+  // Transform to API payload
+  const apiPayload = {
+    entry: {
+      number: `INV-${Date.now()}`,
+      status: "DRFT",
+      type: "SALE",
+      issued_at: new Date().toISOString(),
+      currency: "INR"
+    },
+    buyer: {
+      schema_version: 1,
+      legal_name: entry.customerName,
+      trade_name: entry.customerName,
+      gstin: entry.customFields.gst || null,
+      contact: {
+        schema_version: 1,
+        phone: entry.customerPhone,
+        email: null
+      }
+    },
+    totals: {
+      schema_version: 1,
+      items_subtotal: entry.products.reduce((sum, p) => sum + (p.quantity * p.price), 0),
+      discounts_total: entry.customFields.discount || 0,
+      tax_total: ((entry.customFields.cgst || 0) / 100) * (entry.products.reduce((sum, p) => sum + (p.quantity * p.price), 0) - (entry.customFields.discount || 0)),
+      rounding: 0,
+      grand_total: entry.totalAmount,
+      paid_total: 0,
+      balance_due: entry.totalAmount
+    },
+    items: entry.products.map((product, index) => ({
+      line_id: `ITEM-${index + 1}`,
+      name: product.name,
+      sku: null,
+      category: "General",
+      quantity: product.quantity,
+      unit_price: product.price,
+      discount: 0,
+      tax_rate: entry.customFields.cgst || 0,
+      metadata: {}
+    })),
+    payments: [],
+    source: "business-log",
+    ingestion_id: `ING-${Date.now()}`,
+    metadata: entry.customFields
+  };
+
+  const response = await api.business.createBusinessEntry(token, businessId, apiPayload);
+  return {
+    id: response.data.id,
+    ...entry,
+    timestamp: new Date()
+  };
 };
 
-const deleteBusinessLogEntry = async (id: string): Promise<void> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  try {
-    const existing = localStorage.getItem('businessLogEntries');
-    let entries: BusinessLogEntry[] = [];
-    
-    if (existing && existing !== 'null') {
-      const parsed = JSON.parse(existing);
-      entries = Array.isArray(parsed) ? parsed : [];
-    }
-    
-    const filtered = entries.filter((entry: BusinessLogEntry) => entry.id !== id);
-    localStorage.setItem('businessLogEntries', JSON.stringify(filtered));
-  } catch (error) {
-    console.error('Error deleting business log entry:', error);
-    throw new Error('Failed to delete entry');
-  }
+const updateBusinessLogEntry = async (token: string, businessId: string, id: string, updates: Partial<BusinessLogEntry>): Promise<BusinessLogEntry> => {
+  // For update, we'd need to transform back to API format, but keeping simple for now
+  const response = await api.business.updateBusinessEntry(token, businessId, id, updates);
+  return {
+    ...response.data,
+    timestamp: new Date(response.data.timestamp)
+  };
 };
 
-export function useBusinessLogData() {
+const deleteBusinessLogEntry = async (token: string, businessId: string, id: string): Promise<void> => {
+  await api.business.deleteBusinessEntry(token, businessId, id);
+};
+
+export function useBusinessLogData(limit?: number, cursor?: string) {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
+  const token = user?.accessToken;
+  const businessId = user?.business_id;
+
+
 
   // Fetch all entries
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['businessLogEntries'],
-    queryFn: fetchBusinessLogEntries,
+    queryKey: ['businessEntries', businessId, limit, cursor],
+    queryFn: async () => {
+      console.log('Fetching business entries:', { token: !!token, businessId });
+
+      let currentBusinessId = businessId;
+      const currentToken = token;
+
+      // If businessId is missing but we have token, try to fetch it
+      if (!currentBusinessId && currentToken) {
+        console.log('BusinessId missing, fetching...');
+        try {
+          const businessesResponse = await api.business.getBusinesses(currentToken);
+          if (businessesResponse.data && businessesResponse.data.length > 0) {
+            currentBusinessId = businessesResponse.data[0]._id;
+            console.log('Fetched businessId:', currentBusinessId);
+          }
+        } catch (error) {
+          console.warn('Failed to fetch businessId:', error);
+          throw new Error('Failed to get business ID');
+        }
+      }
+
+      if (!currentToken || !currentBusinessId) {
+        throw new Error('Not authenticated or no business ID');
+      }
+
+      return fetchBusinessLogEntries(currentToken, currentBusinessId, limit, cursor);
+    },
+    enabled: !!token, // Enable as long as we have token
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Listen for custom events to refresh data
   useEffect(() => {
     const handleBusinessLogUpdate = () => {
-      queryClient.invalidateQueries({ queryKey: ['businessLogEntries'] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
     };
 
     window.addEventListener('businessLogUpdated', handleBusinessLogUpdate);
-    
+
     return () => {
       window.removeEventListener('businessLogUpdated', handleBusinessLogUpdate);
     };
-  }, [queryClient]);
+  }, [queryClient, businessId]);
 
   // Add entry mutation
   const addEntryMutation = useMutation({
-    mutationFn: addBusinessLogEntry,
+    mutationFn: (entry: Omit<BusinessLogEntry, 'id'>) => {
+      if (!token || !businessId) throw new Error('Not authenticated');
+      return addBusinessLogEntry(token, businessId, entry);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessLogEntries'] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
     },
   });
 
   // Update entry mutation
   const updateEntryMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<BusinessLogEntry> }) =>
-      updateBusinessLogEntry(id, updates),
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<BusinessLogEntry> }) => {
+      if (!token || !businessId) throw new Error('Not authenticated');
+      return updateBusinessLogEntry(token, businessId, id, updates);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessLogEntries'] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
     },
   });
 
   // Delete entry mutation
   const deleteEntryMutation = useMutation({
-    mutationFn: deleteBusinessLogEntry,
+    mutationFn: (id: string) => {
+      if (!token || !businessId) throw new Error('Not authenticated');
+      return deleteBusinessLogEntry(token, businessId, id);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessLogEntries'] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
     },
   });
 
   return {
-    data,
+    data: Array.isArray(data?.data) ? data.data : [],
+    nextCursor: data?.next_cursor,
     isLoading,
     error,
     refetch,

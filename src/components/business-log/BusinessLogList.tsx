@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from 'date-fns';
+import { useBusinessLogData } from "@/hooks/useBusinessLogData";
 
 interface BusinessLogEntry {
   id: string;
@@ -25,24 +26,34 @@ interface BusinessLogListProps {
   data: BusinessLogEntry[] | undefined;
   loading: boolean;
   error: any;
+  nextCursor?: string;
+  onNextPage: () => void;
+  onPrevPage: () => void;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
 }
 
-export function BusinessLogList({ data, loading, error }: BusinessLogListProps) {
+export function BusinessLogList({ data, loading, error, onNextPage, onPrevPage, hasNextPage, hasPrevPage }: BusinessLogListProps) {
+  const { updateEntry, deleteEntry } = useBusinessLogData();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterNewCustomers, setFilterNewCustomers] = useState<boolean | null>(null);
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<BusinessLogEntry>>({});
 
-  const filteredData = data?.filter(entry => {
-    const matchesSearch = 
+
+
+  const filteredData = (Array.isArray(data) ? data : []).filter(entry => {
+    const matchesSearch =
       entry.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       entry.customerPhone.includes(searchTerm) ||
-      entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+      (entry.products && entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())));
+
     const matchesFilter = filterNewCustomers === null || entry.isNewCustomer === filterNewCustomers;
-    
+
     return matchesSearch && matchesFilter;
-  }) || [];
+  });
+
+  console.log('filteredData length:', filteredData.length);
 
   const handleEditEntry = (entry: BusinessLogEntry) => {
     setEditingEntry(entry.id);
@@ -58,28 +69,15 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
 
   const handleSaveEdit = async (id: string) => {
     try {
-      const existing = localStorage.getItem('businessLogEntries');
-      if (existing) {
-        const entries = JSON.parse(existing);
-        const updatedEntries = entries.map((entry: BusinessLogEntry) => 
-          entry.id === id 
-            ? { ...entry, ...editForm, timestamp: new Date() }
-            : entry
-        );
-        localStorage.setItem('businessLogEntries', JSON.stringify(updatedEntries));
-        
-        // Trigger a custom event to notify other components
-        window.dispatchEvent(new CustomEvent('businessLogUpdated'));
-        
-        // Reset edit state
-        setEditingEntry(null);
-        setEditForm({});
-        
-        // Show success message
-        alert('Entry updated successfully!');
-      }
+      await updateEntry({ id, updates: editForm });
+
+      // Reset edit state
+      setEditingEntry(null);
+      setEditForm({});
+
+      // Show success message
+      alert('Entry updated successfully!');
     } catch (error) {
-      console.error('Error updating entry:', error);
       alert('Error updating entry. Please try again.');
     }
   };
@@ -531,19 +529,34 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                       </span>
                     )}
                   </div>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditEntry(entry)}
-                      className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
-                    >
-                      <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                      Edit
-                    </Button>
-                  </div>
+                   <div className="flex gap-1">
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => handleEditEntry(entry)}
+                       className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
+                     >
+                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                       </svg>
+                       Edit
+                     </Button>
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => {
+                         if (confirm('Are you sure you want to delete this entry?')) {
+                           deleteEntry(entry.id);
+                         }
+                       }}
+                       className="h-6 px-2 text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors group/delete"
+                     >
+                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/delete:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                       </svg>
+                       Delete
+                     </Button>
+                   </div>
                 </div>
               </div>
             </CardContent>
@@ -551,13 +564,41 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
         ))}
       </div>
 
-      {/* Summary */}
+      {/* Pagination */}
       <Card>
         <CardContent className="p-2">
-          <div className="text-center text-sm">
-            <span className="text-gray-600">
-              Showing {filteredData.length} of {data.length} entries
-            </span>
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onPrevPage}
+              disabled={!hasPrevPage || loading}
+              className="flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Previous
+            </Button>
+
+            <div className="text-center text-sm">
+              <span className="text-gray-600">
+                Showing {filteredData.length} entries
+              </span>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onNextPage}
+              disabled={!hasNextPage || loading}
+              className="flex items-center gap-2"
+            >
+              Next
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Button>
           </div>
         </CardContent>
       </Card>
