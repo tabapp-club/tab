@@ -16,4 +16,7 @@ export type {
   CreateCustomerRequest,
   BusinessDataFilters,
   DataCenterFilters,
+  FieldType,
+  CustomField,
+  CreateCustomFieldRequest,
 } from './types';

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { config } from '@/lib/config';
 
 interface ImportModalProps {
   onClose: () => void;
@@ -87,7 +88,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('https://api.tabapp.club/v1/upload-csv', {
+      const response = await fetch(`${config.api.baseURL}/upload-csv`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${user.accessToken}`

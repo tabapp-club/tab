@@ -13,9 +13,9 @@ export interface BusinessLogEntry {
     name: string;
     quantity: number;
     price: number;
+    customFields: Record<string, any>;
   }>;
   totalAmount: number;
-  customFields: Record<string, any>;
   timestamp: Date;
   isNewCustomer: boolean;
 }
@@ -108,21 +108,18 @@ const addBusinessLogEntry = async (token: string, businessId: string, entry: Omi
       currency: "INR"
     },
     buyer: {
-      schema_version: 1,
       legal_name: entry.customerName,
       trade_name: entry.customerName,
-      gstin: entry.customFields.gst || null,
+      gstin: null,
       contact: {
-        schema_version: 1,
         phone: entry.customerPhone,
         email: null
       }
     },
     totals: {
-      schema_version: 1,
       items_subtotal: entry.products.reduce((sum, p) => sum + (p.quantity * p.price), 0),
-      discounts_total: entry.customFields.discount || 0,
-      tax_total: ((entry.customFields.cgst || 0) / 100) * (entry.products.reduce((sum, p) => sum + (p.quantity * p.price), 0) - (entry.customFields.discount || 0)),
+      discounts_total: 0,
+      tax_total: 0,
       rounding: 0,
       grand_total: entry.totalAmount,
       paid_total: 0,
@@ -136,13 +133,17 @@ const addBusinessLogEntry = async (token: string, businessId: string, entry: Omi
       quantity: product.quantity,
       unit_price: product.price,
       discount: 0,
-      tax_rate: entry.customFields.cgst || 0,
+      tax_rate: 0,
       metadata: {}
     })),
     payments: [],
     source: "business-log",
     ingestion_id: `ING-${Date.now()}`,
-    metadata: entry.customFields
+    metadata: {
+      isNewCustomer: entry.isNewCustomer,
+      submitted_at: new Date().toISOString(),
+      total_products: entry.products.length
+    }
   };
 
   const response = await api.business.createBusinessEntry(token, businessId, apiPayload);

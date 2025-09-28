@@ -31,6 +31,23 @@ export interface CreateCustomerRequest {
   name: string;
 }
 
+// Custom field types
+export type FieldType = "Text" | "Number" | "Percentage" | "Dropdown" | "Date" | "Checkbox";
+
+export interface CustomField {
+  label: string;
+  placeholder: string;
+  required: boolean;
+  field_type: FieldType;
+}
+
+export interface CreateCustomFieldRequest {
+  label: string;
+  placeholder: string;
+  required: boolean;
+  field_type: FieldType;
+}
+
 // Business data types
 export interface BusinessDataResponse {
   all_customers?: number;

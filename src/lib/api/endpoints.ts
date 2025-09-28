@@ -8,6 +8,7 @@ import {
   CreateCustomerRequest,
   BusinessDataFilters,
   DataCenterFilters,
+  CreateCustomFieldRequest,
 } from './types';
 
 // Authentication endpoints
@@ -68,6 +69,12 @@ export const business = {
 
   getCustomFields: (token: string, businessId: string): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
     apiClient.get(`/dashboard/v1/business_log/${businessId}/custom_fields`, { headers: apiClient.withAuth(token) }),
+
+  createCustomField: (token: string, businessId: string, data: CreateCustomFieldRequest): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
+    apiClient.post(`/dashboard/v1/business_log/${businessId}/custom_fields`, data, { headers: apiClient.withAuth(token) }),
+
+  createCustomFields: (token: string, businessId: string, data: CreateCustomFieldRequest[]): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
+    apiClient.post(`/dashboard/v1/business_log/${businessId}/custom_fields`, data, { headers: apiClient.withAuth(token) }),
 
   updateCustomField: (token: string, businessId: string, label: string, data: { label: string; placeholder: string; required: boolean; field_type: string }): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
     apiClient.put(`/dashboard/v1/business_log/${businessId}/custom_fields?label=${encodeURIComponent(label)}`, data, { headers: apiClient.withAuth(token) }),

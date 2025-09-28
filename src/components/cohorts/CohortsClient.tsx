@@ -8,6 +8,7 @@ import { CohortsFilterBar } from './CohortsFilterBar';
 import { CohortsList } from './CohortsList';
 import ImportModal from '../ImportModal';
 import { useSidebar } from '../SidebarContext';
+import { config } from '@/lib/config';
 import { CohortData } from './CohortsList';
 import { useAuth } from '@/contexts/AuthContext';
 import React from 'react';
@@ -73,7 +74,7 @@ export function CohortsClient() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://api.tabapp.club/v1/cohort-analysis', {
+      const response = await fetch(`${config.api.baseURL}/cohort-analysis`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

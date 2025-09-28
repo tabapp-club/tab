@@ -34,7 +34,11 @@ export function BusinessLogList({
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<BusinessLogEntry>>({});
 
-
+  // Function to determine if user is new or returning based on frequency
+  const getUserStatus = (phoneNumber: string, allEntries: BusinessLogEntry[]) => {
+    const userEntries = allEntries.filter(entry => entry.customerPhone === phoneNumber);
+    return userEntries.length === 1 ? 'New User' : 'Returning';
+  };
 
   const filteredData = (Array.isArray(data) ? data : []).filter(entry => {
     const matchesSearch =
@@ -42,7 +46,18 @@ export function BusinessLogList({
       entry.customerPhone.includes(searchTerm) ||
       (entry.products && entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())));
 
-    const matchesFilter = filterNewCustomers === null || entry.isNewCustomer === filterNewCustomers;
+    // Use the new user status logic for filtering
+    let matchesFilter = true;
+    if (filterNewCustomers !== null) {
+      const userStatus = getUserStatus(entry.customerPhone, data || []);
+      if (filterNewCustomers === true) {
+        // Show only "New User" entries
+        matchesFilter = userStatus === 'New User';
+      } else {
+        // Show only "Returning" entries
+        matchesFilter = userStatus === 'Returning';
+      }
+    }
 
     return matchesSearch && matchesFilter;
   });
@@ -56,7 +71,6 @@ export function BusinessLogList({
       customerPhone: entry.customerPhone,
       products: entry.products,
       totalAmount: entry.totalAmount,
-      customFields: entry.customFields,
       isNewCustomer: entry.isNewCustomer
     });
   };
@@ -83,13 +97,13 @@ export function BusinessLogList({
 
   const handleProductChange = (index: number, field: string, value: string | number) => {
     if (!editForm.products) return;
-    
+
     const updatedProducts = [...editForm.products];
     updatedProducts[index] = { ...updatedProducts[index], [field]: value };
-    
+
     // Recalculate total amount
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -99,11 +113,11 @@ export function BusinessLogList({
 
   const addProduct = () => {
     if (!editForm.products) return;
-    
-    const newProduct = { name: '', quantity: 1, price: 0 };
+
+    const newProduct = { name: '', quantity: 1, price: 0, customFields: {} };
     const updatedProducts = [...editForm.products, newProduct];
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -113,10 +127,10 @@ export function BusinessLogList({
 
   const removeProduct = (index: number) => {
     if (!editForm.products || editForm.products.length <= 1) return;
-    
+
     const updatedProducts = editForm.products.filter((_, i) => i !== index);
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -204,7 +218,7 @@ export function BusinessLogList({
             onClick={() => setFilterNewCustomers(true)}
             className={`${filterNewCustomers === true ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
-            <span className="hidden sm:inline">New Customers</span>
+            <span className="hidden sm:inline">New Users</span>
             <span className="sm:hidden">New</span>
           </Button>
           <Button
@@ -213,8 +227,8 @@ export function BusinessLogList({
             onClick={() => setFilterNewCustomers(false)}
             className={`${filterNewCustomers === false ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
-            <span className="hidden sm:inline">Existing</span>
-            <span className="sm:hidden">Existing</span>
+            <span className="hidden sm:inline">Returning</span>
+            <span className="sm:hidden">Returning</span>
           </Button>
         </div>
       </div>
@@ -245,9 +259,9 @@ export function BusinessLogList({
                         </div>
                       </div>
                     </div>
-                    
+
                   </div>
-                  
+
                   {/* Amount Display */}
                   <div className="text-right">
                     <div className="text-lg font-bold text-[#7856ff]">
@@ -343,22 +357,22 @@ export function BusinessLogList({
                         <button
                           onClick={() => setEditForm({...editForm, isNewCustomer: true})}
                           className={`px-3 py-1 text-xs rounded ${
-                            editForm.isNewCustomer 
-                              ? 'bg-[#7856ff] text-white' 
+                            editForm.isNewCustomer
+                              ? 'bg-[#7856ff] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          New Customer
+                          New User
                         </button>
                         <button
                           onClick={() => setEditForm({...editForm, isNewCustomer: false})}
                           className={`px-3 py-1 text-xs rounded ${
-                            !editForm.isNewCustomer 
-                              ? 'bg-[#7856ff] text-white' 
+                            !editForm.isNewCustomer
+                              ? 'bg-[#7856ff] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          Existing Customer
+                          Returning
                         </button>
                       </div>
                     </div>
@@ -409,98 +423,6 @@ export function BusinessLogList({
                   </div>
                 </div>
 
-                {/* Additional Details Section - Enhanced */}
-                {Object.keys(entry.customFields).length > 0 && (
-                  <div className="mb-2">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <svg className="w-3 h-3 text-[#7856ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <h4 className="text-xs font-semibold text-gray-800">Details</h4>
-                    </div>
-                    <div className="space-y-1">
-                      {(() => {
-                        const fields = Object.entries(entry.customFields);
-                        const discountField = fields.find(([key]) => key.toLowerCase().includes('discount'));
-                        const couponField = fields.find(([key]) => key.toLowerCase().includes('coupon'));
-                        const otherFields = fields.filter(([key]) => 
-                          !key.toLowerCase().includes('discount') && !key.toLowerCase().includes('coupon')
-                        );
-
-                        return (
-                          <>
-                            {/* Discount and Coupon side by side */}
-                            {(discountField || couponField) && (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                                {discountField && (
-                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                    <div className="flex-1 min-w-0">
-                                       <span className="text-xs font-medium text-gray-900 truncate">
-                                         Discount: {
-                                          typeof discountField[1] === 'boolean' ? (
-                                            <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                              discountField[1] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                              {discountField[1] ? 'Yes' : 'No'}
-                                            </span>
-                                          ) : (
-                                            <span className="text-gray-600 ml-1">{String(discountField[1])}</span>
-                                          )
-                                        }
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                                {couponField && (
-                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                    <div className="flex-1 min-w-0">
-                                      <span className="text-xs font-medium text-gray-900 truncate">
-                                        {couponField[0].replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
-                                          typeof couponField[1] === 'boolean' ? (
-                                            <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                              couponField[1] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                              {couponField[1] ? 'Yes' : 'No'}
-                                            </span>
-                                          ) : (
-                                            <span className="text-gray-600 ml-1">{String(couponField[1])}</span>
-                                          )
-                                        }
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                            
-                            {/* Other fields in single column */}
-                             {otherFields.map(([key, value]) => (
-                               <div key={key} className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                 <div className="flex-1 min-w-0">
-                                   <span className="text-xs font-medium text-gray-900 truncate">
-                                     {key === 'issued_at' ? 'Issued At' : key === 'gst' ? 'GST' : key.replace(/([A-Z])/g, ' $1').toLowerCase().trim().replace(/^\w/, c => c.toUpperCase())}: {
-                                       key === 'issued_at' ? (
-                                         <span className="text-gray-600 ml-1">{format(new Date(value), 'dd-MM-yyyy hh:mm a')}</span>
-                                       ) : typeof value === 'boolean' ? (
-                                         <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                           value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                         }`}>
-                                           {value ? 'Yes' : 'No'}
-                                         </span>
-                                       ) : (
-                                         <span className="text-gray-600 ml-1">{String(value)}</span>
-                                       )
-                                     }
-                                   </span>
-                                 </div>
-                               </div>
-                             ))}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Footer Section - Actions */}
@@ -508,22 +430,25 @@ export function BusinessLogList({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    {format(new Date(entry.timestamp), 'h:mm a • MMM d, yyyy')}
-                    {entry.isNewCustomer ? (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <div className="w-1 h-1 bg-emerald-500 rounded-full mr-1 animate-pulse"></div>
-                        <span className="hidden sm:inline">New</span>
-                        <span className="sm:hidden">N</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                        <div className="w-1 h-1 bg-blue-500 rounded-full mr-1"></div>
-                        <span className="hidden sm:inline">Returning</span>
-                        <span className="sm:hidden">R</span>
-                      </span>
-                    )}
+                    <span>Issue Date: {format(new Date(entry.timestamp), 'dd-MM-yyyy')}</span>
+                    {(() => {
+                      const userStatus = getUserStatus(entry.customerPhone, data || []);
+                      return userStatus === 'New User' ? (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <div className="w-1 h-1 bg-emerald-500 rounded-full mr-1 animate-pulse"></div>
+                          <span className="hidden sm:inline">New User</span>
+                          <span className="sm:hidden">N</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                          <div className="w-1 h-1 bg-blue-500 rounded-full mr-1"></div>
+                          <span className="hidden sm:inline">Returning</span>
+                          <span className="sm:hidden">R</span>
+                        </span>
+                      );
+                    })()}
                   </div>
                    <div className="flex gap-1">
                      <Button

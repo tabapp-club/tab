@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUpdateIntegration, useIntegrations } from "@/hooks/useWorkflowData";
+import { config } from "@/lib/config";
 
 interface Integration {
   id: string;
@@ -45,7 +46,7 @@ export function IntegrationSettings() {
         provider: "Meta",
         config: {
           apiKey: "wab_****_****_****",
-          webhookUrl: "https://api.tabapp.com/webhook/whatsapp",
+          webhookUrl: `${config.api.baseURL}/webhook/whatsapp`,
           phoneNumber: "+91 98765 43210"
         },
         lastSync: "2024-01-20 14:30:00",
@@ -127,7 +128,7 @@ export function IntegrationSettings() {
       case "whatsapp":
         return [
           "• Get API credentials from Meta Business",
-          "• Verify your business phone number", 
+          "• Verify your business phone number",
           "• Set up webhook for message status",
           "• Test with sample messages"
         ];
@@ -135,7 +136,7 @@ export function IntegrationSettings() {
         return [
           "• Register with SMS provider",
           "• Get API key and sender ID",
-          "• Configure delivery reports", 
+          "• Configure delivery reports",
           "• Set up rate limiting"
         ];
       default:
@@ -161,7 +162,7 @@ export function IntegrationSettings() {
               {
                 name: "phoneNumberId",
                 label: "Phone Number ID",
-                type: "text", 
+                type: "text",
                 placeholder: "e.g., 123456789012345",
                 help: "Get this from WhatsApp Manager > Phone Numbers"
               },
@@ -210,7 +211,7 @@ export function IntegrationSettings() {
                 label: "Business Category",
                 type: "select",
                 options: [
-                  "AUTOMOTIVE", "BEAUTY_SPA_AND_SALON", "CLOTHING_AND_APPAREL", 
+                  "AUTOMOTIVE", "BEAUTY_SPA_AND_SALON", "CLOTHING_AND_APPAREL",
                   "EDUCATION", "ENTERTAINMENT", "EVENT_PLANNING_AND_SERVICE",
                   "FINANCE_AND_BANKING", "FOOD_AND_GROCERY", "PUBLIC_SERVICE",
                   "HOTEL_AND_LODGING", "MEDICAL_AND_HEALTH", "NON_PROFIT",
@@ -363,18 +364,18 @@ export function IntegrationSettings() {
     const errors: any = {};
     const steps = getConfigurationSteps(selectedIntegration?.type || '');
     const currentStep = steps[stepIndex];
-    
+
     if (!currentStep) return errors;
 
     currentStep.fields.forEach((field: any) => {
       const value = stepData[field.name];
-      
+
       if (field.type === 'text' || field.type === 'password' || field.type === 'url' || field.type === 'tel') {
         if (!value || value.trim() === '') {
           errors[field.name] = `${field.label} is required`;
         }
       }
-      
+
       if (field.type === 'url' && value) {
         try {
           new URL(value);
@@ -382,7 +383,7 @@ export function IntegrationSettings() {
           errors[field.name] = 'Please enter a valid URL';
         }
       }
-      
+
       if (field.type === 'tel' && value) {
         const phoneRegex = /^\+[1-9]\d{1,14}$/;
         if (!phoneRegex.test(value)) {
@@ -390,19 +391,19 @@ export function IntegrationSettings() {
         }
       }
     });
-    
+
     return errors;
   };
 
   const handleNextStep = () => {
     const steps = getConfigurationSteps(selectedIntegration?.type || '');
     const errors = validateStep(configData, configStep);
-    
+
     if (Object.keys(errors).length > 0) {
       setConfigErrors(errors);
       return;
     }
-    
+
     setConfigErrors({});
     if (configStep < steps.length - 1) {
       setConfigStep(configStep + 1);
@@ -435,8 +436,8 @@ export function IntegrationSettings() {
     if (selectedIntegration) {
       setIntegrations(integrations.map(integration =>
         integration.id === selectedIntegration.id
-          ? { 
-              ...integration, 
+          ? {
+              ...integration,
               config: configData,
               status: "connected" as const,
               lastSync: new Date().toLocaleString()
@@ -452,7 +453,7 @@ export function IntegrationSettings() {
 
     const steps = getConfigurationSteps(selectedIntegration.type);
     const currentStep = steps[configStep];
-    
+
     if (!currentStep) return null;
 
     return (
@@ -463,8 +464,8 @@ export function IntegrationSettings() {
             {steps.map((_, index) => (
               <div key={index} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  index <= configStep 
-                    ? 'bg-[#6E4EFF] text-white' 
+                  index <= configStep
+                    ? 'bg-[#6E4EFF] text-white'
                     : 'bg-[#e5e7eb] text-[#6b7280]'
                 }`}>
                   {index + 1}
@@ -500,7 +501,7 @@ export function IntegrationSettings() {
                 {field.label}
                 {field.type !== 'checkbox' && <span className="text-red-500 ml-1">*</span>}
               </label>
-              
+
               {field.type === 'select' ? (
                 <select
                   value={configData[field.name] || ''}
@@ -547,11 +548,11 @@ export function IntegrationSettings() {
                   }`}
                 />
               )}
-              
+
               {field.help && field.type !== 'checkbox' && (
                 <p className="text-xs text-[#6b7280] mt-1">{field.help}</p>
               )}
-              
+
               {configErrors[field.name] && (
                 <p className="text-xs text-red-500 mt-1">{configErrors[field.name]}</p>
               )}
@@ -706,11 +707,11 @@ export function IntegrationSettings() {
                 </button>
               </div>
             </div>
-            
+
             <div className="p-6">
               {renderConfigForm()}
             </div>
-            
+
             <div className="p-6 border-t border-[#e5e7eb] bg-[#f9fafb]">
               <div className="flex justify-between">
                 <button
@@ -724,7 +725,7 @@ export function IntegrationSettings() {
                 >
                   Previous
                 </button>
-                
+
                 <div className="flex gap-3">
                   <button
                     onClick={() => setIsConfiguring(false)}
@@ -732,7 +733,7 @@ export function IntegrationSettings() {
                   >
                     Cancel
                   </button>
-                  
+
                   {configStep === getConfigurationSteps(selectedIntegration.type).length - 1 ? (
                     <button
                       onClick={handleSaveConfig}

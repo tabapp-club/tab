@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/api";
+import { CreateCustomFieldRequest, FieldType } from "@/lib/api";
+import { config } from "@/lib/config";
 
 interface DynamicField {
   id: string;
@@ -41,6 +43,17 @@ export function BusinessLogFields() {
   const [fieldToDelete, setFieldToDelete] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // Create field form state
+  const [isCreatingFields, setIsCreatingFields] = useState(false);
+  const [createFieldsData, setCreateFieldsData] = useState<CreateCustomFieldRequest[]>([
+    {
+      label: '',
+      placeholder: '',
+      required: false,
+      field_type: 'Text'
+    }
+  ]);
+
   // Mutations
   const updateMutation = useMutation({
     mutationFn: ({ originalLabel, updatedData }: { originalLabel: string; updatedData: { label: string; placeholder: string; required: boolean; field_type: string } }) =>
@@ -69,6 +82,140 @@ export function BusinessLogFields() {
       setMessage({ type: 'error', text: 'Failed to delete custom field' });
     },
   });
+
+  const createFieldsMutation = useMutation({
+    mutationFn: async (fieldsData: CreateCustomFieldRequest[]) => {
+      console.log('Sending fields data (array):', fieldsData);
+      console.log('Token:', token);
+      console.log('Business ID:', businessId);
+
+      // Validate required data
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      if (!businessId) {
+        throw new Error('No business ID available');
+      }
+      if (!fieldsData || fieldsData.length === 0) {
+        throw new Error('No fields to create');
+      }
+
+      // Validate each field
+      for (const field of fieldsData) {
+        if (!field.label || field.label.trim() === '') {
+          throw new Error('Field label is required for all fields');
+        }
+        if (!field.field_type) {
+          throw new Error('Field type is required for all fields');
+        }
+      }
+
+      try {
+        // Try the multiple fields endpoint first
+        const result = await api.business.createCustomFields(token!, businessId!, fieldsData);
+        console.log('API response:', result);
+        return result;
+      } catch (error) {
+        console.error('Multiple fields API call failed:', error);
+
+        // If multiple fields fails, try creating fields one by one
+        console.log('Trying to create fields individually...');
+        try {
+          const results = [];
+          for (const field of fieldsData) {
+            console.log('Creating individual field:', field);
+            const result = await api.business.createCustomField(token!, businessId!, field);
+            results.push(result);
+          }
+          console.log('All individual fields created:', results);
+          return { message: 'Fields created successfully', data: results.flatMap(r => r.data) };
+        } catch (individualError) {
+          console.error('Individual field creation also failed:', individualError);
+          console.error('Error details:', {
+            message: individualError instanceof Error ? individualError.message : 'Unknown error',
+            stack: individualError instanceof Error ? individualError.stack : undefined,
+            error: individualError
+          });
+          throw individualError;
+        }
+      }
+    },
+    onSuccess: (data) => {
+      console.log('Success response:', data);
+      queryClient.invalidateQueries({ queryKey: ['customFields', businessId] });
+      setIsCreatingFields(false);
+      setCreateFieldsData([{ label: '', placeholder: '', required: false, field_type: 'Text' }]);
+      setMessage({ type: 'success', text: 'Custom fields created successfully' });
+    },
+    onError: (error) => {
+      console.error('Create failed with error:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error keys:', Object.keys(error || {}));
+      console.error('Full error object:', JSON.stringify(error, null, 2));
+
+      let errorMessage = 'Failed to create custom fields';
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (error && typeof error === 'object') {
+        // Handle ApiError from the API client
+        const errorObj = error as any;
+        if (errorObj.message) {
+          errorMessage = errorObj.message;
+        } else if (errorObj.status) {
+          errorMessage = `HTTP ${errorObj.status}: ${errorObj.statusText || 'Unknown error'}`;
+        }
+      }
+
+      setMessage({ type: 'error', text: errorMessage });
+    },
+  });
+
+  // Helper functions for managing fields
+  const addNewField = () => {
+    setCreateFieldsData([...createFieldsData, {
+      label: '',
+      placeholder: '',
+      required: false,
+      field_type: 'Text'
+    }]);
+  };
+
+  const removeField = (index: number) => {
+    if (createFieldsData.length > 1) {
+      setCreateFieldsData(createFieldsData.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateField = (index: number, field: CreateCustomFieldRequest) => {
+    const newFields = [...createFieldsData];
+    newFields[index] = field;
+    setCreateFieldsData(newFields);
+  };
+
+  const resetFields = () => {
+    setCreateFieldsData([{ label: '', placeholder: '', required: false, field_type: 'Text' }]);
+  };
+
+  const startCreatingFields = () => {
+    setIsCreatingFields(true);
+    setCreateFieldsData([{ label: '', placeholder: '', required: false, field_type: 'Text' }]);
+  };
+
+  const cancelCreatingFields = () => {
+    setIsCreatingFields(false);
+    resetFields();
+  };
+
+  const duplicateField = (field: CreateCustomFieldRequest) => {
+    setCreateFieldsData([...createFieldsData, { ...field, label: field.label + ' (Copy)' }]);
+  };
+
+  const editField = (field: CreateCustomFieldRequest, index: number) => {
+    const newFields = [...createFieldsData];
+    newFields[index] = field;
+    setCreateFieldsData(newFields);
+  };
 
   // Map API fields to DynamicField format
   useEffect(() => {
@@ -206,6 +353,12 @@ export function BusinessLogFields() {
             Review the current custom fields retrieved from the backend
           </p>
         </div>
+        <Button
+          onClick={startCreatingFields}
+          className="bg-[#6E4EFF] hover:bg-[#5a3fd9] text-white"
+        >
+          + Add Custom Fields
+        </Button>
       </div>
 
       {/* Existing Fields */}
@@ -400,6 +553,165 @@ export function BusinessLogFields() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Create Fields Inline Form */}
+      {isCreatingFields && (
+        <Card className="mb-6">
+          <CardHeader className="bg-gradient-to-r from-[#6E4EFF]/5 to-[#7856ff]/5">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold text-[#2a2a2f]">Create Custom Fields</CardTitle>
+                <p className="text-sm text-gray-600 mt-1">Add new fields to your business records</p>
+              </div>
+              <button
+                onClick={cancelCreatingFields}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-6">
+            <div className="space-y-6">
+              {createFieldsData.map((field, index) => (
+                <div key={index} className="border-2 border-gray-100 rounded-xl p-4 bg-gray-50/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-semibold text-[#2a2a2f]">Field {index + 1}</h4>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => duplicateField(field)}
+                        className="text-blue-500 hover:text-blue-700 p-1"
+                        title="Duplicate field"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                      {createFieldsData.length > 1 && (
+                        <button
+                          onClick={() => removeField(index)}
+                          className="text-red-500 hover:text-red-700 p-1"
+                          title="Remove field"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-[#2a2a2f]">
+                        Field Label <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={field.label}
+                        onChange={(e) => updateField(index, { ...field, label: e.target.value })}
+                        placeholder="e.g., Customer Age, Product Category"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-[#2a2a2f]">
+                        Field Type <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={field.field_type}
+                        onChange={(e) => updateField(index, { ...field, field_type: e.target.value as FieldType })}
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200 bg-white"
+                      >
+                        <option value="Text">📝 Text Input</option>
+                        <option value="Number">🔢 Number Input</option>
+                        <option value="Percentage">📊 Percentage</option>
+                        <option value="Dropdown">📋 Dropdown</option>
+                        <option value="Date">📅 Date Picker</option>
+                        <option value="Checkbox">☑️ Checkbox</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="block text-sm font-semibold text-[#2a2a2f]">
+                        Placeholder Text
+                      </label>
+                      <input
+                        type="text"
+                        value={field.placeholder}
+                        onChange={(e) => updateField(index, { ...field, placeholder: e.target.value })}
+                        placeholder="e.g., Enter customer age, Select category"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200"
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-3 p-3 bg-white/50 rounded-xl md:col-span-2">
+                      <input
+                        type="checkbox"
+                        id={`required-${index}`}
+                        checked={field.required}
+                        onChange={(e) => updateField(index, { ...field, required: e.target.checked })}
+                        className="w-4 h-4 text-[#6E4EFF] border-2 border-gray-300 rounded focus:ring-[#6E4EFF] focus:ring-2"
+                      />
+                      <label htmlFor={`required-${index}`} className="text-sm font-medium text-[#2a2a2f] cursor-pointer">
+                        This field is required
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Add Field Button */}
+              <button
+                onClick={addNewField}
+                className="w-full border-2 border-dashed border-[#6E4EFF]/30 hover:border-[#6E4EFF]/50 rounded-xl p-4 text-[#6E4EFF] hover:bg-[#6E4EFF]/5 transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Add Another Field
+              </button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
+              <Button
+                onClick={cancelCreatingFields}
+                className="px-6 py-2 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 rounded-xl font-medium"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  console.log('=== DEBUG INFO ===');
+                  console.log('Fields data:', createFieldsData);
+                  console.log('Request payload (array):', createFieldsData);
+                  console.log('Token exists:', !!token);
+                  console.log('Business ID exists:', !!businessId);
+                  console.log('API base URL:', config.api.baseURL);
+                  console.log('==================');
+                  createFieldsMutation.mutate(createFieldsData);
+                }}
+                disabled={createFieldsData.some(field => !field.label) || createFieldsMutation.isPending}
+                className="px-6 py-2 bg-gradient-to-r from-[#6E4EFF] to-[#7856ff] hover:from-[#5a3fd9] hover:to-[#6b46c1] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-xl font-medium shadow-lg hover:shadow-xl"
+              >
+                {createFieldsMutation.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Creating {createFieldsData.length} Field{createFieldsData.length > 1 ? 's' : ''}...
+                  </div>
+                ) : (
+                  `Create ${createFieldsData.length} Field${createFieldsData.length > 1 ? 's' : ''}`
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Instructions */}
