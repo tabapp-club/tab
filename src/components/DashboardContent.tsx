@@ -451,19 +451,19 @@ export function DashboardContent() {
 
             {/* Quick Actions */}
             <div className="flex flex-wrap justify-center gap-4 mb-10">
-              <a href="/new-campaign" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/new-campaign" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all pointer-events-none opacity-50 cursor-not-allowed">
                 Campaign Templates
               </a>
-              <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/achievements" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all pointer-events-none opacity-50 cursor-not-allowed">
                 Achievements
               </a>
-              <a href="/business-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/business-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all pointer-events-none opacity-50 cursor-not-allowed">
                 Business Solutions
               </a>
-              <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/ai-services" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all pointer-events-none opacity-50 cursor-not-allowed">
                 AI Insights
               </a>
-              <a href="/settings?section=help-support" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all">
+              <a href="/settings?section=help-support" className="bg-white px-4 py-2 rounded border border-[#e5e7eb] text-[13px] text-[#696969] hover:text-primary hover:border-primary transition-all pointer-events-none opacity-50 cursor-not-allowed">
                 Help and Support
               </a>
             </div>

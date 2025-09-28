@@ -156,7 +156,7 @@ export function BugReportContent() {
               <button
                 type="submit"
                 disabled={isSubmitting || !isFormValid}
-                className="px-5 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-300 ease-in-out active:scale-[0.98] flex items-center justify-center gap-2"
+                className="px-5 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  disabled:opacity-50 disabled:cursor-not-allowed  disabled:hover:shadow-none transition-all duration-300 ease-in-out  flex items-center justify-center gap-2"
               >
                 {isSubmitting && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>

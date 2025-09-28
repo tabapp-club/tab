@@ -3,6 +3,40 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+// Add custom styles for animations
+const styles = `
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+}
+
 // Loading Spinner Component
 const LoadingSpinner = () => (
   <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center rounded z-20">
@@ -104,31 +138,39 @@ const campaigns = [
 export function CampaignCards() {
     const router = useRouter();
     const [loadingCardId, setLoadingCardId] = useState<number | null>(null);
+    const [showDialog, setShowDialog] = useState(false);
+    const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    const handleCampaignClick = async (campaignType: string, campaignId: number) => {
-        setLoadingCardId(campaignId);
+    const handleCampaignClick = (campaign: any) => {
+        setSelectedCampaign(campaign);
+        setShowDialog(true);
+    };
 
-        // Add a small delay to show the loading animation
-        await new Promise(resolve => setTimeout(resolve, 300));
+    const handleEnable = () => {
+        setShowDialog(false);
+        setShowSuccessMessage(true);
+    };
 
-        try {
-            // Save source information to localStorage for tracking
-            const sourceData = {
-                source: 'dashboard',
-                campaignType: campaignType,
-                timestamp: new Date().toISOString()
-            };
-            localStorage.setItem('campaign_source', JSON.stringify(sourceData));
-            
-            // Route to audience page to start the journey
-            await router.push(`/new-campaign/audience?type=${campaignType}&source=dashboard`, { scroll: false });
-        } catch (error) {
-            console.error('Navigation error:', error);
-            setLoadingCardId(null);
+    const handleClose = () => {
+        setShowDialog(false);
+        setSelectedCampaign(null);
+    };
+
+    const handleBackdropClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
+    const handleSuccessBackdropClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            setShowSuccessMessage(false);
         }
     };
 
     return (
+        <>
         <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0 w-full max-w-full overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0 scrollbar-hide sm:scrollbar-default">
         {campaigns.map((campaign) => {
             const Icon = campaign.icon;
@@ -137,21 +179,21 @@ export function CampaignCards() {
             return (
             <div
                 key={campaign.id}
-                className="relative min-w-[280px] sm:min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-out cursor-pointer group overflow-hidden transform flex-shrink-0 sm:flex-shrink"
-                onClick={() => !isLoading && handleCampaignClick(campaign.type, campaign.id)}
+                className="relative min-w-[280px] sm:min-w-0 max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg transition-all duration-300 ease-out cursor-pointer group overflow-hidden flex-shrink-0 sm:flex-shrink"
+                onClick={() => !isLoading && handleCampaignClick(campaign)}
             >
                 {/* Loading Overlay */}
                 {isLoading && <LoadingSpinner />}
 
                 {/* Header with gradient background */}
-                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden transition-transform duration-300 group-hover:scale-105`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                <div className={`h-16 ${campaign.bgColor} rounded-t relative overflow-hidden transition-transform duration-300`} style={{backgroundImage: `url(${campaign.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
                   <div className="absolute inset-0 bg-black/25"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-20"></div>
 
                 {/* Icon */}
-                <div className="absolute -bottom-[5px] left-4 w-[44px] h-[44px] bg-white border border-[#e9e9e9] rounded flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <div className="absolute -bottom-[5px] left-4 w-[44px] h-[44px] bg-white border border-[#e9e9e9] rounded flex items-center justify-center transition-transform duration-300">
                     <div className="w-8 h-8 rounded-sm flex items-center justify-center transition-colors duration-300">
-                    <div className="w-8 h-8 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <div className="w-8 h-8 flex items-center justify-center transition-transform duration-300">
                         <Icon />
                     </div>
                     </div>
@@ -171,5 +213,154 @@ export function CampaignCards() {
             );
         })}
         </div>
+
+        {/* Dialog */}
+        {showDialog && selectedCampaign && (
+            <div className="fixed inset-0 flex items-center justify-center z-50 animate-fadeIn" style={{backgroundColor: 'rgba(0, 0, 0, 0.75)'}} onClick={handleBackdropClick}>
+                <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform animate-slideUp">
+                    {/* Header with gradient background */}
+                    <div className={`relative ${selectedCampaign.type === 'advertise' ? 'bg-gradient-to-br from-slate-600 to-slate-800' : selectedCampaign.bgColor} rounded-t-2xl p-6 text-white overflow-hidden`}>
+                        <div className="absolute inset-0 bg-black/20"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+                        
+                        <div className="relative flex items-center">
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
+                                <selectedCampaign.icon />
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold">{selectedCampaign.title}</h3>
+                                <p className="text-white/80 text-sm">Campaign Service</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                            </div>
+                            <h4 className="text-xl font-semibold text-gray-900 mb-2">Service Not Available</h4>
+                            <p className="text-gray-600 leading-relaxed">
+                                Campaigns is not enabled yet for your business. Enable this service to start creating powerful marketing campaigns.
+                            </p>
+                        </div>
+                        
+                        {/* Features preview */}
+                        <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                            <h5 className="text-sm font-semibold text-gray-700 mb-3">What you'll get:</h5>
+                            <div className="space-y-2">
+                                <div className="flex items-center text-sm text-gray-600">
+                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    Advanced campaign management
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600">
+                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    AI-powered insights
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600">
+                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    Real-time analytics
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Action buttons */}
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleEnable}
+                                className="flex-1 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                            >
+                                Enable Service
+                            </button>
+                            <button
+                                onClick={handleClose}
+                                className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded font-semibold text-sm hover:bg-gray-200 transition-all duration-300"
+                            >
+                                Maybe Later
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* Success Message */}
+        {showSuccessMessage && (
+            <div className="fixed inset-0 flex items-center justify-center z-50 animate-fadeIn" style={{backgroundColor: 'rgba(0, 0, 0, 0.75)'}} onClick={handleSuccessBackdropClick}>
+                <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform animate-slideUp">
+                    {/* Success Header */}
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-t-2xl p-6 text-white relative overflow-hidden">
+                        <div className="absolute inset-0 bg-black/10"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+                        
+                        <div className="relative text-center">
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 className="text-2xl font-bold mb-2">Request Received!</h3>
+                            <p className="text-white/90 text-sm">Your service enablement request has been submitted</p>
+                        </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h4 className="text-xl font-semibold text-gray-900 mb-3">What happens next?</h4>
+                            <p className="text-gray-600 leading-relaxed mb-4">
+                                We received your request and Tribly team has initiated the process. We'll send you communication once services are enabled.
+                            </p>
+                        </div>
+                        
+                        {/* Timeline */}
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6">
+                            <h5 className="text-sm font-semibold text-gray-700 mb-3">Process Timeline:</h5>
+                            <div className="space-y-3">
+                                <div className="flex items-center text-sm">
+                                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <span className="text-gray-600">Request submitted successfully</span>
+                                </div>
+                                <div className="flex items-center text-sm">
+                                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                                    </div>
+                                    <span className="text-gray-600">Team review in progress</span>
+                                </div>
+                                <div className="flex items-center text-sm">
+                                    <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                                    </div>
+                                    <span className="text-gray-500">Service activation</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Action button */}
+                        <button
+                            onClick={() => setShowSuccessMessage(false)}
+                            className="w-full bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                        >
+                            Got it, thanks!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
   );
 }

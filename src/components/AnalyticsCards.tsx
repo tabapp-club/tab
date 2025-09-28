@@ -216,14 +216,14 @@ const BarChart = ({ currentValue, previousValue, title, trend }: {
       <div className="flex flex-col items-center gap-2 relative group">
         <div className="h-32 w-[52px] bg-[#6e4eff]/10 rounded-md flex items-end overflow-hidden">
           <div
-            className={`w-full ${previousBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform] hover:scale-[1.02] hover:shadow-lg`}
+            className={`w-full ${previousBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform]  hover:shadow-lg`}
             style={{ height: `${animatedPrevHeight}%` }}
           />
         </div>
         <div className="text-xs text-[#626266] font-medium">Previous</div>
 
         {/* Tooltip for Previous Value */}
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999]">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0  group-hover:opacity-100  transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999]">
           <div className="font-semibold text-white mb-1">{title}</div>
           <div className="text-gray-200">Previous: {previousValue}</div>
           <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
@@ -234,14 +234,14 @@ const BarChart = ({ currentValue, previousValue, title, trend }: {
       <div className="flex flex-col items-center gap-2 relative group">
         <div className="h-32 w-[52px] bg-[#6e4eff]/10 rounded-md flex items-end overflow-hidden">
           <div
-            className={`w-full ${currentBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform] hover:scale-[1.02] hover:shadow-lg`}
+            className={`w-full ${currentBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform]  hover:shadow-lg`}
             style={{ height: `${animatedCurrHeight}%` }}
           />
         </div>
         <div className="text-xs text-[#626266] font-medium">Current</div>
 
         {/* Tooltip for Current Value */}
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999]">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0  group-hover:opacity-100  transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl border border-gray-700 z-[9999]">
           <div className="font-semibold text-white mb-1">{title}</div>
           <div className="text-gray-200">Current: {currentValue}</div>
           <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
@@ -716,7 +716,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                   {/* Ask Reason Text Button */}
                   <button
                     onClick={() => onAskReason?.(card.title, card)}
-                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10 hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
                   >
                     <span>Get analysis</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -844,7 +844,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                 {/* Ask Reason Text Button */}
                 <button
                   onClick={() => onAskReason?.(growthRateCard.title, growthRateCard)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10 hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
                 >
                   <span>Get analysis</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -952,7 +952,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
               {/* Ask Reason Text Button */}
               <button
                 onClick={() => onAskReason?.(card.title, card)}
-                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10 hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
               >
                 <span>Get analysis</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>

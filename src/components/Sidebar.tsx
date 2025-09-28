@@ -9,6 +9,40 @@ import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
 import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft } from "lucide-react";
 
+// Add custom styles for animations
+const styles = `
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slideUp {
+    animation: slideUp 0.4s ease-out;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+}
+
 // SVG Icons as React components
 const DashboardIcon = ({colorCode}: {colorCode: string}) => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -236,6 +270,9 @@ export function Sidebar() {
   const { logout, user } = useAuth();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showServiceDialog, setShowServiceDialog] = useState(false);
+  const [selectedService, setSelectedService] = useState<any>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -265,8 +302,37 @@ export function Sidebar() {
     }
   };
 
+  // Service dialog handlers
+  const handleServiceClick = (item: any) => {
+    setSelectedService(item);
+    setShowServiceDialog(true);
+  };
+
+  const handleEnableService = () => {
+    setShowServiceDialog(false);
+    setShowSuccessMessage(true);
+  };
+
+  const handleCloseService = () => {
+    setShowServiceDialog(false);
+    setSelectedService(null);
+  };
+
+  const handleServiceBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleCloseService();
+    }
+  };
+
+  const handleSuccessBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setShowSuccessMessage(false);
+    }
+  };
+
   return (
-    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out ${
+    <>
+    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out border-r border-gray-200 ${
       actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
     }`}>
       {/* User Profile Section */}
@@ -304,7 +370,7 @@ export function Sidebar() {
           )}
           {actualIsCollapsed && (
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm hover:scale-105 transition-all duration-200 cursor-pointer">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm transition-all duration-200 cursor-pointer">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
@@ -327,7 +393,55 @@ export function Sidebar() {
               (item.id === "cohorts" && pathname === "/cohorts") ||
               (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
 
-            return (
+            // Check if this item should show modal instead of navigation
+            const shouldShowModal = ['ai-services', 'cohorts', 'workflow-automation', 'achievements', 'campaigns'].includes(item.id);
+
+            return shouldShowModal ? (
+              <div
+                key={item.id}
+                onClick={() => handleServiceClick(item)}
+                className={`group rounded flex items-center overflow-hidden cursor-pointer relative ${
+                  actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
+                } ${
+                  isActive
+                    ? "bg-gray-100 text-gray-400 border border-gray-200"
+                    : "text-gray-400 hover:bg-gray-50 hover:text-gray-500 hover:border hover:border-gray-200"
+                }`}
+                title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
+                onMouseEnter={() => setHoveredItem(item.id)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                {/* Left-side indicator for selected state */}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-gray-300 rounded-r-full"></div>
+                )}
+                <div className="flex-shrink-0 relative">
+                  <div className={`p-1 rounded-md ${
+                    isActive ? 'bg-gray-100' : 'group-hover:bg-gray-100'
+                  }`}>
+                  <Icon colorCode={isActive ? "#9CA3AF" : (hoveredItem === item.id ? "#9CA3AF" : "#9CA3AF")} />
+                  </div>
+                  {/* Lock icon for restricted items */}
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                                <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
+                } justify-start`}>
+                  <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
+                    isActive ? 'text-gray-400' : 'text-gray-400 group-hover:text-gray-500'
+                }`}>
+                  {item.label}
+                </span>
+                  <span className="text-[12px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-gray-400">
+                    {item.description}
+                  </span>
+                </div>
+              </div>
+            ) : (
               <Link
                 key={item.id}
                 href={item.href}
@@ -341,9 +455,6 @@ export function Sidebar() {
                 title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
               >
                 {/* Left-side indicator for selected state */}
                 {isActive && (
@@ -355,11 +466,8 @@ export function Sidebar() {
                   }`}>
                   <Icon colorCode={isActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
                   </div>
-                  {actualIsCollapsed && item.notificationCount > 0 && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff4757] rounded-full animate-pulse"></div>
-                  )}
                 </div>
-                                <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+                <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 } justify-start`}>
                   <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
@@ -370,11 +478,6 @@ export function Sidebar() {
                   <span className="text-[12px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-[#8f8f91]">
                     {item.description}
                   </span>
-                </div>
-                <div className={`transition-all duration-300 ease-in-out ${
-                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
-                }`}>
-                  <NotificationBadge count={item.notificationCount} isActive={isActive} />
                 </div>
               </Link>
             );
@@ -469,5 +572,154 @@ export function Sidebar() {
         }
       />
     </div>
+
+    {/* Service Dialog - Outside sidebar container */}
+    {showServiceDialog && selectedService && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 animate-fadeIn" style={{backgroundColor: 'rgba(0, 0, 0, 0.75)'}} onClick={handleServiceBackdropClick}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform animate-slideUp">
+            {/* Header with gradient background */}
+            <div className="relative bg-gradient-to-br from-slate-600 to-slate-800 rounded-t-2xl p-6 text-white overflow-hidden">
+              <div className="absolute inset-0 bg-black/20"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+              
+              <div className="relative flex items-center">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
+                  <selectedService.icon colorCode="#ffffff" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold">{selectedService.label}</h3>
+                  <p className="text-white/80 text-sm">{selectedService.description}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-2">Service Not Available</h4>
+                <p className="text-gray-600 leading-relaxed">
+                  {selectedService.label} is not enabled yet for your business. Enable this service to start using powerful features.
+                </p>
+              </div>
+              
+              {/* Features preview */}
+              <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                <h5 className="text-sm font-semibold text-gray-700 mb-3">What you'll get:</h5>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    Advanced {selectedService.label.toLowerCase()} features
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    AI-powered insights
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    Real-time analytics
+                  </div>
+                </div>
+              </div>
+              
+              {/* Action buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleEnableService}
+                  className="flex-1 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                >
+                  Enable Service
+                </button>
+                <button
+                  onClick={handleCloseService}
+                  className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded font-semibold text-sm hover:bg-gray-200 transition-all duration-300"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+    {/* Success Message - Outside sidebar container */}
+    {showSuccessMessage && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 animate-fadeIn" style={{backgroundColor: 'rgba(0, 0, 0, 0.75)'}} onClick={handleSuccessBackdropClick}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform animate-slideUp">
+            {/* Success Header */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-t-2xl p-6 text-white relative overflow-hidden">
+              <div className="absolute inset-0 bg-black/10"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+              
+              <div className="relative text-center">
+                <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Request Received!</h3>
+                <p className="text-white/90 text-sm">Your service enablement request has been submitted</p>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">What happens next?</h4>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  We received your request and Tribly team has initiated the process. We'll send you communication once services are enabled.
+                </p>
+              </div>
+              
+              {/* Timeline */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6">
+                <h5 className="text-sm font-semibold text-gray-700 mb-3">Process Timeline:</h5>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-600">Request submitted successfully</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                    <span className="text-gray-600">Team review in progress</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                    <span className="text-gray-500">Service activation</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Action button */}
+              <button
+                onClick={() => setShowSuccessMessage(false)}
+                className="w-full bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+              >
+                Got it, thanks!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

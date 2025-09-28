@@ -434,10 +434,10 @@ export default function LoginPage() {
                 <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                 <defs>
                 <linearGradient id="paint0_linear_7845_13502" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#9747FF"/>
-                <stop offset="0.289538" stop-color="#6420BD"/>
-                <stop offset="0.684985" stop-color="#6420BD"/>
-                <stop offset="0.966994" stop-color="#9747FF"/>
+                <stop stopColor="#9747FF"/>
+                <stop offset="0.289538" stopColor="#6420BD"/>
+                <stop offset="0.684985" stopColor="#6420BD"/>
+                <stop offset="0.966994" stopColor="#9747FF"/>
                 </linearGradient>
                 </defs>
               </svg>
@@ -963,7 +963,7 @@ export default function LoginPage() {
               <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentSlide
                   ? 'bg-[#6e4eff] scale-125'
-                  : 'bg-[#d1d5db] hover:bg-[#9ca3af] hover:scale-110'
+                  : 'bg-[#d1d5db] hover:bg-[#9ca3af] '
               }`}>
                 {/* Subtle glow for active dot */}
                 {index === currentSlide && (
@@ -1049,10 +1049,10 @@ export default function LoginPage() {
                     <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                     <defs>
                     <linearGradient id="paint0_linear_7845_13502_mobile" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#9747FF"/>
-                    <stop offset="0.289538" stop-color="#6420BD"/>
-                    <stop offset="0.684985" stop-color="#6420BD"/>
-                    <stop offset="0.966994" stop-color="#9747FF"/>
+                    <stop stopColor="#9747FF"/>
+                    <stop offset="0.289538" stopColor="#6420BD"/>
+                    <stop offset="0.684985" stopColor="#6420BD"/>
+                    <stop offset="0.966994" stopColor="#9747FF"/>
                     </linearGradient>
                     </defs>
                   </svg>

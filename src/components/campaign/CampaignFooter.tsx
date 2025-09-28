@@ -57,7 +57,7 @@ export function CampaignFooter({
             disabled={nextDisabled || isNavigating}
             className={`flex-[2] h-9 px-6 rounded font-medium text-[16px] transition-all duration-200 touch-manipulation ${
               !nextDisabled && !isNavigating
-                ? 'bg-gradient-to-r from-[#6e4eff] to-[#8B6AFF] text-white hover:from-[#5a3de8] hover:to-[#7856ff] active:scale-[0.98]'
+                ? 'bg-gradient-to-r from-[#6e4eff] to-[#8B6AFF] text-white hover:from-[#5a3de8] hover:to-[#7856ff] '
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
