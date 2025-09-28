@@ -1,25 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BottomSheet } from "@/components/ui/BottomSheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/api";
 
 interface DynamicField {
   id: string;
-  type: 'text' | 'number' | 'select' | 'date' | 'checkbox' | 'percentage';
+  type: 'text' | 'number' | 'select' | 'date' | 'checkbox' | 'percentage' | 'dropdown';
   label: string;
   required: boolean;
   options?: string[];
   placeholder?: string;
+  originalLabel?: string; // For API calls
+  field_type?: string; // Original API field type
 }
 
 export function BusinessLogFields() {
   const { user } = useAuth();
   const token = user?.accessToken;
   const businessId = user?.business_id;
+  const queryClient = useQueryClient();
 
   const { data: apiFields, isLoading, error } = useQuery({
     queryKey: ['customFields', businessId],
@@ -32,6 +36,39 @@ export function BusinessLogFields() {
   });
 
   const [customFields, setCustomFields] = useState<DynamicField[]>([]);
+  const [editingField, setEditingField] = useState<{ originalLabel: string; label: string; placeholder: string; required: boolean; field_type: string } | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [fieldToDelete, setFieldToDelete] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Mutations
+  const updateMutation = useMutation({
+    mutationFn: ({ originalLabel, updatedData }: { originalLabel: string; updatedData: { label: string; placeholder: string; required: boolean; field_type: string } }) =>
+      api.business.updateCustomField(token!, businessId!, originalLabel, updatedData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customFields', businessId] });
+      setEditingField(null);
+      setMessage({ type: 'success', text: 'Custom field updated successfully' });
+    },
+    onError: (error) => {
+      console.error('Update failed:', error);
+      setMessage({ type: 'error', text: 'Failed to update custom field' });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (label: string) => api.business.deleteCustomField(token!, businessId!, label),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customFields', businessId] });
+      setIsDeleteConfirmOpen(false);
+      setFieldToDelete(null);
+      setMessage({ type: 'success', text: 'Custom field deleted successfully' });
+    },
+    onError: (error) => {
+      console.error('Delete failed:', error);
+      setMessage({ type: 'error', text: 'Failed to delete custom field' });
+    },
+  });
 
   // Map API fields to DynamicField format
   useEffect(() => {
@@ -42,6 +79,8 @@ export function BusinessLogFields() {
         label: field.label,
         required: field.required,
         placeholder: field.placeholder,
+        originalLabel: field.label, // Store original for API calls
+        field_type: field.field_type, // Store original field_type
       }));
       setCustomFields(mappedFields);
     }
@@ -56,6 +95,7 @@ export function BusinessLogFields() {
   const renderFieldPreview = (field: DynamicField) => {
     switch (field.type) {
       case 'select':
+      case 'dropdown':
         return (
           <select className="w-full h-10 px-3 py-2 border border-[#d1d5db] rounded bg-gray-50 text-sm" disabled>
             <option>{field.placeholder || 'Select an option'}</option>
@@ -150,6 +190,14 @@ export function BusinessLogFields() {
 
   return (
     <div className="space-y-6">
+      {/* Message */}
+      {message && (
+        <div className={`p-4 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          {message.text}
+          <button onClick={() => setMessage(null)} className="float-right ml-4">×</button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
         <div>
@@ -194,13 +242,41 @@ export function BusinessLogFields() {
                       Placeholder: &quot;{field.placeholder}&quot;
                     </p>
                   )}
-                </div>
+                 </div>
+
+                 {/* Action Buttons */}
+                 <div className="flex gap-2 mt-4">
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => setEditingField({
+                       originalLabel: field.originalLabel!,
+                       label: field.label,
+                       placeholder: field.placeholder || '',
+                       required: field.required,
+                       field_type: field.field_type || 'Text'
+                     })}
+                     className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                   >
+                     Edit
+                   </Button>
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => {
+                       setFieldToDelete(field.label);
+                       setIsDeleteConfirmOpen(true);
+                     }}
+                     className="text-red-600 border-red-600 hover:bg-red-50"
+                   >
+                     Delete
+                   </Button>
+                 </div>
+
+               </div>
 
 
-              </div>
-
-
-            </div>
+             </div>
           ))}
 
            {customFields.length === 0 && (
@@ -215,7 +291,116 @@ export function BusinessLogFields() {
         </CardContent>
       </Card>
 
+      {/* Edit Field BottomSheet */}
+      <BottomSheet
+        isOpen={!!editingField}
+        onClose={() => setEditingField(null)}
+        title="Edit Custom Field"
+      >
+        <div className="p-4 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Label</label>
+            <input
+              type="text"
+              value={editingField?.label || ''}
+              onChange={(e) => setEditingField(prev => prev ? { ...prev, label: e.target.value } : null)}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Placeholder</label>
+            <input
+              type="text"
+              value={editingField?.placeholder || ''}
+              onChange={(e) => setEditingField(prev => prev ? { ...prev, placeholder: e.target.value } : null)}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Field Type</label>
+            <select
+              value={editingField?.field_type || 'Text'}
+              onChange={(e) => setEditingField(prev => prev ? { ...prev, field_type: e.target.value } : null)}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            >
+              <option value="Text">Text</option>
+              <option value="Number">Number</option>
+              <option value="Percentage">Percentage</option>
+              <option value="Dropdown">Dropdown</option>
+              <option value="Date">Date</option>
+              <option value="Checkbox">Checkbox</option>
+            </select>
+          </div>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={editingField?.required || false}
+              onChange={(e) => setEditingField(prev => prev ? { ...prev, required: e.target.checked } : null)}
+              className="h-4 w-4 text-blue-600"
+            />
+            <label className="ml-2 text-sm text-gray-700">Required</label>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                if (editingField) {
+                  updateMutation.mutate({
+                    originalLabel: editingField.originalLabel,
+                    updatedData: {
+                      label: editingField.label,
+                      placeholder: editingField.placeholder,
+                      required: editingField.required,
+                      field_type: editingField.field_type
+                    }
+                  });
+                }
+              }}
+              disabled={updateMutation.isPending}
+              className="flex-1"
+            >
+              {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+            <Button variant="outline" onClick={() => setEditingField(null)} className="flex-1">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </BottomSheet>
 
+      {/* Delete Confirmation */}
+      {isDeleteConfirmOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Delete Custom Field</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete the field &quot;{fieldToDelete}&quot;? This action cannot be undone.
+            </p>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  if (fieldToDelete) {
+                    deleteMutation.mutate(fieldToDelete);
+                  }
+                }}
+                disabled={deleteMutation.isPending}
+                className="flex-1 bg-red-600 hover:bg-red-700"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsDeleteConfirmOpen(false);
+                  setFieldToDelete(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Instructions */}
       <Card>

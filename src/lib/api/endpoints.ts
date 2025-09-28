@@ -68,6 +68,12 @@ export const business = {
 
   getCustomFields: (token: string, businessId: string): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
     apiClient.get(`/dashboard/v1/business_log/${businessId}/custom_fields`, { headers: apiClient.withAuth(token) }),
+
+  updateCustomField: (token: string, businessId: string, label: string, data: { label: string; placeholder: string; required: boolean; field_type: string }): Promise<{ message: string; data: Array<{ label: string; placeholder: string; required: boolean; field_type: string }> }> =>
+    apiClient.put(`/dashboard/v1/business_log/${businessId}/custom_fields?label=${encodeURIComponent(label)}`, data, { headers: apiClient.withAuth(token) }),
+
+  deleteCustomField: (token: string, businessId: string, labels: string): Promise<{ message: string; success?: boolean; error?: string }> =>
+    apiClient.delete(`/dashboard/v1/business_log/${businessId}/custom_fields?labels=${encodeURIComponent(labels)}`, { headers: apiClient.withAuth(token) }),
 };
 
 // Data center endpoints

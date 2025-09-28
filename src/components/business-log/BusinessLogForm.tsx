@@ -249,7 +249,7 @@ export function BusinessLogForm() {
     try {
       const totals = calculateTotal();
       
-       const entry: Omit<BusinessLogEntry, 'id' | 'timestamp'> = {
+        const entry: Omit<BusinessLogEntry, 'id' | 'timestamp'> = {
          customerPhone: formData.customerPhone,
          customerName: formData.customerName,
          products: formData.products,

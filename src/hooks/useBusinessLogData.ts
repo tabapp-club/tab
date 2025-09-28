@@ -97,7 +97,7 @@ const fetchBusinessLogEntries = async (
   };
 };
 
-const addBusinessLogEntry = async (token: string, businessId: string, entry: Omit<BusinessLogEntry, 'id'>): Promise<BusinessLogEntry> => {
+const addBusinessLogEntry = async (token: string, businessId: string, entry: Omit<BusinessLogEntry, 'id' | 'timestamp'>): Promise<BusinessLogEntry> => {
   // Transform to API payload
   const apiPayload = {
     entry: {
@@ -223,7 +223,7 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
 
   // Add entry mutation
   const addEntryMutation = useMutation({
-    mutationFn: (entry: Omit<BusinessLogEntry, 'id'>) => {
+    mutationFn: (entry: Omit<BusinessLogEntry, 'id' | 'timestamp'>) => {
       if (!token || !businessId) throw new Error('Not authenticated');
       return addBusinessLogEntry(token, businessId, entry);
     },

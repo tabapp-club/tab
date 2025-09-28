@@ -138,20 +138,7 @@ const CollapseIcon = () => (
   <ChevronLeft size={22} color="#2A2A2F" />
 );
 
-// Notification Badge Component
-const NotificationBadge = ({ count, isActive }: { count: number; isActive: boolean }) => {
-  if (count === 0) return null;
 
-  return (
-    <div className={`ml-auto flex-shrink-0 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold font-manrope ${
-      isActive
-        ? 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white'
-        : 'bg-gradient-to-r from-[#ff4757] to-[#ff6b7a] text-white hover:from-[#ff3742] hover:to-[#ff4757]'
-    }`}>
-      {count > 99 ? '99+' : count}
-    </div>
-  );
-};
 
 const menuItems = [
   {
@@ -169,7 +156,7 @@ const menuItems = [
     description: "Manage your data",
     icon: DataCenterIcon,
     href: "/data-center",
-    notificationCount: 4
+    notificationCount: 0
   },
   {
     id: "ai-services",
@@ -185,7 +172,8 @@ const menuItems = [
     description: "User segmentation",
     icon: CohortsIcon,
     href: "/cohorts",
-    notificationCount: 0
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "workflow-automation",
@@ -193,7 +181,8 @@ const menuItems = [
     description: "Automate communications",
     icon: WorkflowAutomationIcon,
     href: "/workflow-automation",
-    notificationCount: 3
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "achievements",
@@ -201,7 +190,8 @@ const menuItems = [
     description: "Goals & milestones",
     icon: AchievementsIcon,
     href: "/achievements",
-    notificationCount: 2
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "campaigns",
@@ -209,7 +199,8 @@ const menuItems = [
     description: "Marketing campaigns",
     icon: CampaignsIcon,
     href: "/campaigns",
-    notificationCount: 7
+    notificationCount: 0,
+    disabled: true
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   // {
@@ -297,50 +288,55 @@ export function Sidebar() {
         <div className="space-y-4 sm:space-y-5">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = 
+            const isActive =
               (item.id === "dashboard" && pathname === "/dashboard") ||
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "cohorts" && pathname === "/cohorts") ||
               (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
 
+            const isDisabled = item.disabled;
+            const effectiveIsActive = isActive && !isDisabled;
+
             return (
               <Link
                 key={item.id}
-                href={item.href}
-                className={`group rounded flex items-center overflow-hidden cursor-pointer relative ${
+                href={isDisabled ? "#" : item.href}
+                className={`group rounded flex items-center overflow-hidden relative ${
                   actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
                 } ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
-                    : "text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
+                  isDisabled
+                    ? 'cursor-not-allowed opacity-50 text-[#6b7280]'
+                    : effectiveIsActive
+                      ? "cursor-pointer bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
+                      : "cursor-pointer text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
                 }`}
-                title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
+                title={actualIsCollapsed ? `${item.label} - ${item.description}${isDisabled ? ' (Work in progress)' : ''}` : undefined}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
                   e.stopPropagation();
                 }}
               >
                 {/* Left-side indicator for selected state */}
-                {isActive && (
+                {effectiveIsActive && (
                   <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6E4EFF] rounded-r-full"></div>
                 )}
                 <div className="flex-shrink-0 relative">
                   <div className={`p-1 rounded-md ${
-                    isActive ? 'bg-[#6E4EFF]/10' : 'group-hover:bg-[#6E4EFF]/10'
+                    effectiveIsActive ? 'bg-[#6E4EFF]/10' : isDisabled ? '' : 'group-hover:bg-[#6E4EFF]/10'
                   }`}>
-                  <Icon colorCode={isActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
+                  <Icon colorCode={isDisabled ? "#6b7280" : effectiveIsActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
                   </div>
-                  {actualIsCollapsed && item.notificationCount > 0 && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#ff4757] rounded-full animate-pulse"></div>
-                  )}
                 </div>
                                 <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 } justify-start`}>
                   <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
-                    isActive ? 'text-[#6E4EFF]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
+                    effectiveIsActive ? 'text-[#6E4EFF]' : isDisabled ? 'text-[#6b7280]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
                 }`}>
                   {item.label}
                 </span>
@@ -348,11 +344,7 @@ export function Sidebar() {
                     {item.description}
                   </span>
                 </div>
-                <div className={`transition-all duration-300 ease-in-out ${
-                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
-                }`}>
-                  <NotificationBadge count={item.notificationCount} isActive={isActive} />
-                </div>
+
               </Link>
             );
           })}
