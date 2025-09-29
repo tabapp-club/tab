@@ -187,10 +187,8 @@ export function SettingsContent() {
       setIntegrations(prev => ({ ...prev, [integrationId]: true }));
 
       // Show success notification
-      console.log(`${integrationId} integration connected successfully`);
     } catch (error) {
       setErrorStates(prev => ({ ...prev, [integrationId]: 'Failed to connect integration' }));
-      console.error(`Error connecting ${integrationId}:`, error);
     } finally {
       setLoadingStates(prev => ({ ...prev, [integrationId]: false }));
     }
@@ -207,10 +205,8 @@ export function SettingsContent() {
       setIntegrations(prev => ({ ...prev, [integrationId]: false }));
 
       // Show success notification
-      console.log(`${integrationId} integration disconnected successfully`);
     } catch (error) {
       setErrorStates(prev => ({ ...prev, [integrationId]: 'Failed to disconnect integration' }));
-      console.error(`Error disconnecting ${integrationId}:`, error);
     } finally {
       setLoadingStates(prev => ({ ...prev, [integrationId]: false }));
     }
@@ -224,9 +220,7 @@ export function SettingsContent() {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Show success notification
-      console.log(`${integrationId} data synced successfully`);
     } catch (error) {
-      console.error(`Error syncing ${integrationId}:`, error);
     } finally {
       setLoadingStates(prev => ({ ...prev, [`${integrationId}_sync`]: false }));
     }
@@ -234,7 +228,6 @@ export function SettingsContent() {
 
   const openIntegrationSettings = (integrationId: string) => {
     // Navigate to integration settings or open modal
-    console.log(`Opening settings for ${integrationId}`);
   };
 
   const viewIntegrationDocs = (integrationId: string) => {
@@ -269,9 +262,7 @@ export function SettingsContent() {
       }));
 
       setShowZapierModal(false);
-      console.log('Zapier integration setup successfully');
     } catch (error) {
-      console.error('Error setting up Zapier:', error);
     } finally {
       setLoadingStates(prev => ({ ...prev, zapier: false }));
     }
@@ -294,9 +285,7 @@ export function SettingsContent() {
       }));
 
       setShowWebhookModal(false);
-      console.log('Webhook integration setup successfully');
     } catch (error) {
-      console.error('Error setting up webhooks:', error);
     } finally {
       setLoadingStates(prev => ({ ...prev, webhooks: false }));
     }
@@ -314,9 +303,7 @@ export function SettingsContent() {
       }));
 
       setShowApiModal(false);
-      console.log('API integration setup successfully');
     } catch (error) {
-      console.error('Error setting up API:', error);
     } finally {
       setLoadingStates(prev => ({ ...prev, api: false }));
     }

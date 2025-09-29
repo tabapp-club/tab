@@ -196,7 +196,6 @@ export function CohortCard({ cohort }: CohortCardProps) {
   };
 
   const handleAction = (action: string) => {
-    console.log(`${action} cohort:`, cohort.name);
     setShowBottomSheet(false);
     setShowMoreMenu(false);
   };

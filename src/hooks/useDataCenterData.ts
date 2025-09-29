@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
+import { api, DataCenterFilters } from '@/lib/api';
 
 export interface UserData {
   id: string;
@@ -9,15 +10,6 @@ export interface UserData {
   visits: number;
   status: 'Active' | 'In Active';
   addedOn: string;
-}
-
-interface DataCenterFilters {
-  category?: string[];
-  userType?: string;
-  no_of_visits_from?: number;
-  no_of_visits_to?: number;
-  status?: string;
-  search?: string;
 }
 
 interface DataCenterApiResponse {
@@ -42,46 +34,23 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
   return useQuery<DataCenterApiResponse, Error>({
     queryKey: ['data-center-data', page, pageSize, filters],
     queryFn: async () => {
-
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
 
-      const params = new URLSearchParams();
-      params.append('page', String(page));
-      params.append('page_size', String(pageSize));
+      const apiFilters: any = {
+        page,
+        page_size: pageSize,
+        category: Array.isArray(filters.category) ? filters.category[0] : filters.category,
+        user_type: (filters as any).userType, // Map userType to user_type
+        no_of_visits_from: filters.no_of_visits_from,
+        no_of_visits_to: filters.no_of_visits_to,
+        status_filter: filters.status,
+        search: filters.search,
+      };
 
-      if (filters.category && filters.category.length > 0) {
-        params.append('category', filters.category.join(','));
-      }
-      if (filters.userType) params.append('user_type', filters.userType);
-      if (filters.no_of_visits_from !== undefined) params.append('no_of_visits_from', String(filters.no_of_visits_from));
-      if (filters.no_of_visits_to !== undefined) params.append('no_of_visits_to', String(filters.no_of_visits_to));
-      if (filters.status) params.append('status', filters.status);
-      if (filters.search) params.append('search', filters.search);
-
-      const url = `https://api.tabapp.club/v1/dashboard-data-centre?${params.toString()}`;
-
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.accessToken}`
-          }
-        });
-
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to fetch data center data: ${response.status}`);
-        }
-
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        throw error;
-      }
+      const result = await api.dataCenter.getCustomers(user.accessToken, apiFilters);
+      return result;
     },
     enabled: isEnabled,
     staleTime: filters.search ? 30 * 1000 : 1 * 60 * 1000, // 30 seconds for search, 1 minute for regular data

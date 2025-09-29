@@ -112,7 +112,7 @@ const DataCenterFilters = ({
         onSearchChange('');
       }
     }
-  }, [clearFilters, onFiltersChange, onSearchChange]);
+  }, [clearFilters, onFiltersChange, onSearchChange, filters.category, filters.status, filters.userType, filters.visits]);
 
   // Update category filter options when categories prop changes
   useEffect(() => {
@@ -147,9 +147,10 @@ const DataCenterFilters = ({
 
   // Cleanup search debounce timer on unmount
   useEffect(() => {
+    const timer = searchDebounceTimer.current;
     return () => {
-      if (searchDebounceTimer.current) {
-        clearTimeout(searchDebounceTimer.current);
+      if (timer) {
+        clearTimeout(timer);
       }
     };
   }, []);

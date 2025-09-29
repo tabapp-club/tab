@@ -50,7 +50,6 @@ export function BugReportContent() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      console.log('Bug Report Submitted:', formData);
 
       setShowSuccess(true);
 
@@ -61,7 +60,6 @@ export function BugReportContent() {
       }, 3000);
 
     } catch (error) {
-      console.error('Error submitting bug report:', error);
     } finally {
       setIsSubmitting(false);
     }

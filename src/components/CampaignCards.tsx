@@ -9,22 +9,22 @@ const styles = `
     from { opacity: 0; }
     to { opacity: 1; }
   }
-  
+
   @keyframes slideUp {
-    from { 
+    from {
       opacity: 0;
       transform: translateY(20px) scale(0.95);
     }
-    to { 
+    to {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
   }
-  
+
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
   }
-  
+
   .animate-slideUp {
     animation: slideUp 0.4s ease-out;
   }
@@ -223,7 +223,7 @@ export function CampaignCards() {
                         <div className="absolute inset-0 bg-black/20"></div>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-                        
+
                         <div className="relative flex items-center">
                             <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
                                 <selectedCampaign.icon />
@@ -234,7 +234,7 @@ export function CampaignCards() {
                             </div>
                         </div>
                     </div>
-                    
+
                     {/* Content */}
                     <div className="p-6">
                         <div className="text-center mb-6">
@@ -248,10 +248,10 @@ export function CampaignCards() {
                                 Campaigns is not enabled yet for your business. Enable this service to start creating powerful marketing campaigns.
                             </p>
                         </div>
-                        
+
                         {/* Features preview */}
                         <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                            <h5 className="text-sm font-semibold text-gray-700 mb-3">What you'll get:</h5>
+                            <h5 className="text-sm font-semibold text-gray-700 mb-3">What you&apos;ll get:</h5>
                             <div className="space-y-2">
                                 <div className="flex items-center text-sm text-gray-600">
                                     <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
@@ -267,7 +267,7 @@ export function CampaignCards() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Action buttons */}
                         <div className="flex gap-3">
                             <button
@@ -297,7 +297,7 @@ export function CampaignCards() {
                         <div className="absolute inset-0 bg-black/10"></div>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-                        
+
                         <div className="relative text-center">
                             <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,7 +308,7 @@ export function CampaignCards() {
                             <p className="text-white/90 text-sm">Your service enablement request has been submitted</p>
                         </div>
                     </div>
-                    
+
                     {/* Content */}
                     <div className="p-6">
                         <div className="text-center mb-6">
@@ -319,10 +319,10 @@ export function CampaignCards() {
                             </div>
                             <h4 className="text-xl font-semibold text-gray-900 mb-3">What happens next?</h4>
                             <p className="text-gray-600 leading-relaxed mb-4">
-                                We received your request and Tribly team has initiated the process. We'll send you communication once services are enabled.
+                                We received your request and Tribly team has initiated the process. We&apos;ll send you communication once services are enabled.
                             </p>
                         </div>
-                        
+
                         {/* Timeline */}
                         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6">
                             <h5 className="text-sm font-semibold text-gray-700 mb-3">Process Timeline:</h5>
@@ -349,7 +349,7 @@ export function CampaignCards() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Action button */}
                         <button
                             onClick={() => setShowSuccessMessage(false)}

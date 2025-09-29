@@ -15,22 +15,22 @@ const styles = `
     from { opacity: 0; }
     to { opacity: 1; }
   }
-  
+
   @keyframes slideUp {
-    from { 
+    from {
       opacity: 0;
       transform: translateY(20px) scale(0.95);
     }
-    to { 
+    to {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
   }
-  
+
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
   }
-  
+
   .animate-slideUp {
     animation: slideUp 0.4s ease-out;
   }
@@ -172,20 +172,7 @@ const CollapseIcon = () => (
   <ChevronLeft size={22} color="#2A2A2F" />
 );
 
-// Notification Badge Component
-const NotificationBadge = ({ count, isActive }: { count: number; isActive: boolean }) => {
-  if (count === 0) return null;
 
-  return (
-    <div className={`ml-auto flex-shrink-0 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-semibold font-manrope ${
-      isActive
-        ? 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white'
-        : 'bg-gradient-to-r from-[#ff4757] to-[#ff6b7a] text-white hover:from-[#ff3742] hover:to-[#ff4757]'
-    }`}>
-      {count > 99 ? '99+' : count}
-    </div>
-  );
-};
 
 const menuItems = [
   {
@@ -203,7 +190,7 @@ const menuItems = [
     description: "Manage your data",
     icon: DataCenterIcon,
     href: "/data-center",
-    notificationCount: 4
+    notificationCount: 0
   },
   {
     id: "ai-services",
@@ -219,7 +206,8 @@ const menuItems = [
     description: "User segmentation",
     icon: CohortsIcon,
     href: "/cohorts",
-    notificationCount: 0
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "workflow-automation",
@@ -227,7 +215,8 @@ const menuItems = [
     description: "Automate communications",
     icon: WorkflowAutomationIcon,
     href: "/workflow-automation",
-    notificationCount: 3
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "achievements",
@@ -235,7 +224,8 @@ const menuItems = [
     description: "Goals & milestones",
     icon: AchievementsIcon,
     href: "/achievements",
-    notificationCount: 2
+    notificationCount: 0,
+    disabled: true
   },
   {
     id: "campaigns",
@@ -243,7 +233,8 @@ const menuItems = [
     description: "Marketing campaigns",
     icon: CampaignsIcon,
     href: "/campaigns",
-    notificationCount: 7
+    notificationCount: 0,
+    disabled: true
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   // {
@@ -266,7 +257,7 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed, toggleSidebar, isMobile } = useSidebar();
+  const { isCollapsed, toggleSidebar, isMobile, isMobileOpen, setIsMobileOpen, closeMobileSidebar } = useSidebar();
   const { logout, user } = useAuth();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -277,30 +268,7 @@ export function Sidebar() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
-  // Function to close mobile sidebar
-  const closeMobileSidebar = () => {
-    if (isMobile) {
-      const sidebar = document.querySelector('.sidebar-mobile');
-      const overlay = document.querySelector('.sidebar-overlay');
-      const body = document.body;
-
-      if (sidebar && overlay && body) {
-        // Restore scroll position
-        const scrollY = body.style.top;
-        body.style.top = '';
-        if (scrollY) {
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        }
-        
-        sidebar.classList.remove('open');
-        overlay.classList.remove('open');
-        body.classList.remove('sidebar-open');
-        
-        // Dispatch custom event to notify MobileMenuToggle
-        window.dispatchEvent(new CustomEvent('sidebar-closed'));
-      }
-    }
-  };
+  // Close mobile sidebar using context
 
   // Service dialog handlers
   const handleServiceClick = (item: any) => {
@@ -334,7 +302,7 @@ export function Sidebar() {
     <>
     <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out border-r border-gray-200 ${
       actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
-    }`}>
+    } ${isMobile && isMobileOpen ? 'open' : ''}`}>
       {/* User Profile Section */}
       <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className={`transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
@@ -351,7 +319,7 @@ export function Sidebar() {
                   {user?.name || 'User'}
                 </div>
                 <div className="text-xs text-[#6b7280] font-manrope leading-tight">
-                  Business Manager
+                  {user?.user_type || 'Loading...'}
                 </div>
               </div>
               {/* Cross icon for mobile */}
@@ -386,92 +354,55 @@ export function Sidebar() {
         <div className="space-y-4 sm:space-y-5">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = 
+            const isActive =
               (item.id === "dashboard" && pathname === "/dashboard") ||
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "cohorts" && pathname === "/cohorts") ||
               (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
 
-            // Check if this item should show modal instead of navigation
-            const shouldShowModal = ['ai-services', 'cohorts', 'workflow-automation', 'achievements', 'campaigns'].includes(item.id);
+            const isDisabled = item.disabled;
+            const effectiveIsActive = isActive && !isDisabled;
 
-            return shouldShowModal ? (
-              <div
-                key={item.id}
-                onClick={() => handleServiceClick(item)}
-                className={`group rounded flex items-center overflow-hidden cursor-pointer relative ${
-                  actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
-                } ${
-                  isActive
-                    ? "bg-gray-100 text-gray-400 border border-gray-200"
-                    : "text-gray-400 hover:bg-gray-50 hover:text-gray-500 hover:border hover:border-gray-200"
-                }`}
-                title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                {/* Left-side indicator for selected state */}
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-gray-300 rounded-r-full"></div>
-                )}
-                <div className="flex-shrink-0 relative">
-                  <div className={`p-1 rounded-md ${
-                    isActive ? 'bg-gray-100' : 'group-hover:bg-gray-100'
-                  }`}>
-                  <Icon colorCode={isActive ? "#9CA3AF" : (hoveredItem === item.id ? "#9CA3AF" : "#9CA3AF")} />
-                  </div>
-                  {/* Lock icon for restricted items */}
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
-                    <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                                <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
-                  actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
-                } justify-start`}>
-                  <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
-                    isActive ? 'text-gray-400' : 'text-gray-400 group-hover:text-gray-500'
-                }`}>
-                  {item.label}
-                </span>
-                  <span className="text-[12px] font-normal font-manrope leading-[1.2] whitespace-nowrap text-gray-400">
-                    {item.description}
-                  </span>
-                </div>
-              </div>
-            ) : (
+            return (
               <Link
                 key={item.id}
-                href={item.href}
-                className={`group rounded flex items-center overflow-hidden cursor-pointer relative ${
+                href={isDisabled ? "#" : item.href}
+                className={`group rounded flex items-center overflow-hidden relative ${
                   actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
                 } ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
-                    : "text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
+                  isDisabled
+                    ? 'cursor-not-allowed opacity-50 text-[#6b7280]'
+                    : effectiveIsActive
+                      ? "cursor-pointer bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
+                      : "cursor-pointer text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
                 }`}
-                title={actualIsCollapsed ? `${item.label} - ${item.description}${item.notificationCount > 0 ? ` (${item.notificationCount} notifications)` : ''}` : undefined}
+                title={actualIsCollapsed ? `${item.label} - ${item.description}${isDisabled ? ' (Work in progress)' : ''}` : undefined}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
+                  e.stopPropagation();
+                }}
               >
                 {/* Left-side indicator for selected state */}
-                {isActive && (
+                {effectiveIsActive && (
                   <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6E4EFF] rounded-r-full"></div>
                 )}
                 <div className="flex-shrink-0 relative">
                   <div className={`p-1 rounded-md ${
-                    isActive ? 'bg-[#6E4EFF]/10' : 'group-hover:bg-[#6E4EFF]/10'
+                    effectiveIsActive ? 'bg-[#6E4EFF]/10' : isDisabled ? '' : 'group-hover:bg-[#6E4EFF]/10'
                   }`}>
-                  <Icon colorCode={isActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
+                  <Icon colorCode={isDisabled ? "#6b7280" : effectiveIsActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
                   </div>
                 </div>
                 <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 } justify-start`}>
                   <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
-                    isActive ? 'text-[#6E4EFF]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
+                    effectiveIsActive ? 'text-[#6E4EFF]' : isDisabled ? 'text-[#6b7280]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
                 }`}>
                   {item.label}
                 </span>
@@ -582,7 +513,7 @@ export function Sidebar() {
               <div className="absolute inset-0 bg-black/20"></div>
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-              
+
               <div className="relative flex items-center">
                 <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4">
                   <selectedService.icon colorCode="#ffffff" />
@@ -593,7 +524,7 @@ export function Sidebar() {
                 </div>
               </div>
             </div>
-            
+
             {/* Content */}
             <div className="p-6">
               <div className="text-center mb-6">
@@ -607,10 +538,10 @@ export function Sidebar() {
                   {selectedService.label} is not enabled yet for your business. Enable this service to start using powerful features.
                 </p>
               </div>
-              
+
               {/* Features preview */}
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                <h5 className="text-sm font-semibold text-gray-700 mb-3">What you'll get:</h5>
+                <h5 className="text-sm font-semibold text-gray-700 mb-3">What you&apos;ll get:</h5>
                 <div className="space-y-2">
                   <div className="flex items-center text-sm text-gray-600">
                     <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
@@ -626,7 +557,7 @@ export function Sidebar() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Action buttons */}
               <div className="flex gap-3">
                 <button
@@ -656,7 +587,7 @@ export function Sidebar() {
               <div className="absolute inset-0 bg-black/10"></div>
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-              
+
               <div className="relative text-center">
                 <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -667,7 +598,7 @@ export function Sidebar() {
                 <p className="text-white/90 text-sm">Your service enablement request has been submitted</p>
               </div>
             </div>
-            
+
             {/* Content */}
             <div className="p-6">
               <div className="text-center mb-6">
@@ -678,10 +609,10 @@ export function Sidebar() {
                 </div>
                 <h4 className="text-xl font-semibold text-gray-900 mb-3">What happens next?</h4>
                 <p className="text-gray-600 leading-relaxed mb-4">
-                  We received your request and Tribly team has initiated the process. We'll send you communication once services are enabled.
+                  We received your request and Tribly team has initiated the process. We&apos;ll send you communication once services are enabled.
                 </p>
               </div>
-              
+
               {/* Timeline */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6">
                 <h5 className="text-sm font-semibold text-gray-700 mb-3">Process Timeline:</h5>
@@ -708,7 +639,7 @@ export function Sidebar() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Action button */}
               <button
                 onClick={() => setShowSuccessMessage(false)}

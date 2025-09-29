@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { BusinessServicesContent } from "./BusinessServicesContent";
+import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 
 export const metadata: Metadata = {
   title: "Business Services - Business Dashboard",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
-import { WorkflowAutomationContent } from "./WorkflowAutomationContent";
+import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const metadata: Metadata = {
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
 export default function WorkflowAutomationPage() {
   return (
     <ProtectedRoute>
-      <div className="bg-[#f6f6f6]">
+      <div className="bg-white">
         <div className="flex relative">
           {/* Sidebar */}
           <Sidebar />
 
           {/* Main Content */}
-          <WorkflowAutomationContent />
+          <BusinessServicesContent title="Workflow Automation" description="Automate WhatsApp and SMS communications with intelligent workflow automation" />
         </div>
       </div>
     </ProtectedRoute>

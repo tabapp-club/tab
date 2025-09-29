@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import type { Metadata } from "next";
-import { CampaignsClient } from "@/components/campaigns/CampaignsClient";
+import { Sidebar } from "@/components/Sidebar";
+import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const metadata: Metadata = {
@@ -22,9 +23,15 @@ export const metadata: Metadata = {
 export default function CampaignsPage() {
   return (
     <ProtectedRoute>
-      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
-        <CampaignsClient />
-      </Suspense>
+      <div className="bg-white">
+        <div className="flex relative">
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Main Content */}
+          <BusinessServicesContent title="Campaigns" description="Manage and create marketing campaigns to grow your business with advanced targeting and analytics" />
+        </div>
+      </div>
     </ProtectedRoute>
   );
 }

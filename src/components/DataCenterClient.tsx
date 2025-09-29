@@ -184,7 +184,7 @@ export default function DataCenterClient() {
     }, 100); // Reduced debounce to prevent history conflicts
 
     return () => clearTimeout(urlUpdateTimer);
-  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, updateURL]);
+  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, updateURL, searchTerm]);
 
   // Use React Query to fetch data center data
   const { data: dataCenterResponse, isLoading: loading, error } = useDataCenterData({

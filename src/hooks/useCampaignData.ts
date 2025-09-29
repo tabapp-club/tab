@@ -15,7 +15,6 @@ export const useCampaignData = () => {
         setCampaignData(JSON.parse(stored));
       }
     } catch (error) {
-      console.error('Error loading campaign data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -27,7 +26,6 @@ export const useCampaignData = () => {
       localStorage.setItem(CAMPAIGN_DATA_KEY, JSON.stringify(data));
       setCampaignData(data);
     } catch (error) {
-      console.error('Error saving campaign data:', error);
     }
   };
 
@@ -37,7 +35,6 @@ export const useCampaignData = () => {
       localStorage.removeItem(CAMPAIGN_DATA_KEY);
       setCampaignData(null);
     } catch (error) {
-      console.error('Error clearing campaign data:', error);
     }
   };
 

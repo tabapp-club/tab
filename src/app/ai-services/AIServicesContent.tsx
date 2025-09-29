@@ -7,6 +7,7 @@ import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/Button";
 import { History } from 'lucide-react';
+import DOMPurify from 'dompurify';
 
 interface ChatMessage {
   id: string;
@@ -89,7 +90,7 @@ export function AIServicesContent() {
     }
 
     setTimeout(() => setIsLoadingFromURL(false), 0);
-  }, [searchParams]); // Remove currentSessionId and chatSessions from deps
+   }, [searchParams, chatSessions, currentSessionId]);
 
   // Handle pending session ID when sessions are loaded
   useEffect(() => {
@@ -104,7 +105,7 @@ export function AIServicesContent() {
         setPendingSessionId(null);
       }
     }
-  }, [pendingSessionId, chatSessions]);
+  }, [pendingSessionId, chatSessions, currentSessionId]);
 
   // Function to update URL with current state (only when not loading from URL)
   const updateURL = useCallback(() => {
@@ -199,7 +200,6 @@ export function AIServicesContent() {
           }))
         })));
       } catch (error) {
-        console.error('Error loading chat sessions:', error);
         localStorage.removeItem('ai-chat-sessions');
       }
     }
@@ -380,7 +380,6 @@ export function AIServicesContent() {
         return session;
       }));
     } catch (error) {
-      console.error('Error getting AI response:', error);
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         content: "Sorry, I encountered an error while processing your request. Please try again.",
@@ -419,8 +418,8 @@ export function AIServicesContent() {
   };
 
   const formatMessageContent = (content: string) => {
-    // Convert markdown-like formatting to HTML
-    return content
+    // Convert markdown-like formatting to HTML and sanitize
+    const html = content
       .split('\n')
       .map((line, index) => {
         if (line.startsWith('• ')) {
@@ -434,6 +433,12 @@ export function AIServicesContent() {
         }
       })
       .join('');
+
+    // Sanitize the HTML to prevent XSS
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['li', 'div', 'p', 'br'],
+      ALLOWED_ATTR: ['class']
+    });
   };
 
   return (

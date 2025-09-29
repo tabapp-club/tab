@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { config } from '@/lib/config';
 
 interface WorkflowData {
   activeWorkflows: number;
@@ -214,7 +215,7 @@ const mockIntegrations: Integration[] = [
     provider: "Meta",
     config: {
       apiKey: "wab_****_****_****",
-      webhookUrl: "https://api.tabapp.com/webhook/whatsapp",
+      webhookUrl: `${config.api.baseURL}/webhook/whatsapp`,
       phoneNumber: "+91 98765 43210"
     },
     lastSync: "2024-01-20 14:30:00",

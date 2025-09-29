@@ -2,47 +2,67 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { format } from 'date-fns';
-
-interface BusinessLogEntry {
-  id: string;
-  customerPhone: string;
-  customerName: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  customFields: Record<string, any>;
-  timestamp: Date;
-  isNewCustomer: boolean;
-}
+import type { BusinessLogEntry } from '@/hooks/useBusinessLogData';
 
 interface BusinessLogListProps {
   data: BusinessLogEntry[] | undefined;
   loading: boolean;
   error: any;
+  onNextPage: () => void;
+  onPrevPage: () => void;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  onUpdateEntry: ({ id, updates }: { id: string; updates: Partial<BusinessLogEntry> }) => Promise<unknown>;
+  onDeleteEntry: (id: string) => Promise<unknown>;
 }
 
-export function BusinessLogList({ data, loading, error }: BusinessLogListProps) {
+export function BusinessLogList({
+  data,
+  loading,
+  error,
+  onNextPage,
+  onPrevPage,
+  hasNextPage,
+  hasPrevPage,
+  onUpdateEntry,
+  onDeleteEntry,
+}: BusinessLogListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterNewCustomers, setFilterNewCustomers] = useState<boolean | null>(null);
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<BusinessLogEntry>>({});
 
-  const filteredData = data?.filter(entry => {
-    const matchesSearch = 
+  // Function to determine if user is new or returning based on frequency
+  const getUserStatus = (phoneNumber: string, allEntries: BusinessLogEntry[]) => {
+    const userEntries = allEntries.filter(entry => entry.customerPhone === phoneNumber);
+    return userEntries.length === 1 ? 'New User' : 'Returning';
+  };
+
+  const filteredData = (Array.isArray(data) ? data : []).filter(entry => {
+    const matchesSearch =
       entry.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       entry.customerPhone.includes(searchTerm) ||
-      entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesFilter = filterNewCustomers === null || entry.isNewCustomer === filterNewCustomers;
-    
+      (entry.products && entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())));
+
+    // Use the new user status logic for filtering
+    let matchesFilter = true;
+    if (filterNewCustomers !== null) {
+      const userStatus = getUserStatus(entry.customerPhone, data || []);
+      if (filterNewCustomers === true) {
+        // Show only "New User" entries
+        matchesFilter = userStatus === 'New User';
+      } else {
+        // Show only "Returning" entries
+        matchesFilter = userStatus === 'Returning';
+      }
+    }
+
     return matchesSearch && matchesFilter;
-  }) || [];
+  });
+
+  console.log('filteredData length:', filteredData.length);
 
   const handleEditEntry = (entry: BusinessLogEntry) => {
     setEditingEntry(entry.id);
@@ -51,35 +71,21 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
       customerPhone: entry.customerPhone,
       products: entry.products,
       totalAmount: entry.totalAmount,
-      customFields: entry.customFields,
       isNewCustomer: entry.isNewCustomer
     });
   };
 
   const handleSaveEdit = async (id: string) => {
     try {
-      const existing = localStorage.getItem('businessLogEntries');
-      if (existing) {
-        const entries = JSON.parse(existing);
-        const updatedEntries = entries.map((entry: BusinessLogEntry) => 
-          entry.id === id 
-            ? { ...entry, ...editForm, timestamp: new Date() }
-            : entry
-        );
-        localStorage.setItem('businessLogEntries', JSON.stringify(updatedEntries));
-        
-        // Trigger a custom event to notify other components
-        window.dispatchEvent(new CustomEvent('businessLogUpdated'));
-        
-        // Reset edit state
-        setEditingEntry(null);
-        setEditForm({});
-        
-        // Show success message
-        alert('Entry updated successfully!');
-      }
+      await onUpdateEntry({ id, updates: editForm });
+
+      // Reset edit state
+      setEditingEntry(null);
+      setEditForm({});
+
+      // Show success message
+      alert('Entry updated successfully!');
     } catch (error) {
-      console.error('Error updating entry:', error);
       alert('Error updating entry. Please try again.');
     }
   };
@@ -91,13 +97,13 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
 
   const handleProductChange = (index: number, field: string, value: string | number) => {
     if (!editForm.products) return;
-    
+
     const updatedProducts = [...editForm.products];
     updatedProducts[index] = { ...updatedProducts[index], [field]: value };
-    
+
     // Recalculate total amount
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -107,11 +113,11 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
 
   const addProduct = () => {
     if (!editForm.products) return;
-    
-    const newProduct = { name: '', quantity: 1, price: 0 };
+
+    const newProduct = { name: '', quantity: 1, price: 0, customFields: {} };
     const updatedProducts = [...editForm.products, newProduct];
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -121,10 +127,10 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
 
   const removeProduct = (index: number) => {
     if (!editForm.products || editForm.products.length <= 1) return;
-    
+
     const updatedProducts = editForm.products.filter((_, i) => i !== index);
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    
+
     setEditForm({
       ...editForm,
       products: updatedProducts,
@@ -212,7 +218,7 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
             onClick={() => setFilterNewCustomers(true)}
             className={`${filterNewCustomers === true ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
-            <span className="hidden sm:inline">New Customers</span>
+            <span className="hidden sm:inline">New Users</span>
             <span className="sm:hidden">New</span>
           </Button>
           <Button
@@ -221,8 +227,8 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
             onClick={() => setFilterNewCustomers(false)}
             className={`${filterNewCustomers === false ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
-            <span className="hidden sm:inline">Existing</span>
-            <span className="sm:hidden">Existing</span>
+            <span className="hidden sm:inline">Returning</span>
+            <span className="sm:hidden">Returning</span>
           </Button>
         </div>
       </div>
@@ -253,9 +259,9 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                         </div>
                       </div>
                     </div>
-                    
+
                   </div>
-                  
+
                   {/* Amount Display */}
                   <div className="text-right">
                     <div className="text-lg font-bold text-[#7856ff]">
@@ -351,22 +357,22 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                         <button
                           onClick={() => setEditForm({...editForm, isNewCustomer: true})}
                           className={`px-3 py-1 text-xs rounded ${
-                            editForm.isNewCustomer 
-                              ? 'bg-[#7856ff] text-white' 
+                            editForm.isNewCustomer
+                              ? 'bg-[#7856ff] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          New Customer
+                          New User
                         </button>
                         <button
                           onClick={() => setEditForm({...editForm, isNewCustomer: false})}
                           className={`px-3 py-1 text-xs rounded ${
-                            !editForm.isNewCustomer 
-                              ? 'bg-[#7856ff] text-white' 
+                            !editForm.isNewCustomer
+                              ? 'bg-[#7856ff] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
-                          Existing Customer
+                          Returning
                         </button>
                       </div>
                     </div>
@@ -417,96 +423,6 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                   </div>
                 </div>
 
-                {/* Additional Details Section - Enhanced */}
-                {Object.keys(entry.customFields).length > 0 && (
-                  <div className="mb-2">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <svg className="w-3 h-3 text-[#7856ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <h4 className="text-xs font-semibold text-gray-800">Details</h4>
-                    </div>
-                    <div className="space-y-1">
-                      {(() => {
-                        const fields = Object.entries(entry.customFields);
-                        const discountField = fields.find(([key]) => key.toLowerCase().includes('discount'));
-                        const couponField = fields.find(([key]) => key.toLowerCase().includes('coupon'));
-                        const otherFields = fields.filter(([key]) => 
-                          !key.toLowerCase().includes('discount') && !key.toLowerCase().includes('coupon')
-                        );
-
-                        return (
-                          <>
-                            {/* Discount and Coupon side by side */}
-                            {(discountField || couponField) && (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                                {discountField && (
-                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                    <div className="flex-1 min-w-0">
-                                      <span className="text-xs font-medium text-gray-900 truncate">
-                                        {discountField[0].replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
-                                          typeof discountField[1] === 'boolean' ? (
-                                            <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                              discountField[1] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                              {discountField[1] ? 'Yes' : 'No'}
-                                            </span>
-                                          ) : (
-                                            <span className="text-gray-600 ml-1">{String(discountField[1])}</span>
-                                          )
-                                        }
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                                {couponField && (
-                                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                    <div className="flex-1 min-w-0">
-                                      <span className="text-xs font-medium text-gray-900 truncate">
-                                        {couponField[0].replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
-                                          typeof couponField[1] === 'boolean' ? (
-                                            <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                              couponField[1] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                              {couponField[1] ? 'Yes' : 'No'}
-                                            </span>
-                                          ) : (
-                                            <span className="text-gray-600 ml-1">{String(couponField[1])}</span>
-                                          )
-                                        }
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                            
-                            {/* Other fields in single column */}
-                            {otherFields.map(([key, value]) => (
-                              <div key={key} className="flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-100">
-                                <div className="flex-1 min-w-0">
-                                  <span className="text-xs font-medium text-gray-900 truncate">
-                                    {key.replace(/([A-Z])/g, ' $1').toLowerCase().trim()}: {
-                                      typeof value === 'boolean' ? (
-                                        <span className={`inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium ml-1 ${
-                                          value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                        }`}>
-                                          {value ? 'Yes' : 'No'}
-                                        </span>
-                                      ) : (
-                                        <span className="text-gray-600 ml-1">{String(value)}</span>
-                                      )
-                                    }
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Footer Section - Actions */}
@@ -514,7 +430,7 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     {format(new Date(entry.timestamp), 'h:mm a • MMM d, yyyy')}
                     {entry.isNewCustomer ? (
@@ -544,6 +460,34 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
                       Edit
                     </Button>
                   </div>
+                   <div className="flex gap-1">
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => handleEditEntry(entry)}
+                       className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
+                     >
+                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                       </svg>
+                       Edit
+                     </Button>
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => {
+                         if (confirm('Are you sure you want to delete this entry?')) {
+                           onDeleteEntry(entry.id);
+                         }
+                       }}
+                       className="h-6 px-2 text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors group/delete"
+                     >
+                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/delete:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                       </svg>
+                       Delete
+                     </Button>
+                   </div>
                 </div>
               </div>
             </CardContent>
@@ -551,13 +495,41 @@ export function BusinessLogList({ data, loading, error }: BusinessLogListProps) 
         ))}
       </div>
 
-      {/* Summary */}
+      {/* Pagination */}
       <Card>
         <CardContent className="p-2">
-          <div className="text-center text-sm">
-            <span className="text-gray-600">
-              Showing {filteredData.length} of {data.length} entries
-            </span>
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onPrevPage}
+              disabled={!hasPrevPage || loading}
+              className="flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Previous
+            </Button>
+
+            <div className="text-center text-sm">
+              <span className="text-gray-600">
+                Showing {filteredData.length} entries
+              </span>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onNextPage}
+              disabled={!hasNextPage || loading}
+              className="flex items-center gap-2"
+            >
+              Next
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -102,19 +102,55 @@ Add app screenshots to `/public/screenshots/` for app store listings:
 - `desktop-screenshot.png` (1280x720)
 - `mobile-screenshot.png` (390x844)
 
+## Caching Strategy & Data Freshness
+
+### Conservative Caching Approach
+To ensure business data remains fresh and accurate, we've implemented a conservative caching strategy that prioritizes data freshness over aggressive caching:
+
+#### React Query Configuration (`/src/lib/queryClient.ts`)
+- **Stale Time**: 30 seconds (data considered fresh for 30s)
+- **Cache Time**: 2 minutes (cached data retained for 2min)
+- **Refetch on Focus**: Enabled (refreshes data when app regains focus)
+- **Refetch on Reconnect**: Enabled (refreshes data when network reconnects)
+
+#### Service Worker Caching (`/public/sw.js`)
+- **API Routes**: Never cached - always fetch fresh data
+- **Static Assets**: Aggressively cached with long expiry
+- **Strategy**: Network-first for dynamic content, cache-first for static
+- **Cache Expiry**: 1 minute for dynamic content
+- **Size Limits**: 50MB cache limit with automatic cleanup
+- **Periodic Cleanup**: Removes expired entries every 24 hours
+
+#### HTTP Headers (`next.config.ts`)
+- **API Routes**: `Cache-Control: no-cache` (prevents browser caching)
+- **Static Assets**: `Cache-Control: public, max-age=31536000` (1 year cache)
+
+#### Cache Management Tools
+- **Cache Utils** (`/src/lib/cacheUtils.ts`): Utilities for manual cache invalidation
+- **Cache Invalidation Hook** (`/src/hooks/useCacheInvalidation.ts`): React hook for components to trigger cache refreshes
+
+#### Push Notifications
+- **Conservative Implementation**: Only essential notifications
+- **Structured Data**: Clear message format with action buttons
+- **Auto-hide**: Notifications disappear after 5 seconds
+- **User Control**: Easy unsubscribe options
+
 ## PWA Features Available
 
 ### ✅ Implemented
 - [x] Web App Manifest
-- [x] Service Worker with offline support
+- [x] Service Worker with conservative caching
 - [x] Install prompt
 - [x] App shortcuts
 - [x] Theme colors
 - [x] Responsive icons
 - [x] Standalone display mode
+- [x] Conservative caching for data freshness
+- [x] Cache management utilities
+- [x] Push notification support (conservative)
 
 ### 🔄 Optional Enhancements
-- [ ] Push notifications
+- [ ] Advanced push notification features
 - [ ] Background sync
 - [ ] Offline data storage
 - [ ] App updates notification

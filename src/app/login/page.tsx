@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -102,7 +103,7 @@ export default function LoginPage() {
   const validatePhoneNumber = (phone: string) => {
     // Remove all non-digits
     const cleanPhone = phone.replace(/\D/g, '');
-    
+
     // Check if it's a valid Indian mobile number
     if (cleanPhone.length === 10) {
       const firstDigit = cleanPhone[0];
@@ -111,7 +112,7 @@ export default function LoginPage() {
         return { isValid: true, formatted: cleanPhone };
       }
     }
-    
+
     return { isValid: false, formatted: cleanPhone };
   };
 
@@ -157,9 +158,9 @@ export default function LoginPage() {
   const handleSendOTP = async () => {
     setError('');
     setOtpError('');
-    
+
     const validation = validatePhoneNumber(phoneNumber);
-    
+
     if (!validation.isValid) {
       setError('Please enter a valid 10-digit mobile number');
       return;
@@ -173,7 +174,6 @@ export default function LoginPage() {
       setIsResendDisabled(true);
       setError('');
     } catch (error: any) {
-      console.error('OTP sending failed:', error);
       setError(error.message || 'Failed to send OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -183,7 +183,7 @@ export default function LoginPage() {
   // Handle OTP verification
   const handleVerifyOTP = async () => {
     setOtpError('');
-    
+
     if (!validateOTP(otp)) {
       setOtpError('Please enter a valid 6-digit OTP');
       return;
@@ -211,7 +211,6 @@ export default function LoginPage() {
         }
       }
     } catch (error: any) {
-      console.error('OTP verification failed:', error);
       setOtpError(error.message || 'Failed to verify OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -221,7 +220,7 @@ export default function LoginPage() {
   // Handle resend OTP
   const handleResendOTP = async () => {
     if (isResendDisabled) return;
-    
+
     setOtpError('');
     setIsLoading(true);
     try {
@@ -231,7 +230,6 @@ export default function LoginPage() {
       setOtp('');
       setOtpAttempts(0);
     } catch (error: any) {
-      console.error('Resend OTP failed:', error);
       setError(error.message || 'Failed to resend OTP. Please try again.');
     } finally {
       setIsLoading(false);
@@ -259,27 +257,18 @@ export default function LoginPage() {
     }
   };
 
-  // Handle OTP input change
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 6) {
-      setOtp(value);
-      setOtpError('');
-    }
-  };
-
   // Handle individual OTP digit input
   const handleOtpDigitChange = (index: number, value: string) => {
     // Only allow single digit
     const digit = value.replace(/\D/g, '').slice(-1);
-    
+
     const newOtp = otp.split('');
     newOtp[index] = digit;
     const updatedOtp = newOtp.join('');
-    
+
     setOtp(updatedOtp);
     setOtpError('');
-    
+
     // Auto-focus next input if digit was entered
     if (digit && index < 5) {
       // Use multiple timing strategies for better compatibility
@@ -290,62 +279,12 @@ export default function LoginPage() {
         }
       }, 10);
     }
-    
+
     // Auto-validate when all 6 digits are entered
     if (updatedOtp.length === 6 && updatedOtp.replace(/\s/g, '').length === 6) {
       setTimeout(() => {
         handleAutoVerifyOTP(updatedOtp);
       }, 300);
-    }
-  };
-
-  // Auto-verify OTP when all digits are entered
-  const handleAutoVerifyOTP = async (otpCode: string) => {
-    setOtpError('');
-    setIsLoading(true);
-    
-    try {
-      const isValid = await verifyOTP(phoneNumber, otpCode);
-      if (isValid) {
-        setIsOtpVerified(true);
-        setOtpError('');
-        // Redirect to dashboard after successful verification
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
-      } else {
-        setOtpAttempts(prev => prev + 1);
-        if (otpAttempts >= 2) {
-          setOtpError('Too many failed attempts. Please request a new OTP.');
-          setIsOtpSent(false);
-          setOtp('');
-          setOtpAttempts(0);
-          // Focus back to first input
-          setTimeout(() => {
-            const firstInput = document.getElementById('otp-0');
-            firstInput?.focus();
-          }, 100);
-        } else {
-          setOtpError('Invalid OTP. Please try again.');
-          // Clear OTP and focus first input
-          setOtp('');
-          setTimeout(() => {
-            const firstInput = document.getElementById('otp-0');
-            firstInput?.focus();
-          }, 100);
-        }
-      }
-    } catch (error: any) {
-      console.error('Auto OTP verification failed:', error);
-      setOtpError('Failed to verify OTP. Please try again.');
-      // Clear OTP and focus first input
-      setOtp('');
-      setTimeout(() => {
-        const firstInput = document.getElementById('otp-0');
-        firstInput?.focus();
-      }, 100);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -385,6 +324,61 @@ export default function LoginPage() {
     }
   };
 
+
+
+
+
+  // Auto-verify OTP when all digits are entered
+  const handleAutoVerifyOTP = async (otpCode: string) => {
+    setOtpError('');
+    setIsLoading(true);
+
+    try {
+      const isValid = await verifyOTP(phoneNumber, otpCode);
+      if (isValid) {
+        setIsOtpVerified(true);
+        setOtpError('');
+        // Redirect to dashboard after successful verification
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        setOtpAttempts(prev => prev + 1);
+        if (otpAttempts >= 2) {
+          setOtpError('Too many failed attempts. Please request a new OTP.');
+          setIsOtpSent(false);
+          setOtp('');
+          setOtpAttempts(0);
+          // Focus back to first input
+          setTimeout(() => {
+            const firstInput = document.getElementById('otp-0');
+            firstInput?.focus();
+          }, 100);
+        } else {
+          setOtpError('Invalid OTP. Please try again.');
+          // Clear OTP and focus first input
+          setOtp('');
+          setTimeout(() => {
+            const firstInput = document.getElementById('otp-0');
+            firstInput?.focus();
+          }, 100);
+        }
+      }
+    } catch (error: any) {
+      setOtpError('Failed to verify OTP. Please try again.');
+      // Clear OTP and focus first input
+      setOtp('');
+      setTimeout(() => {
+        const firstInput = document.getElementById('otp-0');
+        firstInput?.focus();
+      }, 100);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
   // Handle OTP paste
   const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -392,7 +386,7 @@ export default function LoginPage() {
     if (pastedData.length <= 6) {
       setOtp(pastedData);
       setOtpError('');
-      
+
       // Focus the next empty field or the last field
       const nextIndex = Math.min(pastedData.length, 5);
       requestAnimationFrame(() => {
@@ -401,7 +395,7 @@ export default function LoginPage() {
           nextInput.focus();
         }
       });
-      
+
       // Auto-verify if all 6 digits are pasted
       if (pastedData.length === 6) {
         setTimeout(() => {
@@ -497,19 +491,18 @@ export default function LoginPage() {
                     <div className="text-center text-[#2a2a2f] text-sm font-normal mb-6" data-node-id="293:4975">
                       Enter the 6-digit OTP sent to {formatPhoneNumber(phoneNumber)}
                     </div>
-                    
+
                     {/* Individual OTP Input Boxes */}
                     <div className="flex gap-3 justify-center mb-4">
                       {[0, 1, 2, 3, 4, 5].map((index) => (
                         <div
                           key={index}
                           className={`w-12 h-12 border flex items-center justify-center p-3 relative transition-colors ${
-                            otpError ? 'border-red-500' : 
-                            isLoading ? 'border-[#6e4eff]' : 
+                            otpError ? 'border-red-500' :
+                            isLoading ? 'border-[#6e4eff]' :
                             'border-[#e9e9e9] focus-within:border-[#6e4eff]'
                           }`}
-                          data-name="text input field" 
-                          data-node-id="340:6560"
+                          data-name="otp input field"
                         >
                           <input
                             id={`otp-${index}`}
@@ -539,7 +532,7 @@ export default function LoginPage() {
                         </div>
                       ))}
                     </div>
-                    
+
                     {otpError && (
                       <div className="text-red-500 text-xs mt-2 text-center">
                         {otpError}
@@ -640,7 +633,7 @@ export default function LoginPage() {
                       Email
                     </h3>
                     <div className="w-full flex items-center justify-center">
-                      <a 
+                      <a
                         href="mailto:info@tabapp.club"
                         className="text-[#a1a1a1] text-base leading-[1.4] text-center hover:text-[#6e4eff] transition-colors"
                       >
@@ -657,7 +650,7 @@ export default function LoginPage() {
                       Contact
                     </h3>
                     <div className="w-full flex items-center justify-center">
-                      <a 
+                      <a
                         href="tel:+918977719997"
                         className="text-[#a1a1a1] text-base leading-[1.4] text-center hover:text-[#6e4eff] transition-colors"
                       >
@@ -755,7 +748,6 @@ export default function LoginPage() {
               <button
                 onClick={() => {
                   // Handle form submission
-                  console.log('Sales form submitted:', salesForm);
                   // Reset form
                   setSalesForm({
                     fullName: '',
@@ -822,12 +814,12 @@ export default function LoginPage() {
                         className="w-full h-12 flex items-center justify-between px-4 cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <span className="text-[#a1a1a1] text-sm text-left">{item.question}</span>
-                        <svg 
-                          width="24" 
-                          height="24" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="#a1a1a1" 
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#a1a1a1"
                 strokeWidth="2"
                           className={`transition-transform duration-300 ease-in-out ${
                             expandedItem === index ? 'rotate-180' : 'rotate-0'
@@ -836,9 +828,9 @@ export default function LoginPage() {
                           <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-                      
+
                       {/* Answer Content */}
-                      <div 
+                      <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
                           expandedItem === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                         }`}
@@ -864,7 +856,7 @@ export default function LoginPage() {
                   <h3 className="text-[#2a2a2f] text-base font-bold leading-[1.4] text-center">
                     Still need help?
                   </h3>
-                  <button 
+                  <button
                     onClick={() => setShowContactSupport(true)}
                     className="flex items-center gap-2 text-[#a1a1a1] hover:text-[#6e4eff] transition-colors"
                   >
@@ -883,9 +875,9 @@ export default function LoginPage() {
       {/* Top Right Buttons - Only show when not in help modal or contact sales */}
       {!showHelpModal && !showContactSales && (
         <div className="absolute top-[8.9%] right-[4.4%] flex gap-3" data-name="Frame 1171279609" data-node-id="800:30478">
-        <button 
+        <button
           onClick={() => setShowHelpModal(true)}
-          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors" 
+          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors"
           data-name="Button" data-node-id="800:30479"
         >
           <div className="w-5 h-5 flex items-center justify-center" data-name="formkit:help" data-node-id="800:30482">
@@ -901,9 +893,9 @@ export default function LoginPage() {
             Need Help?
           </span>
         </button>
-        <button 
+        <button
           onClick={() => setShowContactSales(true)}
-          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors" 
+          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors"
           data-name="Button" data-node-id="800:30493"
         >
           <div className="w-4 h-4 flex items-center justify-center" data-name="svg-icon → SVG" data-node-id="800:30494">
@@ -943,13 +935,20 @@ export default function LoginPage() {
                   </div>
                 </div>
                 <div className="w-64 h-56 flex items-center justify-center transition-all duration-300" data-name="caitiao问卷101caitiao20230608-01" data-node-id="340:6594">
-                  <img src={slide.image} alt={`${slide.title} Illustration`} className="max-w-full max-h-full object-contain" />
+                  <Image
+                    src={slide.image}
+                    alt={`${slide.title} Illustration`}
+                    width={256}
+                    height={224}
+                    className="max-w-full max-h-full object-contain"
+                    priority={currentSlide === index}
+                  />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        
+
         {/* Elegant Pagination Dots */}
         <div className="flex gap-2 mt-6" data-name="Container" data-node-id="340:6584">
           {carouselSlides.map((_, index) => (
@@ -970,7 +969,7 @@ export default function LoginPage() {
                   <div className="absolute inset-0 rounded-full bg-[#6e4eff] opacity-30 blur-sm"></div>
                 )}
               </div>
-              
+
               {/* Minimal tooltip */}
               <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
@@ -1005,7 +1004,7 @@ export default function LoginPage() {
           {/* Mobile Top Buttons */}
           {!showHelpModal && !showContactSales && (
             <div className="flex gap-2">
-              <button 
+              <button
                 onClick={() => setShowHelpModal(true)}
                 className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
               >
@@ -1018,7 +1017,7 @@ export default function LoginPage() {
                 </div>
                 <span className="text-[#6e4eff] text-xs font-medium">Help</span>
               </button>
-              <button 
+              <button
                 onClick={() => setShowContactSales(true)}
                 className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
               >
@@ -1119,30 +1118,48 @@ export default function LoginPage() {
                         <div className="text-center text-[#2a2a2f] text-sm font-normal mb-3">
                           Enter the OTP sent to {formatPhoneNumber(phoneNumber)}
                         </div>
-                        
-                        {/* OTP Input Boxes */}
-                        <div className="flex gap-2 justify-center mb-4">
+
+                        {/* Individual OTP Input Boxes */}
+                        <div className="flex gap-3 justify-center mb-4">
                           {[0, 1, 2, 3, 4, 5].map((index) => (
-                            <div key={index} className="w-10 h-10 border border-[#e9e9e9] focus-within:border-[#6e4eff] transition-colors flex items-center justify-center">
+                            <div
+                              key={index}
+                              className={`w-12 h-12 border flex items-center justify-center p-3 relative transition-colors ${
+                                otpError ? 'border-red-500' :
+                                isLoading ? 'border-[#6e4eff]' :
+                                'border-[#e9e9e9] focus-within:border-[#6e4eff]'
+                              }`}
+                              data-name="otp input field"
+                            >
                               <input
                                 id={`otp-${index}`}
-                                type="text"
+                                type="tel"
                                 inputMode="numeric"
                                 pattern="[0-9]*"
-                                maxLength={1}
                                 value={otp[index] || ''}
                                 onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
                                 onPaste={handleOtpPaste}
-                                className="w-full h-full text-center text-[#6e4eff] text-lg font-bold tracking-widest bg-transparent outline-none border-none"
                                 disabled={isLoading}
+                                className={`w-full h-full text-center text-[#6e4eff] text-xl font-bold tracking-widest bg-transparent outline-none ${
+                                  isLoading ? 'opacity-50' : ''
+                                }`}
+                                maxLength={1}
                                 autoComplete="off"
                                 autoFocus={index === 0 && isOtpSent && !isOtpVerified}
                               />
+                              {isLoading && index === 5 && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg className="animate-spin h-4 w-4 text-[#6e4eff]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                  </svg>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
-                        
+
                         {otpError && (
                           <div className="text-red-500 text-xs text-center mb-4">
                             {otpError}
@@ -1211,7 +1228,7 @@ export default function LoginPage() {
                 <div className="text-center">
                   <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Support</h2>
                   <p className="text-sm text-[#a1a1a1] mb-6">Get help from our support team</p>
-                  
+
                   <div className="space-y-4">
                     <a href="mailto:support@tabapp.club" className="block w-full h-12 bg-[#6e4eff] text-white font-semibold flex items-center justify-center hover:bg-[#5a3fd9] transition-colors">
                       Email Support
@@ -1239,12 +1256,12 @@ export default function LoginPage() {
                   </span>
                 </button>
 
-                <div className="text-center">
-                  <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Sales</h2>
-                  <p className="text-sm text-[#a1a1a1] mb-6">Get in touch with our sales team</p>
-                  
-                  <form onSubmit={(e) => { e.preventDefault(); console.log('Sales form submitted:', salesForm); setSalesForm({ fullName: '', email: '', phoneNumber: '', requirement: '' }); }}>
-                    <div className="space-y-4 mb-6">
+                 <div className="text-center">
+                   <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Sales</h2>
+                   <p className="text-sm text-[#a1a1a1] mb-6">Get in touch with our sales team</p>
+
+                   <form onSubmit={(e) => { e.preventDefault(); }}>
+                     <div className="space-y-4 mb-6">
                       <input
                         type="text"
                         placeholder="Full Name"
@@ -1277,7 +1294,7 @@ export default function LoginPage() {
                         required
                       />
                     </div>
-                    
+
                     <button
                       type="submit"
                       className="w-full h-12 bg-[#6e4eff] text-white font-semibold hover:bg-[#5a3fd9] transition-colors"
@@ -1307,7 +1324,7 @@ export default function LoginPage() {
                 <div className="text-center">
                   <h2 className="text-lg font-bold text-[#2a2a2f] mb-2">Need help?</h2>
                   <p className="text-sm text-[#a1a1a1] mb-6">Find answers to common questions</p>
-                  
+
                   <div className="space-y-3 mb-6">
                     {faqItems.map((item, index) => (
                       <div key={index} className="border border-[#e9e9e9]">
@@ -1343,7 +1360,7 @@ export default function LoginPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="text-center">
                     <h3 className="text-base font-bold text-[#2a2a2f] mb-2">Still need help?</h3>
                     <button

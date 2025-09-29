@@ -16,12 +16,6 @@ export function CreateTemplateModal({ onClose }: CreateTemplateModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle template creation logic here
-    console.log('Creating template:', {
-      name: templateName,
-      type: templateType,
-      category: templateCategory,
-      description
-    });
     onClose();
   };
 

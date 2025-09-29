@@ -4,7 +4,12 @@ import React from 'react';
 import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 
-export function BusinessServicesContent() {
+interface BusinessServicesContentProps {
+  title?: string;
+  description?: string;
+}
+
+export function BusinessServicesContent({ title = "Business Services", description = "Explore comprehensive business services and solutions for your organization." }: BusinessServicesContentProps) {
   const { isCollapsed, isMobile } = useSidebar();
 
   // Force uncollapsed state on mobile
@@ -30,18 +35,18 @@ export function BusinessServicesContent() {
             </div>
 
             {/* Main Heading */}
-            <div className="space-y-3">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-                The Next Big Thing is
-                <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Brewing
-                </span>
-              </h1>
-              <p className="text-base text-gray-600 leading-relaxed max-w-lg mx-auto">
-                We&apos;re crafting something extraordinary. Our business services platform is in development,
-                designed to revolutionize how you manage and grow your business.
-              </p>
-            </div>
+             <div className="space-y-3">
+               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                 {title} is
+                 <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                   Brewing
+                 </span>
+               </h1>
+               <p className="text-base text-gray-600 leading-relaxed max-w-lg mx-auto">
+                 We&apos;re crafting something extraordinary. Our {description.toLowerCase()} platform is in development,
+                 designed to revolutionize how you manage and grow your business.
+               </p>
+             </div>
 
 
 
