@@ -20,14 +20,14 @@ const DataCenterHeader = ({ onImportClick, onExportClick }: DataCenterHeaderProp
         <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
           <button
             onClick={onImportClick}
-            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
+            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50  transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
           >
             <ImportIcon />
             <span>Import</span>
           </button>
           <button
             onClick={onExportClick}
-            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
+            className="flex-1 sm:flex-none px-4 h-9 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-[14px] leading-[1.4] hover:text-white hover:bg-[#6E4EFF] focus:ring-[#6E4EFF]/50  transition-all duration-200 ease-in-out flex items-center justify-center gap-2 whitespace-nowrap"
           >
             <ExportIcon />
             <span>Export</span>

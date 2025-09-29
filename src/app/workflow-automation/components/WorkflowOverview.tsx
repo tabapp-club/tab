@@ -162,11 +162,11 @@ export function WorkflowOverview() {
               <button
                 key={index}
                 onClick={() => handleQuickAction(action.action)}
-                className={`${action.gradient} ${action.hoverGradient} p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105 hover:shadow-lg group border border-white/50`}
+                className={`${action.gradient} ${action.hoverGradient} p-4 rounded-lg text-left transition-all duration-300 transform  hover:shadow-lg group border border-white/50`}
               >
                 <div className="flex flex-col h-full">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className={`${action.iconBg} p-2 rounded-md group-hover:scale-110 transition-all duration-300`}>
+                    <div className={`${action.iconBg} p-2 rounded-md  transition-all duration-300`}>
                       <IconComponent size={20} className={action.iconColor} />
                     </div>
                     <h3 className={`font-semibold text-base ${action.textColor}`}>{action.title}</h3>

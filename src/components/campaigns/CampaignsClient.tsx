@@ -88,7 +88,7 @@ export function CampaignsClient() {
           <MobileHeaderButton />
             <button
               onClick={handleCreateCampaign}
-              className="flex items-center justify-center gap-2 h-9 px-3 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out active:scale-[0.98] flex-shrink-0"
+              className="flex items-center justify-center gap-2 h-9 px-3 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out  flex-shrink-0"
               style={{ height: '36px' }}
             >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

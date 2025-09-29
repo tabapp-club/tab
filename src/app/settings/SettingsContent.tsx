@@ -329,7 +329,7 @@ export function SettingsContent() {
   useEffect(() => {
     const section = searchParams.get('section');
     const tab = searchParams.get('tab');
-    const validSections = ['account-settings', 'integrations', 'user-management', 'login-security', 'payments-billing', 'data-privacy', 'help-support'];
+    const validSections = ['account-settings', 'data-privacy', 'help-support'];
     const validTabs = ['user-profile', 'business-profile'];
 
     if (section && validSections.includes(section)) {
@@ -501,85 +501,6 @@ export function SettingsContent() {
               </button>
 
 
-              <button
-                onClick={() => {
-                  setActiveSection('user-management');
-                  updateURL('user-management');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'user-management'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">User management</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Manage team members & access permissions
-                  </span>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveSection('login-security');
-                  updateURL('login-security');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'login-security'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Login and security</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Password & session management
-                  </span>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveSection('integrations');
-                  updateURL('integrations');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'integrations'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Integrations</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Connect POS systems & third-party apps
-                  </span>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveSection('payments-billing');
-                  updateURL('payments-billing');
-                  if (isMobile) setShowContent(true);
-                }}
-                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
-                  activeSection === 'payments-billing'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">Payments & Billing</span>
-                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
-                    Subscription plans & payment methods
-                  </span>
-                </div>
-              </button>
 
               <button
                 onClick={() => {
@@ -764,7 +685,7 @@ export function SettingsContent() {
                     <div className="pt-4 flex gap-3">
                       <button
                         onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
-                        className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]"
+                        className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out"
                       >
                         Save Changes
                       </button>
@@ -780,7 +701,7 @@ export function SettingsContent() {
               )}
 
 
-              {activeSection === 'integrations' && (
+              {false && activeSection === 'integrations' && (
                 <div className="space-y-6">
                   {/* Header Section */}
                   <div className="border-b border-gray-100 pb-4">
@@ -1510,10 +1431,10 @@ export function SettingsContent() {
                 </div>
               )}
 
-              {activeSection === 'user-management' && (
+              {false && activeSection === 'user-management' && (
                 <div className="space-y-4">
                   <div className="flex justify-end items-center">
-                      <button onClick={() => setShowAddMember(!showAddMember)} className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                      <button onClick={() => setShowAddMember(!showAddMember)} className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                         {showAddMember ? 'Close' : 'Add Employee'}
                     </button>
                   </div>
@@ -1631,7 +1552,7 @@ export function SettingsContent() {
                             setShowAddMember(false);
                             setShowRoleDropdown(false);
                           }}
-                          className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
+                          className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
                         >
                           Add Employee
                         </button>
@@ -1641,7 +1562,7 @@ export function SettingsContent() {
                             setShowAddMember(false);
                             setShowRoleDropdown(false);
                           }}
-                          className="h-9 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-gray-200 hover:to-gray-300 hover:shadow-md hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
+                          className="h-9 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-gray-200 hover:to-gray-300 hover:shadow-md transition-all duration-300 ease-in-out w-full sm:w-auto"
                         >
                           Cancel
                         </button>
@@ -1767,7 +1688,7 @@ export function SettingsContent() {
                                     setEditingMember(null);
                                     setShowEditRoleDropdown(false);
                                   }}
-                                  className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
+                                  className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
                                 >
                                   Save Changes
                                 </button>
@@ -1776,7 +1697,7 @@ export function SettingsContent() {
                                     setEditingMember(null);
                                     setShowEditRoleDropdown(false);
                                   }}
-                                  className="h-9 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-gray-200 hover:to-gray-300 hover:shadow-md hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98] w-full sm:w-auto"
+                                  className="h-9 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-gray-200 hover:to-gray-300 hover:shadow-md transition-all duration-300 ease-in-out w-full sm:w-auto"
                                 >
                                   Cancel
                                 </button>
@@ -1847,7 +1768,7 @@ export function SettingsContent() {
                 </div>
               )}
 
-              {activeSection === 'login-security' && (
+              {false && activeSection === 'login-security' && (
                 <div className="space-y-4">
                   <div className="space-y-4">
                     <div className="border border-gray-200 rounded-[4px] p-4">
@@ -1904,7 +1825,7 @@ export function SettingsContent() {
                 </div>
               )}
 
-              {activeSection === 'payments-billing' && (
+              {false && activeSection === 'payments-billing' && (
                 <div className="space-y-4">
                   <div className="space-y-4">
                     <div className="border border-gray-200 rounded-[4px] p-4">
@@ -1978,7 +1899,7 @@ export function SettingsContent() {
               {activeSection === 'help-support' && (
                 <div className="space-y-6">
                   {/* Help Center Section */}
-                  <div className="space-y-4">
+                  {false && <div className="space-y-4">
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">Help Center</h2>
                       <p className="text-gray-600 text-sm">Find answers to common questions and learn how to use our platform.</p>
@@ -2104,12 +2025,12 @@ export function SettingsContent() {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
                           />
                         </div>
-                        <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                        <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                           Search
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </div>}
 
                   {/* Contact Support Section */}
                   <div className="space-y-4">
@@ -2136,22 +2057,18 @@ export function SettingsContent() {
                             <div className="space-y-2 mb-3">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs text-gray-500">General Support</span>
-                                <span className="text-xs font-medium text-gray-900">+1 (555) 123-4567</span>
+                                <span className="text-xs font-medium text-gray-900">+91 9618610909</span>
                               </div>
                               <div className="flex items-center justify-between">
                                 <span className="text-xs text-gray-500">Technical Support</span>
-                                <span className="text-xs font-medium text-gray-900">+1 (555) 987-6543</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs text-gray-500">Emergency (24/7)</span>
-                                <span className="text-xs font-medium text-gray-900">+1 (555) 911-0000</span>
+                                <span className="text-xs font-medium text-gray-900">+91 897771997</span>
                               </div>
                             </div>
                             <div className="flex items-center space-x-2 mb-3">
                               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                               <span className="text-xs text-green-600 font-medium">Available 24/7</span>
                             </div>
-                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                               Call Now
                             </button>
                           </div>
@@ -2172,9 +2089,9 @@ export function SettingsContent() {
                               Send us a detailed message and we&apos;ll respond within 24 hours.
                             </p>
                             <div className="flex items-center space-x-2 mb-3">
-                              <span className="text-xs text-gray-500">support@businessdashboard.com</span>
+                              <span className="text-xs text-gray-500">connect@tribly.ai</span>
                             </div>
-                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                               Send Email
                             </button>
                           </div>
@@ -2261,43 +2178,13 @@ export function SettingsContent() {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]">
+                          <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                             Submit Request
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    {/* Support Resources */}
-                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-6">
-                      <div className="flex items-start space-x-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-1">Additional Resources</h4>
-                          <p className="text-sm text-gray-600 mb-3">
-                            Explore our comprehensive documentation, video tutorials, and community resources.
-                          </p>
-                          <div className="flex flex-wrap gap-3">
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
-                              Video Tutorials
-                            </button>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
-                              Community Forum
-                            </button>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
-                              Status Page
-                            </button>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
-                              Release Notes
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -2890,7 +2777,7 @@ export function SettingsContent() {
                   <div className="pt-4 flex gap-3">
                     <button
                       onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
-                      className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]"
+                      className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out"
                     >
                       Save Changes
                     </button>

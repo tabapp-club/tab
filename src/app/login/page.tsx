@@ -103,7 +103,7 @@ export default function LoginPage() {
   const validatePhoneNumber = (phone: string) => {
     // Remove all non-digits
     const cleanPhone = phone.replace(/\D/g, '');
-    
+
     // Check if it's a valid Indian mobile number
     if (cleanPhone.length === 10) {
       const firstDigit = cleanPhone[0];
@@ -112,7 +112,7 @@ export default function LoginPage() {
         return { isValid: true, formatted: cleanPhone };
       }
     }
-    
+
     return { isValid: false, formatted: cleanPhone };
   };
 
@@ -158,9 +158,9 @@ export default function LoginPage() {
   const handleSendOTP = async () => {
     setError('');
     setOtpError('');
-    
+
     const validation = validatePhoneNumber(phoneNumber);
-    
+
     if (!validation.isValid) {
       setError('Please enter a valid 10-digit mobile number');
       return;
@@ -183,7 +183,7 @@ export default function LoginPage() {
   // Handle OTP verification
   const handleVerifyOTP = async () => {
     setOtpError('');
-    
+
     if (!validateOTP(otp)) {
       setOtpError('Please enter a valid 6-digit OTP');
       return;
@@ -220,7 +220,7 @@ export default function LoginPage() {
   // Handle resend OTP
   const handleResendOTP = async () => {
     if (isResendDisabled) return;
-    
+
     setOtpError('');
     setIsLoading(true);
     try {
@@ -332,7 +332,7 @@ export default function LoginPage() {
   const handleAutoVerifyOTP = async (otpCode: string) => {
     setOtpError('');
     setIsLoading(true);
-    
+
     try {
       const isValid = await verifyOTP(phoneNumber, otpCode);
       if (isValid) {
@@ -386,7 +386,7 @@ export default function LoginPage() {
     if (pastedData.length <= 6) {
       setOtp(pastedData);
       setOtpError('');
-      
+
       // Focus the next empty field or the last field
       const nextIndex = Math.min(pastedData.length, 5);
       requestAnimationFrame(() => {
@@ -395,7 +395,7 @@ export default function LoginPage() {
           nextInput.focus();
         }
       });
-      
+
       // Auto-verify if all 6 digits are pasted
       if (pastedData.length === 6) {
         setTimeout(() => {
@@ -427,12 +427,12 @@ export default function LoginPage() {
                 <path d="M413.878 334.245H473.684V350.245H407.567L413.878 334.245Z" fill="#AB6AFF"/>
                 <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                 <defs>
-                  <linearGradient id="paint0_linear_7845_13502" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#9747FF" />
-                    <stop offset="0.289538" stopColor="#6420BD" />
-                    <stop offset="0.684985" stopColor="#6420BD" />
-                    <stop offset="0.966994" stopColor="#9747FF" />
-                  </linearGradient>
+                <linearGradient id="paint0_linear_7845_13502" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#9747FF"/>
+                <stop offset="0.289538" stopColor="#6420BD"/>
+                <stop offset="0.684985" stopColor="#6420BD"/>
+                <stop offset="0.966994" stopColor="#9747FF"/>
+                </linearGradient>
                 </defs>
               </svg>
             </div>
@@ -491,7 +491,7 @@ export default function LoginPage() {
                     <div className="text-center text-[#2a2a2f] text-sm font-normal mb-6" data-node-id="293:4975">
                       Enter the 6-digit OTP sent to {formatPhoneNumber(phoneNumber)}
                     </div>
-                    
+
                     {/* Individual OTP Input Boxes */}
                     <div className="flex gap-3 justify-center mb-4">
                       {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -532,7 +532,7 @@ export default function LoginPage() {
                         </div>
                       ))}
                     </div>
-                    
+
                     {otpError && (
                       <div className="text-red-500 text-xs mt-2 text-center">
                         {otpError}
@@ -633,7 +633,7 @@ export default function LoginPage() {
                       Email
                     </h3>
                     <div className="w-full flex items-center justify-center">
-                      <a 
+                      <a
                         href="mailto:info@tabapp.club"
                         className="text-[#a1a1a1] text-base leading-[1.4] text-center hover:text-[#6e4eff] transition-colors"
                       >
@@ -650,7 +650,7 @@ export default function LoginPage() {
                       Contact
                     </h3>
                     <div className="w-full flex items-center justify-center">
-                      <a 
+                      <a
                         href="tel:+918977719997"
                         className="text-[#a1a1a1] text-base leading-[1.4] text-center hover:text-[#6e4eff] transition-colors"
                       >
@@ -814,12 +814,12 @@ export default function LoginPage() {
                         className="w-full h-12 flex items-center justify-between px-4 cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <span className="text-[#a1a1a1] text-sm text-left">{item.question}</span>
-                        <svg 
-                          width="24" 
-                          height="24" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="#a1a1a1" 
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#a1a1a1"
                 strokeWidth="2"
                           className={`transition-transform duration-300 ease-in-out ${
                             expandedItem === index ? 'rotate-180' : 'rotate-0'
@@ -828,9 +828,9 @@ export default function LoginPage() {
                           <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-                      
+
                       {/* Answer Content */}
-                      <div 
+                      <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
                           expandedItem === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                         }`}
@@ -856,7 +856,7 @@ export default function LoginPage() {
                   <h3 className="text-[#2a2a2f] text-base font-bold leading-[1.4] text-center">
                     Still need help?
                   </h3>
-                  <button 
+                  <button
                     onClick={() => setShowContactSupport(true)}
                     className="flex items-center gap-2 text-[#a1a1a1] hover:text-[#6e4eff] transition-colors"
                   >
@@ -875,9 +875,9 @@ export default function LoginPage() {
       {/* Top Right Buttons - Only show when not in help modal or contact sales */}
       {!showHelpModal && !showContactSales && (
         <div className="absolute top-[8.9%] right-[4.4%] flex gap-3" data-name="Frame 1171279609" data-node-id="800:30478">
-        <button 
+        <button
           onClick={() => setShowHelpModal(true)}
-          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors" 
+          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors"
           data-name="Button" data-node-id="800:30479"
         >
           <div className="w-5 h-5 flex items-center justify-center" data-name="formkit:help" data-node-id="800:30482">
@@ -893,9 +893,9 @@ export default function LoginPage() {
             Need Help?
           </span>
         </button>
-        <button 
+        <button
           onClick={() => setShowContactSales(true)}
-          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors" 
+          className="bg-white h-9 px-3 border border-[#e9e9e9] flex items-center gap-2 hover:bg-gray-50 transition-colors"
           data-name="Button" data-node-id="800:30493"
         >
           <div className="w-4 h-4 flex items-center justify-center" data-name="svg-icon → SVG" data-node-id="800:30494">
@@ -948,7 +948,7 @@ export default function LoginPage() {
             ))}
           </div>
         </div>
-        
+
         {/* Elegant Pagination Dots */}
         <div className="flex gap-2 mt-6" data-name="Container" data-node-id="340:6584">
           {carouselSlides.map((_, index) => (
@@ -962,14 +962,14 @@ export default function LoginPage() {
               <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentSlide
                   ? 'bg-[#6e4eff] scale-125'
-                  : 'bg-[#d1d5db] hover:bg-[#9ca3af] hover:scale-110'
+                  : 'bg-[#d1d5db] hover:bg-[#9ca3af] '
               }`}>
                 {/* Subtle glow for active dot */}
                 {index === currentSlide && (
                   <div className="absolute inset-0 rounded-full bg-[#6e4eff] opacity-30 blur-sm"></div>
                 )}
               </div>
-              
+
               {/* Minimal tooltip */}
               <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap">
@@ -1004,7 +1004,7 @@ export default function LoginPage() {
           {/* Mobile Top Buttons */}
           {!showHelpModal && !showContactSales && (
             <div className="flex gap-2">
-              <button 
+              <button
                 onClick={() => setShowHelpModal(true)}
                 className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
               >
@@ -1017,7 +1017,7 @@ export default function LoginPage() {
                 </div>
                 <span className="text-[#6e4eff] text-xs font-medium">Help</span>
               </button>
-              <button 
+              <button
                 onClick={() => setShowContactSales(true)}
                 className="bg-white h-8 px-2 border border-[#e9e9e9] flex items-center gap-1 hover:bg-gray-50 transition-colors text-xs"
               >
@@ -1048,10 +1048,10 @@ export default function LoginPage() {
                     <path d="M384.256 334.38H318.051V350.38H378.522L384.256 334.38Z" fill="#AB6AFF"/>
                     <defs>
                     <linearGradient id="paint0_linear_7845_13502_mobile" x1="262" y1="-57.8295" x2="255.517" y2="598.37" gradientUnits="userSpaceOnUse">
-                 <stop stopColor="#9747FF"/>
-                 <stop offset="0.289538" stopColor="#6420BD"/>
-                 <stop offset="0.684985" stopColor="#6420BD"/>
-                 <stop offset="0.966994" stopColor="#9747FF"/>
+                    <stop stopColor="#9747FF"/>
+                    <stop offset="0.289538" stopColor="#6420BD"/>
+                    <stop offset="0.684985" stopColor="#6420BD"/>
+                    <stop offset="0.966994" stopColor="#9747FF"/>
                     </linearGradient>
                     </defs>
                   </svg>
@@ -1118,7 +1118,7 @@ export default function LoginPage() {
                         <div className="text-center text-[#2a2a2f] text-sm font-normal mb-3">
                           Enter the OTP sent to {formatPhoneNumber(phoneNumber)}
                         </div>
-                        
+
                         {/* Individual OTP Input Boxes */}
                         <div className="flex gap-3 justify-center mb-4">
                           {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -1159,7 +1159,7 @@ export default function LoginPage() {
                             </div>
                           ))}
                         </div>
-                        
+
                         {otpError && (
                           <div className="text-red-500 text-xs text-center mb-4">
                             {otpError}
@@ -1228,7 +1228,7 @@ export default function LoginPage() {
                 <div className="text-center">
                   <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Contact Support</h2>
                   <p className="text-sm text-[#a1a1a1] mb-6">Get help from our support team</p>
-                  
+
                   <div className="space-y-4">
                     <a href="mailto:support@tabapp.club" className="block w-full h-12 bg-[#6e4eff] text-white font-semibold flex items-center justify-center hover:bg-[#5a3fd9] transition-colors">
                       Email Support
@@ -1294,7 +1294,7 @@ export default function LoginPage() {
                         required
                       />
                     </div>
-                    
+
                     <button
                       type="submit"
                       className="w-full h-12 bg-[#6e4eff] text-white font-semibold hover:bg-[#5a3fd9] transition-colors"
@@ -1324,7 +1324,7 @@ export default function LoginPage() {
                 <div className="text-center">
                   <h2 className="text-lg font-bold text-[#2a2a2f] mb-2">Need help?</h2>
                   <p className="text-sm text-[#a1a1a1] mb-6">Find answers to common questions</p>
-                  
+
                   <div className="space-y-3 mb-6">
                     {faqItems.map((item, index) => (
                       <div key={index} className="border border-[#e9e9e9]">
@@ -1360,7 +1360,7 @@ export default function LoginPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="text-center">
                     <h3 className="text-base font-bold text-[#2a2a2f] mb-2">Still need help?</h3>
                     <button
@@ -1383,4 +1383,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

@@ -432,23 +432,33 @@ export function BusinessLogList({
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span>Issue Date: {format(new Date(entry.timestamp), 'dd-MM-yyyy')}</span>
-                    {(() => {
-                      const userStatus = getUserStatus(entry.customerPhone, data || []);
-                      return userStatus === 'New User' ? (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <div className="w-1 h-1 bg-emerald-500 rounded-full mr-1 animate-pulse"></div>
-                          <span className="hidden sm:inline">New User</span>
-                          <span className="sm:hidden">N</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                          <div className="w-1 h-1 bg-blue-500 rounded-full mr-1"></div>
-                          <span className="hidden sm:inline">Returning</span>
-                          <span className="sm:hidden">R</span>
-                        </span>
-                      );
-                    })()}
+                    {format(new Date(entry.timestamp), 'h:mm a • MMM d, yyyy')}
+                    {entry.isNewCustomer ? (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <div className="w-1 h-1 bg-emerald-500 rounded-full mr-1 animate-pulse"></div>
+                        <span className="hidden sm:inline">New</span>
+                        <span className="sm:hidden">N</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        <div className="w-1 h-1 bg-blue-500 rounded-full mr-1"></div>
+                        <span className="hidden sm:inline">Returning</span>
+                        <span className="sm:hidden">R</span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditEntry(entry)}
+                      className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
+                    >
+                      <svg className="w-2.5 h-2.5 mr-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Edit
+                    </Button>
                   </div>
                    <div className="flex gap-1">
                      <Button

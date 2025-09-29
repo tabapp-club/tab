@@ -1103,7 +1103,7 @@ export function PlatformBudgetContent() {
                 </div>
                 <button
                   onClick={() => setSelectedBudgetType(selectedBudgetType === 'custom' ? 'balanced' : 'custom')}
-                  className="w-full h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
+                  className="w-full h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  focus:ring-[#6E4EFF]/50  transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
                 >
                   {selectedBudgetType === 'custom' ? 'Try AI Suggested Budgets' : 'Create Custom Budget'}
                 </button>
@@ -1118,7 +1118,7 @@ export function PlatformBudgetContent() {
                 </div>
                 <button
                   onClick={() => setSelectedBudgetType(selectedBudgetType === 'custom' ? 'balanced' : 'custom')}
-                  className="h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] focus:ring-[#6E4EFF]/50 active:scale-[0.98] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
+                  className="h-9 px-6 py-1 rounded font-semibold text-[14px] bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  focus:ring-[#6E4EFF]/50  transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap relative overflow-hidden"
                 >
                   {selectedBudgetType === 'custom' ? 'Try AI Suggested Budgets' : 'Create Custom Budget'}
                 </button>

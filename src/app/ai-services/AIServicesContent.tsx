@@ -474,7 +474,7 @@ export function AIServicesContent() {
                       {aiFeatures.map((feature) => (
                         <div
                           key={feature.id}
-                          className={`${feature.gradient} p-3 sm:p-4 rounded-2xl text-gray-500 transform hover:scale-105 transition-all duration-300 cursor-pointer border border-blue-200 w-[calc(66.67vw-1rem)] sm:w-auto sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center ${
+                          className={`${feature.gradient} p-3 sm:p-4 rounded-2xl text-gray-500 transform  transition-all duration-300 cursor-pointer border border-blue-200 w-[calc(66.67vw-1rem)] sm:w-auto sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center ${
                             feature.id === 'analytics' ? 'border-blue-200' :
                             feature.id === 'predictions' ? 'border-purple-200' :
                             feature.id === 'optimization' ? 'border-green-200' :
@@ -514,7 +514,7 @@ export function AIServicesContent() {
                       <button
                         key={index}
                         onClick={() => handleQuestionClick(question.text)}
-                        className="group py-2.5 sm:py-3 px-3 sm:px-4 text-left bg-transparent border border-gray-200 rounded-[100px] hover:border-[#6E4EFF] transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-transparent w-fit flex-shrink-0"
+                        className="group py-2.5 sm:py-3 px-3 sm:px-4 text-left bg-transparent border border-gray-200 rounded-[100px] hover:border-[#6E4EFF] transition-all duration-300 transform  focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-transparent w-fit flex-shrink-0"
                         aria-label={`Ask: ${question.text}`}
                       >
                         <div className="flex items-center justify-between w-full">
@@ -561,7 +561,7 @@ export function AIServicesContent() {
                         <button
                           onClick={() => handleSendMessage()}
                           disabled={!message.trim()}
-                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform hover:scale-105"
+                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
                           aria-label="Send message"
                         >
                           <svg
@@ -685,7 +685,7 @@ export function AIServicesContent() {
                       <button
                         onClick={() => handleSendMessage()}
                         disabled={!message.trim() || isLoading}
-                        className="w-9 h-9 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform hover:scale-105"
+                        className="w-9 h-9 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
                         aria-label="Send message"
                       >
                         {isLoading ? (
@@ -751,7 +751,7 @@ export function AIServicesContent() {
                         <button
                           onClick={() => handleSendMessage()}
                           disabled={!message.trim() || isLoading}
-                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform hover:scale-105"
+                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
                           aria-label="Send message"
                         >
                           {isLoading ? (

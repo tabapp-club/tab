@@ -37,7 +37,7 @@ const CampaignsHeader = ({ onCreateCampaign }: CampaignsHeaderProps) => {
             {/* Create Campaign Button */}
             <button
               onClick={onCreateCampaign}
-              className="flex items-center justify-center gap-2 h-9 px-4 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 ease-in-out active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 h-9 px-4 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  transition-all duration-300 ease-in-out "
             >
               <PlusIcon />
               <span>Create Campaign</span>
