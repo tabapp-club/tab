@@ -357,12 +357,7 @@ export function BusinessLogForm() {
       }
 
       // Call the new API endpoint
-      console.log('Submitting to API:', apiPayload);
-      console.log('API URL:', `${config.api.baseURL}/dashboard/v1/business_entries/${businessId}`);
-      console.log('Token exists:', !!token);
-      console.log('Business ID:', businessId);
-      console.log('Expected URL from user: http://127.0.0.1:8000/dashboard/v1/business_entries/68d6905b43f258518dbc156c');
-      console.log('User business ID from context:', user?.business_id);
+
 
       const apiResponse = await api.business.createBusinessEntry(token!, businessId!, apiPayload);
       console.log('API Response:', apiResponse);
