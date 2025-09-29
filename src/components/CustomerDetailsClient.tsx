@@ -229,16 +229,6 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
               </div>
 
-              {/* Action Buttons - Desktop Only */}
-              <div className="hidden lg:flex gap-3 w-fit pb-10">
-                <button className="px-4 py-2 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
-                  Send Message
-                </button>
-                <button className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
-                  Create Campaign
-                </button>
-              </div>
-
               {/* Customer Profile Card */}
               <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
@@ -702,16 +692,6 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Action Buttons - Mobile Only */}
-              <div className="lg:hidden flex gap-3 w-full mt-6 pb-10">
-                <button className="flex-1 px-4 py-3 text-[#6E4EFF] bg-white border border-[#6E4EFF] rounded font-semibold text-sm hover:bg-[#6E4EFF] hover:text-white transition-all duration-200">
-                  Send Message
-                </button>
-                <button className="flex-1 px-4 py-3 bg-[#6E4EFF] text-white rounded font-semibold text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200">
-                  Create Campaign
-                </button>
               </div>
             </div>
           </div>
