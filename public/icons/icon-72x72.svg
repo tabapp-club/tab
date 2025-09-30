@@ -5,10 +5,10 @@
 <path d="M384.256 334.379H318.051V350.379H378.521L384.256 334.379Z" fill="#AB6AFF"/>
 <defs>
 <linearGradient id="paint0_linear_7873_13725" x1="256" y1="-56.5052" x2="249.665" y2="584.667" gradientUnits="userSpaceOnUse">
-<stop stop-color="#9747FF"/>
-<stop offset="0.289538" stop-color="#6420BD"/>
-<stop offset="0.684985" stop-color="#6420BD"/>
-<stop offset="0.966994" stop-color="#9747FF"/>
+<stop stopColor="#9747FF"/>
+<stop offset="0.289538" stopColor="#6420BD"/>
+<stop offset="0.684985" stopColor="#6420BD"/>
+<stop offset="0.966994" stopColor="#9747FF"/>
 </linearGradient>
 </defs>
 </svg>

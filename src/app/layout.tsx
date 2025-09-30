@@ -53,6 +53,15 @@ export const metadata: Metadata = {
   },
 };
 
+export const generateViewport = () => ({
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#f6f6f6",
+});
+
 
 export default function RootLayout({
   children,
@@ -103,18 +112,18 @@ export default function RootLayout({
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
-                      console.log('SW registered: ', registration);
+                      // SW registered successfully
                     })
                     .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                      // SW registration failed
                     });
                 });
               }
-              
+
               // PWA Zoom Prevention JavaScript
               (function() {
                 'use strict';
-                
+
                 // Prevent zoom on double tap
                 let lastTouchEnd = 0;
                 document.addEventListener('touchend', function (event) {
@@ -124,42 +133,42 @@ export default function RootLayout({
                   }
                   lastTouchEnd = now;
                 }, false);
-                
+
                 // Prevent zoom on pinch
                 document.addEventListener('gesturestart', function (event) {
                   event.preventDefault();
                 });
-                
+
                 document.addEventListener('gesturechange', function (event) {
                   event.preventDefault();
                 });
-                
+
                 document.addEventListener('gestureend', function (event) {
                   event.preventDefault();
                 });
-                
+
                 // Prevent zoom on wheel with ctrl key
                 document.addEventListener('wheel', function (event) {
                   if (event.ctrlKey) {
                     event.preventDefault();
                   }
                 }, { passive: false });
-                
+
                 // Prevent zoom on keyboard shortcuts
                 document.addEventListener('keydown', function (event) {
                   if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-' || event.key === '=' || event.key === '0')) {
                     event.preventDefault();
                   }
                 });
-                
+
                 // Force viewport settings
                 function setViewport() {
                   const viewport = document.querySelector('meta[name="viewport"]');
                   if (viewport) {
                     // Check if device is tablet
-                    const isTablet = /tablet|ipad|android(?!.*mobile)/i.test(navigator.userAgent) || 
+                    const isTablet = /tablet|ipad|android(?!.*mobile)/i.test(navigator.userAgent) ||
                                    (window.innerWidth >= 768 && window.innerWidth <= 1024);
-                    
+
                     if (isTablet) {
                       // Allow scaling on tablets for better rotation experience
                       viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover');
@@ -169,26 +178,26 @@ export default function RootLayout({
                     }
                   }
                 }
-                
+
                 // Set viewport on load and resize
                 setViewport();
                 window.addEventListener('resize', setViewport);
                 window.addEventListener('orientationchange', setViewport);
-                
+
                 // Prevent text selection that could trigger zoom
                 document.addEventListener('selectstart', function (event) {
                   if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA' && !event.target.contentEditable) {
                     event.preventDefault();
                   }
                 });
-                
+
                 // Prevent context menu that could trigger zoom
                 document.addEventListener('contextmenu', function (event) {
                   if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA' && !event.target.contentEditable) {
                     event.preventDefault();
                   }
                 });
-                
+
                 // Force font size on input focus to prevent zoom
                 document.addEventListener('focusin', function (event) {
                   if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.contentEditable) {
@@ -197,7 +206,7 @@ export default function RootLayout({
                     event.target.style.textSizeAdjust = '100%';
                   }
                 });
-                
+
                 // Additional mobile-specific prevention
                 if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                   // Prevent zoom on touch events
@@ -206,13 +215,13 @@ export default function RootLayout({
                       event.preventDefault();
                     }
                   }, { passive: false });
-                  
+
                   document.addEventListener('touchmove', function (event) {
                     if (event.touches.length > 1) {
                       event.preventDefault();
                     }
                   }, { passive: false });
-                  
+
                   // Prevent zoom on orientation change
                   window.addEventListener('orientationchange', function () {
                     setTimeout(function () {

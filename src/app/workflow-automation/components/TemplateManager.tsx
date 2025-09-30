@@ -74,7 +74,6 @@ export function TemplateManager() {
           updates: { isActive: !template.isActive }
         });
       } catch (error) {
-        console.error('Failed to toggle template status:', error);
       }
     }
   };
@@ -95,7 +94,6 @@ export function TemplateManager() {
         setEditingTemplate({});
         setIsCreating(false);
       } catch (error) {
-        console.error('Failed to create template:', error);
       }
     }
   };
@@ -110,7 +108,6 @@ export function TemplateManager() {
         setEditingTemplate({});
         setIsEditing(false);
       } catch (error) {
-        console.error('Failed to update template:', error);
       }
     }
   };

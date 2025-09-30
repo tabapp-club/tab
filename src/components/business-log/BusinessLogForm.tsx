@@ -7,21 +7,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DynamicFieldManager } from "./DynamicFieldManager";
 import { CustomerValidation } from "./CustomerValidation";
 import { ProductServiceInput } from "./ProductServiceInput";
-import { useBusinessLogData } from "@/hooks/useBusinessLogData";
+import { useBusinessLogData, type BusinessLogEntry } from "@/hooks/useBusinessLogData";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { config } from "@/lib/config";
+import { useToast } from "@/hooks/useToast";
+import { ToastContainer } from "@/components/ui/toast";
 
-interface BusinessLogEntry {
+interface DynamicField {
   id: string;
-  customerPhone: string;
-  customerName: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  customFields: Record<string, any>;
-  timestamp: Date;
-  isNewCustomer: boolean;
+  type: 'text' | 'number' | 'select' | 'date' | 'checkbox' | 'percentage';
+  label: string;
+  required: boolean;
+  options?: string[];
+  placeholder?: string;
+  originalLabel?: string; // For API compatibility
+  field_type?: string; // Original API field type
 }
 
 interface FormData {
@@ -31,67 +33,53 @@ interface FormData {
     name: string;
     quantity: number;
     price: number;
+    customFields: Record<string, any>;
   }>;
-  customFields: Record<string, any>;
 }
 
 export function BusinessLogForm() {
+  // CACHE BUST: Fixed cgst error - v2.0
   const { addEntry } = useBusinessLogData();
+  const { user } = useAuth();
+  const { toasts, success, error, removeToast } = useToast();
+  const token = user?.accessToken;
+  const businessId = user?.business_id;
+
   const [formData, setFormData] = useState<FormData>({
     customerPhone: '',
     customerName: '',
-    products: [{ name: '', quantity: 1, price: 0 }],
-    customFields: {}
+    products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [customFields, setCustomFields] = useState<Array<{
-    id: string;
-    type: 'text' | 'number' | 'select' | 'date' | 'checkbox';
-    label: string;
-    required: boolean;
-    options?: string[];
-    placeholder?: string;
-  }>>([]);
+  const [customFields, setCustomFields] = useState<DynamicField[]>([]);
 
-  // Load custom fields from localStorage and sync with changes
+  // Load custom fields from API
+  const { data: apiFields, isLoading: fieldsLoading, error: fieldsError } = useQuery({
+    queryKey: ['customFields', businessId],
+    queryFn: async () => {
+      if (!token || !businessId) throw new Error('Not authenticated');
+      const response = await api.business.getCustomFields(token, businessId);
+      return response.data;
+    },
+    enabled: !!token && !!businessId,
+  });
+
+  // Map API fields to DynamicField format
   useEffect(() => {
-    const loadFields = () => {
-      const savedFields = localStorage.getItem('businessLogCustomFields');
-      if (savedFields) {
-        try {
-          const parsed = JSON.parse(savedFields);
-          setCustomFields(Array.isArray(parsed) ? parsed : []);
-        } catch (error) {
-          console.error('Error parsing custom fields:', error);
-          setCustomFields([]);
-        }
-      } else {
-        // No default fields - user must create their own
-        setCustomFields([]);
-      }
-    };
-
-    loadFields();
-
-    // Listen for changes to custom fields from other tabs
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'businessLogCustomFields') {
-        loadFields();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also check for changes periodically (for same-tab updates)
-    const interval = setInterval(loadFields, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
+    if (apiFields) {
+      const mappedFields: DynamicField[] = apiFields.map((field, index) => ({
+        id: `api-${index}`,
+        type: field.field_type.toLowerCase() as DynamicField['type'],
+        label: field.label,
+        required: field.required,
+        placeholder: field.placeholder,
+        originalLabel: field.label,
+        field_type: field.field_type,
+      }));
+      setCustomFields(mappedFields);
+    }
+  }, [apiFields]);
 
   const [customerValidation, setCustomerValidation] = useState<{
     isValidating: boolean;
@@ -124,18 +112,18 @@ export function BusinessLogForm() {
 
   const validateCustomer = async (phone: string) => {
     setCustomerValidation(prev => ({ ...prev, isValidating: true }));
-    
+
     try {
       // Check existing entries for this phone number
       const existingEntries = localStorage.getItem('businessLogEntries');
       let foundCustomer = null;
-      
+
       if (existingEntries) {
         const entries = JSON.parse(existingEntries);
-        const existingEntry = entries.find((entry: any) => 
+        const existingEntry = entries.find((entry: any) =>
           entry.customerPhone.replace(/\D/g, '') === phone
         );
-        
+
         if (existingEntry) {
           foundCustomer = {
             phone: existingEntry.customerPhone,
@@ -143,7 +131,7 @@ export function BusinessLogForm() {
           };
         }
       }
-      
+
       // If not found in entries, check mock customers
       if (!foundCustomer) {
         const mockCustomers = [
@@ -153,10 +141,10 @@ export function BusinessLogForm() {
           { phone: '9876543213', name: 'Alice Brown', email: 'alice@example.com' },
           { phone: '9876543214', name: 'Charlie Wilson', email: 'charlie@example.com' }
         ];
-        
+
         foundCustomer = mockCustomers.find(c => c.phone === phone);
       }
-      
+
       setTimeout(() => {
         if (foundCustomer) {
           setCustomerValidation({
@@ -181,7 +169,6 @@ export function BusinessLogForm() {
         }
       }, 800);
     } catch (error) {
-      console.error('Error validating customer:', error);
       setCustomerValidation({
         isValidating: false,
         customerFound: false,
@@ -209,10 +196,25 @@ export function BusinessLogForm() {
     }));
   };
 
+  const handleProductCustomFieldChange = (productIndex: number, fieldId: string, value: any) => {
+    const updatedProducts = [...formData.products];
+    updatedProducts[productIndex] = {
+      ...updatedProducts[productIndex],
+      customFields: {
+        ...updatedProducts[productIndex].customFields,
+        [fieldId]: value
+      }
+    };
+    setFormData(prev => ({
+      ...prev,
+      products: updatedProducts
+    }));
+  };
+
   const addProduct = () => {
     setFormData(prev => ({
       ...prev,
-      products: [...prev.products, { name: '', quantity: 1, price: 0 }]
+      products: [...prev.products, { name: '', quantity: 1, price: 0, customFields: {} }]
     }));
   };
 
@@ -227,22 +229,24 @@ export function BusinessLogForm() {
   };
 
   const calculateTotal = () => {
-    const subtotal = formData.products.reduce((sum, product) => {
-      return sum + (product.quantity * product.price);
-    }, 0);
+    try {
+      const subtotal = formData.products.reduce((sum, product) => {
+        return sum + (product.quantity * product.price);
+      }, 0);
 
-    const cgst = formData.customFields.cgst || 0;
-    const discount = formData.customFields.discount || 0;
-    
-    const cgstAmount = (subtotal * cgst) / 100;
-    const total = subtotal + cgstAmount - discount;
-    
-    return { subtotal, cgstAmount, discount, total };
+      // For now, just return the subtotal as total
+      // Tax and discount calculations can be added back later if needed
+      // CACHE BUST: Fixed cgst error - removed customFields references
+      return { subtotal, total: subtotal };
+    } catch (error) {
+      console.error('Error in calculateTotal:', error);
+      return { subtotal: 0, total: 0 };
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.customerPhone || !formData.customerName) {
       alert('Please fill in all required fields (Phone and Name)');
@@ -265,42 +269,157 @@ export function BusinessLogForm() {
 
     try {
       const totals = calculateTotal();
-      
-      const entry: BusinessLogEntry = {
-        id: Date.now().toString(),
-        customerPhone: formData.customerPhone,
-        customerName: formData.customerName,
-        products: formData.products,
-        totalAmount: totals.total,
-        customFields: formData.customFields,
-        timestamp: new Date(),
-        isNewCustomer: !customerValidation.customerFound
+
+      // Map form data to new API schema
+      // This creates a structured payload that matches the business entries API specification
+      // Using null instead of empty strings for better API compatibility
+      const apiPayload = {
+        entry: {
+          number: `ENT-${Date.now()}`,
+          status: "DRFT",
+          type: "SALE",
+          issued_at: new Date().toISOString(),
+          currency: "INR"
+        },
+        buyer: {
+          name: formData.customerName,
+          legal_name: formData.customerName,
+          gstin: null,
+          tax_id: null,
+          address: {
+            line1: null,
+            line2: null,
+            city: null,
+            state: null,
+            pincode: null,
+            country: "India"
+          },
+          contact: {
+            phone: formData.customerPhone,
+            email: null
+          },
+          fssai: null,
+          store_id: null
+        },
+        totals: {
+          items_subtotal: totals.subtotal,
+          discounts_total: 0,
+          tax_total: 0,
+          rounding: 0,
+          grand_total: totals.total,
+          paid_total: 0,
+          balance_due: totals.total
+        },
+        items: formData.products.map((product, index) => ({
+          line_id: `ITEM-${index + 1}`,
+          name: product.name,
+          sku: `SKU-${Date.now()}-${index + 1}`,
+          category: "General",
+          quantity: product.quantity,
+          unit_of_measure: "pcs",
+          unit_price: product.price,
+          discount: 0,
+          tax_rate: 0,
+          metadata: {
+            ...(Object.keys(product.customFields || {}).length > 0 ? product.customFields : {}),
+            product_id: `PROD-${Date.now()}-${index + 1}`,
+            created_at: new Date().toISOString()
+          }
+        })),
+        payments: [],
+        source: "business-log",
+        ingestion_id: `ING-${Date.now()}`,
+        metadata: {
+          isNewCustomer: !customerValidation.customerFound,
+          form_version: "1.0",
+          submitted_at: new Date().toISOString(),
+          total_products: formData.products.length,
+          custom_fields_count: formData.products.reduce((count, product) =>
+            count + Object.keys(product.customFields || {}).length, 0
+          ),
+          additional_notes: null,
+          tags: null
+        }
       };
 
-      await addEntry(entry);
-      
-      // Trigger a custom event to notify other components
-      window.dispatchEvent(new CustomEvent('businessLogUpdated'));
-      
-      setSubmitSuccess(true);
-      setFormData({
-        customerPhone: '',
-        customerName: '',
-        products: [{ name: '', quantity: 1, price: 0 }],
-        customFields: {}
+      // Validate required data before API call
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      if (!businessId) {
+        throw new Error('No business ID available');
+      }
+      if (!apiPayload.entry.number) {
+        throw new Error('Entry number is missing');
+      }
+      if (!apiPayload.buyer.name) {
+        throw new Error('Buyer name is missing');
+      }
+
+      // Call the new API endpoint
+
+
+      const apiResponse = await api.business.createBusinessEntry(token!, businessId!, apiPayload);
+      console.log('API Response:', apiResponse);
+
+      // Check if response is successful (201 Created)
+      if (apiResponse && apiResponse.data && apiResponse.data.id) {
+        // Show success toast
+        console.log('Showing success toast...');
+        success("Entry created successfully!", 4000);
+
+        // Reset form data
+        setFormData({
+          customerPhone: '',
+          customerName: '',
+          products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
+        });
+
+        // Reset customer validation
+        setCustomerValidation({
+          isValidating: false,
+          customerFound: false,
+          customerData: null
+        });
+
+        // Trigger a custom event to notify other components
+        window.dispatchEvent(new CustomEvent('businessLogUpdated'));
+      } else {
+        // Show error toast for unexpected response
+        error("Entry created but with unexpected response format", 4000);
+      }
+    } catch (err) {
+      console.error('Error submitting entry:', err);
+      console.error('Error type:', typeof err);
+      console.error('Error details:', {
+        message: err instanceof Error ? err.message : 'No message',
+        status: (err as any)?.status,
+        statusText: (err as any)?.statusText,
+        response: (err as any)?.response,
+        data: (err as any)?.data,
+        fullError: err
       });
-      
-      // Reset customer validation
-      setCustomerValidation({
-        isValidating: false,
-        customerFound: false,
-        customerData: null
-      });
-      
-      setTimeout(() => setSubmitSuccess(false), 3000);
-    } catch (error) {
-      console.error('Error submitting entry:', error);
-      alert('Error submitting entry. Please try again.');
+
+      let errorMessage = 'Unknown error';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        const errorObj = err as any;
+        if (errorObj.message) {
+          errorMessage = errorObj.message;
+        } else if (errorObj.statusText) {
+          errorMessage = errorObj.statusText;
+        } else if (errorObj.status) {
+          errorMessage = `HTTP ${errorObj.status}`;
+        } else if (errorObj.response?.data?.message) {
+          errorMessage = errorObj.response.data.message;
+        } else {
+          errorMessage = JSON.stringify(err);
+        }
+      }
+
+      // Show error toast
+      error(`Error submitting entry: ${errorMessage}. Please try again.`, 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -309,18 +428,23 @@ export function BusinessLogForm() {
   const totals = calculateTotal();
 
   return (
-    <div className="space-y-6">
-      {/* Success Message */}
-      {submitSuccess && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="flex items-center">
-            <svg className="w-5 h-5 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-green-800 font-medium">Entry submitted successfully!</p>
-          </div>
-        </div>
-      )}
+    <div className="space-y-6" data-version="2.0-fixed-cgst">
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+
+      {/* Test Toast Button - Remove this later */}
+      <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-sm text-yellow-800 mb-2">Debug: Test toast system</p>
+        <button
+          onClick={() => {
+            console.log('Test button clicked');
+            success("Test toast message!", 3000);
+          }}
+          className="px-3 py-1 bg-yellow-200 text-yellow-800 rounded text-sm hover:bg-yellow-300"
+        >
+          Test Success Toast
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Customer Information */}
@@ -352,7 +476,7 @@ export function BusinessLogForm() {
                 </div>
                 <CustomerValidation validation={customerValidation} />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                   Customer Name <span className="text-red-500">*</span>
@@ -392,7 +516,7 @@ export function BusinessLogForm() {
                       required
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                       Quantity <span className="text-red-500">*</span>
@@ -408,7 +532,7 @@ export function BusinessLogForm() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                       Price (₹) <span className="text-red-500">*</span>
@@ -426,7 +550,26 @@ export function BusinessLogForm() {
                     </div>
                   </div>
                 </div>
-                
+
+                {/* Custom Fields for this Product */}
+                {fieldsLoading ? (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-center py-4">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#6E4EFF]"></div>
+                      <span className="ml-2 text-sm text-gray-600">Loading additional fields...</span>
+                    </div>
+                  </div>
+                ) : customFields.length > 0 ? (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">Additional Fields</h4>
+                    <DynamicFieldManager
+                      customFields={customFields}
+                      formData={{ customFields: product.customFields }}
+                      onCustomFieldChange={(fieldId, value) => handleProductCustomFieldChange(index, fieldId, value)}
+                    />
+                  </div>
+                ) : null}
+
                 {formData.products.length > 1 && (
                   <div className="flex justify-end">
                     <Button
@@ -444,7 +587,7 @@ export function BusinessLogForm() {
                 )}
               </div>
             ))}
-            
+
             <Button
               type="button"
               variant="outline"
@@ -459,22 +602,6 @@ export function BusinessLogForm() {
           </CardContent>
         </Card>
 
-        {/* Dynamic Fields - Only show if there are custom fields */}
-        {customFields.length > 0 && (
-          <DynamicFieldManager
-            customFields={customFields}
-            formData={formData}
-            onCustomFieldChange={(fieldId, value) => {
-              setFormData(prev => ({
-                ...prev,
-                customFields: {
-                  ...prev.customFields,
-                  [fieldId]: value
-                }
-              }));
-            }}
-          />
-        )}
 
         {/* Bill Summary */}
         <Card>
@@ -487,18 +614,6 @@ export function BusinessLogForm() {
                 <span className="text-gray-600">Subtotal:</span>
                 <span className="font-medium">₹{totals.subtotal.toFixed(2)}</span>
               </div>
-              {formData.customFields.cgst && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">CGST ({formData.customFields.cgst}%):</span>
-                  <span className="font-medium">₹{totals.cgstAmount.toFixed(2)}</span>
-                </div>
-              )}
-              {formData.customFields.discount && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Discount:</span>
-                  <span className="font-medium text-green-600">-₹{totals.discount.toFixed(2)}</span>
-                </div>
-              )}
               <hr className="my-2" />
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total Amount:</span>
@@ -517,8 +632,7 @@ export function BusinessLogForm() {
               setFormData({
                 customerPhone: '',
                 customerName: '',
-                products: [{ name: '', quantity: 1, price: 0 }],
-                customFields: {}
+                products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
               });
             }}
             className="w-full sm:w-auto border-[#d1d5db] text-[#2a2a2f] hover:bg-gray-50"

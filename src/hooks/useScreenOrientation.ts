@@ -78,14 +78,15 @@ export function useScreenOrientation() {
     });
   }, []);
 
-  const lockOrientation = useCallback(async (orientation: OrientationLockType) => {
+  const lockOrientation = useCallback(async (orientation: OrientationType) => {
     if (!orientationState.isSupported || !orientationState.canRotate) {
       console.warn('Screen orientation lock not supported');
       return false;
     }
 
     try {
-      await screen.orientation.lock(orientation);
+      // Type assertion for the lock method which may not be in all TypeScript definitions
+      await (screen.orientation as any).lock(orientation);
       return true;
     } catch (error) {
       console.error('Failed to lock orientation:', error);
@@ -126,7 +127,7 @@ export function useScreenOrientation() {
     if (typeof window !== 'undefined') {
       window.addEventListener('orientationchange', handleOrientationChange);
       window.addEventListener('resize', handleResize);
-      
+
       // Screen Orientation API events
       if ('orientation' in screen) {
         screen.orientation.addEventListener('change', handleOrientationChange);
@@ -137,7 +138,7 @@ export function useScreenOrientation() {
       if (typeof window !== 'undefined') {
         window.removeEventListener('orientationchange', handleOrientationChange);
         window.removeEventListener('resize', handleResize);
-        
+
         if ('orientation' in screen) {
           screen.orientation.removeEventListener('change', handleOrientationChange);
         }

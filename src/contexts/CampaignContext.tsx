@@ -138,7 +138,6 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({ children }) 
         try {
           return JSON.parse(stored);
         } catch (error) {
-          console.error('Error parsing stored campaign data:', error);
         }
       }
     }
@@ -152,7 +151,6 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({ children }) 
         try {
           return JSON.parse(stored);
         } catch (error) {
-          console.error('Error parsing stored platforms:', error);
         }
       }
     }

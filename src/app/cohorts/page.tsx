@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { CohortsClient } from "@/components/cohorts/CohortsClient";
+import { Sidebar } from "@/components/Sidebar";
+import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const metadata: Metadata = {
@@ -21,7 +22,15 @@ export const metadata: Metadata = {
 export default function CohortsPage() {
   return (
     <ProtectedRoute>
-      <CohortsClient />
+      <div className="bg-white">
+        <div className="flex relative">
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Main Content */}
+          <BusinessServicesContent title="Cohorts" description="Manage and analyze customer cohorts with detailed insights and segmentation data" />
+        </div>
+      </div>
     </ProtectedRoute>
   );
 }

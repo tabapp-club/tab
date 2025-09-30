@@ -1,21 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface BusinessLogEntry {
-  id: string;
-  customerPhone: string;
-  customerName: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  totalAmount: number;
-  customFields: Record<string, any>;
-  timestamp: Date;
-  isNewCustomer: boolean;
-}
+import type { BusinessLogEntry } from '@/hooks/useBusinessLogData';
 
 interface BusinessLogStatsProps {
   data: BusinessLogEntry[] | undefined;

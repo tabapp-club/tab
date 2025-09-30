@@ -405,7 +405,6 @@ export function NewCampaignContent() {
           }
         }
       } catch (error) {
-        console.error('Error loading new campaign data from session storage:', error);
       }
     }
   }, [campaignTypeFromUrl]);
@@ -428,7 +427,6 @@ export function NewCampaignContent() {
       try {
           await router.push(`/new-campaign/audience?type=${selectedCampaignType.type}`);
       } catch (error) {
-        console.error('Navigation error:', error);
         setIsNavigating(false);
       }
     }

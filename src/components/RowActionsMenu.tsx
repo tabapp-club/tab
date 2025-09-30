@@ -51,7 +51,6 @@ const RowActionsMenu = ({ isOpen, onClose, onViewDetails, rowData }: RowActionsM
 
         <button
           onClick={() => {
-            console.log('Edit customer:', rowData);
             onClose();
           }}
           className="w-full px-4 py-2 text-left text-[14px] text-[#2a2a2f] hover:bg-gray-50 transition-colors flex items-center gap-3"
@@ -62,7 +61,6 @@ const RowActionsMenu = ({ isOpen, onClose, onViewDetails, rowData }: RowActionsM
 
         <button
           onClick={() => {
-            console.log('Delete customer:', rowData);
             onClose();
           }}
           className="w-full px-4 py-2 text-left text-[14px] text-[#f04646] hover:bg-red-50 transition-colors flex items-center gap-3"

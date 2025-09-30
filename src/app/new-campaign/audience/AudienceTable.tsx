@@ -72,7 +72,6 @@ const AudienceTable = ({ searchTerm = '', data = [] }: AudienceTableProps) => {
   };
 
   const handleAction = (action: string, user: UserData) => {
-    console.log(`${action} for user:`, user);
     setOpenMenu(null);
     // Here you can implement the actual action logic
   };

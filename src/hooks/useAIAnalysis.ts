@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
+import { config } from '@/lib/config';
 
 interface AIAnalysisApiResponse {
   success: boolean;
@@ -44,7 +45,7 @@ export function useAIAnalysis({ cardType, filterDays, dateRange, enabled = true 
         throw new Error('Authentication required');
       }
 
-      const url = "https://api.tabapp.club/v1/ai-analysis";
+      const url = `${config.api.baseURL}/ai-analysis`;
       const params = new URLSearchParams();
 
       params.append('type_', getTypeParam(cardType));
