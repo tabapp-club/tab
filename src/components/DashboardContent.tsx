@@ -475,9 +475,9 @@ export function DashboardContent() {
               {/* Mobile: Privacy links first, then copyright */}
               <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-6">
                 <div className="flex items-center space-x-6">
-                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Privacy</a>
-                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Terms</a>
-                  <a href="#" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Cookies</a>
+                  <a href="/privacy" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Privacy</a>
+                  <a href="/terms" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Terms</a>
+                  <a href="/cookies" className="text-[12px] text-[#696969] hover:text-[#2a2a2f] transition-colors">Cookies</a>
                 </div>
                 <span className="text-[12px] text-[#696969]">© 2025 tribly. All rights reserved.</span>
               </div>
