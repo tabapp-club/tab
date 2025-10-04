@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useBusiness } from "@/contexts/BusinessContext";
+import { BusinessFeatures } from "@/lib/api/types";
 import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
-import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft } from "lucide-react";
+import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock } from "lucide-react";
 
 // Add custom styles for animations
 const styles = `
@@ -172,9 +174,13 @@ const CollapseIcon = () => (
   <ChevronLeft size={22} color="#2A2A2F" />
 );
 
+const LockIcon = ({colorCode}: {colorCode: string}) => (
+  <Lock size={12} color={colorCode} />
+);
 
 
-const menuItems = [
+
+const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) => [
   {
     id: "dashboard",
     label: "Dashboard",
@@ -182,7 +188,8 @@ const menuItems = [
     icon: DashboardIcon,
     href: "/dashboard",
     active: true,
-    notificationCount: 0
+    notificationCount: 0,
+    featureKey: "dashboard" as const
   },
   {
     id: "data-center",
@@ -190,15 +197,17 @@ const menuItems = [
     description: "Manage your data",
     icon: DataCenterIcon,
     href: "/data-center",
-    notificationCount: 0
+    notificationCount: 0,
+    featureKey: "data_center" as const
   },
   {
     id: "ai-services",
     label: "tribly AI for business",
-    description: "AI-powered insights",
+    description: "AI-powered insights & chat",
     icon: AIServicesIcon,
     href: "/ai-services",
-    notificationCount: 0
+    notificationCount: 0,
+    featureKey: "tribly_ai" as const
   },
   {
     id: "cohorts",
@@ -207,7 +216,7 @@ const menuItems = [
     icon: CohortsIcon,
     href: "/cohorts",
     notificationCount: 0,
-    disabled: true
+    featureKey: "cohorts" as const
   },
   {
     id: "workflow-automation",
@@ -216,7 +225,7 @@ const menuItems = [
     icon: WorkflowAutomationIcon,
     href: "/workflow-automation",
     notificationCount: 0,
-    disabled: true
+    featureKey: "automation" as const
   },
   {
     id: "achievements",
@@ -225,7 +234,7 @@ const menuItems = [
     icon: AchievementsIcon,
     href: "/achievements",
     notificationCount: 0,
-    disabled: true
+    featureKey: "achievements" as const
   },
   {
     id: "campaigns",
@@ -234,7 +243,7 @@ const menuItems = [
     icon: CampaignsIcon,
     href: "/campaigns",
     notificationCount: 0,
-    disabled: true
+    featureKey: "campaigns" as const
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   // {
@@ -259,6 +268,18 @@ export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar, isMobile, isMobileOpen, setIsMobileOpen, closeMobileSidebar } = useSidebar();
   const { logout, user } = useAuth();
+  const { hasFeature, isLoading: featuresLoading, features } = useBusiness();
+
+  // Debug logging for BusinessContext
+  console.log('Sidebar BusinessContext state:', {
+    features,
+    featuresLoading,
+    hasFeatureDashboard: hasFeature('dashboard'),
+    hasFeatureCohorts: hasFeature('cohorts'),
+    hasFeatureAchievements: hasFeature('achievements'),
+    hasFeatureAutomation: hasFeature('automation'),
+    hasFeatureCampaigns: hasFeature('campaigns')
+  });
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showServiceDialog, setShowServiceDialog] = useState(false);
@@ -352,17 +373,30 @@ export function Sidebar() {
       {/* Navigation Menu */}
       <nav className={`flex-1 px-2 sm:px-3 py-2 overflow-y-auto transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className="space-y-4 sm:space-y-5">
-          {menuItems.map((item) => {
+          {getMenuItems(hasFeature).map((item) => {
             const Icon = item.icon;
             const isActive =
               (item.id === "dashboard" && pathname === "/dashboard") ||
+              (item.id === "data-center" && pathname === "/data-center") ||
+              (item.id === "ai-services" && pathname === "/ai-services") ||
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "cohorts" && pathname === "/cohorts") ||
               (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
 
-            const isDisabled = item.disabled;
+            const isDisabled = !hasFeature(item.featureKey);
             const effectiveIsActive = isActive && !isDisabled;
+
+            // Debug logging for feature access
+            if (item.featureKey === 'cohorts' || item.featureKey === 'achievements' || item.featureKey === 'automation' || item.featureKey === 'campaigns') {
+              console.log(`Sidebar feature check for ${item.featureKey}:`, {
+                featureKey: item.featureKey,
+                hasFeature: hasFeature(item.featureKey),
+                isDisabled,
+                features: features,
+                isLoading: featuresLoading
+              });
+            }
 
             return (
               <Link
@@ -397,6 +431,11 @@ export function Sidebar() {
                   }`}>
                   <Icon colorCode={isDisabled ? "#6b7280" : effectiveIsActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
                   </div>
+                  {isDisabled && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                      <LockIcon colorCode="#6b7280" />
+                    </div>
+                  )}
                 </div>
                 <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'

@@ -16,10 +16,10 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (phoneNumber: string, otp: string) => Promise<boolean>;
+  login: (phoneNumber: string, otp: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   sendOTP: (phoneNumber: string) => Promise<boolean>;
-  verifyOTP: (phoneNumber: string, otp: string) => Promise<boolean>;
+  verifyOTP: (phoneNumber: string, otp: string) => Promise<{ success: boolean; error?: string }>;
   isAuthenticated: boolean;
 }
 
@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const verifyOTP = async (phoneNumber: string, otp: string): Promise<boolean> => {
+  const verifyOTP = async (phoneNumber: string, otp: string): Promise<{ success: boolean; error?: string }> => {
     try {
       setIsLoading(true);
       const response = await api.auth.verifyOTP({ phone_number: phoneNumber, otp });
@@ -124,12 +124,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Message:', message, 'Data:', data);
 
       if (!message || !data || !data.token) {
-        return false;
+        return { success: false, error: 'Invalid response from server' };
       }
 
       // Check if the message indicates success
       if (!message.toLowerCase().includes('successfully')) {
-        return false;
+        return { success: false, error: 'OTP verification failed' };
       }
 
       const token = data.token;
@@ -180,9 +180,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(userData);
       sessionStorage.setItem('user', JSON.stringify(userData));
       sessionStorage.setItem('access_token', token);
-      return true;
-    } catch (error) {
-      return false; // Return false instead of throwing
+      return { success: true };
+    } catch (error: any) {
+      // Check if it's a 404 error (user not registered)
+      if (error.status === 404) {
+        return { success: false, error: 'User not registered' };
+      }
+      // For other errors, return generic failure
+      return { success: false, error: error.message || 'Verification failed' };
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +203,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const login = async (phoneNumber: string, otp: string): Promise<boolean> => {
+  const login = async (phoneNumber: string, otp: string): Promise<{ success: boolean; error?: string }> => {
     // Use verifyOTP for login logic
     return await verifyOTP(phoneNumber, otp);
   };

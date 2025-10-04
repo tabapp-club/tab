@@ -26,14 +26,14 @@ export function TermsContent() {
       content: (
         <div className="space-y-4">
           <p className="text-gray-700 leading-relaxed">
-            Welcome to tribly, a comprehensive business analytics platform that provides real-time insights, 
-            customer analytics, campaign management, and multi-channel communication automation. These Terms 
-            and Conditions ("Terms") govern your use of our services and platform.
+            Welcome to tribly, a comprehensive business analytics platform that provides real-time insights,
+            customer analytics, campaign management, and multi-channel communication automation. These Terms
+            and Conditions (&quot;Terms&quot;) govern your use of our services and platform.
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="font-semibold text-blue-900 mb-2">📋 Agreement to Terms</h4>
             <p className="text-blue-800 text-sm">
-              By accessing or using tribly's services, you agree to be bound by these Terms. 
+              By accessing or using tribly&apos;s services, you agree to be bound by these Terms.
               If you disagree with any part of these terms, you may not access the service.
             </p>
           </div>
@@ -52,7 +52,7 @@ export function TermsContent() {
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
                 <div>
-                  <span className="font-medium">"Service" or "Platform":</span>
+                  <span className="font-medium">&quot;Service&quot; or &quot;Platform&quot;:</span>
                   <p className="text-sm text-gray-600 mt-1">
                     The tribly business analytics platform, including all features, tools, APIs, and related services.
                   </p>
@@ -61,7 +61,7 @@ export function TermsContent() {
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
                 <div>
-                  <span className="font-medium">"User" or "Customer":</span>
+                  <span className="font-medium">&quot;User&quot; or &quot;Customer&quot;:</span>
                   <p className="text-sm text-gray-600 mt-1">
                     Any individual or entity that accesses or uses the Service, including business owners, analysts, and administrators.
                   </p>
@@ -70,7 +70,7 @@ export function TermsContent() {
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
                 <div>
-                  <span className="font-medium">"Content":</span>
+                  <span className="font-medium">&quot;Content&quot;:</span>
                   <p className="text-sm text-gray-600 mt-1">
                     All data, information, analytics, reports, campaigns, and materials uploaded or generated through the Service.
                   </p>
@@ -79,7 +79,7 @@ export function TermsContent() {
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
                 <div>
-                  <span className="font-medium">"Account":</span>
+                  <span className="font-medium">&quot;Account&quot;:</span>
                   <p className="text-sm text-gray-600 mt-1">
                     Your registered account with tribly, including authentication credentials and associated data.
                   </p>
@@ -284,7 +284,7 @@ export function TermsContent() {
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <h4 className="font-semibold text-red-900 mb-2">⚠️ Violation Consequences</h4>
             <p className="text-red-800 text-sm">
-              Violation of these obligations may result in immediate account suspension or termination 
+              Violation of these obligations may result in immediate account suspension or termination
               without notice or refund.
             </p>
           </div>
@@ -351,7 +351,7 @@ export function TermsContent() {
               </li>
               <li className="flex items-start">
                 <span className="text-green-600 mr-2">•</span>
-                <span>Prices may change with 30 days' notice to existing subscribers</span>
+                <span>Prices may change with 30 days&apos; notice to existing subscribers</span>
               </li>
             </ul>
           </div>
@@ -387,7 +387,7 @@ export function TermsContent() {
       content: (
         <div className="space-y-6">
           <div>
-            <h4 className="font-semibold text-gray-900 mb-3">tribly's Intellectual Property</h4>
+            <h4 className="font-semibold text-gray-900 mb-3">tribly&apos;s Intellectual Property</h4>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
@@ -433,7 +433,7 @@ export function TermsContent() {
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <h4 className="font-semibold text-yellow-900 mb-2">⚖️ DMCA Compliance</h4>
             <p className="text-yellow-800 text-sm">
-              tribly respects intellectual property rights and will respond to valid DMCA takedown notices. 
+              tribly respects intellectual property rights and will respond to valid DMCA takedown notices.
               Contact us at legal@tribly.com for copyright concerns.
             </p>
           </div>
@@ -489,7 +489,7 @@ export function TermsContent() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="font-semibold text-blue-900 mb-2">🔒 Security Commitment</h4>
             <p className="text-blue-800 text-sm">
-              We implement industry-standard security measures including encryption, access controls, 
+              We implement industry-standard security measures including encryption, access controls,
               and regular security audits to protect your data.
             </p>
           </div>
@@ -507,7 +507,7 @@ export function TermsContent() {
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
                 <span className="text-orange-600 mr-2">•</span>
-                <span>The Service is provided "as is" without warranties of any kind</span>
+                <span>The Service is provided &quot;as is&quot; without warranties of any kind</span>
               </li>
               <li className="flex items-start">
                 <span className="text-orange-600 mr-2">•</span>
@@ -529,7 +529,7 @@ export function TermsContent() {
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
                 <span className="text-red-600 mr-2">•</span>
-                <span>tribly's liability is limited to the amount paid for the Service in the 12 months preceding the claim</span>
+                <span>tribly&apos;s liability is limited to the amount paid for the Service in the 12 months preceding the claim</span>
               </li>
               <li className="flex items-start">
                 <span className="text-red-600 mr-2">•</span>
@@ -549,7 +549,7 @@ export function TermsContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Indemnification</h4>
             <p className="text-gray-700 leading-relaxed mb-3">
-              Users agree to indemnify and hold harmless tribly from any claims, damages, or expenses 
+              Users agree to indemnify and hold harmless tribly from any claims, damages, or expenses
               arising from their use of the Service or violation of these Terms.
             </p>
             <ul className="space-y-2 text-gray-700">
@@ -615,7 +615,7 @@ export function TermsContent() {
               </li>
               <li className="flex items-start">
                 <span className="text-red-600 mr-2">•</span>
-                <span>We may discontinue the Service with 30 days' notice</span>
+                <span>We may discontinue the Service with 30 days&apos; notice</span>
               </li>
             </ul>
           </div>
@@ -752,7 +752,7 @@ export function TermsContent() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="font-semibold text-blue-900 mb-2">📅 Version History</h4>
             <p className="text-blue-800 text-sm">
-              We maintain a version history of these Terms. Users can access previous versions 
+              We maintain a version history of these Terms. Users can access previous versions
               through their account settings or by contacting support.
             </p>
           </div>
@@ -768,7 +768,7 @@ export function TermsContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">General Support</h4>
             <p className="text-gray-700 leading-relaxed mb-4">
-              For questions about these Terms, technical support, or general inquiries, 
+              For questions about these Terms, technical support, or general inquiries,
               please contact us using the information below.
             </p>
           </div>
@@ -822,7 +822,7 @@ export function TermsContent() {
             Terms and Conditions
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Please read these terms carefully before using tribly's business analytics platform 
+            Please read these terms carefully before using tribly&apos;s business analytics platform
             and related services.
           </p>
         </div>
@@ -851,7 +851,7 @@ export function TermsContent() {
           {termsSections.map((section) => {
             const Icon = section.icon;
             const isExpanded = expandedSections.has(section.id);
-            
+
             return (
               <div key={section.id} className="bg-white rounded-lg border border-gray-200 overflow-visible">
                 <button
@@ -872,7 +872,7 @@ export function TermsContent() {
                     )}
                   </div>
                 </button>
-                
+
                 {isExpanded && (
                   <div className="px-6 pb-6 border-t border-gray-100 overflow-visible">
                     <div className="pt-4">
@@ -889,8 +889,8 @@ export function TermsContent() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div className="mb-4 sm:mb-0">
-              <a 
-                href="/dashboard" 
+              <a
+                href="/dashboard"
                 className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors flex items-center"
               >
                 ← Back to Dashboard

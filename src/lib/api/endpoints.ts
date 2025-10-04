@@ -9,6 +9,7 @@ import {
   BusinessDataFilters,
   DataCenterFilters,
   CreateCustomFieldRequest,
+  BusinessDetails,
 } from './types';
 
 // Authentication endpoints
@@ -35,15 +36,28 @@ export const business = {
   getBusinessLogEntries: (
     token: string,
     businessId: string,
-    limit?: number,
-    cursor?: string
-  ): Promise<{ message: string; data: any[]; next_cursor?: string }> => {
+    page: number = 1,
+    limit: number = 10,
+    status?: 'new' | 'returning'
+  ): Promise<{
+    message: string;
+    data: {
+      result: any[];
+      has_next: boolean;
+      total_entries_count: number;
+      filtered_entries_count: number;
+      total_pages: number;
+      current_page: number;
+      limit: number;
+    }
+  }> => {
     const params = new URLSearchParams();
-    if (limit) params.append('limit', limit.toString());
-    if (cursor) params.append('cursor', cursor);
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    if (status) params.append('status', status);
     const queryString = params.toString();
     return apiClient.get(
-      `/dashboard/v1/business_log/${businessId}/business_entries${queryString ? `?${queryString}` : ''}`,
+      `/dashboard/v1/business_log/${businessId}/business_entries?${queryString}`,
       { headers: apiClient.withAuth(token) }
     );
   },
@@ -81,6 +95,18 @@ export const business = {
 
   deleteCustomField: (token: string, businessId: string, labels: string): Promise<{ message: string; success?: boolean; error?: string }> =>
     apiClient.delete(`/dashboard/v1/business_log/${businessId}/custom_fields?labels=${encodeURIComponent(labels)}`, { headers: apiClient.withAuth(token) }),
+
+  // Customer exists check
+  checkCustomerExists: (token: string, businessId: string, phoneNumber: string): Promise<{ message: string; data: { name?: string; phone?: string } | null }> => {
+    const params = new URLSearchParams();
+    params.append('phone_number', phoneNumber);
+    params.append('business_id', businessId);
+    return apiClient.get(`/dashboard/v1/customers/customer_exists?${params.toString()}`, { headers: apiClient.withAuth(token) });
+  },
+
+  // Get business details with features
+  getBusinessDetails: (token: string): Promise<{ message: string; data: BusinessDetails }> =>
+    apiClient.get('/dashboard/v1/business/me', { headers: apiClient.withAuth(token) }),
 };
 
 // Data center endpoints

@@ -6,7 +6,7 @@ import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/Button";
-import { History } from 'lucide-react';
+import { History, Send, Plus, Trash2 } from 'lucide-react';
 import DOMPurify from 'dompurify';
 
 interface ChatMessage {
@@ -14,6 +14,7 @@ interface ChatMessage {
   content: string;
   timestamp: Date;
   isUser: boolean;
+  isTyping?: boolean;
 }
 
 interface ChatSession {
@@ -21,6 +22,7 @@ interface ChatSession {
   title: string;
   messages: ChatMessage[];
   createdAt: Date;
+  lastMessageAt: Date;
 }
 
 interface AIFeature {
@@ -37,14 +39,19 @@ export function AIServicesContent() {
   const searchParams = useSearchParams();
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
+
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [showFeatures, setShowFeatures] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Component initialized
+  console.log('AIServicesContent state:', { currentSessionId, showFeatures, chatSessionsLength: chatSessions.length });
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -187,30 +194,33 @@ export function AIServicesContent() {
 
   // Load chat sessions from localStorage on component mount
   useEffect(() => {
-    const savedSessions = localStorage.getItem('ai-chat-sessions');
-    if (savedSessions) {
-      try {
+    try {
+      const savedSessions = localStorage.getItem('tribly-ai-chat-sessions');
+      if (savedSessions) {
         const parsed = JSON.parse(savedSessions);
         setChatSessions(parsed.map((session: any) => ({
           ...session,
           createdAt: new Date(session.createdAt),
+          lastMessageAt: new Date(session.lastMessageAt || session.createdAt),
           messages: session.messages.map((msg: any) => ({
             ...msg,
             timestamp: new Date(msg.timestamp)
           }))
         })));
-      } catch (error) {
-        localStorage.removeItem('ai-chat-sessions');
+        // Chat sessions loaded successfully
       }
+    } catch (error) {
+      console.error('Error loading chat sessions:', error);
+      localStorage.removeItem('tribly-ai-chat-sessions');
     }
   }, []);
 
   // Save chat sessions to localStorage whenever they change
   useEffect(() => {
     if (chatSessions.length > 0) {
-      localStorage.setItem('ai-chat-sessions', JSON.stringify(chatSessions));
+      localStorage.setItem('tribly-ai-chat-sessions', JSON.stringify(chatSessions));
     } else {
-      localStorage.removeItem('ai-chat-sessions');
+      localStorage.removeItem('tribly-ai-chat-sessions');
     }
   }, [chatSessions]);
 
@@ -253,7 +263,8 @@ export function AIServicesContent() {
       id: Date.now().toString(),
       title: "New Chat",
       messages: [],
-      createdAt: new Date()
+      createdAt: new Date(),
+      lastMessageAt: new Date()
     };
     setChatSessions(prev => [newSession, ...prev]);
     setCurrentSessionId(null);
@@ -320,24 +331,31 @@ export function AIServicesContent() {
   };
 
   const handleSendMessage = async (customMessage?: string) => {
-    const messageToSend = customMessage || message.trim();
-    if (!messageToSend) return;
+    try {
+      const messageToSend = customMessage || message.trim();
+      if (!messageToSend) {
+        return;
+      }
 
-    let sessionId = currentSessionId;
-    if (!sessionId) {
-      const newSession: ChatSession = {
-        id: Date.now().toString(),
-        title: "New Chat",
-        messages: [],
-        createdAt: new Date()
-      };
-      setChatSessions(prev => [newSession, ...prev]);
-      sessionId = newSession.id;
-      setCurrentSessionId(sessionId);
-      setShowFeatures(false);
-    }
+      let sessionId = currentSessionId;
+      if (!sessionId) {
+        console.log('Creating new session...');
+        const newSession: ChatSession = {
+          id: Date.now().toString(),
+          title: "New Chat",
+          messages: [],
+          createdAt: new Date(),
+          lastMessageAt: new Date()
+        };
+        setChatSessions(prev => [newSession, ...prev]);
+        sessionId = newSession.id;
+        setCurrentSessionId(sessionId);
+        setShowFeatures(false);
+        console.log('New session created:', sessionId);
+      }
 
-    setIsLoading(true);
+      setIsLoading(true);
+      setIsTyping(true);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -352,7 +370,8 @@ export function AIServicesContent() {
         return {
           ...session,
           title: session.messages.length === 0 ? messageToSend.slice(0, 50) + (messageToSend.length > 50 ? '...' : '') : session.title,
-          messages: updatedMessages
+          messages: updatedMessages,
+          lastMessageAt: new Date()
         };
       }
       return session;
@@ -362,6 +381,7 @@ export function AIServicesContent() {
 
     try {
       const aiResponse = await simulateAIResponse(messageToSend);
+      setIsTyping(false);
 
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -374,12 +394,15 @@ export function AIServicesContent() {
         if (session.id === sessionId) {
           return {
             ...session,
-            messages: [...session.messages, aiMessage]
+            messages: [...session.messages, aiMessage],
+            lastMessageAt: new Date()
           };
         }
         return session;
       }));
     } catch (error) {
+      console.error('Error in handleSendMessage:', error);
+      setIsTyping(false);
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         content: "Sorry, I encountered an error while processing your request. Please try again.",
@@ -391,12 +414,17 @@ export function AIServicesContent() {
         if (session.id === sessionId) {
           return {
             ...session,
-            messages: [...session.messages, errorMessage]
+            messages: [...session.messages, errorMessage],
+            lastMessageAt: new Date()
           };
         }
         return session;
       }));
     } finally {
+      setIsLoading(false);
+    }
+    } catch (outerError) {
+      console.error('Outer error in handleSendMessage:', outerError);
       setIsLoading(false);
     }
   };
@@ -448,13 +476,22 @@ export function AIServicesContent() {
       {/* Mobile Header with Menu Toggle */}
         <header className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
           <MobileHeaderButton />
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition-colors rounded-lg"
-            aria-label="Toggle chat history"
-          >
-            <History className="w-5 h-5 text-[#2a2a2f]" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={createNewChat}
+              className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition-colors rounded-lg"
+              aria-label="New chat"
+            >
+              <Plus className="w-5 h-5 text-[#2a2a2f]" />
+            </button>
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition-colors rounded-lg"
+              aria-label="Toggle chat history"
+            >
+              <History className="w-5 h-5 text-[#2a2a2f]" />
+            </button>
+          </div>
         </header>
 
       {/* Main Content */}
@@ -462,8 +499,10 @@ export function AIServicesContent() {
         <div className="pt-16 sm:pt-12 lg:pt-0 h-full flex flex-col">
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col items-center justify-end max-w-7xl mx-auto w-full pb-20 lg:pb-0">
-            {!currentSessionId || (currentSession && currentSession.messages.length === 0) ? (
+
+            {!currentSessionId ? (
               <>
+
 
 
                 {/* AI Features Showcase */}
@@ -622,7 +661,7 @@ export function AIServicesContent() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                               </svg>
                             </div>
-                            <span className="text-[10px] sm:text-xs font-normal text-[#6E4EFF]">AI Assistant</span>
+                            <span className="text-[10px] sm:text-xs font-normal text-[#6E4EFF]">tribly AI</span>
                           </div>
                         )}
                         <div
@@ -634,16 +673,21 @@ export function AIServicesContent() {
                       </div>
                     </div>
                   ))}
-                  {isLoading && (
+                  {isTyping && (
                     <div className="flex justify-start animate-in fade-in duration-300">
-                      <div className="bg-white border border-gray-100 p-4 rounded">
+                      <div className="bg-white border border-gray-100 p-4 rounded-lg">
                         <div className="flex items-center space-x-3">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                          </div>
                           <div className="flex space-x-1">
                             <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce"></div>
                             <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                             <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                           </div>
-                          <span className="text-sm text-[#2a2a2f]">AI is analyzing your data...</span>
+                          <span className="text-sm text-[#2a2a2f]">tribly AI is thinking...</span>
                         </div>
                       </div>
                     </div>

@@ -79,26 +79,26 @@ export default function DataCenterClient() {
     const urlPage = searchParams.get('page');
     const urlPageSize = searchParams.get('pageSize');
     const urlCard = searchParams.get('card');
-    
+
     if (urlSearch) {
       setSearchTerm(urlSearch);
       setDebouncedSearchTerm(urlSearch);
     }
-    
+
     if (urlPage) {
       const pageNum = parseInt(urlPage);
       if (!isNaN(pageNum) && pageNum > 0) {
         setPage(pageNum);
       }
     }
-    
+
     if (urlPageSize) {
       const pageSizeNum = parseInt(urlPageSize);
       if (!isNaN(pageSizeNum) && [10, 25, 50, 100].includes(pageSizeNum)) {
         setPageSize(pageSizeNum);
       }
     }
-    
+
     if (urlCard) {
       setSelectedCard(urlCard);
     }
@@ -110,13 +110,13 @@ export default function DataCenterClient() {
     const status = searchParams.get('status');
     const visitsFrom = searchParams.get('visitsFrom');
     const visitsTo = searchParams.get('visitsTo');
-    
+
     if (category) urlFilters.category = category.split(',');
     if (userType) urlFilters.userType = userType;
     if (status) urlFilters.status = status;
     if (visitsFrom) urlFilters.no_of_visits_from = parseInt(visitsFrom);
     if (visitsTo) urlFilters.no_of_visits_to = parseInt(visitsTo);
-    
+
     if (Object.keys(urlFilters).length > 0) {
       setFilters(urlFilters);
     }
@@ -126,18 +126,18 @@ export default function DataCenterClient() {
   const updateURL = useCallback(() => {
     const currentParams = new URLSearchParams(searchParams.toString());
     const newParams = new URLSearchParams();
-    
+
     if (searchTerm) newParams.set('search', searchTerm);
     if (page > 1) newParams.set('page', page.toString());
     if (pageSize !== 10) newParams.set('pageSize', pageSize.toString());
     if (selectedCard !== 'total') newParams.set('card', selectedCard);
-    
+
     if (filters.category?.length) newParams.set('category', filters.category.join(','));
     if (filters.userType) newParams.set('userType', filters.userType);
     if (filters.status) newParams.set('status', filters.status);
     if (filters.no_of_visits_from) newParams.set('visitsFrom', filters.no_of_visits_from.toString());
     if (filters.no_of_visits_to) newParams.set('visitsTo', filters.no_of_visits_to.toString());
-    
+
     // Only update URL if parameters have actually changed
     if (currentParams.toString() !== newParams.toString()) {
       const queryString = newParams.toString();
@@ -178,7 +178,7 @@ export default function DataCenterClient() {
     // Skip URL updates during initial load from URL parameters
     const isInitialLoad = !searchTerm && !debouncedSearchTerm && page === 1 && pageSize === 10 && selectedCard === 'total' && Object.keys(filters).length === 0;
     if (isInitialLoad) return;
-    
+
     const urlUpdateTimer = setTimeout(() => {
       updateURL();
     }, 100); // Reduced debounce to prevent history conflicts
@@ -196,13 +196,31 @@ export default function DataCenterClient() {
   // Process the API response data
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
-    const mappedData = mapApiDataToTable(dataCenterResponse.data);
+
+    // Handle nested data structure (data.data) or flat structure (data)
+    let dataArray = [];
+    const responseData = dataCenterResponse.data as any;
+
+    if (Array.isArray(responseData)) {
+      // Flat structure: data is directly an array
+      dataArray = responseData;
+    } else if (responseData && Array.isArray(responseData.data)) {
+      // Nested structure: data.data is the array
+      dataArray = responseData.data;
+    } else {
+      console.warn('DataCenter API response data is not in expected format:', dataCenterResponse);
+      return [];
+    }
+
+    const mappedData = mapApiDataToTable(dataArray);
     return mappedData;
   }, [dataCenterResponse]);
 
-  const total = dataCenterResponse?.total || 0;
-  const metrics = dataCenterResponse?.metrics || null;
-  const categories = dataCenterResponse?.categories || [];
+  // Handle both nested and flat response structures for total, metrics, and categories
+  const responseData = dataCenterResponse?.data as any;
+  const total = responseData?.total || dataCenterResponse?.total || 0;
+  const metrics = responseData?.metrics || dataCenterResponse?.metrics || null;
+  const categories = responseData?.categories || dataCenterResponse?.categories || [];
 
   // Handle stats card click
   const handleCardClick = (cardType: string) => {

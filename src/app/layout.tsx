@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/SidebarContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { BusinessProvider } from "@/contexts/BusinessContext";
 import { PopupProvider } from "@/contexts/PopupContext";
 import { CampaignProvider } from "@/contexts/CampaignContext";
 import { GlobalPopup } from "@/components/GlobalPopup";
@@ -91,8 +92,9 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" sizes="512x512" href="/icons/icon-512x512.svg" />
       </head>
       <body suppressHydrationWarning className={`${manrope.variable} antialiased`}>
-        <QueryProvider>
-          <AuthProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <BusinessProvider>
             <PopupProvider>
               <CampaignProvider>
                 <SidebarProvider>
@@ -103,8 +105,9 @@ export default function RootLayout({
                 </SidebarProvider>
               </CampaignProvider>
             </PopupProvider>
-          </AuthProvider>
-        </QueryProvider>
+          </BusinessProvider>
+        </AuthProvider>
+      </QueryProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +33,7 @@ interface FormData {
     name: string;
     quantity: number;
     price: number;
+    discount: number;
     customFields: Record<string, any>;
   }>;
 }
@@ -48,7 +49,7 @@ export function BusinessLogForm() {
   const [formData, setFormData] = useState<FormData>({
     customerPhone: '',
     customerName: '',
-    products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
+    products: [{ name: '', quantity: 1, price: 0, discount: 0, customFields: {} }]
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,61 +92,63 @@ export function BusinessLogForm() {
     customerData: null
   });
 
-  // Validate customer when phone number changes
-  useEffect(() => {
-    const cleanPhone = formData.customerPhone.replace(/\D/g, '');
-    if (cleanPhone && cleanPhone.length === 10) {
-      validateCustomer(cleanPhone);
-    } else if (cleanPhone.length === 0) {
-      // Reset validation when phone is cleared
-      setCustomerValidation({
-        isValidating: false,
-        customerFound: false,
-        customerData: null
-      });
-      setFormData(prev => ({
-        ...prev,
-        customerName: ''
-      }));
-    }
-  }, [formData.customerPhone]);
-
-  const validateCustomer = async (phone: string) => {
+  const validateCustomer = useCallback(async (phone: string) => {
+    console.log('🔍 validateCustomer called with:', { phone, token: !!token, businessId });
     setCustomerValidation(prev => ({ ...prev, isValidating: true }));
 
     try {
-      // Check existing entries for this phone number
-      const existingEntries = localStorage.getItem('businessLogEntries');
-      let foundCustomer = null;
+      // Call the customer exists API
+      if (token && businessId) {
+        console.log('📞 Making API call to checkCustomerExists...');
+        const response = await api.business.checkCustomerExists(token, businessId, phone);
+        console.log('📥 API response:', response);
 
-      if (existingEntries) {
-        const entries = JSON.parse(existingEntries);
-        const existingEntry = entries.find((entry: any) =>
-          entry.customerPhone.replace(/\D/g, '') === phone
-        );
-
-        if (existingEntry) {
-          foundCustomer = {
-            phone: existingEntry.customerPhone,
-            name: existingEntry.customerName
-          };
+        if (response.data && response.data.name) {
+          // Customer found - fill the name
+          setCustomerValidation({
+            isValidating: false,
+            customerFound: true,
+            customerData: {
+              phone: phone,
+              name: response.data.name
+            }
+          });
+          setFormData(prev => ({
+            ...prev,
+            customerName: response.data?.name || ''
+          }));
+        } else {
+          // Customer not found - clear name
+          setCustomerValidation({
+            isValidating: false,
+            customerFound: false,
+            customerData: null
+          });
+          setFormData(prev => ({
+            ...prev,
+            customerName: ''
+          }));
         }
-      }
+      } else {
+        // Fallback to local storage check if no token/businessId
+        console.log('⚠️ No token or businessId, falling back to local storage check');
+        const existingEntries = localStorage.getItem('businessLogEntries');
+        let foundCustomer = null;
 
-      // If not found in entries, check mock customers
-      if (!foundCustomer) {
-        const mockCustomers = [
-          { phone: '9876543210', name: 'John Doe', email: 'john@example.com' },
-          { phone: '9876543211', name: 'Jane Smith', email: 'jane@example.com' },
-          { phone: '9876543212', name: 'Bob Johnson', email: 'bob@example.com' },
-          { phone: '9876543213', name: 'Alice Brown', email: 'alice@example.com' },
-          { phone: '9876543214', name: 'Charlie Wilson', email: 'charlie@example.com' }
-        ];
+        if (existingEntries) {
+          const entries = JSON.parse(existingEntries);
+          const existingEntry = entries.find((entry: any) =>
+            entry.customerPhone.replace(/\D/g, '') === phone
+          );
 
-        foundCustomer = mockCustomers.find(c => c.phone === phone);
-      }
+          if (existingEntry) {
+            foundCustomer = {
+              phone: existingEntry.customerPhone,
+              name: existingEntry.customerName
+            };
+          }
+        }
 
-      setTimeout(() => {
         if (foundCustomer) {
           setCustomerValidation({
             isValidating: false,
@@ -167,15 +170,40 @@ export function BusinessLogForm() {
             customerName: ''
           }));
         }
-      }, 800);
+      }
     } catch (error) {
+      console.error('Error validating customer:', error);
       setCustomerValidation({
         isValidating: false,
         customerFound: false,
         customerData: null
       });
+      setFormData(prev => ({
+        ...prev,
+        customerName: ''
+      }));
     }
-  };
+  }, [token, businessId]);
+
+  // Validate customer when phone number changes
+  useEffect(() => {
+    const cleanPhone = formData.customerPhone.replace(/\D/g, '');
+    if (cleanPhone && cleanPhone.length === 10) {
+      console.log('📱 Phone number validation triggered:', { cleanPhone, token: !!token, businessId });
+      validateCustomer(cleanPhone);
+    } else if (cleanPhone.length === 0) {
+      // Reset validation when phone is cleared
+      setCustomerValidation({
+        isValidating: false,
+        customerFound: false,
+        customerData: null
+      });
+      setFormData(prev => ({
+        ...prev,
+        customerName: ''
+      }));
+    }
+  }, [formData.customerPhone, validateCustomer]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -214,7 +242,7 @@ export function BusinessLogForm() {
   const addProduct = () => {
     setFormData(prev => ({
       ...prev,
-      products: [...prev.products, { name: '', quantity: 1, price: 0, customFields: {} }]
+      products: [...prev.products, { name: '', quantity: 1, price: 0, discount: 0, customFields: {} }]
     }));
   };
 
@@ -230,17 +258,28 @@ export function BusinessLogForm() {
 
   const calculateTotal = () => {
     try {
-      const subtotal = formData.products.reduce((sum, product) => {
-        return sum + (product.quantity * product.price);
-      }, 0);
+      let subtotal = 0;
+      let totalDiscount = 0;
 
-      // For now, just return the subtotal as total
-      // Tax and discount calculations can be added back later if needed
-      // CACHE BUST: Fixed cgst error - removed customFields references
-      return { subtotal, total: subtotal };
+      formData.products.forEach(product => {
+        const productSubtotal = product.quantity * product.price;
+        const productDiscount = (productSubtotal * product.discount) / 100;
+        const productTotal = productSubtotal - productDiscount;
+
+        subtotal += productSubtotal;
+        totalDiscount += productDiscount;
+      });
+
+      const total = subtotal - totalDiscount;
+
+      return {
+        subtotal,
+        discount: totalDiscount,
+        total: Math.max(0, total) // Ensure total is not negative
+      };
     } catch (error) {
       console.error('Error in calculateTotal:', error);
-      return { subtotal: 0, total: 0 };
+      return { subtotal: 0, discount: 0, total: 0 };
     }
   };
 
@@ -303,7 +342,7 @@ export function BusinessLogForm() {
         },
         totals: {
           items_subtotal: totals.subtotal,
-          discounts_total: 0,
+          discounts_total: totals.discount,
           tax_total: 0,
           rounding: 0,
           grand_total: totals.total,
@@ -318,7 +357,7 @@ export function BusinessLogForm() {
           quantity: product.quantity,
           unit_of_measure: "pcs",
           unit_price: product.price,
-          discount: 0,
+          discount: product.discount,
           tax_rate: 0,
           metadata: {
             ...(Object.keys(product.customFields || {}).length > 0 ? product.customFields : {}),
@@ -372,7 +411,7 @@ export function BusinessLogForm() {
         setFormData({
           customerPhone: '',
           customerName: '',
-          products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
+          products: [{ name: '', quantity: 1, price: 0, discount: 0, customFields: {} }]
         });
 
         // Reset customer validation
@@ -432,19 +471,6 @@ export function BusinessLogForm() {
       {/* Toast Container */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
-      {/* Test Toast Button - Remove this later */}
-      <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <p className="text-sm text-yellow-800 mb-2">Debug: Test toast system</p>
-        <button
-          onClick={() => {
-            console.log('Test button clicked');
-            success("Test toast message!", 3000);
-          }}
-          className="px-3 py-1 bg-yellow-200 text-yellow-800 rounded text-sm hover:bg-yellow-300"
-        >
-          Test Success Toast
-        </button>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Customer Information */}
@@ -504,7 +530,7 @@ export function BusinessLogForm() {
           <CardContent className="space-y-4">
             {formData.products.map((product, index) => (
               <div key={index} className="p-4 border border-[#e5e7eb] rounded-lg space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                   <div className="md:col-span-2 xl:col-span-1">
                     <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
                       Product/Service Name <span className="text-red-500">*</span>
@@ -547,6 +573,49 @@ export function BusinessLogForm() {
                         required
                         className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
                       />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#2a2a2f] mb-1">
+                      Discount (%)
+                    </label>
+                    <div className="p-1">
+                      <div className="relative">
+                        <input
+                          type="number"
+                          value={product.discount}
+                          onChange={(e) => {
+                            const value = Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+                            handleProductChange(index, 'discount', value);
+                          }}
+                          placeholder="0"
+                          min="0"
+                          max="100"
+                          step="0.01"
+                          className="w-full border border-[#d1d5db] rounded px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <span className="text-gray-500 text-sm">%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Product Total Display */}
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Product Total:</span>
+                    <div className="text-right">
+                      <div className="text-gray-900 font-medium">
+                        ₹{((product.quantity * product.price) - ((product.quantity * product.price) * product.discount / 100)).toFixed(2)}
+                      </div>
+                      {product.discount > 0 && (
+                        <div className="text-red-600 text-xs">
+                          (Discount: ₹{((product.quantity * product.price) * product.discount / 100).toFixed(2)})
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -614,6 +683,12 @@ export function BusinessLogForm() {
                 <span className="text-gray-600">Subtotal:</span>
                 <span className="font-medium">₹{totals.subtotal.toFixed(2)}</span>
               </div>
+              {totals.discount > 0 && (
+                <div className="flex justify-between text-red-600">
+                  <span>Total Discount:</span>
+                  <span className="font-medium">-₹{totals.discount.toFixed(2)}</span>
+                </div>
+              )}
               <hr className="my-2" />
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total Amount:</span>
@@ -632,7 +707,7 @@ export function BusinessLogForm() {
               setFormData({
                 customerPhone: '',
                 customerName: '',
-                products: [{ name: '', quantity: 1, price: 0, customFields: {} }]
+                products: [{ name: '', quantity: 1, price: 0, discount: 0, customFields: {} }]
               });
             }}
             className="w-full sm:w-auto border-[#d1d5db] text-[#2a2a2f] hover:bg-gray-50"

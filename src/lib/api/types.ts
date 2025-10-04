@@ -110,6 +110,24 @@ export interface DataCenterResponse extends ApiResponse<CustomerData[]> {
   categories?: Array<{ name: string; label: string }>;
 }
 
+// Business features types
+export interface BusinessFeatures {
+  dashboard: boolean;
+  data_center: boolean;
+  tribly_ai: boolean;
+  achievements: boolean;
+  cohorts: boolean;
+  automation: boolean;
+  campaigns: boolean;
+}
+
+export interface BusinessDetails {
+  _id: string;
+  name: string;
+  features: BusinessFeatures;
+  [key: string]: any;
+}
+
 // Error types
 export interface ApiError {
   message: string;

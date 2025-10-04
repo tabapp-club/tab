@@ -8,24 +8,61 @@ import { BusinessLogList } from "./BusinessLogList";
 import { BusinessLogStats } from "./BusinessLogStats";
 import { BusinessLogFields } from "./BusinessLogFields";
 import { useBusinessLogData } from "@/hooks/useBusinessLogData";
+import { useToast } from "@/hooks/useToast";
 import { Plus, History, Settings } from "lucide-react";
 
 export function BusinessLogContent() {
   const { isCollapsed, isMobile } = useSidebar();
+  const { success, error: showError } = useToast();
   const [activeTab, setActiveTab] = useState<'entry' | 'history' | 'fields'>('entry');
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>();
-  const [cursorHistory, setCursorHistory] = useState<string[]>([]);
-  const { data: businessLogData, nextCursor, isLoading, error, refetch, updateEntry, deleteEntry } = useBusinessLogData(10, currentCursor);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [statusFilter, setStatusFilter] = useState<'new' | 'returning' | undefined>(undefined);
+  const { data: businessLogData, hasNext, totalPages, currentPage: apiCurrentPage, isLoading, error, refetch, updateEntry, deleteEntry } = useBusinessLogData(10, currentPage, statusFilter);
+
+  console.log('BusinessLogContent - businessLogData:', businessLogData);
+  console.log('BusinessLogContent - isLoading:', isLoading);
+  console.log('BusinessLogContent - error:', error);
+  console.log('BusinessLogContent - currentPage:', currentPage);
+  console.log('BusinessLogContent - statusFilter:', statusFilter);
+
+  // Handle update entry with proper error handling
+  const handleUpdateEntry = async ({ id, updates }: { id: string; updates: any }) => {
+    try {
+      await updateEntry({ id, updates });
+      success('Entry updated successfully!');
+    } catch (error: any) {
+      showError(error.message || 'Error updating entry. Please try again.');
+    }
+  };
+
+  // Handle delete entry with proper error handling
+  const handleDeleteEntry = async (id: string) => {
+    try {
+      await deleteEntry(id);
+      success('Entry deleted successfully!');
+    } catch (error: any) {
+      showError(error.message || 'Error deleting entry. Please try again.');
+    }
+  };
 
 
 
   // Reset pagination when switching tabs
   useEffect(() => {
     if (activeTab !== 'history') {
-      setCurrentCursor(undefined);
-      setCursorHistory([]);
+      setCurrentPage(1);
     }
   }, [activeTab]);
+
+  // Reset pagination when status filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter]);
+
+  // Handle status filter change
+  const handleStatusFilterChange = (status: 'new' | 'returning' | undefined) => {
+    setStatusFilter(status);
+  };
 
   // Only refresh data when switching to history tab if data is stale
   useEffect(() => {
@@ -120,22 +157,21 @@ export function BusinessLogContent() {
                   loading={isLoading}
                   error={error}
                   onNextPage={() => {
-                    if (nextCursor) {
-                      setCursorHistory(prev => [...prev, currentCursor || '']);
-                      setCurrentCursor(nextCursor);
+                    if (hasNext) {
+                      setCurrentPage(prev => prev + 1);
                     }
                   }}
                   onPrevPage={() => {
-                    if (cursorHistory.length > 0) {
-                      const prevCursor = cursorHistory[cursorHistory.length - 1];
-                      setCursorHistory(prev => prev.slice(0, -1));
-                      setCurrentCursor(prevCursor || undefined);
+                    if (currentPage > 1) {
+                      setCurrentPage(prev => prev - 1);
                     }
                   }}
-                  hasNextPage={!!nextCursor && businessLogData && businessLogData.length === 10}
-                  hasPrevPage={cursorHistory.length > 0}
-                  onUpdateEntry={updateEntry}
-                  onDeleteEntry={deleteEntry}
+                  hasNextPage={hasNext}
+                  hasPrevPage={currentPage > 1}
+                  onUpdateEntry={handleUpdateEntry}
+                  onDeleteEntry={handleDeleteEntry}
+                  statusFilter={statusFilter}
+                  onStatusFilterChange={handleStatusFilterChange}
                 />
               ) : activeTab === 'fields' ? (
               <BusinessLogFields />

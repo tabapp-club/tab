@@ -14,8 +14,13 @@ export interface UserData {
 
 interface DataCenterApiResponse {
   success: boolean;
-  data: any[];
-  total: number;
+  data: any[] | {
+    data: any[];
+    total: number;
+    metrics?: any;
+    categories?: Array<{ name: string; label: string }>;
+  };
+  total?: number;
   metrics?: any;
   categories?: Array<{ name: string; label: string }>;
 }
@@ -50,6 +55,7 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
       };
 
       const result = await api.dataCenter.getCustomers(user.accessToken, apiFilters);
+      console.log('DataCenter API response:', result);
       return result;
     },
     enabled: isEnabled,
@@ -75,17 +81,22 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
 
 // Helper function to map API response to UserData[]
 export const mapApiDataToTable = (apiData: any[]): UserData[] => {
+  if (!Array.isArray(apiData)) {
+    console.warn('mapApiDataToTable: Expected array but got:', typeof apiData, apiData);
+    return [];
+  }
+
   return apiData.map((r: any) => {
     let status: 'Active' | 'In Active' = 'In Active';
     if (typeof r.status === 'string' && r.status.toLowerCase() === 'active') status = 'Active';
     return {
-      id: r.user_id,
-      mobile: r.mobile_number,
-      categories: Array.isArray(r.category) ? r.category : [r.category],
-      userType: r.user_type,
-      visits: r.no_of_visits,
+      id: r.user_id || r.id || '',
+      mobile: r.mobile_number || r.mobile || '',
+      categories: Array.isArray(r.category) ? r.category : [r.category || ''],
+      userType: r.user_type || r.userType || '',
+      visits: r.no_of_visits || r.visits || 0,
       status,
-      addedOn: r.added_on,
+      addedOn: r.added_on || r.addedOn || '',
     };
   });
 };

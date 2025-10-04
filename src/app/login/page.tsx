@@ -191,8 +191,8 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      const isValid = await verifyOTP(phoneNumber, otp);
-      if (isValid) {
+      const result = await verifyOTP(phoneNumber, otp);
+      if (result.success) {
         setIsOtpVerified(true);
         setOtpError('');
         // Redirect to dashboard after successful verification
@@ -200,14 +200,22 @@ export default function LoginPage() {
         router.push('/dashboard');
         }, 1000);
       } else {
-        setOtpAttempts(prev => prev + 1);
-        if (otpAttempts >= 2) {
-          setOtpError('Too many failed attempts. Please request a new OTP.');
+        // Check if it's a user not registered error
+        if (result.error === 'User not registered') {
+          setOtpError('User not registered. Please contact support to create an account.');
           setIsOtpSent(false);
           setOtp('');
           setOtpAttempts(0);
         } else {
-          setOtpError('Invalid OTP. Please try again.');
+          setOtpAttempts(prev => prev + 1);
+          if (otpAttempts >= 2) {
+            setOtpError('Too many failed attempts. Please request a new OTP.');
+            setIsOtpSent(false);
+            setOtp('');
+            setOtpAttempts(0);
+          } else {
+            setOtpError(result.error || 'Invalid OTP. Please try again.');
+          }
         }
       }
     } catch (error: any) {

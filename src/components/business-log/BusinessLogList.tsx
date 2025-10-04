@@ -16,6 +16,8 @@ interface BusinessLogListProps {
   hasPrevPage: boolean;
   onUpdateEntry: ({ id, updates }: { id: string; updates: Partial<BusinessLogEntry> }) => Promise<unknown>;
   onDeleteEntry: (id: string) => Promise<unknown>;
+  statusFilter?: 'new' | 'returning' | undefined;
+  onStatusFilterChange: (status: 'new' | 'returning' | undefined) => void;
 }
 
 export function BusinessLogList({
@@ -28,41 +30,36 @@ export function BusinessLogList({
   hasPrevPage,
   onUpdateEntry,
   onDeleteEntry,
+  statusFilter,
+  onStatusFilterChange,
 }: BusinessLogListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterNewCustomers, setFilterNewCustomers] = useState<boolean | null>(null);
   const [editingEntry, setEditingEntry] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<BusinessLogEntry>>({});
 
-  // Function to determine if user is new or returning based on frequency
-  const getUserStatus = (phoneNumber: string, allEntries: BusinessLogEntry[]) => {
-    const userEntries = allEntries.filter(entry => entry.customerPhone === phoneNumber);
-    return userEntries.length === 1 ? 'New User' : 'Returning';
+  // Function to get customer status from API data
+  const getCustomerStatus = (entry: BusinessLogEntry) => {
+    if (entry.customer_status === 'new') {
+      return 'New Customer';
+    } else if (entry.customer_status === 'returning') {
+      return 'Returning Customer';
+    }
+    // Fallback to frequency-based calculation if customer_status is not available
+    const userEntries = (data || []).filter(e => e.customerPhone === entry.customerPhone);
+    return userEntries.length === 1 ? 'New Customer' : 'Returning Customer';
   };
 
+  // Only apply search filtering on the client side, status filtering is handled by API
   const filteredData = (Array.isArray(data) ? data : []).filter(entry => {
     const matchesSearch =
       entry.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       entry.customerPhone.includes(searchTerm) ||
       (entry.products && entry.products.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())));
 
-    // Use the new user status logic for filtering
-    let matchesFilter = true;
-    if (filterNewCustomers !== null) {
-      const userStatus = getUserStatus(entry.customerPhone, data || []);
-      if (filterNewCustomers === true) {
-        // Show only "New User" entries
-        matchesFilter = userStatus === 'New User';
-      } else {
-        // Show only "Returning" entries
-        matchesFilter = userStatus === 'Returning';
-      }
-    }
-
-    return matchesSearch && matchesFilter;
+    return matchesSearch;
   });
 
-  console.log('filteredData length:', filteredData.length);
+
 
   const handleEditEntry = (entry: BusinessLogEntry) => {
     setEditingEntry(entry.id);
@@ -83,10 +80,11 @@ export function BusinessLogList({
       setEditingEntry(null);
       setEditForm({});
 
-      // Show success message
-      alert('Entry updated successfully!');
+      // Show success message - using a more user-friendly approach
+      // The parent component should handle success/error toasts
     } catch (error) {
-      alert('Error updating entry. Please try again.');
+      // Error will be handled by the parent component's error handling
+      throw error;
     }
   };
 
@@ -114,7 +112,7 @@ export function BusinessLogList({
   const addProduct = () => {
     if (!editForm.products) return;
 
-    const newProduct = { name: '', quantity: 1, price: 0, customFields: {} };
+    const newProduct = { name: '', quantity: 1, price: 0, discount: 0, customFields: {} };
     const updatedProducts = [...editForm.products, newProduct];
     const totalAmount = updatedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
 
@@ -161,25 +159,6 @@ export function BusinessLogList({
     );
   }
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-gray-400 mb-4">
-          <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No entries found</h3>
-        <p className="text-gray-500 mb-6">Start by creating your first business log entry.</p>
-        <Button
-          onClick={() => window.location.reload()}
-          className="bg-[#7856ff] hover:bg-[#6d46e5]"
-        >
-          Create First Entry
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
@@ -205,27 +184,27 @@ export function BusinessLogList({
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
-            variant={filterNewCustomers === null ? "default" : "outline"}
+            variant={statusFilter === undefined ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterNewCustomers(null)}
-            className={`${filterNewCustomers === null ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            onClick={() => onStatusFilterChange(undefined)}
+            className={`${statusFilter === undefined ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
             All
           </Button>
           <Button
-            variant={filterNewCustomers === true ? "default" : "outline"}
+            variant={statusFilter === 'new' ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterNewCustomers(true)}
-            className={`${filterNewCustomers === true ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            onClick={() => onStatusFilterChange('new')}
+            className={`${statusFilter === 'new' ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
             <span className="hidden sm:inline">New Users</span>
             <span className="sm:hidden">New</span>
           </Button>
           <Button
-            variant={filterNewCustomers === false ? "default" : "outline"}
+            variant={statusFilter === 'returning' ? "default" : "outline"}
             size="sm"
-            onClick={() => setFilterNewCustomers(false)}
-            className={`${filterNewCustomers === false ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            onClick={() => onStatusFilterChange('returning')}
+            className={`${statusFilter === 'returning' ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
           >
             <span className="hidden sm:inline">Returning</span>
             <span className="sm:hidden">Returning</span>
@@ -235,7 +214,50 @@ export function BusinessLogList({
 
       {/* Entries List */}
       <div className="space-y-3">
-        {filteredData.map((entry) => (
+        {!data || data.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No entries found</h3>
+            <p className="text-gray-500 mb-6">
+              {statusFilter === 'new'
+                ? 'No new customer entries found. Try switching to "All" or "Returning" customers.'
+                : statusFilter === 'returning'
+                ? 'No returning customer entries found. Try switching to "All" or "New Users".'
+                : 'Start by creating your first business log entry.'
+              }
+            </p>
+            {!statusFilter && (
+              <Button
+                onClick={() => window.location.reload()}
+                className="bg-[#7856ff] hover:bg-[#6d46e5]"
+              >
+                Create First Entry
+              </Button>
+            )}
+          </div>
+        ) : filteredData.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No matching entries</h3>
+            <p className="text-gray-500 mb-6">Try adjusting your search terms or filters.</p>
+            <Button
+              onClick={() => setSearchTerm('')}
+              variant="outline"
+              className="border-[#7856ff] text-[#7856ff] hover:bg-[#7856ff] hover:text-white"
+            >
+              Clear Search
+            </Button>
+          </div>
+        ) : (
+          filteredData.map((entry) => (
           <Card key={entry.id} className="hover:border-[#7856ff]/30 transition-all duration-200 group overflow-hidden">
             <CardContent className="p-0 px-2">
               {/* Header Section - Customer Info & Amount */}
@@ -251,11 +273,18 @@ export function BusinessLogList({
                         <h3 className="text-sm font-semibold text-gray-900 truncate">
                           {entry.customerName}
                         </h3>
-                        <div className="flex items-center gap-1 mt-0.5">
+                        <div className="flex items-center gap-2 mt-0.5">
                           <svg className="w-3 h-3 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                           </svg>
                           <span className="text-xs text-gray-600 font-medium">{entry.customerPhone}</span>
+                          <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                            getCustomerStatus(entry) === 'New Customer'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            {getCustomerStatus(entry)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -433,19 +462,21 @@ export function BusinessLogList({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     {format(new Date(entry.timestamp), 'h:mm a • MMM d, yyyy')}
-                    {entry.isNewCustomer ? (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <div className="w-1 h-1 bg-emerald-500 rounded-full mr-1 animate-pulse"></div>
-                        <span className="hidden sm:inline">New</span>
-                        <span className="sm:hidden">N</span>
+                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
+                      getCustomerStatus(entry) === 'New Customer'
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : 'bg-blue-50 text-blue-700 border border-blue-200'
+                    }`}>
+                      <div className={`w-1 h-1 rounded-full mr-1 ${
+                        getCustomerStatus(entry) === 'New Customer' ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'
+                      }`}></div>
+                      <span className="hidden sm:inline">
+                        {getCustomerStatus(entry) === 'New Customer' ? 'New' : 'Returning'}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                        <div className="w-1 h-1 bg-blue-500 rounded-full mr-1"></div>
-                        <span className="hidden sm:inline">Returning</span>
-                        <span className="sm:hidden">R</span>
+                      <span className="sm:hidden">
+                        {getCustomerStatus(entry) === 'New Customer' ? 'N' : 'R'}
                       </span>
-                    )}
+                    </span>
                   </div>
                   <div className="flex gap-1">
                     <Button
@@ -454,45 +485,33 @@ export function BusinessLogList({
                       onClick={() => handleEditEntry(entry)}
                       className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
                     >
-                      <svg className="w-2.5 h-2.5 mr-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                       Edit
                     </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (confirm('Are you sure you want to delete this entry?')) {
+                          onDeleteEntry(entry.id);
+                        }
+                      }}
+                      className="h-6 px-2 text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors group/delete"
+                    >
+                      <svg className="w-2.5 h-2.5 mr-0.5 group-hover/delete:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </Button>
                   </div>
-                   <div className="flex gap-1">
-                     <Button
-                       variant="outline"
-                       size="sm"
-                       onClick={() => handleEditEntry(entry)}
-                       className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
-                     >
-                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                       </svg>
-                       Edit
-                     </Button>
-                     <Button
-                       variant="outline"
-                       size="sm"
-                       onClick={() => {
-                         if (confirm('Are you sure you want to delete this entry?')) {
-                           onDeleteEntry(entry.id);
-                         }
-                       }}
-                       className="h-6 px-2 text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors group/delete"
-                     >
-                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/delete:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                       </svg>
-                       Delete
-                     </Button>
-                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-        ))}
+        ))
+        )}
       </div>
 
       {/* Pagination */}

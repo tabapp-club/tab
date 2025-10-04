@@ -13,11 +13,13 @@ export interface BusinessLogEntry {
     name: string;
     quantity: number;
     price: number;
+    discount: number;
     customFields: Record<string, any>;
   }>;
   totalAmount: number;
   timestamp: Date;
   isNewCustomer: boolean;
+  customer_status?: 'new' | 'returning';
 }
 
 
@@ -26,11 +28,26 @@ export interface BusinessLogEntry {
 const fetchBusinessLogEntries = async (
   token: string,
   businessId: string,
+  page = 1,
   limit = 10,
-  cursor?: string
-): Promise<{ data: BusinessLogEntry[]; next_cursor?: string }> => {
-  const response = await api.business.getBusinessLogEntries(token, businessId, limit, cursor);
-  const rawEntries = Array.isArray(response?.data) ? response.data : [];
+  status?: 'new' | 'returning'
+): Promise<{
+  data: BusinessLogEntry[];
+  has_next: boolean;
+  total_entries_count: number;
+  filtered_entries_count: number;
+  total_pages: number;
+  current_page: number;
+  limit: number;
+}> => {
+  const response = await api.business.getBusinessLogEntries(token, businessId, page, limit, status);
+  console.log('API Response:', response);
+  console.log('Response data:', response?.data);
+  console.log('Result array:', response?.data?.result);
+  const rawEntries = Array.isArray(response?.data?.result) ? response.data.result : [];
+  console.log('Raw entries:', rawEntries);
+  console.log('Raw entries length:', rawEntries.length);
+
   const normalizeDate = (value?: string | null): Date => {
     if (!value) {
       return new Date();
@@ -72,6 +89,8 @@ const fetchBusinessLogEntries = async (
             name: item?.name || 'Unnamed item',
             quantity: rawQuantity,
             price: rawUnitPrice,
+            discount: item?.discount || 0,
+            customFields: item?.metadata || {},
           };
         })
       : [];
@@ -89,11 +108,17 @@ const fetchBusinessLogEntries = async (
       },
       timestamp,
       isNewCustomer: false,
+      customer_status: entry?.customer_status || (entry?.metadata?.isNewCustomer ? 'new' : 'returning'),
     };
   });
   return {
     data: entries,
-    next_cursor: response.next_cursor
+    has_next: response.data?.has_next || false,
+    total_entries_count: response.data?.total_entries_count || 0,
+    filtered_entries_count: response.data?.filtered_entries_count || 0,
+    total_pages: response.data?.total_pages || 0,
+    current_page: response.data?.current_page || 1,
+    limit: response.data?.limit || limit
   };
 };
 
@@ -118,7 +143,7 @@ const addBusinessLogEntry = async (token: string, businessId: string, entry: Omi
     },
     totals: {
       items_subtotal: entry.products.reduce((sum, p) => sum + (p.quantity * p.price), 0),
-      discounts_total: 0,
+      discounts_total: entry.products.reduce((sum, p) => sum + (p.quantity * p.price * (p.discount || 0) / 100), 0),
       tax_total: 0,
       rounding: 0,
       grand_total: entry.totalAmount,
@@ -132,7 +157,7 @@ const addBusinessLogEntry = async (token: string, businessId: string, entry: Omi
       category: "General",
       quantity: product.quantity,
       unit_price: product.price,
-      discount: 0,
+      discount: product.discount || 0,
       tax_rate: 0,
       metadata: {}
     })),
@@ -157,6 +182,12 @@ const addBusinessLogEntry = async (token: string, businessId: string, entry: Omi
 const updateBusinessLogEntry = async (token: string, businessId: string, id: string, updates: Partial<BusinessLogEntry>): Promise<BusinessLogEntry> => {
   // For update, we'd need to transform back to API format, but keeping simple for now
   const response = await api.business.updateBusinessEntry(token, businessId, id, updates);
+
+  // Check if the response is successful
+  if (!response || !response.data) {
+    throw new Error('Invalid response from server');
+  }
+
   return {
     ...response.data,
     timestamp: new Date(response.data.timestamp)
@@ -167,7 +198,7 @@ const deleteBusinessLogEntry = async (token: string, businessId: string, id: str
   await api.business.deleteBusinessEntry(token, businessId, id);
 };
 
-export function useBusinessLogData(limit = 10, cursor?: string) {
+export function useBusinessLogData(limit = 10, page = 1, status?: 'new' | 'returning') {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const token = user?.accessToken;
@@ -176,10 +207,11 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
 
 
   // Fetch all entries
+  console.log('useBusinessLogData hook called with:', { businessId, limit, page, status, token: !!token });
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['businessEntries', businessId, limit, cursor],
+    queryKey: ['businessEntries', businessId, limit, page, status],
     queryFn: async () => {
-      console.log('Fetching business entries:', { token: !!token, businessId });
+      console.log('Query function executing - Fetching business entries:', { token: !!token, businessId, page, status });
 
       let currentBusinessId = businessId;
       const currentToken = token;
@@ -203,7 +235,7 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
         throw new Error('Not authenticated or no business ID');
       }
 
-      return fetchBusinessLogEntries(currentToken, currentBusinessId, limit, cursor);
+      return fetchBusinessLogEntries(currentToken, currentBusinessId, page, limit, status);
     },
     enabled: !!token, // Enable as long as we have token
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -212,7 +244,7 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
   // Listen for custom events to refresh data
   useEffect(() => {
     const handleBusinessLogUpdate = () => {
-      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries'] });
     };
 
     window.addEventListener('businessLogUpdated', handleBusinessLogUpdate);
@@ -229,7 +261,7 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
       return addBusinessLogEntry(token, businessId, entry);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries'] });
     },
   });
 
@@ -240,7 +272,7 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
       return updateBusinessLogEntry(token, businessId, id, updates);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries'] });
     },
   });
 
@@ -251,13 +283,23 @@ export function useBusinessLogData(limit = 10, cursor?: string) {
       return deleteBusinessLogEntry(token, businessId, id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['businessEntries', businessId] });
+      queryClient.invalidateQueries({ queryKey: ['businessEntries'] });
     },
   });
 
+  console.log('Hook data:', data);
+  console.log('Hook data.data:', data?.data);
+  console.log('Hook isLoading:', isLoading);
+  console.log('Hook error:', error);
+
   return {
     data: Array.isArray(data?.data) ? data.data : [],
-    nextCursor: data?.next_cursor,
+    hasNext: data?.has_next || false,
+    totalEntriesCount: data?.total_entries_count || 0,
+    filteredEntriesCount: data?.filtered_entries_count || 0,
+    totalPages: data?.total_pages || 0,
+    currentPage: data?.current_page || 1,
+    limit: data?.limit || limit,
     isLoading,
     error,
     refetch,

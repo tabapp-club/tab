@@ -64,7 +64,7 @@ export function useAchievementsData() {
   useEffect(() => {
     // Simulate loading
     setLoading(true);
-    
+
     // Mock data - in real app, this would come from API
     const mockMilestones: Milestone[] = [
       {
@@ -130,13 +130,22 @@ export function useAchievementsData() {
     // Generate AI suggestions based on data center data
     const generateAISuggestions = () => {
       const suggestions: AISuggestedTarget[] = [];
-      
+
       if (dataCenterData?.data) {
-        const userData = dataCenterData.data;
+        // Handle both flat array and nested object structures
+        let userData = dataCenterData.data;
+        if (!Array.isArray(userData) && userData.data) {
+          userData = userData.data;
+        }
+
+        if (!Array.isArray(userData)) {
+          return suggestions;
+        }
+
         const totalUsers = userData.length;
         const activeUsers = userData.filter((user: any) => user.status === 'Active').length;
         const activeRate = totalUsers > 0 ? (activeUsers / totalUsers) * 100 : 0;
-        
+
         // Analyze user categories
         const categoryCounts: { [key: string]: number } = {};
         userData.forEach((user: any) => {

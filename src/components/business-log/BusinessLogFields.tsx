@@ -688,13 +688,6 @@ export function BusinessLogFields() {
               </Button>
               <Button
                 onClick={() => {
-                  console.log('=== DEBUG INFO ===');
-                  console.log('Fields data:', createFieldsData);
-                  console.log('Request payload (array):', createFieldsData);
-                  console.log('Token exists:', !!token);
-                  console.log('Business ID exists:', !!businessId);
-                  console.log('API base URL:', config.api.baseURL);
-                  console.log('==================');
                   createFieldsMutation.mutate(createFieldsData);
                 }}
                 disabled={createFieldsData.some(field => !field.label) || createFieldsMutation.isPending}

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
 import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { FeatureGuard } from "@/components/FeatureGuard";
 
 export const metadata: Metadata = {
   title: "Achievements - Business Dashboard",
@@ -21,15 +22,17 @@ export const metadata: Metadata = {
 export default function AchievementsPage() {
   return (
     <ProtectedRoute>
-      <div className="bg-white">
-        <div className="flex relative">
-          {/* Sidebar */}
-          <Sidebar />
+      <FeatureGuard feature="achievements">
+        <div className="bg-white">
+          <div className="flex relative">
+            {/* Sidebar */}
+            <Sidebar />
 
-          {/* Main Content */}
-          <BusinessServicesContent title="Achievements" description="Track your achievements and milestones in your business journey" />
+            {/* Main Content */}
+            <BusinessServicesContent title="Achievements" description="Track your achievements and milestones in your business journey" />
+          </div>
         </div>
-      </div>
+      </FeatureGuard>
     </ProtectedRoute>
   );
 }

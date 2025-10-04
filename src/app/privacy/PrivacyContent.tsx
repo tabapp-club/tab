@@ -26,8 +26,8 @@ export function PrivacyContent() {
       content: (
         <div className="space-y-4">
           <p className="text-gray-700 leading-relaxed">
-            At tribly, we are committed to protecting your privacy and ensuring the security of your personal information. 
-            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our 
+            At tribly, we are committed to protecting your privacy and ensuring the security of your personal information.
+            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our
             business analytics platform and related services.
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -62,7 +62,7 @@ export function PrivacyContent() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Usage Information</h4>
             <ul className="space-y-2 text-gray-700">
@@ -188,7 +188,7 @@ export function PrivacyContent() {
                 <div>
                   <span className="font-medium">Service Providers:</span>
                   <p className="text-sm text-gray-600 mt-1">
-                    We may share data with trusted third-party service providers who assist in platform operations, 
+                    We may share data with trusted third-party service providers who assist in platform operations,
                     such as cloud hosting, analytics, and communication services (WhatsApp Business API, SMS gateways, Email services).
                   </p>
                 </div>
@@ -225,7 +225,7 @@ export function PrivacyContent() {
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <h4 className="font-semibold text-green-900 mb-2">🛡️ Enterprise-Grade Security</h4>
             <p className="text-green-800 text-sm">
-              We implement industry-standard security measures to protect your data from unauthorized access, 
+              We implement industry-standard security measures to protect your data from unauthorized access,
               alteration, disclosure, or destruction.
             </p>
           </div>
@@ -327,8 +327,8 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Data Deletion</h4>
             <p className="text-gray-700 leading-relaxed">
-              When data reaches the end of its retention period, it is securely deleted using industry-standard 
-              data destruction methods. You can also request immediate deletion of your data by contacting our 
+              When data reaches the end of its retention period, it is securely deleted using industry-standard
+              data destruction methods. You can also request immediate deletion of your data by contacting our
               support team.
             </p>
           </div>
@@ -457,7 +457,7 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Local Storage</h4>
             <p className="text-gray-700 leading-relaxed mb-3">
-              We use browser local storage to securely store your authentication tokens and user preferences. 
+              We use browser local storage to securely store your authentication tokens and user preferences.
               This data is encrypted and only accessible by our platform.
             </p>
             <ul className="space-y-2 text-gray-700">
@@ -479,8 +479,8 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Cookie Management</h4>
             <p className="text-gray-700 leading-relaxed">
-              You can control cookies through your browser settings. However, disabling essential cookies 
-              may affect platform functionality. You can also manage your cookie preferences through our 
+              You can control cookies through your browser settings. However, disabling essential cookies
+              may affect platform functionality. You can also manage your cookie preferences through our
               platform settings.
             </p>
           </div>
@@ -496,7 +496,7 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Global Operations</h4>
             <p className="text-gray-700 leading-relaxed mb-4">
-              tribly operates globally and may transfer your data to countries outside your residence. 
+              tribly operates globally and may transfer your data to countries outside your residence.
               We ensure that all international transfers comply with applicable data protection laws.
             </p>
           </div>
@@ -526,7 +526,7 @@ export function PrivacyContent() {
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <h4 className="font-semibold text-yellow-900 mb-2">🌍 Data Residency</h4>
             <p className="text-yellow-800 text-sm">
-              We offer data residency options for customers who require data to remain within specific 
+              We offer data residency options for customers who require data to remain within specific
               geographic regions. Contact our support team for more information.
             </p>
           </div>
@@ -559,7 +559,7 @@ export function PrivacyContent() {
               </li>
               <li className="flex items-start">
                 <span className="text-orange-600 mr-2">•</span>
-                <span>Parents can contact us to review or delete their child's information</span>
+                <span>Parents can contact us to review or delete their child&apos;s information</span>
               </li>
             </ul>
           </div>
@@ -575,8 +575,8 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Changes to This Policy</h4>
             <p className="text-gray-700 leading-relaxed mb-4">
-              We may update this Privacy Policy from time to time to reflect changes in our practices, 
-              technology, legal requirements, or other factors. We will notify you of any material changes 
+              We may update this Privacy Policy from time to time to reflect changes in our practices,
+              technology, legal requirements, or other factors. We will notify you of any material changes
               through the platform or via email.
             </p>
           </div>
@@ -606,7 +606,7 @@ export function PrivacyContent() {
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <h4 className="font-semibold text-gray-900 mb-2">📅 Last Updated</h4>
             <p className="text-gray-700 text-sm">
-              This Privacy Policy was last updated on January 15, 2025. We recommend reviewing this policy 
+              This Privacy Policy was last updated on January 15, 2025. We recommend reviewing this policy
               periodically to stay informed about how we protect your information.
             </p>
           </div>
@@ -622,7 +622,7 @@ export function PrivacyContent() {
           <div>
             <h4 className="font-semibold text-gray-900 mb-3">Privacy Questions & Concerns</h4>
             <p className="text-gray-700 leading-relaxed mb-4">
-              If you have any questions about this Privacy Policy, our data practices, or wish to exercise 
+              If you have any questions about this Privacy Policy, our data practices, or wish to exercise
               your privacy rights, please contact us using the information below.
             </p>
           </div>
@@ -675,7 +675,7 @@ export function PrivacyContent() {
             Privacy Policy
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Your privacy is our priority. Learn how we protect and handle your data 
+            Your privacy is our priority. Learn how we protect and handle your data
             with transparency and care.
           </p>
         </div>
@@ -704,7 +704,7 @@ export function PrivacyContent() {
           {privacySections.map((section) => {
             const Icon = section.icon;
             const isExpanded = expandedSections.has(section.id);
-            
+
             return (
               <div key={section.id} className="bg-white rounded-lg border border-gray-200 overflow-visible">
                 <button
@@ -725,7 +725,7 @@ export function PrivacyContent() {
                     )}
                   </div>
                 </button>
-                
+
                 {isExpanded && (
                   <div className="px-6 pb-6 border-t border-gray-100 overflow-visible">
                     <div className="pt-4">
@@ -742,8 +742,8 @@ export function PrivacyContent() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div className="mb-4 sm:mb-0">
-              <a 
-                href="/dashboard" 
+              <a
+                href="/dashboard"
                 className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors flex items-center"
               >
                 ← Back to Dashboard

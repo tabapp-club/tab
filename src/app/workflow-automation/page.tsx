@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
 import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { FeatureGuard } from "@/components/FeatureGuard";
 
 export const metadata: Metadata = {
   title: "Workflow Automation - Business Dashboard",
@@ -54,15 +55,17 @@ export const metadata: Metadata = {
 export default function WorkflowAutomationPage() {
   return (
     <ProtectedRoute>
-      <div className="bg-white">
-        <div className="flex relative">
-          {/* Sidebar */}
-          <Sidebar />
+      <FeatureGuard feature="automation">
+        <div className="bg-white">
+          <div className="flex relative">
+            {/* Sidebar */}
+            <Sidebar />
 
-          {/* Main Content */}
-          <BusinessServicesContent title="Workflow Automation" description="Automate WhatsApp and SMS communications with intelligent workflow automation" />
+            {/* Main Content */}
+            <BusinessServicesContent title="Workflow Automation" description="Automate WhatsApp and SMS communications with intelligent workflow automation" />
+          </div>
         </div>
-      </div>
+      </FeatureGuard>
     </ProtectedRoute>
   );
 }
