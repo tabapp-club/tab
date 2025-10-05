@@ -33,8 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = () => {
       try {
-        const savedUser = sessionStorage.getItem('user');
-        const savedAccessToken = sessionStorage.getItem('access_token');
+        const savedUser = localStorage.getItem('user');
+        const savedAccessToken = localStorage.getItem('access_token');
 
         if (savedUser) {
           const userData = JSON.parse(savedUser);
@@ -42,16 +42,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Check if token is expired
           if (userData.tokenExpiry && Date.now() > userData.tokenExpiry) {
             // Token expired, clear session
-            sessionStorage.removeItem('user');
-            sessionStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('access_token');
             return;
           }
 
-          // Check if we have an access token in sessionStorage that might not be in userData
+          // Check if we have an access token in localStorage that might not be in userData
           if (savedAccessToken && !userData.accessToken) {
             userData.accessToken = savedAccessToken;
-            // Update sessionStorage with the complete user data
-            sessionStorage.setItem('user', JSON.stringify(userData));
+            // Update localStorage with the complete user data
+            localStorage.setItem('user', JSON.stringify(userData));
           }
 
           // If business_id is missing, try to fetch it
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const businessesResponse = await api.business.getBusinesses(userData.accessToken);
                 if (businessesResponse.data && businessesResponse.data.length > 0) {
                   userData.business_id = businessesResponse.data[0]._id;
-                  sessionStorage.setItem('user', JSON.stringify(userData));
+                  localStorage.setItem('user', JSON.stringify(userData));
                   setUser(userData);
                   console.log('Fetched and set businessId:', userData.business_id);
                 }
@@ -82,14 +82,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenExpiry: Date.now() + (24 * 60 * 60 * 1000), // 24 hours from now
           };
           setUser(fallbackUser);
-          sessionStorage.setItem('user', JSON.stringify(fallbackUser));
+          localStorage.setItem('user', JSON.stringify(fallbackUser));
         } else {
           // No saved user or access_token found
         }
       } catch (error) {
         // Error checking auth status
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
       } finally {
         setIsLoading(false);
       }
@@ -178,8 +178,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
        };
 
       setUser(userData);
-      sessionStorage.setItem('user', JSON.stringify(userData));
-      sessionStorage.setItem('access_token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('access_token', token);
       return { success: true };
     } catch (error: any) {
       // Check if it's a 404 error (user not registered)
@@ -210,8 +210,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
   };
 
   const value: AuthContextType = {

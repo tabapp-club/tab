@@ -45,7 +45,7 @@ export function useAIAnalysis({ cardType, filterDays, dateRange, enabled = true 
         throw new Error('Authentication required');
       }
 
-      const url = `${config.api.baseURL}/ai-analysis`;
+      const url = `${config.api.baseURL}/dashboard/v1/overview/ai_analysis`;
       const params = new URLSearchParams();
 
       params.append('type_', getTypeParam(cardType));

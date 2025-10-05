@@ -35,6 +35,13 @@ export default function LoginPage() {
     }
   }, [isOtpSent, isOtpVerified]);
 
+  // Navigate to dashboard when authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
+
   // Carousel data
   const carouselSlides = [
     {
@@ -195,10 +202,7 @@ export default function LoginPage() {
       if (result.success) {
         setIsOtpVerified(true);
         setOtpError('');
-        // Redirect to dashboard after successful verification
-        setTimeout(() => {
-        router.push('/dashboard');
-        }, 1000);
+        // Navigation will be handled by useEffect when isAuthenticated becomes true
       } else {
         // Check if it's a user not registered error
         if (result.error === 'User not registered') {

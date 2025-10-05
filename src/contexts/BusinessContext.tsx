@@ -20,7 +20,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
   const refreshFeatures = async () => {
     try {
       setIsLoading(true);
-      const token = sessionStorage.getItem('access_token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         setFeatures(null);
         return;
