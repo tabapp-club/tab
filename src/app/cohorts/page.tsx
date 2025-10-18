@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
-import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
+import { CohortsClient } from "@/components/cohorts/CohortsClient";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { FeatureGuard } from "@/components/FeatureGuard";
 
@@ -30,7 +30,7 @@ export default function CohortsPage() {
             <Sidebar />
 
             {/* Main Content */}
-            <BusinessServicesContent title="Cohorts" description="Manage and analyze customer cohorts with detailed insights and segmentation data" />
+            <CohortsClient />
           </div>
         </div>
       </FeatureGuard>

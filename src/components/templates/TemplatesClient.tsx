@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Sidebar } from '../Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { TemplatesHeader } from './TemplatesHeader';

@@ -2,11 +2,12 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { MobileHeaderButton } from './MobileHeaderButton';
 import DataCenterStats from './DataCenterStats';
 import DataCenterFilters from './DataCenterFilters';
 import DataTable from './DataTable';
+import DataTableSkeleton from './DataTableSkeleton';
 import Pagination from './Pagination';
 import ImportModal from './ImportModal';
 import { useSidebar } from './SidebarContext';
@@ -163,7 +164,7 @@ export default function DataCenterClient() {
       if (searchTerm !== debouncedSearchTerm) {
         setPage(1);
       }
-    }, 300); // Reduced to 300ms for better responsiveness
+    }, 500); // Optimized to 500ms to reduce API calls while maintaining responsiveness
 
     // Cleanup function
     return () => {
@@ -320,7 +321,7 @@ export default function DataCenterClient() {
             </div>
                 <div className="flex-1 min-h-0 min-w-0">
             {loading && currentTableData.length === 0 ? (
-              <div className="text-center py-10 text-[#a1a1a1]">Loading data...</div>
+              <DataTableSkeleton />
             ) : error ? (
               <div className="text-center py-10 text-red-500">{error.message}</div>
             ) : (

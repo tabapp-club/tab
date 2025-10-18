@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
-import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
+import { AchievementsContent } from "./AchievementsContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { FeatureGuard } from "@/components/FeatureGuard";
 
@@ -29,7 +29,7 @@ export default function AchievementsPage() {
             <Sidebar />
 
             {/* Main Content */}
-            <BusinessServicesContent title="Achievements" description="Track your achievements and milestones in your business journey" />
+            <AchievementsContent />
           </div>
         </div>
       </FeatureGuard>

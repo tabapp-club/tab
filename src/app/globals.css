@@ -822,6 +822,30 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
   display: none;  /* Safari and Chrome */
 }
 
+/* Enhanced horizontal scroll for business growth cards */
+.business-growth-scroll {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+
+.business-growth-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.business-growth-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure cards don't wrap and maintain their width */
+.business-growth-scroll > * {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
 /* Global mobile scroll indicator hiding */
 @media (max-width: 1023px) {
   /* Hide all scrollbars on mobile */

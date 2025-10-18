@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
-import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
+import { CampaignsClient } from "@/components/campaigns/CampaignsClient";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { FeatureGuard } from "@/components/FeatureGuard";
 
@@ -31,7 +31,7 @@ export default function CampaignsPage() {
             <Sidebar />
 
             {/* Main Content */}
-            <BusinessServicesContent title="Campaigns" description="Manage and create marketing campaigns to grow your business with advanced targeting and analytics" />
+            <CampaignsClient />
           </div>
         </div>
       </FeatureGuard>

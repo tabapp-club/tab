@@ -55,12 +55,11 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
       };
 
       const result = await api.dataCenter.getCustomers(user.accessToken, apiFilters);
-      console.log('DataCenter API response:', result);
       return result;
     },
     enabled: isEnabled,
-    staleTime: filters.search ? 30 * 1000 : 1 * 60 * 1000, // 30 seconds for search, 1 minute for regular data
-    gcTime: 3 * 60 * 1000, // 3 minutes in cache
+    staleTime: filters.search ? 10 * 1000 : 5 * 60 * 1000, // 10 seconds for search, 5 minutes for regular data
+    gcTime: 10 * 60 * 1000, // 10 minutes in cache
     // Keep previous data while fetching new data to avoid loading states during search
     placeholderData: (previousData) => previousData,
     retry: (failureCount, error) => {
@@ -68,14 +67,19 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
       if (error.message === 'No access token available') {
         return false;
       }
-      return false;
+      // Retry up to 2 times for network errors
+      return failureCount < 2;
     },
     // Return default data structure when query is disabled
     initialData: isEnabled ? undefined : {
       success: true,
       data: [],
       total: 0
-    }
+    },
+    // Add refetch on window focus for better UX
+    refetchOnWindowFocus: false,
+    // Add network mode for better offline handling
+    networkMode: 'online'
   });
 }
 

@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Sidebar } from '../Sidebar';
 import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { CampaignsHeader } from './CampaignsHeader';
@@ -80,59 +79,38 @@ export function CampaignsClient() {
   }, []);
 
   return (
-    <div className="campaigns-container flex bg-[#F6F6F6] font-sans min-h-screen overflow-hidden">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
-        <header className="flex items-center justify-between p-3 sm:p-4 lg:hidden">
-          <MobileHeaderButton />
-            <button
-              onClick={handleCreateCampaign}
-              className="flex items-center justify-center gap-2 h-9 px-3 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out  flex-shrink-0"
-              style={{ height: '36px' }}
-            >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 1V15M1 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span>New Campaign</span>
-          </button>
-        </header>
+    <main className={`flex-1 transition-sidebar ${
+      actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
+    }`}>
+      {/* Mobile Header with Menu Toggle */}
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
+        <MobileHeaderButton />
+      </header>
 
-        {/* Main Content */}
-        <main
-          className={`campaigns-main flex-1 transition-all duration-300 min-w-0 ${
-            actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'
-          }`}
-        >
-          <div className="h-full flex flex-col min-w-0">
-            <div className="p-2 sm:p-3 lg:p-4 xl:p-6 space-y-3 sm:space-y-4 lg:space-y-6 flex-1 flex flex-col min-w-0">
-              {/* Header */}
-              <CampaignsHeader
-                onCreateCampaign={handleCreateCampaign}
-              />
+      {/* Main Content */}
+      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
+        <div className="pt-12 lg:pt-0 space-y-6">
+          {/* Header */}
+          <CampaignsHeader
+            onCreateCampaign={handleCreateCampaign}
+          />
 
-              {/* Stats */}
-              <CampaignsStats />
+          {/* Stats */}
+          <CampaignsStats />
 
-              {/* Filters */}
-              <CampaignsFilters
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-              />
+          {/* Filters */}
+          <CampaignsFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
 
-              {/* Campaigns List */}
-              <div className="flex-1 min-h-0 min-w-0">
-                <CampaignsList
-                  searchTerm={searchTerm}
-                  onCampaignsUpdate={handleCampaignsUpdate}
-                />
-              </div>
-            </div>
-          </div>
-        </main>
+          {/* Campaigns List */}
+          <CampaignsList
+            searchTerm={searchTerm}
+            onCampaignsUpdate={handleCampaignsUpdate}
+          />
+        </div>
       </div>
-
-
-    </div>
+    </main>
   );
 }

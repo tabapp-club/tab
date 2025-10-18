@@ -188,7 +188,7 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     icon: DashboardIcon,
     href: "/dashboard",
     active: true,
-    notificationCount: 0,
+    notificationCount: 3,
     featureKey: "dashboard" as const
   },
   {
@@ -206,7 +206,7 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     description: "AI-powered insights & chat",
     icon: AIServicesIcon,
     href: "/ai-services",
-    notificationCount: 0,
+    notificationCount: 12,
     featureKey: "tribly_ai" as const
   },
   {
@@ -224,7 +224,7 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     description: "Automate communications",
     icon: WorkflowAutomationIcon,
     href: "/workflow-automation",
-    notificationCount: 0,
+    notificationCount: 7,
     featureKey: "automation" as const
   },
   {
@@ -242,7 +242,7 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     description: "Marketing campaigns",
     icon: CampaignsIcon,
     href: "/campaigns",
-    notificationCount: 0,
+    notificationCount: 25,
     featureKey: "campaigns" as const
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
@@ -270,16 +270,6 @@ export function Sidebar() {
   const { logout, user } = useAuth();
   const { hasFeature, isLoading: featuresLoading, features } = useBusiness();
 
-  // Debug logging for BusinessContext
-  console.log('Sidebar BusinessContext state:', {
-    features,
-    featuresLoading,
-    hasFeatureDashboard: hasFeature('dashboard'),
-    hasFeatureCohorts: hasFeature('cohorts'),
-    hasFeatureAchievements: hasFeature('achievements'),
-    hasFeatureAutomation: hasFeature('automation'),
-    hasFeatureCampaigns: hasFeature('campaigns')
-  });
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showServiceDialog, setShowServiceDialog] = useState(false);
@@ -387,17 +377,6 @@ export function Sidebar() {
             const isDisabled = !hasFeature(item.featureKey);
             const effectiveIsActive = isActive && !isDisabled;
 
-            // Debug logging for feature access
-            if (item.featureKey === 'cohorts' || item.featureKey === 'achievements' || item.featureKey === 'automation' || item.featureKey === 'campaigns') {
-              console.log(`Sidebar feature check for ${item.featureKey}:`, {
-                featureKey: item.featureKey,
-                hasFeature: hasFeature(item.featureKey),
-                isDisabled,
-                features: features,
-                isLoading: featuresLoading
-              });
-            }
-
             return (
               <Link
                 key={item.id}
@@ -435,6 +414,10 @@ export function Sidebar() {
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
                       <LockIcon colorCode="#6b7280" />
                     </div>
+                  )}
+                  {/* Notification Badge */}
+                  {item.notificationCount > 0 && !isDisabled && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
                   )}
                 </div>
                 <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
@@ -490,7 +473,7 @@ export function Sidebar() {
             </Link>
             <Link
               href="/settings"
-              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${
+              className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 relative ${
                 pathname === '/settings'
                   ? "bg-[#6E4EFF0D] hover:bg-[#6E4EFF]/10"
                   : "hover:bg-gray-100"
@@ -498,6 +481,8 @@ export function Sidebar() {
               title="Settings"
             >
               <SettingsIcon colorCode={pathname === '/settings' ? "#6E4EFF" : "#2A2A2F"} />
+              {/* Notification Badge for Settings */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
             </Link>
             <button
               onClick={() => setShowLogoutConfirm(true)}

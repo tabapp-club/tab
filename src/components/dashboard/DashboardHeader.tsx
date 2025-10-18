@@ -31,7 +31,7 @@ export function DashboardHeader() {
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
         {/* Header */}
-        <header className="mb-6 sm:mb-8 lg:mb-12 pt-16 lg:pt-0">
+        <header className="mb-0 sm:mb-1 lg:mb-1 pt-16 lg:pt-0">
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start">
             <div>
               <h1 className="text-[24px] font-bold text-[#2a2a2f] leading-tight tracking-[-0.1px]">

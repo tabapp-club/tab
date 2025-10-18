@@ -1,16 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Sidebar } from '../Sidebar';
 import { MobileHeaderButton } from '../MobileHeaderButton';
 import { CohortsHeader } from './CohortsHeader';
 import { CohortsFilterBar } from './CohortsFilterBar';
 import { CohortsList } from './CohortsList';
 import ImportModal from '../ImportModal';
 import { useSidebar } from '../SidebarContext';
-import { config } from '@/lib/config';
 import { CohortData } from './CohortsList';
-import { useAuth } from '@/contexts/AuthContext';
 import React from 'react';
 
 // CSV Export Utility Function for Cohorts
@@ -66,47 +63,63 @@ export function CohortsClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
-  const { user } = useAuth();
 
-  // Fetch cohorts from API
-  const fetchCohorts = useCallback(async () => {
-    if (!user?.accessToken) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`${config.api.baseURL}/cohort-analysis`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.accessToken}`
-        }
-      });
-      if (!response.ok) throw new Error('Failed to fetch cohorts');
-      const result = await response.json();
-      if (!result.success) throw new Error(result.message || 'API error');
-      // Map API data to CohortData[]
-      const apiCohorts = (result.data || []).map((item: any) => ({
-        id: item.name + '-' + item.category + '-' + item.first_invoice_date,
-        name: item.category,
-        count: item.count,
-        category: item.category,
-        createdBy: item.name || 'Rahul',
-        createdDate: item.first_invoice_date,
-        description: item.description || '',
-      }));
-      setCohorts(apiCohorts);
-    } catch (err: any) {
-      setError(err.message || 'Unknown error');
-      setCohorts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.accessToken]);
-
-  // Fetch on mount and when user changes
+  // Use dummy data instead of API fetch
   React.useEffect(() => {
-    fetchCohorts();
-  }, [fetchCohorts]);
+    setLoading(true);
+    // Simulate loading delay
+    setTimeout(() => {
+      const dummyCohorts: CohortData[] = [
+        {
+          id: "mobile-buyers",
+          name: "All mobile phone buyers",
+          count: 6958,
+          category: "Mobile phone buyers",
+          createdBy: "tab AI",
+          createdDate: "05-07-2025",
+          description: "This cohort consists data of all the users who bought mobiles phones. this has the data of both iOS and Android with all ticket sizes"
+        },
+        {
+          id: "android-buyers",
+          name: "Android buyers",
+          count: 4958,
+          category: "Mobile phone buyers",
+          createdBy: "tab AI",
+          createdDate: "05-07-2025",
+          description: "This cohort consists data of all the users who bought mobiles phones. this has the data of both iOS and Android with all ticket sizes"
+        },
+        {
+          id: "ios-buyers",
+          name: "iOS buyers",
+          count: 1958,
+          category: "Mobile phone buyers",
+          createdBy: "tab AI",
+          createdDate: "05-07-2025",
+          description: "This cohort consists data of all the users who bought mobiles phones. this has the data of both iOS and Android with all ticket sizes"
+        },
+        {
+          id: "appliances-buyers",
+          name: "Home appliances buyers",
+          count: 9556,
+          category: "Home appliances buyers",
+          createdBy: "tab AI",
+          createdDate: "05-07-2025",
+          description: "This cohort consists data of all the users who bought home appliances. This includes kitchen appliances, washing machines, and other household items"
+        },
+        {
+          id: "laptop-buyers",
+          name: "Laptop buyers",
+          count: 2556,
+          category: "Electronics buyers",
+          createdBy: "tab AI",
+          createdDate: "05-07-2025",
+          description: "This cohort consists data of all the users who bought laptops. This includes both gaming laptops and business laptops across different price ranges"
+        }
+      ];
+      setCohorts(dummyCohorts);
+      setLoading(false);
+    }, 500);
+  }, []);
 
   // Filter cohorts by search term
   const filteredCohorts = React.useMemo(() => {
@@ -139,60 +152,48 @@ export function CohortsClient() {
   }, []);
 
   return (
-    <div className="cohorts-page-container flex min-h-screen bg-[#F6F6F6]">
-      <Sidebar />
+    <main className={`flex-1 transition-sidebar ${
+      actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
+    }`}>
+      {/* Mobile Header with Menu Toggle */}
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
+        <MobileHeaderButton />
+      </header>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
-        <header className="flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50 lg:hidden">
-          <MobileHeaderButton />
-        </header>
+      {/* Main Content */}
+      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
+        <div className="pt-12 lg:pt-0 space-y-6">
+          {/* Header Section */}
+          <CohortsHeader
+            onImportClick={handleImportClick}
+            onExportClick={handleExportClick}
+            onCreateCohort={handleCreateCohort}
+          />
 
-        {/* Main Content Area */}
-        <main
-          className={`flex-1 transition-all duration-300 min-w-0 ${
-            actualIsCollapsed ? 'lg:ml-[64px]' : 'lg:ml-[232px]'
-          }`}
-        >
-          <div className="flex flex-col min-h-screen">
-            {/* Header Section */}
-            <div className="px-2 sm:px-4 lg:px-6 pt-16 lg:pt-10 pb-0">
-              <CohortsHeader
-                onImportClick={handleImportClick}
-                onExportClick={handleExportClick}
-                onCreateCohort={handleCreateCohort}
-              />
-            </div>
+          {/* Filter Bar */}
+          <CohortsFilterBar
+            onSearch={handleSearchChange}
+            totalCohorts={cohorts.length}
+            visibleCohorts={filteredCohorts.length}
+          />
 
-            {/* Filter Bar - Sticky */}
-            <div className="sticky top-0 z-10 px-2 sm:px-4 lg:px-6">
-              <CohortsFilterBar
-                onSearch={handleSearchChange}
-                totalCohorts={cohorts.length}
-                visibleCohorts={filteredCohorts.length}
-              />
-            </div>
-
-            {/* Cohorts List */}
-            <div className="flex-1 px-2 sm:px-4 lg:px-6 pb-6">
-              {loading ? (
-                <div className="text-center py-10 text-[#a1a1a1]">Loading cohorts...</div>
-              ) : error ? (
-                <div className="text-center py-10 text-red-500">{error}</div>
-              ) : (
-                <CohortsList
-                  cohorts={filteredCohorts}
-                />
-              )}
-            </div>
-          </div>
-        </main>
+          {/* Cohorts List */}
+          {loading ? (
+            <div className="text-center py-10 text-[#a1a1a1]">Loading cohorts...</div>
+          ) : error ? (
+            <div className="text-center py-10 text-red-500">{error}</div>
+          ) : (
+            <CohortsList
+              cohorts={filteredCohorts}
+            />
+          )}
+        </div>
       </div>
 
       {/* Import Modal */}
       {isImportModalOpen && (
         <ImportModal onClose={() => setIsImportModalOpen(false)} />
       )}
-    </div>
+    </main>
   );
 }

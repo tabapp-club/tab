@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { MobileHeaderButton } from './MobileHeaderButton';
 import { useSidebar } from './SidebarContext';
 import { useAuth } from '@/contexts/AuthContext';

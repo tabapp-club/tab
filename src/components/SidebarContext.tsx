@@ -26,6 +26,11 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
   // Check if we're on mobile
   useEffect(() => {
     const checkMobile = () => {
+      // Check if we're in the browser environment
+      if (typeof window === 'undefined') {
+        return;
+      }
+      
       const mobile = window.innerWidth < 1024; // lg breakpoint
       setIsMobile(mobile);
 
@@ -39,16 +44,20 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
     checkMobile();
 
     // Add resize listener
-    window.addEventListener('resize', checkMobile);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile);
+    }
 
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', checkMobile);
+      }
     };
   }, []);
 
   // Load collapsed state from localStorage only on desktop
   useEffect(() => {
-    if (!isMobile) {
+    if (!isMobile && typeof window !== 'undefined') {
       const savedState = localStorage.getItem('sidebar-collapsed');
       if (savedState !== null) {
         setIsCollapsed(JSON.parse(savedState));
@@ -58,7 +67,7 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
 
   // Save collapsed state to localStorage only on desktop
   useEffect(() => {
-    if (!isMobile) {
+    if (!isMobile && typeof window !== 'undefined') {
       localStorage.setItem('sidebar-collapsed', JSON.stringify(isCollapsed));
     }
   }, [isCollapsed, isMobile]);

@@ -3,7 +3,7 @@
 import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
 import { useState } from "react";
-import { DashboardHeader, CampaignSection, AnalyticsSection, WorkflowInsights, DashboardFooter } from "./dashboard";
+import { DashboardHeader, BlogsSection, BusinessGrowthSection, AnalyticsSection, WorkflowInsights, DashboardFooter } from "./dashboard";
 
 export function DashboardContent() {
   const { isCollapsed, isMobile } = useSidebar();
@@ -34,9 +34,10 @@ export function DashboardContent() {
     }`}>
       <DashboardHeader />
 
-      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
-        <CampaignSection />
+      <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8">
+        <BusinessGrowthSection />
         <AnalyticsSection onAskReason={handleAskReason} />
+        <BlogsSection />
         <WorkflowInsights />
         <DashboardFooter />
       </div>

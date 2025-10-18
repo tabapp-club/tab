@@ -164,7 +164,7 @@ export function AnalyticsSection({ onAskReason }: AnalyticsSectionProps) {
   };
 
   return (
-    <section className="pb-6 sm:pb-8">
+    <section className="pb-8 sm:pb-12 lg:pb-16">
       <div className="mb-4 sm:mb-6">
         <TimeFilter onFilterChange={handleFilterChange} />
       </div>

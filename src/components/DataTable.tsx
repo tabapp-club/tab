@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, memo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import React from 'react'; // Added missing import for React.useEffect
+import React from 'react';
 
 interface SortConfig {
   key: string | null;
@@ -24,51 +24,68 @@ interface DataTableProps {
   data?: UserData[];
 }
 
-const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
+const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
-  const handleSort = (key: keyof UserData) => {
+  const handleSort = useCallback((key: keyof UserData) => {
     setSortConfig(prev => ({ key, direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc' }));
-  };
-
-
+  }, []);
 
   const router = useRouter();
 
-  const handleAction = (action: string, user: UserData) => {
+  const handleAction = useCallback((action: string, user: UserData) => {
     if (action === 'view') {
       router.push(`/customer/${user.id}`, { scroll: false });
     }
-  };
+  }, [router]);
 
-  const filteredData = useMemo(() => {
-    return data.filter(user => {
-    if (!searchTerm) return true;
-    const searchLower = searchTerm.toLowerCase();
-    return Object.values(user).some(value =>
-      String(value).toLowerCase().includes(searchLower)
-    );
-  });
-  }, [searchTerm, data]);
+  const processedData = useMemo(() => {
+    // Early return if no data
+    if (!data || data.length === 0) return [];
+    
+    // Filter data
+    let filtered = data;
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = data.filter(user => {
+        // Optimize search by checking most common fields first
+        return user.mobile.toLowerCase().includes(searchLower) ||
+               user.id.toLowerCase().includes(searchLower) ||
+               user.userType.toLowerCase().includes(searchLower) ||
+               user.categories.some(cat => cat.toLowerCase().includes(searchLower));
+      });
+    }
+    
+    // Sort data
+    if (sortConfig.key) {
+      filtered = [...filtered].sort((a, b) => {
+        const aValue = a[sortConfig.key as keyof UserData];
+        const bValue = b[sortConfig.key as keyof UserData];
+        
+        // Handle different data types
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+        
+        const aStr = String(aValue).toLowerCase();
+        const bStr = String(bValue).toLowerCase();
+        
+        if (aStr < bStr) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aStr > bStr) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    return filtered;
+  }, [data, searchTerm, sortConfig]);
 
-  const sortedData = useMemo(() => {
-    return [...filteredData].sort((a, b) => {
-    if (!sortConfig.key) return 0;
-    const aValue = a[sortConfig.key as keyof UserData];
-    const bValue = b[sortConfig.key as keyof UserData];
-    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-    return 0;
-  });
-  }, [filteredData, sortConfig]);
-
-  const getSortIcon = (columnKey: string) => {
+  const getSortIcon = useCallback((columnKey: string) => {
     if (sortConfig.key !== columnKey) return <SortIcon />;
     return sortConfig.direction === 'asc' ? <SortUpIcon /> : <SortDownIcon />;
-  };
+  }, [sortConfig]);
 
-  const columns = [
+  const columns = useMemo(() => [
     { key: 'id', label: 'User ID', width: 'w-24 sm:w-32 lg:w-36', flex: 'flex-shrink-0' },
     { key: 'mobile', label: 'Mobile number', width: 'w-32 sm:w-40 lg:w-44', flex: 'flex-shrink-0' },
     { key: 'categories', label: 'Category', width: 'w-24 sm:w-32 lg:w-36', flex: 'flex-grow' },
@@ -77,17 +94,17 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
     { key: 'status', label: 'Status', width: 'w-20 sm:w-24 lg:w-32', flex: 'flex-shrink-0', centered: true },
     { key: 'addedOn', label: 'Added on', width: 'w-24 sm:w-28 lg:w-32', flex: 'flex-shrink-0' },
     { key: 'actions', label: 'Actions', width: 'w-16 sm:w-20 lg:w-24', flex: 'flex-shrink-0', centered: true }
-  ];
+  ], []);
 
   return (
     <div className="lg:bg-white overflow-hidden">
       {/* Mobile: Card Layout */}
       <div className="lg:hidden">
-        {sortedData.length === 0 ? (
+        {processedData.length === 0 ? (
           <div className="text-center py-8 text-[#a1a1a1]">No data available.</div>
         ) : (
           <div className="space-y-3 p-4">
-            {sortedData.map((user, index) => (
+            {processedData.map((user, index) => (
               <div 
                 key={index} 
                 className="bg-white border border-[#e9e9e9] rounded-lg p-4 hover:bg-[#f9fafb] cursor-pointer transition-colors duration-150"
@@ -180,10 +197,10 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
 
           {/* Table Body */}
           <div>
-            {sortedData.length === 0 ? (
+            {processedData.length === 0 ? (
               <div className="text-center py-8 text-[#a1a1a1]">No data available.</div>
             ) : (
-              sortedData.map((user, index) => (
+              processedData.map((user, index) => (
               <div key={index} onMouseEnter={() => setHoveredRow(index)} onMouseLeave={() => setHoveredRow(null)} className={`flex border-b border-[#e9e9e9] transition-colors min-w-max ${hoveredRow === index ? 'bg-gray-50' : 'bg-white'}`}>
                 {columns.map(col => (
                   <div key={col.key} className={`${col.width} ${col.flex || ''} flex items-center px-2 sm:px-3 lg:px-4 h-[50px] sm:h-[60px] lg:h-[66px] ${col.key !== 'actions' ? 'border-r border-[#e9e9e9]' : ''} ${col.centered ? 'justify-center' : ''}`}>
@@ -228,7 +245,9 @@ const DataTable = ({ searchTerm = '', data = [] }: DataTableProps) => {
       </div>
     </div>
   );
-};
+});
+
+DataTable.displayName = 'DataTable';
 
 // Icon components
 const SortIcon = () => <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L7 3L10 6" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 8L7 11L10 8" stroke="#626266" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
-import { BusinessServicesContent } from "@/components/business-services/BusinessServicesContent";
+import { WorkflowAutomationContent } from "./WorkflowAutomationContent";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { FeatureGuard } from "@/components/FeatureGuard";
 
@@ -62,7 +62,7 @@ export default function WorkflowAutomationPage() {
             <Sidebar />
 
             {/* Main Content */}
-            <BusinessServicesContent title="Workflow Automation" description="Automate WhatsApp and SMS communications with intelligent workflow automation" />
+            <WorkflowAutomationContent />
           </div>
         </div>
       </FeatureGuard>

@@ -33,6 +33,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = () => {
       try {
+        // Check if we're in the browser environment
+        if (typeof window === 'undefined') {
+          setIsLoading(false);
+          return;
+        }
+
         const savedUser = localStorage.getItem('user');
         const savedAccessToken = localStorage.getItem('access_token');
 
@@ -42,8 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Check if token is expired
           if (userData.tokenExpiry && Date.now() > userData.tokenExpiry) {
             // Token expired, clear session
-            localStorage.removeItem('user');
-            localStorage.removeItem('access_token');
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('user');
+              localStorage.removeItem('access_token');
+            }
             return;
           }
 
@@ -51,7 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (savedAccessToken && !userData.accessToken) {
             userData.accessToken = savedAccessToken;
             // Update localStorage with the complete user data
-            localStorage.setItem('user', JSON.stringify(userData));
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('user', JSON.stringify(userData));
+            }
           }
 
           // If business_id is missing, try to fetch it
@@ -62,7 +72,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const businessesResponse = await api.business.getBusinesses(userData.accessToken);
                 if (businessesResponse.data && businessesResponse.data.length > 0) {
                   userData.business_id = businessesResponse.data[0]._id;
-                  localStorage.setItem('user', JSON.stringify(userData));
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('user', JSON.stringify(userData));
+                  }
                   setUser(userData);
                   console.log('Fetched and set businessId:', userData.business_id);
                 }
@@ -82,14 +94,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenExpiry: Date.now() + (24 * 60 * 60 * 1000), // 24 hours from now
           };
           setUser(fallbackUser);
-          localStorage.setItem('user', JSON.stringify(fallbackUser));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(fallbackUser));
+          }
         } else {
           // No saved user or access_token found
         }
       } catch (error) {
         // Error checking auth status
-        localStorage.removeItem('user');
-        localStorage.removeItem('access_token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -178,8 +194,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
        };
 
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('access_token', token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('access_token', token);
+      }
       return { success: true };
     } catch (error: any) {
       // Check if it's a 404 error (user not registered)
@@ -210,8 +228,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('access_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user');
+      localStorage.removeItem('access_token');
+    }
   };
 
   const value: AuthContextType = {
