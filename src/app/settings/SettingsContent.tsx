@@ -4,12 +4,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
+import { InvoiceTemplatesContent } from './invoices/templates/InvoiceTemplatesContent';
 
 /**
  * SettingsContent component with URL routing support
  *
  * Available URLs:
  * - /settings?section=account-settings (default)
+ * - /settings?section=invoice-templates
  * - /settings?section=preferences
  * - /settings?section=integrations
  * - /settings?section=user-management
@@ -25,6 +27,18 @@ export function SettingsContent() {
   const [activeTab, setActiveTab] = useState('user-profile');
   const [activeSection, setActiveSection] = useState('account-settings');
   const [showContent, setShowContent] = useState(false);
+
+  // Set default tab based on active section (only if no tab in URL)
+  useEffect(() => {
+    const tabFromURL = searchParams.get('tab');
+    if (!tabFromURL) {
+      if (activeSection === 'account-settings') {
+        setActiveTab('user-profile');
+      } else if (activeSection === 'invoice-templates') {
+        setActiveTab('template-preview');
+      }
+    }
+  }, [activeSection, searchParams]);
   
   // Help & Support form state
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
@@ -329,8 +343,8 @@ export function SettingsContent() {
   useEffect(() => {
     const section = searchParams.get('section');
     const tab = searchParams.get('tab');
-    const validSections = ['account-settings', 'data-privacy', 'help-support'];
-    const validTabs = ['user-profile', 'business-profile'];
+    const validSections = ['account-settings', 'invoice-templates', 'data-privacy', 'help-support'];
+    const validTabs = ['user-profile', 'business-profile', 'template-preview', 'business-details'];
 
     if (section && validSections.includes(section)) {
       setActiveSection(section);
@@ -352,8 +366,8 @@ export function SettingsContent() {
   const updateURL = (section: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('section', section);
-    // Clear tab when changing sections (except for account-settings)
-    if (section !== 'account-settings') {
+    // Clear tab when changing sections (except for account-settings and invoice-templates)
+    if (section !== 'account-settings' && section !== 'invoice-templates') {
       params.delete('tab');
     }
     router.push(`/settings?${params.toString()}`, { scroll: false });
@@ -372,6 +386,10 @@ export function SettingsContent() {
       'account-settings': {
         title: 'Account settings',
         description: 'Personal & business profile information'
+      },
+      'invoice-templates': {
+        title: 'Invoice Templates',
+        description: 'Customize your business details and invoice templates'
       },
       'integrations': {
         title: 'Integrations',
@@ -500,7 +518,25 @@ export function SettingsContent() {
                 </div>
               </button>
 
-
+              <button
+                onClick={() => {
+                  setActiveSection('invoice-templates');
+                  updateURL('invoice-templates');
+                  if (isMobile) setShowContent(true);
+                }}
+                className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
+                  activeSection === 'invoice-templates'
+                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
+                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                }`}
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">Invoice Templates</span>
+                  <span className="text-xs text-gray-500 mt-0 group-hover:text-gray-600">
+                    Customize business details & invoice templates
+                  </span>
+                </div>
+              </button>
 
               <button
                 onClick={() => {
@@ -593,6 +629,37 @@ export function SettingsContent() {
                 }`}
               >
                 Business Profile
+              </button>
+            </div>
+              )}
+
+              {activeSection === 'invoice-templates' && (
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => {
+                  setActiveTab('template-preview');
+                  updateTabURL('template-preview');
+                }}
+                    className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
+                  activeTab === 'template-preview'
+                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                }`}
+              >
+                Template & Preview
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('business-details');
+                  updateTabURL('business-details');
+                }}
+                    className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
+                  activeTab === 'business-details'
+                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                }`}
+              >
+                Business Details
               </button>
             </div>
               )}
@@ -1866,6 +1933,10 @@ export function SettingsContent() {
 
                   </div>
                 </div>
+              )}
+
+              {activeSection === 'invoice-templates' && (
+                <InvoiceTemplatesContent activeTab={activeTab} />
               )}
 
               {activeSection === 'data-privacy' && (
