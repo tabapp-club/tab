@@ -14,6 +14,8 @@ import { useSidebar } from './SidebarContext';
 import DataCenterHeader from './data-center/DataCenterHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDataCenterData, mapApiDataToTable, UserData } from '@/hooks/useDataCenterData';
+import { CampaignDetailsSidepane } from './campaigns/CampaignDetailsSidepane';
+import { RecommendedCampaign } from './campaigns/RecommendedCampaigns';
 
 // CSV Export Utility Function
 const exportToCSV = (data: UserData[], filename: string = 'data-center-export.csv') => {
@@ -71,6 +73,8 @@ export default function DataCenterClient() {
   const [filters, setFilters] = useState<any>({});
   const [selectedCard, setSelectedCard] = useState<string>('total');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [campaignSidePaneOpen, setCampaignSidePaneOpen] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
 
@@ -283,6 +287,112 @@ export default function DataCenterClient() {
     exportToCSV(currentTableData);
   }, [currentTableData]);
 
+  // Map data center stat to RecommendedCampaign format
+  const mapStatToCampaign = useCallback((filterType: string, stat: any, metrics: any): RecommendedCampaign => {
+    const metric = metrics?.[stat.key as keyof typeof metrics];
+    const count = metric?.count || 0;
+    
+    // Map filter types to campaign data
+    const campaignMap: Record<string, Partial<RecommendedCampaign>> = {
+      'total': {
+        id: 'total-users',
+        title: 'Total Users',
+        description: 'Reach your entire audience at once with a comprehensive campaign',
+        bgColor: 'bg-gray-100',
+        iconColor: 'text-gray-600',
+        expectedCampaignCost: '₹15K',
+        expectedConversion: '25%',
+        expectedRevenue: '₹75K',
+        urgency: 'medium' as const,
+        priority: false,
+        estimatedImpact: 'Broad reach campaign'
+      },
+      'new': {
+        id: 'new-users',
+        title: 'New Users',
+        description: 'Welcome and onboard new customers with personalized messages',
+        bgColor: 'bg-blue-100',
+        iconColor: 'text-blue-600',
+        expectedCampaignCost: '₹8K',
+        expectedConversion: '35%',
+        expectedRevenue: '₹45K',
+        urgency: 'high' as const,
+        priority: true,
+        estimatedImpact: 'Strong onboarding impact'
+      },
+      'retained': {
+        id: 'retained-users',
+        title: 'Retained Users',
+        description: 'Reward loyal customers and boost retention with exclusive offers',
+        bgColor: 'bg-green-100',
+        iconColor: 'text-green-600',
+        expectedCampaignCost: '₹10K',
+        expectedConversion: '40%',
+        expectedRevenue: '₹85K',
+        urgency: 'medium' as const,
+        priority: false,
+        estimatedImpact: 'High retention value'
+      },
+      'active': {
+        id: 'active-users',
+        title: 'Active Users',
+        description: 'Engage your most responsive audience with targeted promotions',
+        bgColor: 'bg-purple-100',
+        iconColor: 'text-purple-600',
+        expectedCampaignCost: '₹12K',
+        expectedConversion: '30%',
+        expectedRevenue: '₹65K',
+        urgency: 'high' as const,
+        priority: true,
+        estimatedImpact: 'Maximum engagement potential'
+      },
+      'inactive': {
+        id: 'inactive-users',
+        title: 'Inactive Users',
+        description: 'Re-engage dormant customers with offers and personalized content',
+        bgColor: 'bg-orange-100',
+        iconColor: 'text-orange-600',
+        expectedCampaignCost: '₹9K',
+        expectedConversion: '20%',
+        expectedRevenue: '₹35K',
+        urgency: 'high' as const,
+        priority: true,
+        estimatedImpact: 'Revenue recovery opportunity'
+      }
+    };
+
+    const baseCampaign = campaignMap[filterType] || campaignMap['total'];
+    
+    return {
+      id: baseCampaign.id!,
+      title: baseCampaign.title!,
+      count,
+      description: baseCampaign.description!,
+      icon: stat.icon,
+      bgColor: baseCampaign.bgColor!,
+      iconColor: baseCampaign.iconColor!,
+      expectedCampaignCost: baseCampaign.expectedCampaignCost!,
+      expectedConversion: baseCampaign.expectedConversion!,
+      expectedRevenue: baseCampaign.expectedRevenue!,
+      urgency: baseCampaign.urgency!,
+      priority: baseCampaign.priority!,
+      estimatedImpact: baseCampaign.estimatedImpact!
+    };
+  }, []);
+
+  // Handle send campaign from data center
+  const handleSendCampaign = useCallback((filterType: string, stat: any) => {
+    const campaign = mapStatToCampaign(filterType, stat, metrics);
+    setSelectedCampaign(campaign);
+    setCampaignSidePaneOpen(true);
+  }, [metrics, mapStatToCampaign]);
+
+  // Handle campaign sidepane close
+  const handleCampaignSidePaneClose = useCallback(() => {
+    setCampaignSidePaneOpen(false);
+    setSelectedCampaign(null);
+  }, []);
+
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
@@ -306,6 +416,7 @@ export default function DataCenterClient() {
               metrics={metrics}
               onCardClick={handleCardClick}
               selectedCard={selectedCard}
+              onSendCampaign={handleSendCampaign}
             />
               <div className="lg:bg-white lg:rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
             <div className="mb-4">
@@ -355,6 +466,13 @@ export default function DataCenterClient() {
             onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)}
           />
         )}
+
+      {/* Campaign Details Sidepane */}
+      <CampaignDetailsSidepane
+        isOpen={campaignSidePaneOpen}
+        onClose={handleCampaignSidePaneClose}
+        campaign={selectedCampaign}
+      />
       </div>
   );
 }

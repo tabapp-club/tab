@@ -33,16 +33,16 @@ const CampaignsHeader = ({ onCreateCampaign }: CampaignsHeaderProps) => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-            {/* Create Campaign Button */}
+          {/* Create Campaign Button - Hidden */}
+          {/* <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             <button
               onClick={onCreateCampaign}
-              className="flex items-center justify-center gap-2 h-9 px-4 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  transition-all duration-300 ease-in-out "
+              className="flex items-center justify-center gap-2 h-9 px-4 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg  transition-all duration-300 ease-in-out "
             >
               <PlusIcon />
               <span>Create Campaign</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

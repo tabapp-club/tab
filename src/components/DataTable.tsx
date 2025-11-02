@@ -164,7 +164,7 @@ const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
                       e.stopPropagation();
                       handleAction('view', user);
                     }}
-                    className="flex items-center gap-2 text-[#6E4EFF] hover:text-[#5a3fd9] transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 text-[#9747FF] hover:text-[#6E4EFF] transition-colors text-sm font-medium"
                   >
                     <ViewIcon />
                     View Details
@@ -207,7 +207,7 @@ const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
                     {col.key === 'actions' ? (
                       <button
                         onClick={() => handleAction('view', user)}
-                        className="p-1 text-[#6E4EFF] hover:bg-[#6E4EFF]/5 rounded transition-colors"
+                        className="p-1 text-[#9747FF] hover:bg-[#9747FF]/5 rounded transition-colors"
                         aria-label="View details"
                       >
                         <ViewIcon />

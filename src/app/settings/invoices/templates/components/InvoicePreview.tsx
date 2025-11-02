@@ -409,7 +409,7 @@ export function InvoicePreview({ businessDetails, selectedTemplate, selectedForm
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           onClick={handleOpenPublicLink}
-          className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 py-2 rounded-md font-medium hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300"
+          className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 py-2 rounded-md font-medium hover:from-[#9747FF] hover:to-[#9747FF] transition-all duration-300"
         >
           <ExternalLink className="w-4 h-4" />
           <span>Open as Public Link</span>

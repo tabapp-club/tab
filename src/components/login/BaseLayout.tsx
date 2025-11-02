@@ -29,7 +29,7 @@ export function BaseLayout({ children, illustration, showHelpButtons = true }: B
       {/* Help Buttons - Bottom Right */}
       {showHelpButtons && (
         <div className="absolute bottom-6 right-6 flex flex-col space-y-2">
-          <button className="w-12 h-12 bg-[#7856ff] rounded-full flex items-center justify-center shadow-lg hover:bg-[#6545dd] transition-colors">
+          <button className="w-12 h-12 bg-[#9747FF] rounded-full flex items-center justify-center shadow-lg hover:bg-[#6545dd] transition-colors">
             <span className="text-white text-lg">?</span>
           </button>
           <button className="w-12 h-12 bg-[#2a2a2f] rounded-full flex items-center justify-center shadow-lg hover:bg-gray-800 transition-colors">

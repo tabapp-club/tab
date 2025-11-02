@@ -138,7 +138,7 @@ export function TemplateManager() {
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="bg-[#6E4EFF] text-white px-4 py-2 rounded hover:bg-[#5a3fd9] transition-colors"
+          className="bg-[#9747FF] text-white px-4 py-2 rounded hover:bg-[#6E4EFF] transition-colors"
         >
           + New Template
         </button>
@@ -190,7 +190,7 @@ export function TemplateManager() {
                   onClick={() => setSelectedTemplate(template)}
                   className={`p-3 rounded-lg cursor-pointer transition-colors border ${
                     selectedTemplate?.id === template.id
-                      ? "bg-[#6E4EFF]/10 border-[#6E4EFF]/20"
+                      ? "bg-[#9747FF]/10 border-[#9747FF]/20"
                       : "hover:bg-[#f9fafb] border-[#e5e7eb]"
                   }`}
                 >
@@ -272,7 +272,7 @@ export function TemplateManager() {
                     {selectedTemplate.variables.map((variable) => (
                       <span
                         key={variable}
-                        className="bg-[#6E4EFF]/10 text-[#6E4EFF] px-2 py-1 rounded-md text-sm font-medium"
+                        className="bg-[#9747FF]/10 text-[#9747FF] px-2 py-1 rounded-md text-sm font-medium"
                       >
                         {`{{${variable}}}`}
                       </span>
@@ -311,7 +311,7 @@ export function TemplateManager() {
               <p className="text-[#6b7280] mb-4">Select a template from the list to view details and edit</p>
               <button
                 onClick={() => setIsCreating(true)}
-                className="bg-[#6E4EFF] text-white px-4 py-2 rounded-lg hover:bg-[#5a3fd9] transition-colors"
+                className="bg-[#9747FF] text-white px-4 py-2 rounded-lg hover:bg-[#6E4EFF] transition-colors"
               >
                 Create New Template
               </button>
@@ -387,7 +387,7 @@ export function TemplateManager() {
               <button 
                 onClick={isCreating ? handleCreateTemplate : handleUpdateTemplate}
                 disabled={createTemplateMutation.isPending || updateTemplateMutation.isPending}
-                className="bg-[#6E4EFF] text-white px-4 py-2 rounded hover:bg-[#5a3fd9] transition-colors disabled:opacity-50"
+                className="bg-[#9747FF] text-white px-4 py-2 rounded hover:bg-[#6E4EFF] transition-colors disabled:opacity-50"
               >
                 {createTemplateMutation.isPending || updateTemplateMutation.isPending 
                   ? (isCreating ? "Creating..." : "Saving...") 

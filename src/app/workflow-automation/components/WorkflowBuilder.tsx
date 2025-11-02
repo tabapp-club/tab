@@ -58,8 +58,8 @@ const CustomDropdown = ({ options, value, onChange, placeholder = "Select option
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent bg-white text-left flex items-center justify-between ${
-          isOpen ? 'border-[#6E4EFF]' : ''
+        className={`w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent bg-white text-left flex items-center justify-between ${
+          isOpen ? 'border-[#9747FF]' : ''
         }`}
       >
         <span className={selectedOption ? 'text-[#2a2a2f]' : 'text-[#6b7280]'}>
@@ -79,7 +79,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder = "Select option
                 setIsOpen(false);
               }}
               className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors ${
-                value === option.value ? 'bg-[#6E4EFF]/5 text-[#6E4EFF]' : 'text-[#2a2a2f]'
+                value === option.value ? 'bg-[#9747FF]/5 text-[#9747FF]' : 'text-[#2a2a2f]'
               }`}
             >
               {option.label}
@@ -268,7 +268,7 @@ export function WorkflowBuilder() {
                   type="text"
                 value={request.title}
                 onChange={(e) => setRequest({ ...request, title: e.target.value })}
-                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                 placeholder="e.g., Send welcome message for all new customers"
                 required
                 />
@@ -279,7 +279,7 @@ export function WorkflowBuilder() {
                 <textarea
                 value={request.description}
                 onChange={(e) => setRequest({ ...request, description: e.target.value })}
-                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   rows={3}
                 placeholder="Describe your automation requirement in detail..."
                 required
@@ -292,7 +292,7 @@ export function WorkflowBuilder() {
                 type="text"
                 value={request.trigger}
                 onChange={(e) => setRequest({ ...request, trigger: e.target.value })}
-                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                 placeholder="e.g., New customer registration, Order placed, Cart abandoned"
                 required
               />
@@ -303,7 +303,7 @@ export function WorkflowBuilder() {
               <textarea
                 value={request.message}
                 onChange={(e) => setRequest({ ...request, message: e.target.value })}
-                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                 rows={2}
                 placeholder="What message should be sent?"
                 required
@@ -338,7 +338,7 @@ export function WorkflowBuilder() {
                 type="text"
                 value={request.targetAudience}
                 onChange={(e) => setRequest({ ...request, targetAudience: e.target.value })}
-                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                 placeholder="e.g., New customers, VIP customers, All users"
                 required
               />
@@ -348,7 +348,7 @@ export function WorkflowBuilder() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#6E4EFF] text-white py-3 rounded hover:bg-[#5a3fd9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-[#9747FF] text-white py-3 rounded hover:bg-[#6E4EFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <>

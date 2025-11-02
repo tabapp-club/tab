@@ -128,7 +128,7 @@ The dashboard implements a mobile-first responsive design with specific breakpoi
 
 ### Colors
 The dashboard uses a consistent color palette defined in the components:
-- Primary: `#7856ff`
+- Primary: `#9747FF`
 - Text: `#2a2a2f`
 - Secondary text: `#626266`
 - Background: `#ffffff`

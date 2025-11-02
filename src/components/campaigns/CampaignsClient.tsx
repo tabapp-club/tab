@@ -5,9 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { CampaignsHeader } from './CampaignsHeader';
-import { CampaignsStats } from './CampaignsStats';
+import { RecommendedCampaigns, RecommendedCampaign } from './RecommendedCampaigns';
 import { CampaignsFilters } from './CampaignsFilters';
 import { CampaignsList } from './CampaignsList';
+import { CampaignDetailsSidepane } from './CampaignDetailsSidepane';
 
 export interface CampaignData {
   id: string;
@@ -32,6 +33,8 @@ export function CampaignsClient() {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignData[]>([]);
+  const [sidePaneOpen, setSidePaneOpen] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
 
   // Load search term from URL parameters
@@ -78,8 +81,18 @@ export function CampaignsClient() {
     setFilteredCampaigns(campaigns);
   }, []);
 
+  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
+    setSelectedCampaign(campaign);
+    setSidePaneOpen(true);
+  }, []);
+
+  const handleSidePaneClose = useCallback(() => {
+    setSidePaneOpen(false);
+    setSelectedCampaign(null);
+  }, []);
+
   return (
-    <main className={`flex-1 transition-sidebar ${
+    <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
       actualIsCollapsed ? 'main-content sidebar-collapsed' : 'main-content'
     }`}>
       {/* Mobile Header with Menu Toggle */}
@@ -95,8 +108,8 @@ export function CampaignsClient() {
             onCreateCampaign={handleCreateCampaign}
           />
 
-          {/* Stats */}
-          <CampaignsStats />
+          {/* Recommended Campaigns */}
+          <RecommendedCampaigns onSendNow={handleSendNow} />
 
           {/* Filters */}
           <CampaignsFilters
@@ -111,6 +124,13 @@ export function CampaignsClient() {
           />
         </div>
       </div>
+
+      {/* Campaign Details Sidepane */}
+      <CampaignDetailsSidepane
+        isOpen={sidePaneOpen}
+        onClose={handleSidePaneClose}
+        campaign={selectedCampaign}
+      />
     </main>
   );
 }

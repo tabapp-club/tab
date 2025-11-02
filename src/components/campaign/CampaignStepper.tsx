@@ -67,7 +67,7 @@ const StepperStep = ({
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
-      return "bg-[rgba(120,86,255,0.1)] text-[#7856ff]";
+      return "bg-[rgba(120,86,255,0.1)] text-[#9747FF]";
     }
     if (isCompleted) {
       return "bg-[rgba(4,180,64,0.1)] text-[#04b440]";
@@ -77,7 +77,7 @@ const StepperStep = ({
 
   const getTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]";
+      return "text-[#9747FF]";
     }
     if (isCompleted) {
       return "text-[#04b440]";
@@ -87,7 +87,7 @@ const StepperStep = ({
 
   const getSubTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]/70";
+      return "text-[#9747FF]/70";
     }
     if (isCompleted) {
       return "text-[#04b440]/70";
@@ -129,7 +129,7 @@ const StepperProgressBar = ({ currentStep = 1, totalSteps = 5 }: { currentStep?:
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
       <div 
-        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
     </div>
@@ -173,9 +173,9 @@ export function CampaignStepper({
     <div className="mb-6 lg:mb-8 bg-white border border-[#e9e9e9] rounded-md overflow-hidden relative">
       {/* Mobile Stepper - Simplified */}
       <div className="lg:hidden">
-        <div className="flex items-center p-4 bg-gradient-to-r from-[#7856ff]/5 to-[#8B6AFF]/5">
+        <div className="flex items-center p-4 bg-gradient-to-r from-[#9747FF]/5 to-[#9747FF]/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] flex items-center justify-center text-white font-bold text-sm">
               {currentStep}
             </div>
             <div>
@@ -189,7 +189,7 @@ export function CampaignStepper({
           </div>
         </div>
         <div className="h-1 bg-gray-200">
-          <div className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500" style={{ width: `${(currentStep / 5) * 100}%` }}></div>
+          <div className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500" style={{ width: `${(currentStep / 5) * 100}%` }}></div>
         </div>
       </div>
 

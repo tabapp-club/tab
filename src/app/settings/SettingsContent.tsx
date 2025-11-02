@@ -506,8 +506,8 @@ export function SettingsContent() {
                 }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'account-settings'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                    ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF]'
+                    : 'text-[#2a2a2f] hover:bg-[#9747FF0D] hover:text-[#9747FF]'
                 }`}
               >
                 <div className="flex flex-col">
@@ -526,8 +526,8 @@ export function SettingsContent() {
                 }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'invoice-templates'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                    ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF]'
+                    : 'text-[#2a2a2f] hover:bg-[#9747FF0D] hover:text-[#9747FF]'
                 }`}
               >
                 <div className="flex flex-col">
@@ -546,8 +546,8 @@ export function SettingsContent() {
                 }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'data-privacy'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                    ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF]'
+                    : 'text-[#2a2a2f] hover:bg-[#9747FF0D] hover:text-[#9747FF]'
                 }`}
               >
                 <div className="flex flex-col">
@@ -566,8 +566,8 @@ export function SettingsContent() {
                 }}
                 className={`w-full px-2 py-2 rounded-[4px] text-left transition-colors group ${
                   activeSection === 'help-support'
-                    ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff]'
-                    : 'text-[#2a2a2f] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF]'
+                    ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF]'
+                    : 'text-[#2a2a2f] hover:bg-[#9747FF0D] hover:text-[#9747FF]'
                 }`}
               >
                 <div className="flex flex-col">
@@ -611,8 +611,8 @@ export function SettingsContent() {
                 }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'user-profile'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                        ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
                 }`}
               >
                 User Profile
@@ -624,8 +624,8 @@ export function SettingsContent() {
                 }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'business-profile'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                        ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
                 }`}
               >
                 Business Profile
@@ -642,8 +642,8 @@ export function SettingsContent() {
                 }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'template-preview'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                        ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
                 }`}
               >
                 Template & Preview
@@ -655,8 +655,8 @@ export function SettingsContent() {
                 }}
                     className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
                   activeTab === 'business-details'
-                        ? 'bg-[rgba(110,78,255,0.05)] text-[#6e4eff] border-[#6e4eff]'
-                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#6E4EFF0D] hover:text-[#6E4EFF] hover:border-[#6E4EFF]'
+                        ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                        : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
                 }`}
               >
                 Business Details
@@ -752,7 +752,7 @@ export function SettingsContent() {
                     <div className="pt-4 flex gap-3">
                       <button
                         onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
-                        className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out"
+                        className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out"
                       >
                         Save Changes
                       </button>
@@ -806,7 +806,7 @@ export function SettingsContent() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {/* Zapier Integration */}
-                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#9747FF]/30 hover:bg-gray-50/80 transition-all duration-300">
                         <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -834,7 +834,7 @@ export function SettingsContent() {
                           </div>
                           <button
                             onClick={() => setShowZapierModal(true)}
-                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                            className="px-3 py-1.5 bg-white text-[#9747FF] border border-[#9747FF] rounded-md text-xs font-normal hover:bg-[#9747FF]/10 transition-all duration-200"
                           >
                             {manualIntegrations.zapier.connected ? 'Connected' : 'Setup Guide'}
                           </button>
@@ -842,7 +842,7 @@ export function SettingsContent() {
                     </div>
 
                       {/* Webhooks Integration */}
-                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#9747FF]/30 hover:bg-gray-50/80 transition-all duration-300">
                         <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -870,7 +870,7 @@ export function SettingsContent() {
                           </div>
                           <button
                             onClick={() => setShowWebhookModal(true)}
-                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                            className="px-3 py-1.5 bg-white text-[#9747FF] border border-[#9747FF] rounded-md text-xs font-normal hover:bg-[#9747FF]/10 transition-all duration-200"
                           >
                             {manualIntegrations.webhooks.enabled ? 'Active' : 'Configure'}
                           </button>
@@ -878,7 +878,7 @@ export function SettingsContent() {
                     </div>
 
                       {/* API Integration */}
-                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#6E4EFF]/30 hover:bg-gray-50/80 transition-all duration-300">
+                      <div className="group relative bg-gray-50 border border-gray-200 rounded-lg p-5 hover:border-[#9747FF]/30 hover:bg-gray-50/80 transition-all duration-300">
                         <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -906,7 +906,7 @@ export function SettingsContent() {
                           </div>
                           <button
                             onClick={() => setShowApiModal(true)}
-                            className="px-3 py-1.5 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded-md text-xs font-normal hover:bg-[#6E4EFF]/10 transition-all duration-200"
+                            className="px-3 py-1.5 bg-white text-[#9747FF] border border-[#9747FF] rounded-md text-xs font-normal hover:bg-[#9747FF]/10 transition-all duration-200"
                           >
                             {manualIntegrations.api.enabled ? 'Enabled' : 'API Docs'}
                           </button>
@@ -930,7 +930,7 @@ export function SettingsContent() {
                               <p className="text-xs text-gray-500">Bulk data operations</p>
                           </div>
                         </div>
-                          <button className="text-xs text-[#6E4EFF] hover:text-[#5D3EE8] font-medium">
+                          <button className="text-xs text-[#9747FF] hover:text-[#9747FF] font-medium">
                             Learn More
                         </button>
                       </div>
@@ -947,7 +947,7 @@ export function SettingsContent() {
                               <p className="text-xs text-gray-500">Automated data sync</p>
                             </div>
                           </div>
-                          <button className="text-xs text-[#6E4EFF] hover:text-[#5D3EE8] font-medium">
+                          <button className="text-xs text-[#9747FF] hover:text-[#9747FF] font-medium">
                             Configure
                           </button>
                         </div>
@@ -984,7 +984,7 @@ export function SettingsContent() {
                               {!integrations.chromeExtension ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, chromeExtension: !v.chromeExtension }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Install
                                 </button>
@@ -1013,7 +1013,7 @@ export function SettingsContent() {
                               {!integrations.chromeAnalytics ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, chromeAnalytics: !v.chromeAnalytics }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Install
                                 </button>
@@ -1054,7 +1054,7 @@ export function SettingsContent() {
                               {!integrations.localAgent ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, localAgent: !v.localAgent }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Download
                                 </button>
@@ -1093,7 +1093,7 @@ export function SettingsContent() {
                               {!integrations.quickbooks ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, quickbooks: !v.quickbooks }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Connect
                                 </button>
@@ -1122,7 +1122,7 @@ export function SettingsContent() {
                               {!integrations.xero ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, xero: !v.xero }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Connect
                                 </button>
@@ -1151,7 +1151,7 @@ export function SettingsContent() {
                               {!integrations.freshbooks ? (
                                 <button
                                   onClick={() => setIntegrations(v => ({ ...v, freshbooks: !v.freshbooks }))}
-                                  className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                  className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                 >
                                   Connect
                                 </button>
@@ -1200,7 +1200,7 @@ export function SettingsContent() {
                                 {!integrations.stripe ? (
                                                                     <button
                                     onClick={() => setIntegrations(v => ({ ...v, stripe: !v.stripe }))}
-                                    className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                    className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                   >
                                     Connect
                         </button>
@@ -1308,7 +1308,7 @@ export function SettingsContent() {
                                 {!integrations.clover ? (
                                                                     <button
                                     onClick={() => setIntegrations(v => ({ ...v, clover: !v.clover }))}
-                                    className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                    className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                   >
                                     Connect
                                   </button>
@@ -1396,7 +1396,7 @@ export function SettingsContent() {
                                 {!integrations.toast ? (
                                   <button
                                     onClick={() => setIntegrations(v => ({ ...v, toast: !v.toast }))}
-                                    className="ml-auto px-3 py-1 bg-white text-[#6E4EFF] border border-[#6E4EFF] rounded text-xs font-medium hover:bg-[#6E4EFF]/10 transition-colors"
+                                    className="ml-auto px-3 py-1 bg-white text-[#9747FF] border border-[#9747FF] rounded text-xs font-medium hover:bg-[#9747FF]/10 transition-colors"
                                   >
                                     Connect
                                   </button>
@@ -1484,10 +1484,10 @@ export function SettingsContent() {
                           Our team can help you set up integrations, troubleshoot issues, or recommend the best tools for your business.
                         </p>
                         <div className="flex gap-3">
-                          <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                          <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                             View Documentation
                           </button>
-                          <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                          <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                             Contact Support
                           </button>
                         </div>
@@ -1501,7 +1501,7 @@ export function SettingsContent() {
               {false && activeSection === 'user-management' && (
                 <div className="space-y-4">
                   <div className="flex justify-end items-center">
-                      <button onClick={() => setShowAddMember(!showAddMember)} className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
+                      <button onClick={() => setShowAddMember(!showAddMember)} className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                         {showAddMember ? 'Close' : 'Add Employee'}
                     </button>
                   </div>
@@ -1513,7 +1513,7 @@ export function SettingsContent() {
                             Name <span className="text-red-500">*</span>
                           </label>
                           <input
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                             placeholder="Enter full name"
                             value={newMember.name}
                             onChange={e => setNewMember({ ...newMember, name: e.target.value })}
@@ -1526,7 +1526,7 @@ export function SettingsContent() {
                           </label>
                           <input
                             type="email"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                             placeholder="Enter email address"
                             value={newMember.email}
                             onChange={e => setNewMember({ ...newMember, email: e.target.value })}
@@ -1539,7 +1539,7 @@ export function SettingsContent() {
                           </label>
                           <input
                             type="tel"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                             placeholder="Enter phone number"
                             value={newMember.phone}
                             onChange={e => setNewMember({ ...newMember, phone: e.target.value })}
@@ -1554,7 +1554,7 @@ export function SettingsContent() {
                             <button
                               type="button"
                               onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-[4px] bg-white text-left focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors flex items-center justify-between text-[14px] font-normal"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-[4px] bg-white text-left focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors flex items-center justify-between text-[14px] font-normal"
                             >
                               <span className="text-gray-900">{newMember.role}</span>
                               <svg className={`w-4 h-4 text-gray-400 transition-transform ${showRoleDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1572,7 +1572,7 @@ export function SettingsContent() {
                                       setShowRoleDropdown(false);
                                     }}
                                     className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors text-sm ${
-                                      newMember.role === role ? 'bg-[#6E4EFF0D] text-[#6E4EFF]' : 'text-gray-900'
+                                      newMember.role === role ? 'bg-[#9747FF0D] text-[#9747FF]' : 'text-gray-900'
                                     } ${role === 'Owner' ? 'rounded-t-[4px]' : role === 'Member' ? 'rounded-b-[4px]' : ''}`}
                                   >
                                     {role}
@@ -1589,7 +1589,7 @@ export function SettingsContent() {
                           </label>
                           <input
                             type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                             placeholder="Enter employee ID"
                             value={newMember.employeeId}
                             onChange={e => setNewMember({ ...newMember, employeeId: e.target.value })}
@@ -1619,7 +1619,7 @@ export function SettingsContent() {
                             setShowAddMember(false);
                             setShowRoleDropdown(false);
                           }}
-                          className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
+                          className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
                         >
                           Add Employee
                         </button>
@@ -1653,7 +1653,7 @@ export function SettingsContent() {
                                     Name <span className="text-red-500">*</span>
                                   </label>
                                   <input
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                                     placeholder="Enter full name"
                                     value={editMember.name}
                                     onChange={e => setEditMember({ ...editMember, name: e.target.value })}
@@ -1666,7 +1666,7 @@ export function SettingsContent() {
                                   </label>
                                   <input
                                     type="email"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                                     placeholder="Enter email address"
                                     value={editMember.email}
                                     onChange={e => setEditMember({ ...editMember, email: e.target.value })}
@@ -1679,7 +1679,7 @@ export function SettingsContent() {
                                   </label>
                                   <input
                                     type="tel"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                                     placeholder="Enter phone number"
                                     value={editMember.phone}
                                     onChange={e => setEditMember({ ...editMember, phone: e.target.value })}
@@ -1694,7 +1694,7 @@ export function SettingsContent() {
                                     <button
                                       type="button"
                                       onClick={() => setShowEditRoleDropdown(!showEditRoleDropdown)}
-                                      className="w-full px-3 py-2 border border-gray-300 rounded-[4px] bg-white text-left focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors flex items-center justify-between text-[14px] font-normal"
+                                      className="w-full px-3 py-2 border border-gray-300 rounded-[4px] bg-white text-left focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors flex items-center justify-between text-[14px] font-normal"
                                     >
                                       <span className="text-gray-900">{editMember.role}</span>
                                       <svg className={`w-4 h-4 text-gray-400 transition-transform ${showEditRoleDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1712,7 +1712,7 @@ export function SettingsContent() {
                                               setShowEditRoleDropdown(false);
                                             }}
                                             className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors text-sm ${
-                                              editMember.role === role ? 'bg-[#6E4EFF0D] text-[#6E4EFF]' : 'text-gray-900'
+                                              editMember.role === role ? 'bg-[#9747FF0D] text-[#9747FF]' : 'text-gray-900'
                                             } ${role === 'Owner' ? 'rounded-t-[4px]' : role === 'Member' ? 'rounded-b-[4px]' : ''}`}
                                           >
                                             {role}
@@ -1729,7 +1729,7 @@ export function SettingsContent() {
                                   </label>
                                   <input
                                     type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent transition-colors text-[14px] font-normal"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent transition-colors text-[14px] font-normal"
                                     placeholder="Enter employee ID"
                                     value={editMember.employeeId}
                                     onChange={e => setEditMember({ ...editMember, employeeId: e.target.value })}
@@ -1755,7 +1755,7 @@ export function SettingsContent() {
                                     setEditingMember(null);
                                     setShowEditRoleDropdown(false);
                                   }}
-                                  className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
+                                  className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out w-full sm:w-auto"
                                 >
                                   Save Changes
                                 </button>
@@ -1821,7 +1821,7 @@ export function SettingsContent() {
                                       employeeId: m.employeeId
                                     });
                                   }}
-                                  className="text-[#6E4EFF] hover:text-[#5A3FD9] text-xs font-medium transition-colors px-2 py-1 hover:bg-[#6E4EFF0D] rounded-[4px]"
+                                  className="text-[#9747FF] hover:text-[#5A3FD9] text-xs font-medium transition-colors px-2 py-1 hover:bg-[#9747FF0D] rounded-[4px]"
                                 >
                                   Edit
                                 </button>
@@ -1988,7 +1988,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">Getting Started</h3>
                             <p className="text-xs text-gray-500 mb-2">Learn the basics of our platform</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Guide →
                             </button>
                           </div>
@@ -2005,7 +2005,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">Campaign Management</h3>
                             <p className="text-xs text-gray-500 mb-2">Create and manage your campaigns</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Guide →
                             </button>
                           </div>
@@ -2022,7 +2022,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">Analytics & Reports</h3>
                             <p className="text-xs text-gray-500 mb-2">Understand your performance data</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Guide →
                             </button>
                           </div>
@@ -2039,7 +2039,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">Integrations</h3>
                             <p className="text-xs text-gray-500 mb-2">Connect third-party tools</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Guide →
                             </button>
                           </div>
@@ -2056,7 +2056,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">Troubleshooting</h3>
                             <p className="text-xs text-gray-500 mb-2">Common issues and solutions</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Guide →
                             </button>
                           </div>
@@ -2073,7 +2073,7 @@ export function SettingsContent() {
                           <div>
                             <h3 className="text-sm font-medium text-gray-900 mb-1">API Documentation</h3>
                             <p className="text-xs text-gray-500 mb-2">Developer resources and guides</p>
-                            <button className="text-xs font-medium text-[#6E4EFF] hover:text-[#5D3EE8] transition-colors">
+                            <button className="text-xs font-medium text-[#9747FF] hover:text-[#9747FF] transition-colors">
                               View Docs →
                             </button>
                           </div>
@@ -2093,10 +2093,10 @@ export function SettingsContent() {
                           <input
                             type="text"
                             placeholder="Search help articles, guides, and FAQs..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                           />
                         </div>
-                        <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
+                        <button className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                           Search
                         </button>
                       </div>
@@ -2139,7 +2139,7 @@ export function SettingsContent() {
                               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                               <span className="text-xs text-green-600 font-medium">Available 24/7</span>
                             </div>
-                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
+                            <button className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                               Call Now
                             </button>
                           </div>
@@ -2162,7 +2162,7 @@ export function SettingsContent() {
                             <div className="flex items-center space-x-2 mb-3">
                               <span className="text-xs text-gray-500">connect@tribly.ai</span>
                             </div>
-                            <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
+                            <button className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                               Send Email
                             </button>
                           </div>
@@ -2181,7 +2181,7 @@ export function SettingsContent() {
                           <input
                             type="text"
                             placeholder="Brief description of your issue"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                           />
                         </div>
                         <div>
@@ -2193,7 +2193,7 @@ export function SettingsContent() {
                               onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                               className={`w-full px-3 py-2 border border-gray-300 rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors text-sm ${
                                 selectedCategory
-                                  ? 'border-[#7856ff] bg-[#7856ff]/5'
+                                  ? 'border-[#9747FF] bg-[#9747FF]/5'
                                   : 'border-gray-300'
                               }`}
                             >
@@ -2233,7 +2233,7 @@ export function SettingsContent() {
                           <textarea
                             rows={4}
                             placeholder="Please provide detailed information about your issue or question..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm resize-none"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm resize-none"
                           />
                         </div>
                         <div>
@@ -2249,7 +2249,7 @@ export function SettingsContent() {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <button className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out">
+                          <button className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out">
                             Submit Request
                           </button>
                         </div>
@@ -2378,7 +2378,7 @@ export function SettingsContent() {
                                 businessEmails: [...v.businessEmails, '']
                               }));
                             }}
-                            className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
+                            className="text-[#9747FF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
                           >
                             + Add Email ID
                           </button>
@@ -2431,7 +2431,7 @@ export function SettingsContent() {
                                 businessPhones: [...v.businessPhones, '']
                               }));
                             }}
-                            className="text-[#6E4EFF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
+                            className="text-[#9747FF] hover:text-[#5A3FD9] text-sm font-medium transition-colors"
                           >
                             + Add Phone Number
                           </button>
@@ -2848,7 +2848,7 @@ export function SettingsContent() {
                   <div className="pt-4 flex gap-3">
                     <button
                       onClick={() => { setSavedProfile(profile); setSavedBusiness(business); }}
-                      className="h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300 ease-in-out"
+                      className="h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-4 rounded-[4px] font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300 ease-in-out"
                     >
                       Save Changes
                     </button>
@@ -2950,7 +2950,7 @@ export function SettingsContent() {
                   type="url"
                   value={zapierForm.webhookUrl}
                   onChange={(e) => setZapierForm(prev => ({ ...prev, webhookUrl: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="https://hooks.zapier.com/..."
                 />
               </div>
@@ -2961,7 +2961,7 @@ export function SettingsContent() {
                   type="password"
                   value={zapierForm.apiKey}
                   onChange={(e) => setZapierForm(prev => ({ ...prev, apiKey: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="Enter API key for authentication"
                 />
               </div>
@@ -2977,7 +2977,7 @@ export function SettingsContent() {
               <button
                 onClick={setupZapierIntegration}
                 disabled={loadingStates.zapier || !zapierForm.webhookUrl}
-                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#9747FF] text-white rounded-md hover:bg-[#9747FF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingStates.zapier ? 'Setting up...' : 'Setup Integration'}
               </button>
@@ -3009,7 +3009,7 @@ export function SettingsContent() {
                   type="url"
                   value={webhookForm.endpoint}
                   onChange={(e) => setWebhookForm(prev => ({ ...prev, endpoint: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="https://your-server.com/webhook"
                 />
               </div>
@@ -3020,7 +3020,7 @@ export function SettingsContent() {
                   type="password"
                   value={webhookForm.secret}
                   onChange={(e) => setWebhookForm(prev => ({ ...prev, secret: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="Enter secret for webhook verification"
                 />
               </div>
@@ -3036,7 +3036,7 @@ export function SettingsContent() {
               <button
                 onClick={setupWebhookIntegration}
                 disabled={loadingStates.webhooks || !webhookForm.endpoint}
-                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#9747FF] text-white rounded-md hover:bg-[#9747FF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingStates.webhooks ? 'Configuring...' : 'Configure Webhook'}
               </button>
@@ -3068,7 +3068,7 @@ export function SettingsContent() {
                   type="password"
                   value={apiForm.apiKey}
                   onChange={(e) => setApiForm(prev => ({ ...prev, apiKey: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="Enter your API key"
                 />
               </div>
@@ -3079,7 +3079,7 @@ export function SettingsContent() {
                   type="number"
                   value={apiForm.rateLimit}
                   onChange={(e) => setApiForm(prev => ({ ...prev, rateLimit: parseInt(e.target.value) || 1000 }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   placeholder="1000"
                 />
               </div>
@@ -3095,7 +3095,7 @@ export function SettingsContent() {
               <button
                 onClick={setupApiIntegration}
                 disabled={loadingStates.api || !apiForm.apiKey}
-                className="flex-1 px-4 py-2 bg-[#6E4EFF] text-white rounded-md hover:bg-[#5D3EE8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#9747FF] text-white rounded-md hover:bg-[#9747FF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loadingStates.api ? 'Configuring...' : 'Enable API'}
               </button>

@@ -136,8 +136,8 @@ const Pagination = ({
           onClick={() => handlePageClick(i)}
           className={`h-7 w-7 sm:h-8 sm:w-8 lg:h-[30px] lg:w-[30px] rounded-md px-1 sm:px-2 py-1 sm:py-1.5 text-xs sm:text-[14px] font-medium transition-colors cursor-pointer flex items-center justify-center touch-manipulation flex-shrink-0 ${
             i === currentPage
-              ? 'bg-[#7856FF] text-white'
-              : 'text-[#7856FF] hover:bg-[#7856FF] hover:bg-opacity-10 hover:text-[#7856FF]'
+              ? 'bg-[#9747FF] text-white'
+              : 'text-[#9747FF] hover:bg-[#9747FF] hover:bg-opacity-10 hover:text-[#9747FF]'
           }`}
         >
           {i}
@@ -154,7 +154,7 @@ const Pagination = ({
       <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 min-w-0 justify-center sm:justify-start">
         {/* Show per page */}
         <div className="flex items-center gap-1 sm:gap-2 relative min-w-0" ref={dropdownRef}>
-          <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
+          <span className="text-xs sm:text-[13px] font-medium text-[#9747FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
             Show
           </span>
 
@@ -194,13 +194,13 @@ const Pagination = ({
             )}
           </div>
 
-          <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
+          <span className="text-xs sm:text-[13px] font-medium text-[#9747FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
             per page
           </span>
         </div>
 
         {/* Page info */}
-        <span className="text-xs sm:text-[13px] font-medium text-[#7856FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
+        <span className="text-xs sm:text-[13px] font-medium text-[#9747FF] leading-[14px] tracking-[-0.13px] flex-shrink-0">
           {startItem}-{endItem} of {totalItems}
         </span>
       </div>

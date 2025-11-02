@@ -161,7 +161,7 @@ export function ProductServiceInput({
         onFocus={() => value.length > 1 && setShowSuggestions(true)}
         placeholder={placeholder}
         required={required}
-        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
       />
 
       {showSuggestions && filteredSuggestions.length > 0 && (
@@ -173,7 +173,7 @@ export function ProductServiceInput({
                 type="button"
                 onClick={() => handleSuggestionClick(suggestion)}
                 className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
-                  index === selectedIndex ? 'bg-[#6E4EFF]/5 text-[#6E4EFF]' : 'text-[#2a2a2f]'
+                  index === selectedIndex ? 'bg-[#9747FF]/5 text-[#9747FF]' : 'text-[#2a2a2f]'
                 }`}
               >
                 <div className="flex items-center justify-between">

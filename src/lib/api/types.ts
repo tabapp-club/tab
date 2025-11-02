@@ -119,6 +119,7 @@ export interface BusinessFeatures {
   cohorts: boolean;
   automation: boolean;
   campaigns: boolean;
+  marketing_calendar: boolean;
 }
 
 export interface BusinessDetails {

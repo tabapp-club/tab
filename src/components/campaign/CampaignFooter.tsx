@@ -57,7 +57,7 @@ export function CampaignFooter({
             disabled={nextDisabled || isNavigating}
             className={`flex-[2] h-9 px-6 rounded font-medium text-[16px] transition-all duration-200 touch-manipulation ${
               !nextDisabled && !isNavigating
-                ? 'bg-gradient-to-r from-[#6e4eff] to-[#8B6AFF] text-white hover:from-[#5a3de8] hover:to-[#7856ff] '
+                ? 'bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white hover:from-[#5a3de8] hover:to-[#9747FF] '
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -99,7 +99,7 @@ export function CampaignFooter({
             disabled={nextDisabled || isNavigating}
             className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
               !nextDisabled && !isNavigating
-                ? 'bg-[#6e4eff] text-white hover:bg-[#5a3de8]'
+                ? 'bg-[#9747FF] text-white hover:bg-[#5a3de8]'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >

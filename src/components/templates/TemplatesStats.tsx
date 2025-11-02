@@ -5,7 +5,7 @@ const TemplatesStats = () => {
     {
       value: '24',
       label: 'Total Templates',
-      labelColor: 'text-[#7856ff]',
+      labelColor: 'text-[#9747FF]',
       insights: '+3',
       icon: <TemplatesIcon />,
       bgColor: 'bg-purple-100'

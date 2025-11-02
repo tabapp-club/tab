@@ -71,7 +71,7 @@ const defaultCampaignData: CampaignData = {
       clickRate: 12,
       rating: 4.0,
       features: ['Rich Media', 'Interactive', 'Analytics'],
-      color: '#7856ff',
+      color: '#9747FF',
       icon: 'tab'
     },
     {

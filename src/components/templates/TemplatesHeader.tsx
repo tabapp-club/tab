@@ -40,7 +40,7 @@ const TemplatesHeader = ({ onCreateTemplate, onImportClick, onExportClick }: Tem
         {/* Create Template Button */}
         <button
           onClick={onCreateTemplate}
-          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-[#7856FF] text-white rounded-md text-sm font-medium hover:bg-[#6B46E5] transition-colors min-h-[36px] sm:min-h-[40px]"
+          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-[#9747FF] text-white rounded-md text-sm font-medium hover:bg-[#6B46E5] transition-colors min-h-[36px] sm:min-h-[40px]"
         >
           <PlusIcon />
           <span>Create Template</span>

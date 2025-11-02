@@ -3,7 +3,7 @@ import { BarChart as RBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveCont
 
 const UserIcon = () => (
   <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fillRule="evenodd" clipRule="evenodd" d="M16.4062 4.66562H4.59375C4.50673 4.66562 4.42327 4.70019 4.36173 4.76172C4.3002 4.82326 4.26562 4.90672 4.26562 4.99374V16.8062C4.26562 16.8933 4.3002 16.9767 4.36173 17.0383C4.42327 17.0998 4.50673 17.1344 4.59375 17.1344H16.4062C16.4933 17.1344 16.5767 17.0998 16.6383 17.0383C16.6998 16.9767 16.7344 16.8933 16.7344 16.8062V4.99374C16.7344 4.90672 16.6998 4.82326 16.6383 4.76172C16.5767 4.70019 16.4933 4.66562 16.4062 4.66562ZM4.59375 3.68124C4.24565 3.68124 3.91181 3.81952 3.66567 4.06567C3.41953 4.31181 3.28125 4.64565 3.28125 4.99374V16.8062C3.28125 17.1543 3.41953 17.4882 3.66567 17.7343C3.91181 17.9805 4.24565 18.1187 4.59375 18.1187H16.4062C16.7543 18.1187 17.0882 17.9805 17.3343 17.7343C17.5805 17.4882 17.7188 17.1543 17.7188 16.8062V4.99374C17.7188 4.64565 17.5805 4.31181 17.3343 4.06567C17.0882 3.81952 16.7543 3.68124 16.4062 3.68124H4.59375ZM10.5 13.0328C10.6305 13.0328 10.7557 13.0847 10.848 13.177C10.9403 13.2693 10.9922 13.3945 10.9922 13.525V15.4937C10.9922 15.6243 10.9403 15.7495 10.848 15.8418C10.7557 15.9341 10.6305 15.9859 10.5 15.9859C10.3695 15.9859 10.2443 15.9341 10.152 15.8418C10.0597 15.7495 10.0078 15.6243 10.0078 15.4937V13.525C10.0078 13.3945 10.0597 13.2693 10.152 13.177C10.2443 13.0847 10.3695 13.0328 10.5 13.0328ZM7.71094 14.8375C7.71094 14.707 7.65908 14.5818 7.56678 14.4895C7.47448 14.3972 7.34929 14.3453 7.21875 14.3453C7.08821 14.3453 6.96302 14.3972 6.87072 14.4895C6.77842 14.5818 6.72656 14.707 6.72656 14.8375V15.4937C6.72656 15.6243 6.77842 15.7495 6.87072 15.8418C6.96302 15.9341 7.08821 15.9859 7.21875 15.9859C7.34929 15.9859 7.47448 15.9341 7.56678 15.8418C7.65908 15.7495 7.71094 15.6243 7.71094 15.4937V14.8375ZM13.7812 14.3453C13.9118 14.3453 14.037 14.3972 14.1293 14.4895C14.2216 14.5818 14.2734 14.707 14.2734 14.8375V15.4937C14.2734 15.6243 14.2216 15.7495 14.1293 15.8418C14.037 15.9341 13.9118 15.9859 13.7812 15.9859C13.6507 15.9859 13.5255 15.9341 13.4332 15.8418C13.3409 15.7495 13.2891 15.6243 13.2891 15.4937V14.8375C13.2891 14.707 13.3409 14.5818 13.4332 14.4895C13.5255 14.3972 13.6507 14.3453 13.7812 14.3453ZM5.88656 10.8803C5.83821 10.9254 5.79942 10.9797 5.77252 11.0401C5.74562 11.1005 5.73115 11.1656 5.72999 11.2317C5.72882 11.2978 5.74098 11.3634 5.76573 11.4247C5.79049 11.486 5.82733 11.5417 5.87407 11.5884C5.92081 11.6352 5.97648 11.672 6.03776 11.6968C6.09905 11.7215 6.16469 11.7337 6.23078 11.7325C6.29687 11.7313 6.36204 11.7169 6.42242 11.69C6.48279 11.6631 6.53713 11.6243 6.58219 11.5759L8.53125 9.62687L10.1522 11.2478C10.2445 11.34 10.3696 11.3917 10.5 11.3917C10.6304 11.3917 10.7555 11.34 10.8478 11.2478L15.1134 6.98218C15.1618 6.93712 15.2006 6.88278 15.2275 6.82241C15.2544 6.76203 15.2688 6.69686 15.27 6.63077C15.2712 6.56469 15.259 6.49904 15.2343 6.43776C15.2095 6.37647 15.1727 6.3208 15.1259 6.27406C15.0792 6.22733 15.0235 6.19048 14.9622 6.16573C14.9009 6.14097 14.8353 6.12881 14.7692 6.12998C14.7031 6.13115 14.638 6.14561 14.5776 6.17251C14.5172 6.19941 14.4629 6.2382 14.4178 6.28656L10.5 10.2044L8.87906 8.58343C8.78678 8.49126 8.66168 8.43949 8.53125 8.43949C8.40082 8.43949 8.27572 8.49126 8.18344 8.58343L5.88656 10.8803Z" fill="#7856FF"/>
+<path fillRule="evenodd" clipRule="evenodd" d="M16.4062 4.66562H4.59375C4.50673 4.66562 4.42327 4.70019 4.36173 4.76172C4.3002 4.82326 4.26562 4.90672 4.26562 4.99374V16.8062C4.26562 16.8933 4.3002 16.9767 4.36173 17.0383C4.42327 17.0998 4.50673 17.1344 4.59375 17.1344H16.4062C16.4933 17.1344 16.5767 17.0998 16.6383 17.0383C16.6998 16.9767 16.7344 16.8933 16.7344 16.8062V4.99374C16.7344 4.90672 16.6998 4.82326 16.6383 4.76172C16.5767 4.70019 16.4933 4.66562 16.4062 4.66562ZM4.59375 3.68124C4.24565 3.68124 3.91181 3.81952 3.66567 4.06567C3.41953 4.31181 3.28125 4.64565 3.28125 4.99374V16.8062C3.28125 17.1543 3.41953 17.4882 3.66567 17.7343C3.91181 17.9805 4.24565 18.1187 4.59375 18.1187H16.4062C16.7543 18.1187 17.0882 17.9805 17.3343 17.7343C17.5805 17.4882 17.7188 17.1543 17.7188 16.8062V4.99374C17.7188 4.64565 17.5805 4.31181 17.3343 4.06567C17.0882 3.81952 16.7543 3.68124 16.4062 3.68124H4.59375ZM10.5 13.0328C10.6305 13.0328 10.7557 13.0847 10.848 13.177C10.9403 13.2693 10.9922 13.3945 10.9922 13.525V15.4937C10.9922 15.6243 10.9403 15.7495 10.848 15.8418C10.7557 15.9341 10.6305 15.9859 10.5 15.9859C10.3695 15.9859 10.2443 15.9341 10.152 15.8418C10.0597 15.7495 10.0078 15.6243 10.0078 15.4937V13.525C10.0078 13.3945 10.0597 13.2693 10.152 13.177C10.2443 13.0847 10.3695 13.0328 10.5 13.0328ZM7.71094 14.8375C7.71094 14.707 7.65908 14.5818 7.56678 14.4895C7.47448 14.3972 7.34929 14.3453 7.21875 14.3453C7.08821 14.3453 6.96302 14.3972 6.87072 14.4895C6.77842 14.5818 6.72656 14.707 6.72656 14.8375V15.4937C6.72656 15.6243 6.77842 15.7495 6.87072 15.8418C6.96302 15.9341 7.08821 15.9859 7.21875 15.9859C7.34929 15.9859 7.47448 15.9341 7.56678 15.8418C7.65908 15.7495 7.71094 15.6243 7.71094 15.4937V14.8375ZM13.7812 14.3453C13.9118 14.3453 14.037 14.3972 14.1293 14.4895C14.2216 14.5818 14.2734 14.707 14.2734 14.8375V15.4937C14.2734 15.6243 14.2216 15.7495 14.1293 15.8418C14.037 15.9341 13.9118 15.9859 13.7812 15.9859C13.6507 15.9859 13.5255 15.9341 13.4332 15.8418C13.3409 15.7495 13.2891 15.6243 13.2891 15.4937V14.8375C13.2891 14.707 13.3409 14.5818 13.4332 14.4895C13.5255 14.3972 13.6507 14.3453 13.7812 14.3453ZM5.88656 10.8803C5.83821 10.9254 5.79942 10.9797 5.77252 11.0401C5.74562 11.1005 5.73115 11.1656 5.72999 11.2317C5.72882 11.2978 5.74098 11.3634 5.76573 11.4247C5.79049 11.486 5.82733 11.5417 5.87407 11.5884C5.92081 11.6352 5.97648 11.672 6.03776 11.6968C6.09905 11.7215 6.16469 11.7337 6.23078 11.7325C6.29687 11.7313 6.36204 11.7169 6.42242 11.69C6.48279 11.6631 6.53713 11.6243 6.58219 11.5759L8.53125 9.62687L10.1522 11.2478C10.2445 11.34 10.3696 11.3917 10.5 11.3917C10.6304 11.3917 10.7555 11.34 10.8478 11.2478L15.1134 6.98218C15.1618 6.93712 15.2006 6.88278 15.2275 6.82241C15.2544 6.76203 15.2688 6.69686 15.27 6.63077C15.2712 6.56469 15.259 6.49904 15.2343 6.43776C15.2095 6.37647 15.1727 6.3208 15.1259 6.27406C15.0792 6.22733 15.0235 6.19048 14.9622 6.16573C14.9009 6.14097 14.8353 6.12881 14.7692 6.12998C14.7031 6.13115 14.638 6.14561 14.5776 6.17251C14.5172 6.19941 14.4629 6.2382 14.4178 6.28656L10.5 10.2044L8.87906 8.58343C8.78678 8.49126 8.66168 8.43949 8.53125 8.43949C8.40082 8.43949 8.27572 8.49126 8.18344 8.58343L5.88656 10.8803Z" fill="#9747FF"/>
 </svg>
 
 );
@@ -65,15 +65,15 @@ const ToggleSlider = ({ isChart, onToggle }: { isChart: boolean; onToggle: () =>
   return (
     <div className="flex items-center gap-1.5">
       <div className={`text-xs font-medium transition-colors duration-200 ${
-        !isChart ? 'text-[#6E4EFF]' : 'text-[#626266]'
+        !isChart ? 'text-[#9747FF]' : 'text-[#626266]'
       }`}>
         Numbers
       </div>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#6E4EFF] focus:ring-opacity-50 ${
+        className={`relative inline-flex h-4 w-7 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:ring-opacity-50 ${
           isChart
-            ? 'bg-[#6E4EFF] hover:bg-[#5D3EE8]'
+            ? 'bg-[#9747FF] hover:bg-[#9747FF]'
             : 'bg-[#e9e9e9] hover:bg-[#d1d1d1]'
         }`}
         type="button"
@@ -85,7 +85,7 @@ const ToggleSlider = ({ isChart, onToggle }: { isChart: boolean; onToggle: () =>
         />
       </button>
       <div className={`text-xs font-medium transition-colors duration-200 ${
-        isChart ? 'text-[#6E4EFF]' : 'text-[#626266]'
+        isChart ? 'text-[#9747FF]' : 'text-[#626266]'
       }`}>
         Graph
       </div>
@@ -207,14 +207,14 @@ const BarChart = ({ currentValue, previousValue, title, trend }: {
   }, [targetPreviousHeight, targetCurrentHeight]);
 
   const isPositiveTrend = trend === "up";
-  const currentBarGradient = "bg-gradient-to-t from-[#6e4eff] to-[#9e83ff]";
+  const currentBarGradient = "bg-gradient-to-t from-[#9747FF] to-[#9e83ff]";
   const previousBarGradient = "bg-gradient-to-t from-[#c7bbff] to-[#a795ff]";
 
   return (
     <div className="w-full h-32 flex items-end justify-center gap-6 px-4">
       {/* Previous Value Bar */}
       <div className="flex flex-col items-center gap-2 relative group">
-        <div className="h-32 w-[52px] bg-[#6e4eff]/10 rounded-md flex items-end overflow-hidden">
+        <div className="h-32 w-[52px] bg-[#9747FF]/10 rounded-md flex items-end overflow-hidden">
           <div
             className={`w-full ${previousBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform]  hover:shadow-lg`}
             style={{ height: `${animatedPrevHeight}%` }}
@@ -232,7 +232,7 @@ const BarChart = ({ currentValue, previousValue, title, trend }: {
 
       {/* Current Value Bar */}
       <div className="flex flex-col items-center gap-2 relative group">
-        <div className="h-32 w-[52px] bg-[#6e4eff]/10 rounded-md flex items-end overflow-hidden">
+        <div className="h-32 w-[52px] bg-[#9747FF]/10 rounded-md flex items-end overflow-hidden">
           <div
             className={`w-full ${currentBarGradient} rounded-md transition-all duration-700 ease-out will-change-[height,transform]  hover:shadow-lg`}
             style={{ height: `${animatedCurrHeight}%` }}
@@ -273,7 +273,7 @@ const RechartsComparisonBar = ({ currentValue, previousValue, title }: {
   ];
 
   // Elegant palettes
-  const purple = { base: '#6E4EFF', light: '#9E83FF' };
+  const purple = { base: '#9747FF', light: '#9E83FF' };
   const purpleNeutral = { base: '#C7BBFF', light: '#E2DBFF' };
   const coral = { base: '#FF6B6B', light: '#FF9A9A' };
 
@@ -477,7 +477,7 @@ const analyticsData = [
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 4,
@@ -489,7 +489,7 @@ const analyticsData = [
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 5,
@@ -501,7 +501,7 @@ const analyticsData = [
     unit: "Users",
     trend: "up",
     trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 6,
@@ -513,7 +513,7 @@ const analyticsData = [
     unit: "Users",
     trend: "down",
     trendValue: "11.49%",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   }
 ];
 
@@ -716,7 +716,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                   {/* Ask Reason Text Button */}
                   <button
                     onClick={() => onAskReason?.(card.title, card)}
-                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#9747FF] bg-transparent hover:bg-[#9747FF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
                   >
                     <span>Get analysis</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -844,7 +844,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                 {/* Ask Reason Text Button */}
                 <button
                   onClick={() => onAskReason?.(growthRateCard.title, growthRateCard)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#9747FF] bg-transparent hover:bg-[#9747FF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
                 >
                   <span>Get analysis</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -952,7 +952,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
               {/* Ask Reason Text Button */}
               <button
                 onClick={() => onAskReason?.(card.title, card)}
-                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#6E4EFF] bg-transparent hover:bg-[#6E4EFF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 h-9 px-3 text-[#9747FF] bg-transparent hover:bg-[#9747FF]/10  transition-all duration-300 ease-in-out  text-[14px] font-semibold rounded flex items-center gap-1 whitespace-nowrap"
               >
                 <span>Get analysis</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>

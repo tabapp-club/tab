@@ -160,7 +160,7 @@ const FilterDropdown = ({
         }}
         className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 flex-shrink-0 ${
           selectedCount > 0
-            ? 'border-[#7856ff] bg-[#7856ff]/5'
+            ? 'border-[#9747FF] bg-[#9747FF]/5'
             : 'border-[#e9e9e9]'
         }`}
       >
@@ -169,7 +169,7 @@ const FilterDropdown = ({
             {title}
           </span>
           {selectedCount > 0 && (
-            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#7856ff] rounded-full flex-shrink-0">
+            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#9747FF] rounded-full flex-shrink-0">
               {selectedCount}
             </span>
           )}
@@ -210,7 +210,7 @@ const FilterDropdown = ({
                         singleSelect ? 'rounded-full' : 'rounded'
                       } ${
                         option.checked
-                          ? 'bg-[#6E4EFF] border-[#6E4EFF] text-white'
+                          ? 'bg-[#9747FF] border-[#9747FF] text-white'
                           : 'border-gray-300 text-transparent'
                       } transition-all duration-200`}>
                         {option.checked && (
@@ -248,7 +248,7 @@ const FilterDropdown = ({
                   </button>
                   <button
                     onClick={onToggle}
-                    className="flex-1 py-2 px-4 bg-[#6E4EFF] text-white rounded font-medium hover:bg-[#5D3EE8] transition-colors"
+                    className="flex-1 py-2 px-4 bg-[#9747FF] text-white rounded font-medium hover:bg-[#9747FF] transition-colors"
                   >
                     Apply
                   </button>
@@ -290,7 +290,7 @@ const FilterDropdown = ({
                       />
                       <div className={`w-[18px] h-[18px] flex items-center justify-center ${
                         option.checked
-                          ? 'text-[#7856ff]'
+                          ? 'text-[#9747FF]'
                           : 'text-[#e9e9e9]'
                       }`}>
                         {option.checked && (

@@ -93,14 +93,14 @@ export function UpsellCrossSellContent() {
           <div
             className={`relative bg-white border rounded p-6 cursor-pointer transition-all duration-300 group ${
               selectedService === 'upsell'
-                ? 'border-[#6E4EFF] bg-gradient-to-br from-[#6E4EFF]/5 to-[#8B6AFF]/5'
-                : 'border-[#e9e9e9] hover:border-[#6E4EFF]/50 hover:bg-gradient-to-br hover:from-[#6E4EFF]/2 hover:to-[#8B6AFF]/2'
+                ? 'border-[#9747FF] bg-gradient-to-br from-[#9747FF]/5 to-[#9747FF]/5'
+                : 'border-[#e9e9e9] hover:border-[#9747FF]/50 hover:bg-gradient-to-br hover:from-[#9747FF]/2 hover:to-[#9747FF]/2'
             }`}
             onClick={() => handleServiceSelect('upsell')}
           >
             {/* Selection Indicator */}
             {selectedService === 'upsell' && (
-              <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#6E4EFF] rounded-full flex items-center justify-center">
+              <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#9747FF] rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
@@ -111,8 +111,8 @@ export function UpsellCrossSellContent() {
             <div className="flex items-start gap-4 mb-5">
               <div className={`w-14 h-14 rounded flex items-center justify-center transition-colors ${
                 selectedService === 'upsell' 
-                  ? 'bg-[#6E4EFF] text-white' 
-                  : 'bg-[#6E4EFF]/10 text-[#6E4EFF] group-hover:bg-[#6E4EFF] group-hover:text-white'
+                  ? 'bg-[#9747FF] text-white' 
+                  : 'bg-[#9747FF]/10 text-[#9747FF] group-hover:bg-[#9747FF] group-hover:text-white'
               }`}>
                 <UpsellIcon />
               </div>
@@ -144,7 +144,7 @@ export function UpsellCrossSellContent() {
             {/* Key Metrics */}
             <div className="grid grid-cols-3 gap-3 mb-5">
               <div className="text-center p-2 bg-white border border-[#e9e9e9] rounded">
-                <div className="text-[16px] font-bold text-[#6E4EFF]">35%</div>
+                <div className="text-[16px] font-bold text-[#9747FF]">35%</div>
                 <div className="text-[10px] text-[#626266] font-medium">Avg. Conversion</div>
               </div>
               <div className="text-center p-2 bg-white border border-[#e9e9e9] rounded">
@@ -160,8 +160,8 @@ export function UpsellCrossSellContent() {
             {/* Action Button */}
             <div className={`w-full py-3 px-4 rounded text-center text-[14px] font-semibold transition-colors ${
               selectedService === 'upsell'
-                ? 'bg-[#6E4EFF] text-white'
-                : 'bg-gray-100 text-[#626266] group-hover:bg-[#6E4EFF] group-hover:text-white'
+                ? 'bg-[#9747FF] text-white'
+                : 'bg-gray-100 text-[#626266] group-hover:bg-[#9747FF] group-hover:text-white'
             }`}>
               {selectedService === 'upsell' ? 'Selected - Ready to Start' : 'Select Upsell Service'}
             </div>
@@ -257,8 +257,8 @@ export function UpsellCrossSellContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="text-center p-3 bg-white border border-[#e9e9e9] rounded">
-              <div className="w-10 h-10 bg-[#6E4EFF]/10 rounded flex items-center justify-center mx-auto mb-2">
-                <TrendingUp className="w-5 h-5 text-[#6E4EFF]" />
+              <div className="w-10 h-10 bg-[#9747FF]/10 rounded flex items-center justify-center mx-auto mb-2">
+                <TrendingUp className="w-5 h-5 text-[#9747FF]" />
               </div>
               <h4 className="text-[13px] font-semibold text-[#2a2a2f] mb-2">Revenue Growth</h4>
               <p className="text-[11px] text-[#626266] leading-relaxed">
@@ -300,7 +300,7 @@ export function UpsellCrossSellContent() {
 
         {/* Action Section */}
         {selectedService && (
-          <div className="bg-gradient-to-r from-[#6E4EFF]/5 to-[#8B6AFF]/5 border border-[#6E4EFF]/20 rounded p-6">
+          <div className="bg-gradient-to-r from-[#9747FF]/5 to-[#9747FF]/5 border border-[#9747FF]/20 rounded p-6">
             <div className="text-center">
               <h3 className="text-[18px] font-bold text-[#2a2a2f] mb-2">
                 Ready to Start Your {selectedService === 'upsell' ? 'Upsell' : 'Cross-Sell'} Campaign?
@@ -313,7 +313,7 @@ export function UpsellCrossSellContent() {
               </p>
               <button
                 onClick={handleGetStarted}
-                className="bg-[#6E4EFF] hover:bg-[#5a3fd8] text-white font-semibold py-2.5 px-6 rounded transition-colors duration-200 text-[14px]"
+                className="bg-[#9747FF] hover:bg-[#5a3fd8] text-white font-semibold py-2.5 px-6 rounded transition-colors duration-200 text-[14px]"
               >
                 Get Started with {selectedService === 'upsell' ? 'Upsell' : 'Cross-Sell'}
               </button>

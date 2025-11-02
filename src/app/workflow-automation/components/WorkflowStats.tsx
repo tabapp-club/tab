@@ -56,13 +56,13 @@ const WorkflowStats = ({ metrics, onCardClick, selectedCard }: WorkflowStatsProp
           key={stat.label}
           className={`bg-white p-4 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 ${
             isSelected
-              ? 'border-[#7856ff] bg-blue-50'
+              ? 'border-[#9747FF] bg-blue-50'
               : 'border-gray-200 hover:border-gray-300'
           }`}
           onClick={() => onCardClick?.(stat.filterType)}
         >
           <div className="w-full">
-            <h3 className={`text-sm font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor}`}>
+            <h3 className={`text-sm font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor}`}>
               {stat.label}
             </h3>
             <p className="text-xl font-bold text-gray-900 mt-1">{value}</p>

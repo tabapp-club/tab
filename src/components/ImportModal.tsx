@@ -149,7 +149,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
           onDrop={handleDrop}
           className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
             isDragOver
-              ? 'border-[#7856FF] bg-purple-50'
+              ? 'border-[#9747FF] bg-purple-50'
               : selectedFile
                 ? uploadSuccess
                   ? 'border-green-400 bg-green-50'
@@ -172,8 +172,8 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                 {isUploading && (
                   <div className="mt-3">
                     <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#7856FF]"></div>
-                      <p className="text-[12px] text-[#7856FF] font-medium">Uploading...</p>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#9747FF]"></div>
+                      <p className="text-[12px] text-[#9747FF] font-medium">Uploading...</p>
                     </div>
                   </div>
                 )}
@@ -216,7 +216,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                         setUploadSuccess(false);
                         setUploadResult(null);
                       }}
-                      className="text-[12px] text-[#7856FF] hover:underline transition-colors font-medium"
+                      className="text-[12px] text-[#9747FF] hover:underline transition-colors font-medium"
                     >
                       Try again
                     </button>
@@ -234,7 +234,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                       setUploadResult(null);
                       setUploadError(null);
                     }}
-                    className="text-[12px] text-[#7856FF] hover:underline transition-colors font-medium"
+                    className="text-[12px] text-[#9747FF] hover:underline transition-colors font-medium"
                   >
                     Upload another file
                   </button>
@@ -254,7 +254,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                   or{' '}
                   <button
                     onClick={handleBrowseClick}
-                    className="text-[#7856FF] hover:underline"
+                    className="text-[#9747FF] hover:underline"
                   >
                     browse files
                   </button>
@@ -282,7 +282,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
           {uploadSuccess ? (
             <button
               onClick={onClose}
-              className="w-full px-4 py-2 bg-[#7856FF] text-white rounded-md text-[14px] font-medium hover:bg-[#6B46E5] transition-colors"
+              className="w-full px-4 py-2 bg-[#9747FF] text-white rounded-md text-[14px] font-medium hover:bg-[#6B46E5] transition-colors"
             >
               Close
             </button>
@@ -299,7 +299,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                 disabled={!selectedFile || isUploading}
                 className={`flex-1 px-4 py-2 rounded-md text-[14px] font-medium transition-colors ${
                   selectedFile && !isUploading
-                    ? 'bg-[#7856FF] text-white hover:bg-[#6B46E5]'
+                    ? 'bg-[#9747FF] text-white hover:bg-[#6B46E5]'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
@@ -354,8 +354,8 @@ const SuccessIcon = () => (
 
 const LoadingIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-    <rect width="48" height="48" rx="8" fill="#7856FF" fillOpacity="0.1"/>
-    <circle cx="24" cy="24" r="16" stroke="#7856FF" strokeWidth="2" strokeDasharray="4 4" className="animate-spin"/>
+    <rect width="48" height="48" rx="8" fill="#9747FF" fillOpacity="0.1"/>
+    <circle cx="24" cy="24" r="16" stroke="#9747FF" strokeWidth="2" strokeDasharray="4 4" className="animate-spin"/>
   </svg>
 );
 

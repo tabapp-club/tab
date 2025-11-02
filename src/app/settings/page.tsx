@@ -18,7 +18,7 @@ export default function SettingsPage() {
     <ProtectedRoute>
       <div className="flex h-screen bg-white">
         <Sidebar />
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div></div>}>
           <SettingsContent />
         </Suspense>
       </div>

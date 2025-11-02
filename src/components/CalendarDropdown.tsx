@@ -248,7 +248,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
         <div className="flex items-center justify-center gap-2 py-2 mb-2">
           <button
             onClick={() => navigateMonth('prev')}
-            className="w-8 h-8 rounded-[25px] border border-[#e9e9e9] flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] transition-colors"
+            className="w-8 h-8 rounded-[25px] border border-[#e9e9e9] flex items-center justify-center hover:bg-[#9747FF]/5 hover:border-[#9747FF] transition-colors"
           >
             <div className="rotate-90 scale-y-[-1]">
               <ChevronRightIcon />
@@ -263,7 +263,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
 
           <button
             onClick={() => navigateMonth('next')}
-            className="w-8 h-8 rounded-[25px] border border-[#e9e9e9] flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] transition-colors"
+            className="w-8 h-8 rounded-[25px] border border-[#e9e9e9] flex items-center justify-center hover:bg-[#9747FF]/5 hover:border-[#9747FF] transition-colors"
           >
             <div className="rotate-90 scale-y-[-1]">
               <ChevronLeftIcon />
@@ -300,12 +300,12 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
                       onClick={() => handleDateClick(date)}
                       className={`h-9 w-9 rounded-lg flex items-center justify-center transition-colors ${
                         isRangeStart(date) || isRangeEnd(date)
-                          ? "bg-[#6E4EFF] text-white"
+                          ? "bg-[#9747FF] text-white"
                           : isInRange(date)
-                          ? "bg-[#6E4EFF]/10 text-[#6E4EFF]"
+                          ? "bg-[#9747FF]/10 text-[#9747FF]"
                           : isToday(date)
-                          ? "bg-[#f2f2f2] text-[#2a2a2f] border border-[#6E4EFF]"
-                          : "text-[#2a2a2f] hover:bg-[#6E4EFF]/5 hover:text-[#6E4EFF]"
+                          ? "bg-[#f2f2f2] text-[#2a2a2f] border border-[#9747FF]"
+                          : "text-[#2a2a2f] hover:bg-[#9747FF]/5 hover:text-[#9747FF]"
                       }`}
                     >
                       <span className="font-['Manrope:Medium',sans-serif] font-medium text-[15px] leading-[1.4]">
@@ -326,7 +326,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
           <div className="flex items-center justify-end gap-1.5">
             <button
               onClick={onClose}
-              className="h-8 px-2 bg-white border border-[#dce0e5] rounded-md flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] transition-colors"
+              className="h-8 px-2 bg-white border border-[#dce0e5] rounded-md flex items-center justify-center hover:bg-[#9747FF]/5 hover:border-[#9747FF] hover:text-[#9747FF] transition-colors"
             >
               <span className="font-['Manrope:Medium',sans-serif] font-medium text-[15px] text-[#2a2a2f] leading-[1.4]">
                 Cancel
@@ -337,7 +337,7 @@ export function CalendarDropdown({ isOpen, onClose, onDateRangeSelect, targetRef
               disabled={!selectedRange.from || !selectedRange.to}
               className={`h-8 px-2 rounded flex items-center justify-center transition-colors ${
                 selectedRange.from && selectedRange.to
-                  ? "bg-[#6E4EFF] hover:bg-[#5D3EE8] text-white"
+                  ? "bg-[#9747FF] hover:bg-[#9747FF] text-white"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
             >

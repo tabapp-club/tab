@@ -496,7 +496,7 @@ export function BusinessLogForm() {
                     }}
                     placeholder="Enter 10-digit phone number"
                     required
-                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                     maxLength={10}
                   />
                 </div>
@@ -514,7 +514,7 @@ export function BusinessLogForm() {
                     onChange={(e) => handleInputChange('customerName', e.target.value)}
                     placeholder="Enter customer name"
                     required
-                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                    className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                   />
                 </div>
               </div>
@@ -554,7 +554,7 @@ export function BusinessLogForm() {
                         onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 1)}
                         min="1"
                         required
-                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                       />
                     </div>
                   </div>
@@ -571,7 +571,7 @@ export function BusinessLogForm() {
                         min="0"
                         step="0.01"
                         required
-                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                        className="w-full border border-[#d1d5db] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                       />
                     </div>
                   </div>
@@ -593,7 +593,7 @@ export function BusinessLogForm() {
                           min="0"
                           max="100"
                           step="0.01"
-                          className="w-full border border-[#d1d5db] rounded px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent text-sm"
+                          className="w-full border border-[#d1d5db] rounded px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent text-sm"
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <span className="text-gray-500 text-sm">%</span>
@@ -624,7 +624,7 @@ export function BusinessLogForm() {
                 {fieldsLoading ? (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex items-center justify-center py-4">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#6E4EFF]"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#9747FF]"></div>
                       <span className="ml-2 text-sm text-gray-600">Loading additional fields...</span>
                     </div>
                   </div>
@@ -717,7 +717,7 @@ export function BusinessLogForm() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#6E4EFF] hover:bg-[#5a3fd9] w-full sm:w-auto text-white"
+            className="bg-[#9747FF] hover:bg-[#6E4EFF] w-full sm:w-auto text-white"
           >
             {isSubmitting ? (
               <>

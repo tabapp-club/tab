@@ -51,7 +51,7 @@ export function TemplatePicker({ selectedTemplate, setSelectedTemplate, selected
             className={classNames(
               "flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors",
               selectedFormat === 'mobile'
-                ? "bg-white text-[#6E4EFF] shadow-sm"
+                ? "bg-white text-[#9747FF] shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             )}
           >
@@ -62,7 +62,7 @@ export function TemplatePicker({ selectedTemplate, setSelectedTemplate, selected
             className={classNames(
               "flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors",
               selectedFormat === 'regular'
-                ? "bg-white text-[#6E4EFF] shadow-sm"
+                ? "bg-white text-[#9747FF] shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             )}
           >
@@ -101,7 +101,7 @@ export function TemplatePicker({ selectedTemplate, setSelectedTemplate, selected
             className={classNames(
               "relative border rounded-lg p-4 cursor-pointer transition-all duration-200 text-center",
               selectedTemplate === template.id
-                ? "border-[#6E4EFF] bg-[#6E4EFF]/5"
+                ? "border-[#9747FF] bg-[#9747FF]/5"
                 : template.id === 'basic'
                 ? "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 : template.id === 'modern'
@@ -121,7 +121,7 @@ export function TemplatePicker({ selectedTemplate, setSelectedTemplate, selected
           >
             {/* Selection indicator */}
             {selectedTemplate === template.id && (
-              <div className="absolute top-2 right-2 w-5 h-5 bg-[#6E4EFF] rounded-full flex items-center justify-center">
+              <div className="absolute top-2 right-2 w-5 h-5 bg-[#9747FF] rounded-full flex items-center justify-center">
                 <Check className="w-3 h-3 text-white" />
               </div>
             )}

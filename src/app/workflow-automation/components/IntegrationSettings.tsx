@@ -465,14 +465,14 @@ export function IntegrationSettings() {
               <div key={index} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   index <= configStep
-                    ? 'bg-[#6E4EFF] text-white'
+                    ? 'bg-[#9747FF] text-white'
                     : 'bg-[#e5e7eb] text-[#6b7280]'
                 }`}>
                   {index + 1}
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`w-12 h-1 mx-2 ${
-                    index < configStep ? 'bg-[#6E4EFF]' : 'bg-[#e5e7eb]'
+                    index < configStep ? 'bg-[#9747FF]' : 'bg-[#e5e7eb]'
                   }`} />
                 )}
               </div>
@@ -666,7 +666,7 @@ export function IntegrationSettings() {
               ) : (
                 <button
                   onClick={() => handleConnect(integration)}
-                  className="w-full bg-[#6E4EFF] text-white px-3 py-2 rounded hover:bg-[#5a3fd9] transition-colors text-sm"
+                  className="w-full bg-[#9747FF] text-white px-3 py-2 rounded hover:bg-[#6E4EFF] transition-colors text-sm"
                 >
                   Connect
                 </button>
@@ -737,14 +737,14 @@ export function IntegrationSettings() {
                   {configStep === getConfigurationSteps(selectedIntegration.type).length - 1 ? (
                     <button
                       onClick={handleSaveConfig}
-                      className="bg-[#6E4EFF] text-white px-6 py-2 rounded hover:bg-[#5a3fd9] transition-colors"
+                      className="bg-[#9747FF] text-white px-6 py-2 rounded hover:bg-[#6E4EFF] transition-colors"
                     >
                       Complete Setup
                     </button>
                   ) : (
                     <button
                       onClick={handleNextStep}
-                      className="bg-[#6E4EFF] text-white px-6 py-2 rounded hover:bg-[#5a3fd9] transition-colors"
+                      className="bg-[#9747FF] text-white px-6 py-2 rounded hover:bg-[#6E4EFF] transition-colors"
                     >
                       Next Step
                     </button>

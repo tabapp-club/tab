@@ -262,7 +262,7 @@ export function TemplateCard({ template }: TemplateCardProps) {
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
-                <button className="px-3 py-2 text-sm font-medium text-[#7856FF] hover:bg-purple-50 rounded-md transition-colors">
+                <button className="px-3 py-2 text-sm font-medium text-[#9747FF] hover:bg-purple-50 rounded-md transition-colors">
                   Use Template
                 </button>
                 <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors">

@@ -83,8 +83,8 @@ export function DashboardTimePicker({
                   className={`
                     h-10 px-3 rounded-lg flex items-center justify-center transition-colors
                     ${selected === time
-                      ? "bg-[#6E4EFF] text-white"
-                      : "text-[#2a2a2f] hover:bg-[#6E4EFF]/5 hover:text-[#6E4EFF]"
+                      ? "bg-[#9747FF] text-white"
+                      : "text-[#2a2a2f] hover:bg-[#9747FF]/5 hover:text-[#9747FF]"
                     }
                   `}
                 >
@@ -101,7 +101,7 @@ export function DashboardTimePicker({
             <div className="flex items-center justify-end gap-1.5">
               <button
                 onClick={() => setIsOpen(false)}
-                className="h-8 px-2 bg-white border border-[#dce0e5] rounded-md flex items-center justify-center hover:bg-[#6E4EFF]/5 hover:border-[#6E4EFF] hover:text-[#6E4EFF] transition-colors"
+                className="h-8 px-2 bg-white border border-[#dce0e5] rounded-md flex items-center justify-center hover:bg-[#9747FF]/5 hover:border-[#9747FF] hover:text-[#9747FF] transition-colors"
               >
                 <span className="font-['Manrope:Medium',sans-serif] font-medium text-[15px] text-[#2a2a2f] leading-[1.4]">
                   Cancel
@@ -109,7 +109,7 @@ export function DashboardTimePicker({
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="h-8 px-2 bg-[#6E4EFF] hover:bg-[#5D3EE8] text-white rounded flex items-center justify-center transition-colors"
+                className="h-8 px-2 bg-[#9747FF] hover:bg-[#9747FF] text-white rounded flex items-center justify-center transition-colors"
               >
                 <span className="font-['Manrope:Medium',sans-serif] font-medium text-[15px] leading-[1.4]">
                   Done

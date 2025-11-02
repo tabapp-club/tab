@@ -33,7 +33,7 @@ export function FeatureGuard({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function FeatureGuard({
           </p>
           <button
             onClick={() => router.push(redirectTo)}
-            className="bg-[#6E4EFF] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#5D3EE8] transition-colors"
+            className="bg-[#9747FF] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#9747FF] transition-colors"
           >
             Go to Dashboard
           </button>

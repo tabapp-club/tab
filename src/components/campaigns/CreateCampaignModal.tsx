@@ -114,7 +114,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
               type="text"
               value={campaignData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                 errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
               }`}
               placeholder="Enter campaign name"
@@ -130,7 +130,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
             <select
               value={campaignData.type}
               onChange={(e) => handleInputChange('type', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
             >
               {campaignTypes.map(type => (
                 <option key={type.value} value={type.value}>
@@ -149,7 +149,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
               value={campaignData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent resize-none ${
+              className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent resize-none ${
                 errors.description ? 'border-red-300 bg-red-50' : 'border-gray-300'
               }`}
               placeholder="Describe your campaign objectives and strategy"
@@ -167,7 +167,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                 type="number"
                 value={campaignData.budget}
                 onChange={(e) => handleInputChange('budget', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                   errors.budget ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
                 placeholder="0"
@@ -185,7 +185,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                 type="number"
                 value={campaignData.audience}
                 onChange={(e) => handleInputChange('audience', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                   errors.audience ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
                 placeholder="0"
@@ -206,7 +206,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                 type="date"
                 value={campaignData.startDate}
                 onChange={(e) => handleInputChange('startDate', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                   errors.startDate ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
                 min={new Date().toISOString().split('T')[0]}
@@ -222,7 +222,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
                 type="date"
                 value={campaignData.endDate}
                 onChange={(e) => handleInputChange('endDate', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#7856FF] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                   errors.endDate ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 }`}
                 min={campaignData.startDate || new Date().toISOString().split('T')[0]}
@@ -246,7 +246,7 @@ const CreateCampaignModal = ({ onClose }: CreateCampaignModalProps) => {
               className={`flex-1 sm:flex-none px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 isSubmitting
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-[#7856FF] text-white hover:bg-[#6B46E5]'
+                  : 'bg-[#9747FF] text-white hover:bg-[#6B46E5]'
               }`}
             >
               {isSubmitting ? 'Creating...' : 'Create Campaign'}

@@ -132,7 +132,7 @@ export function BugReportContent() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${errors.title ? 'border-red-500' : 'border-[#e9e9e9]'}`}
+                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${errors.title ? 'border-red-500' : 'border-[#e9e9e9]'}`}
                 placeholder="Brief description of the issue"
               />
               {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -144,7 +144,7 @@ export function BugReportContent() {
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={6}
-                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#6E4EFF] focus:border-transparent ${errors.description ? 'border-red-500' : 'border-[#e9e9e9]'}`}
+                className={`w-full px-3 py-2 border rounded-[4px] focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${errors.description ? 'border-red-500' : 'border-[#e9e9e9]'}`}
                 placeholder="Provide a detailed description of the bug..."
               />
               {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -154,7 +154,7 @@ export function BugReportContent() {
               <button
                 type="submit"
                 disabled={isSubmitting || !isFormValid}
-                className="px-5 h-9 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg  disabled:opacity-50 disabled:cursor-not-allowed  disabled:hover:shadow-none transition-all duration-300 ease-in-out  flex items-center justify-center gap-2"
+                className="px-5 h-9 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white rounded font-semibold text-[14px] leading-[1.4] hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg  disabled:opacity-50 disabled:cursor-not-allowed  disabled:hover:shadow-none transition-all duration-300 ease-in-out  flex items-center justify-center gap-2"
               >
                 {isSubmitting && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>

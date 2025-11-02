@@ -41,8 +41,8 @@ if (typeof document !== 'undefined') {
 const LoadingSpinner = () => (
   <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center rounded z-20">
     <div className="flex flex-col items-center gap-3">
-      <div className="animate-spin rounded-full h-10 w-10 border-3 border-[#6E4EFF] border-t-transparent"></div>
-      <div className="text-sm font-medium text-[#6E4EFF]">Loading...</div>
+      <div className="animate-spin rounded-full h-10 w-10 border-3 border-[#9747FF] border-t-transparent"></div>
+      <div className="text-sm font-medium text-[#9747FF]">Loading...</div>
     </div>
   </div>
 );
@@ -77,11 +77,11 @@ const EngagementIcon = () => (
 
 const AdvertiseIcon = () => (
   <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.8985 2.81722C18.4365 1.35189 21.5635 1.35189 24.1015 2.81722L33.2638 8.1071C35.8019 9.57242 37.3653 12.2805 37.3653 15.2111V25.7909C37.3653 28.7215 35.8019 31.4295 33.2638 32.8949L24.1015 38.1847C21.5635 39.6501 18.4365 39.6501 15.8985 38.1847L6.73616 32.8949C4.19815 31.4295 2.63467 28.7215 2.63467 25.7909V15.2111C2.63467 12.2805 4.19815 9.57242 6.73616 8.1071L15.8985 2.81722Z" fill="#7856FF" fillOpacity="0.1"/>
-<path d="M16.126 3.21191C18.523 1.828 21.477 1.828 23.874 3.21191L33.0361 8.50195C35.433 9.88587 36.9091 12.4432 36.9092 15.2109V25.791C36.9091 28.5587 35.433 31.1161 33.0361 32.5L23.874 37.79C21.477 39.174 18.523 39.174 16.126 37.79L6.96387 32.5C4.56702 31.1161 3.09088 28.5587 3.09082 25.791V15.2109C3.09088 12.4432 4.56702 9.88587 6.96387 8.50195L16.126 3.21191Z" stroke="#6E4EFF" strokeOpacity="0.2" strokeWidth="0.911444"/>
+<path d="M15.8985 2.81722C18.4365 1.35189 21.5635 1.35189 24.1015 2.81722L33.2638 8.1071C35.8019 9.57242 37.3653 12.2805 37.3653 15.2111V25.7909C37.3653 28.7215 35.8019 31.4295 33.2638 32.8949L24.1015 38.1847C21.5635 39.6501 18.4365 39.6501 15.8985 38.1847L6.73616 32.8949C4.19815 31.4295 2.63467 28.7215 2.63467 25.7909V15.2111C2.63467 12.2805 4.19815 9.57242 6.73616 8.1071L15.8985 2.81722Z" fill="#9747FF" fillOpacity="0.1"/>
+<path d="M16.126 3.21191C18.523 1.828 21.477 1.828 23.874 3.21191L33.0361 8.50195C35.433 9.88587 36.9091 12.4432 36.9092 15.2109V25.791C36.9091 28.5587 35.433 31.1161 33.0361 32.5L23.874 37.79C21.477 39.174 18.523 39.174 16.126 37.79L6.96387 32.5C4.56702 31.1161 3.09088 28.5587 3.09082 25.791V15.2109C3.09088 12.4432 4.56702 9.88587 6.96387 8.50195L16.126 3.21191Z" stroke="#9747FF" strokeOpacity="0.2" strokeWidth="0.911444"/>
 <g clipPath="url(#clip0_1369_7562)">
-<path opacity="0.3" d="M28.0808 10.5491L24.5354 11.19C22.7399 11.6697 21.1068 12.6246 19.8083 13.9542C17.7352 16.1175 15.4217 20.7544 14.5003 22.6873C14.3823 22.9427 14.3468 23.2285 14.3988 23.505C14.4509 23.7814 14.5879 24.0348 14.7908 24.2297L16.8539 26.2327C17.0545 26.428 17.3119 26.5546 17.5891 26.5942C17.8663 26.6338 18.1489 26.5844 18.3962 26.453C21.3867 24.9414 24.1928 23.0897 26.7588 20.9347C28.1125 19.564 29.0262 17.8204 29.3827 15.9272L30.0237 12.5521C30.0755 12.2832 30.0617 12.0057 29.9834 11.7432C29.9051 11.4808 29.7647 11.2411 29.574 11.0445C29.3833 10.8479 29.148 10.7002 28.888 10.614C28.6281 10.5277 28.3512 10.5055 28.0808 10.5491V10.5491ZM25.7172 17.7499C25.4442 18.0384 25.0915 18.2393 24.7041 18.3269C24.3167 18.4145 23.9119 18.385 23.5413 18.242C23.1707 18.099 22.851 17.849 22.6228 17.5239C22.3946 17.1988 22.2682 16.8131 22.2597 16.416C22.2512 16.0188 22.361 15.6281 22.5752 15.2936C22.7893 14.959 23.098 14.6956 23.4622 14.5369C23.8264 14.3783 24.2295 14.3315 24.6203 14.4025C25.0111 14.4735 25.372 14.6591 25.6571 14.9357C26.0353 15.3026 26.2536 15.8037 26.2648 16.3305C26.2761 16.8572 26.0793 17.3672 25.7172 17.7499Z" fill="#6E4EFF"/>
-<path d="M17.4243 17.219L14.6401 22.4369L10.0532 22.3267C10.0532 22.3267 13.889 16.4679 17.4243 17.219ZM24.1545 22.9677L19.1469 26.0323L19.4574 30.5792C19.4574 30.5792 25.0758 26.4529 24.1545 22.9677ZM24.2546 14.3848C23.8585 14.3848 23.4712 14.5022 23.1418 14.7223C22.8124 14.9424 22.5557 15.2553 22.4041 15.6213C22.2525 15.9873 22.2128 16.39 22.2901 16.7786C22.3674 17.1671 22.5581 17.524 22.8383 17.8041C23.1184 18.0843 23.4753 18.275 23.8638 18.3523C24.2524 18.4296 24.6551 18.3899 25.0211 18.2383C25.3871 18.0867 25.7 17.83 25.9201 17.5006C26.1402 17.1712 26.2576 16.7839 26.2576 16.3878C26.2576 15.8565 26.0466 15.3471 25.671 14.9714C25.2953 14.5958 24.7858 14.3848 24.2546 14.3848V14.3848Z" fill="#6E4EFF"/>
+<path opacity="0.3" d="M28.0808 10.5491L24.5354 11.19C22.7399 11.6697 21.1068 12.6246 19.8083 13.9542C17.7352 16.1175 15.4217 20.7544 14.5003 22.6873C14.3823 22.9427 14.3468 23.2285 14.3988 23.505C14.4509 23.7814 14.5879 24.0348 14.7908 24.2297L16.8539 26.2327C17.0545 26.428 17.3119 26.5546 17.5891 26.5942C17.8663 26.6338 18.1489 26.5844 18.3962 26.453C21.3867 24.9414 24.1928 23.0897 26.7588 20.9347C28.1125 19.564 29.0262 17.8204 29.3827 15.9272L30.0237 12.5521C30.0755 12.2832 30.0617 12.0057 29.9834 11.7432C29.9051 11.4808 29.7647 11.2411 29.574 11.0445C29.3833 10.8479 29.148 10.7002 28.888 10.614C28.6281 10.5277 28.3512 10.5055 28.0808 10.5491V10.5491ZM25.7172 17.7499C25.4442 18.0384 25.0915 18.2393 24.7041 18.3269C24.3167 18.4145 23.9119 18.385 23.5413 18.242C23.1707 18.099 22.851 17.849 22.6228 17.5239C22.3946 17.1988 22.2682 16.8131 22.2597 16.416C22.2512 16.0188 22.361 15.6281 22.5752 15.2936C22.7893 14.959 23.098 14.6956 23.4622 14.5369C23.8264 14.3783 24.2295 14.3315 24.6203 14.4025C25.0111 14.4735 25.372 14.6591 25.6571 14.9357C26.0353 15.3026 26.2536 15.8037 26.2648 16.3305C26.2761 16.8572 26.0793 17.3672 25.7172 17.7499Z" fill="#9747FF"/>
+<path d="M17.4243 17.219L14.6401 22.4369L10.0532 22.3267C10.0532 22.3267 13.889 16.4679 17.4243 17.219ZM24.1545 22.9677L19.1469 26.0323L19.4574 30.5792C19.4574 30.5792 25.0758 26.4529 24.1545 22.9677ZM24.2546 14.3848C23.8585 14.3848 23.4712 14.5022 23.1418 14.7223C22.8124 14.9424 22.5557 15.2553 22.4041 15.6213C22.2525 15.9873 22.2128 16.39 22.2901 16.7786C22.3674 17.1671 22.5581 17.524 22.8383 17.8041C23.1184 18.0843 23.4753 18.275 23.8638 18.3523C24.2524 18.4296 24.6551 18.3899 25.0211 18.2383C25.3871 18.0867 25.7 17.83 25.9201 17.5006C26.1402 17.1712 26.2576 16.7839 26.2576 16.3878C26.2576 15.8565 26.0466 15.3471 25.671 14.9714C25.2953 14.5958 24.7858 14.3848 24.2546 14.3848V14.3848Z" fill="#9747FF"/>
 </g>
 <defs>
 <clipPath id="clip0_1369_7562">
@@ -202,13 +202,13 @@ export function CampaignCards() {
 
                 {/* Content */}
                 <div className="h-[50px] px-4 py-4 flex items-center transition-colors duration-300 group-hover:bg-gray-50">
-                <span className="text-[14px] font-medium text-[#2a2a2f] leading-[19.6px] tracking-[-0.1px] transition-colors duration-300 group-hover:text-[#6E4EFF]">
+                <span className="text-[14px] font-medium text-[#2a2a2f] leading-[19.6px] tracking-[-0.1px] transition-colors duration-300 group-hover:text-[#9747FF]">
                     {campaign.title}
                 </span>
                 </div>
 
                 {/* Hover Effect Border */}
-                <div className="absolute inset-0 border-2 border-transparent rounded transition-all duration-300 group-hover:border-[#6E4EFF]/20 pointer-events-none"></div>
+                <div className="absolute inset-0 border-2 border-transparent rounded transition-all duration-300 group-hover:border-[#9747FF]/20 pointer-events-none"></div>
             </div>
             );
         })}
@@ -254,15 +254,15 @@ export function CampaignCards() {
                             <h5 className="text-sm font-semibold text-gray-700 mb-3">What you&apos;ll get:</h5>
                             <div className="space-y-2">
                                 <div className="flex items-center text-sm text-gray-600">
-                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                                     Advanced campaign management
                                 </div>
                                 <div className="flex items-center text-sm text-gray-600">
-                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                                     AI-powered insights
                                 </div>
                                 <div className="flex items-center text-sm text-gray-600">
-                                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                                     Real-time analytics
                                 </div>
                             </div>
@@ -272,7 +272,7 @@ export function CampaignCards() {
                         <div className="flex gap-3">
                             <button
                                 onClick={handleEnable}
-                                className="flex-1 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                                className="flex-1 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300"
                             >
                                 Enable Service
                             </button>
@@ -353,7 +353,7 @@ export function CampaignCards() {
                         {/* Action button */}
                         <button
                             onClick={() => setShowSuccessMessage(false)}
-                            className="w-full bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                            className="w-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300"
                         >
                             Got it, thanks!
                         </button>

@@ -48,7 +48,7 @@ const StepperStep = ({
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
-      return "bg-[rgba(120,86,255,0.1)] text-[#7856ff]";
+      return "bg-[rgba(120,86,255,0.1)] text-[#9747FF]";
     }
     if (isCompleted) {
       return "bg-[rgba(4,180,64,0.1)] text-[#04b440]";
@@ -58,7 +58,7 @@ const StepperStep = ({
 
   const getTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]";
+      return "text-[#9747FF]";
     }
     if (isCompleted) {
       return "text-[#04b440]";
@@ -68,7 +68,7 @@ const StepperStep = ({
 
   const getSubTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]/70";
+      return "text-[#9747FF]/70";
     }
     if (isCompleted) {
       return "text-[#04b440]/70";
@@ -110,7 +110,7 @@ const StepperProgressBar = ({ currentStep = 2, totalSteps = 5 }: { currentStep?:
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
       <div 
-        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
     </div>

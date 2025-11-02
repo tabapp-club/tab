@@ -21,6 +21,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     cohorts: true,
     automation: true,
     campaigns: true,
+    marketing_calendar: true,
   });
   const [isLoading, setIsLoading] = useState(false);
 

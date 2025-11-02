@@ -3,26 +3,25 @@
 import { useState, useEffect } from "react";
 import { useSidebar } from "@/components/SidebarContext";
 import { MobileHeaderButton } from "@/components/MobileHeaderButton";
-import { WorkflowOverview } from "./components/WorkflowOverview";
 import { WorkflowBuilder } from "./components/WorkflowBuilder";
 import { TemplateManager } from "./components/TemplateManager";
 import { AutomationRules } from "./components/AutomationRules";
 import { IntegrationSettings } from "./components/IntegrationSettings";
 import { WorkflowAnalytics } from "./components/WorkflowAnalytics";
 import { useSearchParams } from "next/navigation";
-import { BarChart3, MessageSquare, FileText, Zap, Link, TrendingUp } from "lucide-react";
+import { MessageSquare, FileText, Zap, Link, TrendingUp } from "lucide-react";
 
-type TabType = "overview" | "builder" | "templates" | "rules" | "integrations" | "analytics";
+type TabType = "builder" | "templates" | "rules" | "integrations" | "analytics";
 
 export function WorkflowAutomationContent() {
   const { isCollapsed, isMobile } = useSidebar();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [activeTab, setActiveTab] = useState<TabType>("analytics");
 
   // Handle URL parameters for tab selection
   useEffect(() => {
     const tab = searchParams.get('tab') as TabType;
-    if (tab && ['overview', 'builder', 'templates', 'rules', 'integrations', 'analytics'].includes(tab)) {
+    if (tab && ['builder', 'templates', 'rules', 'integrations', 'analytics'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -31,7 +30,6 @@ export function WorkflowAutomationContent() {
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: BarChart3 },
     { id: "analytics", label: "Analytics", icon: TrendingUp },
     { id: "rules", label: "Automation Templates", icon: Zap },
     { id: "templates", label: "Templates", icon: FileText },
@@ -58,8 +56,6 @@ export function WorkflowAutomationContent() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "overview":
-        return <WorkflowOverview />;
       case "analytics":
         return <WorkflowAnalytics />;
       case "builder":
@@ -71,7 +67,7 @@ export function WorkflowAutomationContent() {
       case "integrations":
         return <IntegrationSettings />;
       default:
-        return <WorkflowOverview />;
+        return <WorkflowAnalytics />;
     }
   };
 
@@ -110,7 +106,7 @@ export function WorkflowAutomationContent() {
                     onClick={() => handleTabChange(tab.id)}
                     className={`flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                       activeTab === tab.id
-                        ? "border-[#6E4EFF] text-[#6E4EFF] bg-[#6E4EFF]/5"
+                        ? "border-[#9747FF] text-[#9747FF] bg-[#9747FF]/5"
                         : "border-transparent text-[#6b7280] hover:text-[#2a2a2f] hover:border-[#d1d5db]"
                     }`}
                   >
@@ -133,7 +129,7 @@ export function WorkflowAutomationContent() {
                     onClick={() => handleTabChange(tab.id)}
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-200 ${
                       activeTab === tab.id
-                        ? "border-[#6E4EFF] text-[#6E4EFF] bg-[#6E4EFF]/5"
+                        ? "border-[#9747FF] text-[#9747FF] bg-[#9747FF]/5"
                         : "border-transparent text-[#6b7280] hover:text-[#2a2a2f] hover:border-[#d1d5db]"
                     }`}
                   >

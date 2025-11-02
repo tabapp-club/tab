@@ -68,12 +68,12 @@ export default function ConfirmationDialog({
         };
       case 'warning':
         return {
-          container: 'border-[#6E4EFF]/20 bg-white',
-          icon: 'text-[#6E4EFF] bg-[#6E4EFF]/10',
+          container: 'border-[#9747FF]/20 bg-white',
+          icon: 'text-[#9747FF] bg-[#9747FF]/10',
           title: 'text-[#2A2A2F]',
           message: 'text-[#626266]',
-          confirmButton: 'bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] hover:from-[#5D3EE8] hover:to-[#7A59FF] text-white',
-          cancelButton: 'border-[#6E4EFF]/30 text-[#6E4EFF] hover:bg-[#6E4EFF]/10 font-normal'
+          confirmButton: 'bg-gradient-to-r from-[#9747FF] to-[#9747FF] hover:from-[#9747FF] hover:to-[#9747FF] text-white',
+          cancelButton: 'border-[#9747FF]/30 text-[#9747FF] hover:bg-[#9747FF]/10 font-normal'
         };
       case 'info':
         return {

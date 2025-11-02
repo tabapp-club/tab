@@ -122,7 +122,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 {/* Loading Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6E4EFF] mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9747FF] mx-auto mb-4"></div>
                     <p className="text-[#626266]">Loading customer data...</p>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     <p className="text-[#626266] mb-4">{error.message}</p>
                     <button
                       onClick={() => window.location.reload()}
-                      className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
+                      className="px-4 py-2 bg-[#9747FF] text-white rounded hover:bg-[#9747FF]/90 transition-colors"
                     >
                       Try Again
                     </button>
@@ -198,7 +198,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     <p className="text-[#626266] mb-4">The customer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                     <button
                       onClick={() => router.push('/data-center')}
-                      className="px-4 py-2 bg-[#6E4EFF] text-white rounded hover:bg-[#6E4EFF]/90 transition-colors"
+                      className="px-4 py-2 bg-[#9747FF] text-white rounded hover:bg-[#9747FF]/90 transition-colors"
                     >
                       Go Back
                     </button>
@@ -234,7 +234,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 <div className="flex flex-col lg:flex-row gap-6">
                   {/* Avatar and Basic Info */}
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    <div className="w-20 h-20 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center text-white text-2xl font-bold">
                       {customerData.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>
@@ -371,8 +371,8 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                       }}
                       className={`flex-shrink-0 px-4 py-4 font-medium text-sm transition-all duration-200 relative min-w-fit ${
                         activeTab === tab.id
-                          ? 'text-[#6E4EFF] border-b-2 border-[#6E4EFF] bg-[#6E4EFF]/5 rounded-t'
-                          : 'text-[#626266] hover:text-[#6E4EFF] hover:bg-gray-50'
+                          ? 'text-[#9747FF] border-b-2 border-[#9747FF] bg-[#9747FF]/5 rounded-t'
+                          : 'text-[#626266] hover:text-[#9747FF] hover:bg-gray-50'
                       }`}
                     >
                       {tab.label}
@@ -397,7 +397,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                         {customerData.purchaseHistory.slice(0, 5).map((purchase) => (
                           <div key={purchase.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-[#e9e9e9] min-w-0">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                              <div className="w-8 h-8 bg-[#6E4EFF] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                              <div className="w-8 h-8 bg-[#9747FF] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                                 {purchase.category.charAt(0)}
                               </div>
                               <div className="min-w-0 flex-1">
@@ -506,7 +506,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                         {customerData.purchaseHistory.map((purchase) => (
                           <div key={purchase.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-[#e9e9e9]">
                             <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 bg-[#6E4EFF] rounded-full flex items-center justify-center text-white text-sm font-bold">
+                              <div className="w-10 h-10 bg-[#9747FF] rounded-full flex items-center justify-center text-white text-sm font-bold">
                                 {purchase.category.charAt(0)}
                               </div>
                               <div>

@@ -183,7 +183,7 @@ export function AutomationRules() {
                   onClick={() => setSelectedTemplate(template)}
                   className={`p-3 rounded-lg cursor-pointer transition-colors border ${
                     selectedTemplate?.id === template.id
-                      ? "bg-[#6E4EFF]/10 border-[#6E4EFF]/20"
+                      ? "bg-[#9747FF]/10 border-[#9747FF]/20"
                       : "hover:bg-[#f9fafb] border-[#e5e7eb]"
                   }`}
                 >

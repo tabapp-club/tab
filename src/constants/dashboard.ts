@@ -26,21 +26,21 @@ export const STATIC_CARD_STRUCTURE: StaticCardStructure[] = [
     title: "New customers",
     legendLabel: "New customers",
     unit: "Users",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 4,
     title: "Retained customers",
     legendLabel: "Retained customers",
     unit: "Users",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 5,
     title: "Active customers",
     legendLabel: "Active customers",
     unit: "Users",
-    bgColor: "bg-[#7856ff]"
+    bgColor: "bg-[#9747FF]"
   },
   {
     id: 6,

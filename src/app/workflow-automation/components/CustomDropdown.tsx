@@ -69,7 +69,7 @@ export function CustomDropdown({
                 setIsOpen(false);
               }}
               className={`w-full px-4 py-2 text-left text-[14px] text-[#2a2a2f] hover:bg-gray-50 transition-colors ${
-                value === option.value ? 'bg-[#6E4EFF]/5 text-[#6E4EFF]' : ''
+                value === option.value ? 'bg-[#9747FF]/5 text-[#9747FF]' : ''
               }`}
             >
               {option.label}

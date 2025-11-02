@@ -16,7 +16,7 @@ export default function AIServicesPage() {
           {/* Main Content */}
           <Suspense fallback={
             <div className="flex-1 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div>
             </div>
           }>
             <AIServicesContent />

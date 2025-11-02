@@ -21,7 +21,7 @@ export function DashboardHeader() {
         <MobileHeaderButton />
         <a
           href="/business-log"
-          className="bg-[#7856ff] hover:bg-[#6d46e5] text-white px-3 py-2 rounded text-sm font-medium transition-all duration-200 flex items-center gap-2"
+          className="bg-[#9747FF] hover:bg-[#9747FF] text-white px-3 py-2 rounded text-sm font-medium transition-all duration-200 flex items-center gap-2"
         >
           <Pencil className="w-4 h-4" />
           <span className="hidden sm:inline">Add Business Records</span>
@@ -43,7 +43,7 @@ export function DashboardHeader() {
             </div>
             <a
               href="/business-log"
-              className="hidden lg:flex bg-[#7856ff] hover:bg-[#6d46e5] text-white px-4 py-2 rounded text-sm font-medium transition-all duration-200 items-center gap-2 mt-4 lg:mt-0 w-fit"
+              className="hidden lg:flex bg-[#9747FF] hover:bg-[#9747FF] text-white px-4 py-2 rounded text-sm font-medium transition-all duration-200 items-center gap-2 mt-4 lg:mt-0 w-fit"
             >
               <Pencil className="w-4 h-4" />
               Add Business Records

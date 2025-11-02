@@ -141,6 +141,13 @@ const AchievementsIcon = ({colorCode}: {colorCode: string}) => (
 </svg>
 );
 
+const CalendarIcon = ({colorCode}: {colorCode: string}) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fillRule="evenodd" clipRule="evenodd" d="M5.33333 1.33334C5.70152 1.33334 6 1.63182 6 2.00001V2.66668H10V2.00001C10 1.63182 10.2985 1.33334 10.6667 1.33334C11.0349 1.33334 11.3333 1.63182 11.3333 2.00001V2.66668H12C12.7073 2.66668 13.3855 2.94763 13.8856 3.44773C14.3857 3.94782 14.6667 4.62611 14.6667 5.33334V12C14.6667 12.7073 14.3857 13.3855 13.8856 13.8856C13.3855 14.3857 12.7073 14.6667 12 14.6667H4C3.29276 14.6667 2.61448 14.3857 2.11438 13.8856C1.61428 13.3855 1.33333 12.7073 1.33333 12V5.33334C1.33333 4.62611 1.61428 3.94782 2.11438 3.44773C2.61448 2.94763 3.29276 2.66668 4 2.66668H4.66667V2.00001C4.66667 1.63182 4.96514 1.33334 5.33333 1.33334ZM4.66667 4.00001H4C3.64638 4.00001 3.30724 4.14048 3.05719 4.39053C2.80714 4.64058 2.66667 4.97972 2.66667 5.33334V12C2.66667 12.3536 2.80714 12.6928 3.05719 12.9428C3.30724 13.1929 3.64638 13.3333 4 13.3333H12C12.3536 13.3333 12.6928 13.1929 12.9428 12.9428C13.1929 12.6928 13.3333 12.3536 13.3333 12V5.33334C13.3333 4.97972 13.1929 4.64058 12.9428 4.39053C12.6928 4.14048 12.3536 4.00001 12 4.00001H11.3333V4.66668C11.3333 5.03487 11.0349 5.33334 10.6667 5.33334C10.2985 5.33334 10 5.03487 10 4.66668V4.00001H6V4.66668C6 5.03487 5.70152 5.33334 5.33333 5.33334C4.96514 5.33334 4.66667 5.03487 4.66667 4.66668V4.00001Z" fill={colorCode}/>
+<path fillRule="evenodd" clipRule="evenodd" d="M1.33333 6.66667C1.33333 6.29849 1.63181 6 2 6H14C14.3682 6 14.6667 6.29849 14.6667 6.66667C14.6667 7.03486 14.3682 7.33334 14 7.33334H2C1.63181 7.33334 1.33333 7.03486 1.33333 6.66667Z" fill={colorCode}/>
+</svg>
+);
+
 const UpsellCrossSellIcon = ({colorCode}: {colorCode: string}) => (
   <ShoppingCart size={16} color={colorCode} />
 );
@@ -201,6 +208,24 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     featureKey: "data_center" as const
   },
   {
+    id: "marketing-calendar",
+    label: "Marketing Calendar",
+    description: "Events & appointments",
+    icon: CalendarIcon,
+    href: "/marketing-calendar",
+    notificationCount: 0,
+    featureKey: "marketing_calendar" as const
+  },
+  {
+    id: "achievements",
+    label: "Achievements",
+    description: "Goals & milestones",
+    icon: AchievementsIcon,
+    href: "/achievements",
+    notificationCount: 0,
+    featureKey: "achievements" as const
+  },
+  {
     id: "ai-services",
     label: "tribly AI for business",
     description: "AI-powered insights & chat",
@@ -226,15 +251,6 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     href: "/workflow-automation",
     notificationCount: 7,
     featureKey: "automation" as const
-  },
-  {
-    id: "achievements",
-    label: "Achievements",
-    description: "Goals & milestones",
-    icon: AchievementsIcon,
-    href: "/achievements",
-    notificationCount: 0,
-    featureKey: "achievements" as const
   },
   {
     id: "campaigns",
@@ -320,7 +336,7 @@ export function Sidebar() {
           {!actualIsCollapsed && (
             <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f8f9fa] transition-all duration-200">
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
                   {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
@@ -349,7 +365,7 @@ export function Sidebar() {
           )}
           {actualIsCollapsed && (
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center text-white font-semibold text-sm transition-all duration-200 cursor-pointer">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center text-white font-semibold text-sm transition-all duration-200 cursor-pointer">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#10b981] border-2 border-white rounded-full"></div>
@@ -372,7 +388,8 @@ export function Sidebar() {
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "cohorts" && pathname === "/cohorts") ||
-              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && pathname === item.href);
+              (item.id === "marketing-calendar" && pathname === "/marketing-calendar") ||
+              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && item.id !== "marketing-calendar" && pathname === item.href);
 
             const isDisabled = !hasFeature(item.featureKey);
             const effectiveIsActive = isActive && !isDisabled;
@@ -387,8 +404,8 @@ export function Sidebar() {
                   isDisabled
                     ? 'cursor-not-allowed opacity-50 text-[#6b7280]'
                     : effectiveIsActive
-                      ? "cursor-pointer bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10 text-[#6E4EFF] border border-[#6E4EFF]/20"
-                      : "cursor-pointer text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#6E4EFF]/8 hover:to-[#8B6AFF]/8 hover:text-[#6E4EFF] hover:border hover:border-[#6E4EFF]/15"
+                      ? "cursor-pointer bg-gradient-to-r from-[#9747FF]/10 to-[#9747FF]/10 text-[#9747FF] border border-[#9747FF]/20"
+                      : "cursor-pointer text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#9747FF]/8 hover:to-[#9747FF]/8 hover:text-[#9747FF] hover:border hover:border-[#9747FF]/15"
                 }`}
                 title={actualIsCollapsed ? `${item.label} - ${item.description}${isDisabled ? ' (Work in progress)' : ''}` : undefined}
                 onMouseEnter={() => setHoveredItem(item.id)}
@@ -402,13 +419,13 @@ export function Sidebar() {
               >
                 {/* Left-side indicator for selected state */}
                 {effectiveIsActive && (
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6E4EFF] rounded-r-full"></div>
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#9747FF] rounded-r-full"></div>
                 )}
                 <div className="flex-shrink-0 relative">
                   <div className={`p-1 rounded-md ${
-                    effectiveIsActive ? 'bg-[#6E4EFF]/10' : isDisabled ? '' : 'group-hover:bg-[#6E4EFF]/10'
+                    effectiveIsActive ? 'bg-[#9747FF]/10' : isDisabled ? '' : 'group-hover:bg-[#9747FF]/10'
                   }`}>
-                  <Icon colorCode={isDisabled ? "#6b7280" : effectiveIsActive ? "#6E4EFF" : (hoveredItem === item.id ? "#6E4EFF" : "#2A2A2F")} />
+                  <Icon colorCode={isDisabled ? "#6b7280" : effectiveIsActive ? "#9747FF" : (hoveredItem === item.id ? "#9747FF" : "#2A2A2F")} />
                   </div>
                   {isDisabled && (
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
@@ -424,7 +441,7 @@ export function Sidebar() {
                   actualIsCollapsed ? 'opacity-0 max-w-0 overflow-hidden' : 'opacity-100 max-w-full'
                 } justify-start`}>
                   <span className={`text-[14px] font-semibold font-manrope leading-[1.2] whitespace-nowrap ${
-                    effectiveIsActive ? 'text-[#6E4EFF]' : isDisabled ? 'text-[#6b7280]' : 'text-[#2a2a2f] group-hover:text-[#6E4EFF]'
+                    effectiveIsActive ? 'text-[#9747FF]' : isDisabled ? 'text-[#6b7280]' : 'text-[#2a2a2f] group-hover:text-[#9747FF]'
                 }`}>
                   {item.label}
                 </span>
@@ -464,23 +481,23 @@ export function Sidebar() {
               href="/report-bug"
               className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 ${
                 pathname === '/report-bug'
-                  ? "bg-[#6E4EFF0D] hover:bg-[#6E4EFF]/10"
+                  ? "bg-[#9747FF0D] hover:bg-[#9747FF]/10"
                   : "hover:bg-gray-100"
               }`}
               title="Report Bug"
             >
-              <BugIcon colorCode={pathname === '/report-bug' ? "#6E4EFF" : "#2A2A2F"} />
+              <BugIcon colorCode={pathname === '/report-bug' ? "#9747FF" : "#2A2A2F"} />
             </Link>
             <Link
               href="/settings"
               className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors flex-shrink-0 relative ${
                 pathname === '/settings'
-                  ? "bg-[#6E4EFF0D] hover:bg-[#6E4EFF]/10"
+                  ? "bg-[#9747FF0D] hover:bg-[#9747FF]/10"
                   : "hover:bg-gray-100"
               }`}
               title="Settings"
             >
-              <SettingsIcon colorCode={pathname === '/settings' ? "#6E4EFF" : "#2A2A2F"} />
+              <SettingsIcon colorCode={pathname === '/settings' ? "#9747FF" : "#2A2A2F"} />
               {/* Notification Badge for Settings */}
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
             </Link>
@@ -568,15 +585,15 @@ export function Sidebar() {
                 <h5 className="text-sm font-semibold text-gray-700 mb-3">What you&apos;ll get:</h5>
                 <div className="space-y-2">
                   <div className="flex items-center text-sm text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                     Advanced {selectedService.label.toLowerCase()} features
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                     AI-powered insights
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <div className="w-1.5 h-1.5 bg-[#6E4EFF] rounded-full mr-3"></div>
+                    <div className="w-1.5 h-1.5 bg-[#9747FF] rounded-full mr-3"></div>
                     Real-time analytics
                   </div>
                 </div>
@@ -586,7 +603,7 @@ export function Sidebar() {
               <div className="flex gap-3">
                 <button
                   onClick={handleEnableService}
-                  className="flex-1 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                  className="flex-1 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300"
                 >
                   Enable Service
                 </button>
@@ -667,7 +684,7 @@ export function Sidebar() {
               {/* Action button */}
               <button
                 onClick={() => setShowSuccessMessage(false)}
-                className="w-full bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#5D3EE8] hover:to-[#7A59FF] hover:shadow-lg transition-all duration-300"
+                className="w-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 py-3 rounded font-semibold text-sm hover:from-[#9747FF] hover:to-[#9747FF] hover:shadow-lg transition-all duration-300"
               >
                 Got it, thanks!
               </button>

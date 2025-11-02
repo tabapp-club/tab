@@ -25,7 +25,7 @@ export default function CampaignsPage() {
   return (
     <ProtectedRoute>
       <FeatureGuard feature="campaigns">
-        <div className="bg-white">
+        <div className="bg-[#f6f6f6]">
           <div className="flex relative">
             {/* Sidebar */}
             <Sidebar />

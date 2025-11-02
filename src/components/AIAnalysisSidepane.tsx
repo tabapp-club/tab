@@ -309,7 +309,7 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
       }`}>
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
@@ -328,9 +328,9 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
                 <div className="flex-shrink-0">
                   <div className={`w-4 h-4 rounded-full border-2 transition-all duration-500 ${
                     (currentStep > index) || (index === 2 && isComplete)
-                      ? 'bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] border-[#6E4EFF] shadow-sm'
+                      ? 'bg-gradient-to-br from-[#9747FF] to-[#9747FF] border-[#9747FF] shadow-sm'
                       : currentStep === index
-                        ? 'bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] border-[#6E4EFF] animate-pulse shadow-md'
+                        ? 'bg-gradient-to-br from-[#9747FF] to-[#9747FF] border-[#9747FF] animate-pulse shadow-md'
                         : 'bg-gray-100 border-gray-200'
                   }`} />
                 </div>
@@ -354,7 +354,7 @@ const TaskLoader = ({ onComplete }: { onComplete?: () => void }) => {
                     {/* Time indicator */}
                     <div className="flex items-center space-x-2 ml-6">
                       <div className={`p-1.5 rounded-lg transition-all duration-300 ${
-                        currentStep >= index ? 'bg-gradient-to-r from-[#6E4EFF]/10 to-[#8B6AFF]/10' : 'bg-transparent'
+                        currentStep >= index ? 'bg-gradient-to-r from-[#9747FF]/10 to-[#9747FF]/10' : 'bg-transparent'
                       }`}>
                         <ClockIcon />
                       </div>
@@ -490,29 +490,29 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               {/* Business Summary */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-2 bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 rounded-xl">
-                    <BarChart3 className="w-5 h-5 text-[#6E4EFF]" />
+                  <div className="p-2 bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 rounded-xl">
+                    <BarChart3 className="w-5 h-5 text-[#9747FF]" />
                   </div>
                   <h3 className="font-bold text-[#2a2a2f]">{translations[selectedLanguage as keyof typeof translations].businessSummary}</h3>
                 </div>
 
                 {/* Compact Metrics Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 border border-[#9747FF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Current Value</p>
-                    <p className="text-sm font-semibold text-[#6E4EFF]">
+                    <p className="text-sm font-semibold text-[#9747FF]">
                       {analysis.business_summary.current_value}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 border border-[#9747FF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Previous Value</p>
-                    <p className="text-sm font-semibold text-[#6E4EFF]">
+                    <p className="text-sm font-semibold text-[#9747FF]">
                       {analysis.business_summary.previous_value}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 border border-[#6E4EFF]/20 rounded-lg p-3">
+                  <div className="bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 border border-[#9747FF]/20 rounded-lg p-3">
                     <p className="text-sm font-semibold text-[#2a2a2f] mb-1">Change</p>
-                    <p className="text-sm font-semibold text-[#6E4EFF]">
+                    <p className="text-sm font-semibold text-[#9747FF]">
                       {analysis.business_summary.percentage_change}
                     </p>
                   </div>
@@ -625,14 +625,14 @@ export function AIAnalysisSidepane({ isOpen, onClose, cardType, cardData, filter
               {/* Smart Actions */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="p-2 bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 rounded-xl">
-                    <Target className="w-5 h-5 text-[#6E4EFF]" />
+                  <div className="p-2 bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 rounded-xl">
+                    <Target className="w-5 h-5 text-[#9747FF]" />
                   </div>
                   <h3 className="font-bold text-[#2a2a2f] text-[16px]">{translations[selectedLanguage as keyof typeof translations].smartActions}</h3>
                 </div>
                 <div className="space-y-4">
                   {analysis.smart_actions.map((action: any, index: number) => (
-                    <div key={index} className="border border-gray-100 rounded-xl p-4 bg-white hover:bg-gradient-to-r hover:from-[#6E4EFF]/5 hover:to-[#8B6AFF]/5 transition-colors">
+                    <div key={index} className="border border-gray-100 rounded-xl p-4 bg-white hover:bg-gradient-to-r hover:from-[#9747FF]/5 hover:to-[#9747FF]/5 transition-colors">
                       <div className="flex items-start justify-between mb-6">
                         <span className="font-semibold text-[#2a2a2f] pr-2 text-[14px]">
                           {action.action}

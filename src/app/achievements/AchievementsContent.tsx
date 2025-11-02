@@ -230,7 +230,7 @@ export function AchievementsContent() {
                   onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
                   className={`bg-white h-10 px-3 py-2 border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors relative w-28 sm:w-32 ${
                     selectedStatus !== 'all'
-                      ? 'border-[#7856ff] bg-[#7856ff]/5'
+                      ? 'border-[#9747FF] bg-[#9747FF]/5'
                       : 'border-[#e9e9e9]'
                   }`}
                 >
@@ -242,7 +242,7 @@ export function AchievementsContent() {
                        selectedStatus === 'overdue' ? '⚠️ Overdue' : 'All Status'}
                     </span>
                     {selectedStatus !== 'all' && (
-                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#7856ff] rounded-full flex-shrink-0">
+                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#9747FF] rounded-full flex-shrink-0">
                         1
                       </span>
                     )}
@@ -269,7 +269,7 @@ export function AchievementsContent() {
                       <div className="flex justify-between items-center">
                         <span className="text-[12px] text-[#626266]">Filter by Status</span>
                         <button
-                          className="text-[12px] text-[#626266] hover:text-[#7856ff]"
+                          className="text-[12px] text-[#626266] hover:text-[#9747FF]"
                           onClick={() => {
                             setSelectedStatus('all');
                             setIsStatusDropdownOpen(false);
@@ -295,13 +295,13 @@ export function AchievementsContent() {
                             setIsStatusDropdownOpen(false);
                           }}
                           className={`w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer text-left ${
-                            selectedStatus === option.value ? 'bg-[#7856ff]/5' : ''
+                            selectedStatus === option.value ? 'bg-[#9747FF]/5' : ''
                           }`}
                         >
                           <div className="w-[18px] h-[18px] flex items-center justify-center">
                             {selectedStatus === option.value && (
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M3 8L7 12L13 4" stroke="#7856ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M3 8L7 12L13 4" stroke="#9747FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
                             )}
                           </div>
@@ -317,7 +317,7 @@ export function AchievementsContent() {
 
               <button
                 onClick={() => setShowCreateTarget(true)}
-                className="px-4 py-2 bg-[#6E4EFF] text-white rounded font-medium text-sm hover:bg-[#6E4EFF]/90 transition-all duration-200 flex items-center gap-2"
+                className="px-4 py-2 bg-[#9747FF] text-white rounded font-medium text-sm hover:bg-[#9747FF]/90 transition-all duration-200 flex items-center gap-2"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

@@ -267,7 +267,7 @@ export function BusinessLogFields() {
             <input
               type="checkbox"
               disabled
-              className="h-4 w-4 text-[#6E4EFF] focus:ring-[#6E4EFF] border-[#d1d5db] rounded bg-gray-50"
+              className="h-4 w-4 text-[#9747FF] focus:ring-[#9747FF] border-[#d1d5db] rounded bg-gray-50"
             />
             <label className="ml-2 text-sm text-gray-500">
               {field.placeholder || 'Check this option'}
@@ -315,7 +315,7 @@ export function BusinessLogFields() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7856ff]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div>
         <span className="ml-3 text-gray-600">Loading fields...</span>
       </div>
     );
@@ -355,7 +355,7 @@ export function BusinessLogFields() {
         </div>
         <Button
           onClick={startCreatingFields}
-          className="bg-[#6E4EFF] hover:bg-[#5a3fd9] text-white"
+          className="bg-[#9747FF] hover:bg-[#6E4EFF] text-white"
         >
           + Add Custom Fields
         </Button>
@@ -558,7 +558,7 @@ export function BusinessLogFields() {
       {/* Create Fields Inline Form */}
       {isCreatingFields && (
         <Card className="mb-6">
-          <CardHeader className="bg-gradient-to-r from-[#6E4EFF]/5 to-[#7856ff]/5">
+          <CardHeader className="bg-gradient-to-r from-[#9747FF]/5 to-[#9747FF]/5">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-lg font-semibold text-[#2a2a2f]">Create Custom Fields</CardTitle>
@@ -615,7 +615,7 @@ export function BusinessLogFields() {
                         value={field.label}
                         onChange={(e) => updateField(index, { ...field, label: e.target.value })}
                         placeholder="e.g., Customer Age, Product Category"
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#9747FF]/20 focus:border-[#9747FF] transition-all duration-200"
                       />
                     </div>
 
@@ -626,7 +626,7 @@ export function BusinessLogFields() {
                       <select
                         value={field.field_type}
                         onChange={(e) => updateField(index, { ...field, field_type: e.target.value as FieldType })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200 bg-white"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#9747FF]/20 focus:border-[#9747FF] transition-all duration-200 bg-white"
                       >
                         <option value="Text">📝 Text Input</option>
                         <option value="Number">🔢 Number Input</option>
@@ -646,7 +646,7 @@ export function BusinessLogFields() {
                         value={field.placeholder}
                         onChange={(e) => updateField(index, { ...field, placeholder: e.target.value })}
                         placeholder="e.g., Enter customer age, Select category"
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/20 focus:border-[#6E4EFF] transition-all duration-200"
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#9747FF]/20 focus:border-[#9747FF] transition-all duration-200"
                       />
                     </div>
 
@@ -656,7 +656,7 @@ export function BusinessLogFields() {
                         id={`required-${index}`}
                         checked={field.required}
                         onChange={(e) => updateField(index, { ...field, required: e.target.checked })}
-                        className="w-4 h-4 text-[#6E4EFF] border-2 border-gray-300 rounded focus:ring-[#6E4EFF] focus:ring-2"
+                        className="w-4 h-4 text-[#9747FF] border-2 border-gray-300 rounded focus:ring-[#9747FF] focus:ring-2"
                       />
                       <label htmlFor={`required-${index}`} className="text-sm font-medium text-[#2a2a2f] cursor-pointer">
                         This field is required
@@ -669,7 +669,7 @@ export function BusinessLogFields() {
               {/* Add Field Button */}
               <button
                 onClick={addNewField}
-                className="w-full border-2 border-dashed border-[#6E4EFF]/30 hover:border-[#6E4EFF]/50 rounded-xl p-4 text-[#6E4EFF] hover:bg-[#6E4EFF]/5 transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full border-2 border-dashed border-[#9747FF]/30 hover:border-[#9747FF]/50 rounded-xl p-4 text-[#9747FF] hover:bg-[#9747FF]/5 transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -691,7 +691,7 @@ export function BusinessLogFields() {
                   createFieldsMutation.mutate(createFieldsData);
                 }}
                 disabled={createFieldsData.some(field => !field.label) || createFieldsMutation.isPending}
-                className="px-6 py-2 bg-gradient-to-r from-[#6E4EFF] to-[#7856ff] hover:from-[#5a3fd9] hover:to-[#6b46c1] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-xl font-medium shadow-lg hover:shadow-xl"
+                className="px-6 py-2 bg-gradient-to-r from-[#9747FF] to-[#9747FF] hover:from-[#6E4EFF] hover:to-[#6b46c1] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-xl font-medium shadow-lg hover:shadow-xl"
               >
                 {createFieldsMutation.isPending ? (
                   <div className="flex items-center gap-2">

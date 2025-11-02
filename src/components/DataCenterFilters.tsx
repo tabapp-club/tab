@@ -371,10 +371,10 @@ const DataCenterFilters = ({
           {showSearchBar && (
             <div className="flex flex-row items-center justify-start w-full sm:w-auto sm:min-w-[168px] relative shrink-0 search-input">
               <div className="flex flex-col items-start justify-start relative w-full sm:w-auto">
-                <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#6E4EFF] focus-within:ring-2 focus-within:ring-[#6E4EFF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full sm:w-[168px] sm:min-w-[168px] transition-all duration-200">
-                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#6E4EFF] transition-colors duration-200">
+                <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#9747FF] focus-within:ring-2 focus-within:ring-[#9747FF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full sm:w-[168px] sm:min-w-[168px] transition-all duration-200">
+                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#9747FF] transition-colors duration-200">
                     {isLoading ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#6E4EFF] border-t-transparent"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#9747FF] border-t-transparent"></div>
                     ) : (
                       <SearchIcon />
                     )}

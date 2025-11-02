@@ -30,7 +30,7 @@ const UsersIcon = () => (
 const BagIcon = () => (
   <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clipPath="url(#clip0_719_7542)">
-<path fillRule="evenodd" clipRule="evenodd" d="M19.8329 14.3459C19.8329 18.5916 15.9858 20.5002 10.6 20.5002C5.21433 20.5002 1.36719 18.5916 1.36719 14.3759C1.36719 9.76018 3.67576 7.42161 8.29147 5.08304L6.65719 2.03875C6.55968 1.88627 6.50538 1.71019 6.50008 1.52927C6.49478 1.34836 6.53868 1.1694 6.62711 1.01147C6.71553 0.853546 6.84515 0.72258 7.00215 0.632536C7.15916 0.542492 7.33766 0.496748 7.51862 0.50018H14.0429C14.2125 0.50452 14.3782 0.551947 14.5245 0.637997C14.6707 0.724047 14.7926 0.84589 14.8788 0.99206C14.965 1.13823 15.0125 1.30392 15.017 1.47353C15.0214 1.64315 14.9827 1.81111 14.9043 1.96161L12.9086 5.08304C17.5229 7.39018 19.8329 9.72875 19.8329 14.3459ZM7.68147 9.78589H10.0858C10.2858 9.84589 10.5372 9.95732 10.7386 10.143C10.8894 10.2798 11.0008 10.4544 11.0615 10.6488H7.6829C7.5891 10.6488 7.49622 10.6672 7.40956 10.7031C7.3229 10.739 7.24415 10.7916 7.17782 10.858C7.1115 10.9243 7.05888 11.003 7.02299 11.0897C6.98709 11.1764 6.96862 11.2692 6.96862 11.363C6.96862 11.4568 6.98709 11.5497 7.02299 11.6364C7.05888 11.723 7.1115 11.8018 7.17782 11.8681C7.24415 11.9344 7.3229 11.9871 7.40956 12.023C7.49622 12.0588 7.5891 12.0773 7.6829 12.0773H10.8358C10.5903 12.35 10.2789 12.5552 9.93147 12.673C9.48365 12.8366 9.01234 12.9268 8.53576 12.9402H8.51433C8.36893 12.9403 8.22703 12.9848 8.10759 13.0677C7.98815 13.1507 7.89686 13.2681 7.84593 13.4042C7.79499 13.5404 7.78684 13.6889 7.82254 13.8299C7.85825 13.9708 7.93612 14.0975 8.04576 14.193L8.04862 14.1959L8.05576 14.2002L8.07433 14.2173C8.17571 14.3033 8.28006 14.3857 8.38719 14.4645C9.61907 15.3844 11.02 16.0528 12.51 16.4316C12.6018 16.4568 12.6978 16.4634 12.7921 16.4509C12.8865 16.4385 12.9775 16.4074 13.0596 16.3593C13.1418 16.3112 13.2135 16.2472 13.2706 16.171C13.3277 16.0948 13.3689 16.008 13.392 15.9157C13.415 15.8233 13.4194 15.7273 13.4048 15.6332C13.3902 15.5391 13.3569 15.4489 13.307 15.3679C13.257 15.2869 13.1914 15.2166 13.1139 15.1613C13.0364 15.106 12.9486 15.0668 12.8558 15.0459C11.9819 14.8217 11.1414 14.4836 10.3558 14.0402L10.4329 14.0116C10.9158 13.8302 11.4472 13.5416 11.8615 13.0745C12.1115 12.7959 12.3072 12.463 12.4286 12.0773H13.5172C13.7066 12.0773 13.8883 12.0021 14.0223 11.8681C14.1562 11.7342 14.2315 11.5525 14.2315 11.363C14.2315 11.1736 14.1562 10.9919 14.0223 10.858C13.8883 10.724 13.7066 10.6488 13.5172 10.6488H12.5258C12.4806 10.3473 12.385 10.0556 12.2429 9.78589H13.5172C13.7066 9.78589 13.8883 9.71064 14.0223 9.57668C14.1562 9.44273 14.2315 9.26105 14.2315 9.07161C14.2315 8.88217 14.1562 8.70049 14.0223 8.56653C13.8883 8.43258 13.7066 8.35732 13.5172 8.35732H7.6829C7.49346 8.35732 7.31178 8.43258 7.17782 8.56653C7.04387 8.70049 6.96862 8.88217 6.96862 9.07161C6.96862 9.26105 7.04387 9.44273 7.17782 9.57668C7.31178 9.71064 7.49346 9.78589 7.6829 9.78589H7.68147Z" fill="#7856FF"/>
+<path fillRule="evenodd" clipRule="evenodd" d="M19.8329 14.3459C19.8329 18.5916 15.9858 20.5002 10.6 20.5002C5.21433 20.5002 1.36719 18.5916 1.36719 14.3759C1.36719 9.76018 3.67576 7.42161 8.29147 5.08304L6.65719 2.03875C6.55968 1.88627 6.50538 1.71019 6.50008 1.52927C6.49478 1.34836 6.53868 1.1694 6.62711 1.01147C6.71553 0.853546 6.84515 0.72258 7.00215 0.632536C7.15916 0.542492 7.33766 0.496748 7.51862 0.50018H14.0429C14.2125 0.50452 14.3782 0.551947 14.5245 0.637997C14.6707 0.724047 14.7926 0.84589 14.8788 0.99206C14.965 1.13823 15.0125 1.30392 15.017 1.47353C15.0214 1.64315 14.9827 1.81111 14.9043 1.96161L12.9086 5.08304C17.5229 7.39018 19.8329 9.72875 19.8329 14.3459ZM7.68147 9.78589H10.0858C10.2858 9.84589 10.5372 9.95732 10.7386 10.143C10.8894 10.2798 11.0008 10.4544 11.0615 10.6488H7.6829C7.5891 10.6488 7.49622 10.6672 7.40956 10.7031C7.3229 10.739 7.24415 10.7916 7.17782 10.858C7.1115 10.9243 7.05888 11.003 7.02299 11.0897C6.98709 11.1764 6.96862 11.2692 6.96862 11.363C6.96862 11.4568 6.98709 11.5497 7.02299 11.6364C7.05888 11.723 7.1115 11.8018 7.17782 11.8681C7.24415 11.9344 7.3229 11.9871 7.40956 12.023C7.49622 12.0588 7.5891 12.0773 7.6829 12.0773H10.8358C10.5903 12.35 10.2789 12.5552 9.93147 12.673C9.48365 12.8366 9.01234 12.9268 8.53576 12.9402H8.51433C8.36893 12.9403 8.22703 12.9848 8.10759 13.0677C7.98815 13.1507 7.89686 13.2681 7.84593 13.4042C7.79499 13.5404 7.78684 13.6889 7.82254 13.8299C7.85825 13.9708 7.93612 14.0975 8.04576 14.193L8.04862 14.1959L8.05576 14.2002L8.07433 14.2173C8.17571 14.3033 8.28006 14.3857 8.38719 14.4645C9.61907 15.3844 11.02 16.0528 12.51 16.4316C12.6018 16.4568 12.6978 16.4634 12.7921 16.4509C12.8865 16.4385 12.9775 16.4074 13.0596 16.3593C13.1418 16.3112 13.2135 16.2472 13.2706 16.171C13.3277 16.0948 13.3689 16.008 13.392 15.9157C13.415 15.8233 13.4194 15.7273 13.4048 15.6332C13.3902 15.5391 13.3569 15.4489 13.307 15.3679C13.257 15.2869 13.1914 15.2166 13.1139 15.1613C13.0364 15.106 12.9486 15.0668 12.8558 15.0459C11.9819 14.8217 11.1414 14.4836 10.3558 14.0402L10.4329 14.0116C10.9158 13.8302 11.4472 13.5416 11.8615 13.0745C12.1115 12.7959 12.3072 12.463 12.4286 12.0773H13.5172C13.7066 12.0773 13.8883 12.0021 14.0223 11.8681C14.1562 11.7342 14.2315 11.5525 14.2315 11.363C14.2315 11.1736 14.1562 10.9919 14.0223 10.858C13.8883 10.724 13.7066 10.6488 13.5172 10.6488H12.5258C12.4806 10.3473 12.385 10.0556 12.2429 9.78589H13.5172C13.7066 9.78589 13.8883 9.71064 14.0223 9.57668C14.1562 9.44273 14.2315 9.26105 14.2315 9.07161C14.2315 8.88217 14.1562 8.70049 14.0223 8.56653C13.8883 8.43258 13.7066 8.35732 13.5172 8.35732H7.6829C7.49346 8.35732 7.31178 8.43258 7.17782 8.56653C7.04387 8.70049 6.96862 8.88217 6.96862 9.07161C6.96862 9.26105 7.04387 9.44273 7.17782 9.57668C7.31178 9.71064 7.49346 9.78589 7.6829 9.78589H7.68147Z" fill="#9747FF"/>
 </g>
 <defs>
 <clipPath id="clip0_719_7542">
@@ -71,7 +71,7 @@ const StepperStep = ({
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
-      return "bg-[rgba(120,86,255,0.1)] text-[#7856ff]";
+      return "bg-[rgba(120,86,255,0.1)] text-[#9747FF]";
     }
     if (isCompleted) {
       return "bg-[rgba(4,180,64,0.1)] text-[#04b440]";
@@ -81,7 +81,7 @@ const StepperStep = ({
 
   const getSubTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]/70";
+      return "text-[#9747FF]/70";
     }
     if (isCompleted) {
       return "text-[#04b440]/70";
@@ -123,7 +123,7 @@ const StepperProgressBar = ({ currentStep = 4, totalSteps = 5 }: { currentStep?:
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
       <div 
-        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
     </div>
@@ -317,7 +317,7 @@ export function PlatformBudgetContent() {
                     <tr className="hover:bg-[#f8f9fa] transition-colors">
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#7856ff] rounded-lg flex items-center justify-center">
+                          <div className="w-10 h-10 bg-[#9747FF] rounded-lg flex items-center justify-center">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="white"/>
                               <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="white"/>
@@ -357,7 +357,7 @@ export function PlatformBudgetContent() {
                           type="checkbox" 
                           checked={selectedPlatforms.includes('tab')}
                           onChange={() => togglePlatform('tab')}
-                          className="w-4 h-4 text-[#7856ff] border-gray-300 rounded focus:ring-[#7856ff]" 
+                          className="w-4 h-4 text-[#9747FF] border-gray-300 rounded focus:ring-[#9747FF]" 
                         />
                       </td>
                     </tr>
@@ -534,7 +534,7 @@ export function PlatformBudgetContent() {
                       {!showCustomBudget && (
                         <button 
                           onClick={() => setShowCustomBudget(true)}
-                          className="text-[12px] text-[#7856ff] font-medium hover:underline ml-2"
+                          className="text-[12px] text-[#9747FF] font-medium hover:underline ml-2"
                         >
                           Customize
                         </button>
@@ -547,8 +547,8 @@ export function PlatformBudgetContent() {
                   <div 
                     className={`border rounded-lg p-4 transition-colors cursor-pointer ${
                       selectedBudgetType === 'conservative' 
-                        ? 'border-[#7856ff] bg-[#7856ff]/5' 
-                        : 'border-[#e9e9e9] hover:border-[#7856ff]'
+                        ? 'border-[#9747FF] bg-[#9747FF]/5' 
+                        : 'border-[#e9e9e9] hover:border-[#9747FF]'
                     }`}
                     onClick={() => handleSuggestedBudget('conservative')}
                   >
@@ -581,8 +581,8 @@ export function PlatformBudgetContent() {
                   <div 
                     className={`border-2 rounded-lg p-4 transition-colors cursor-pointer ${
                       selectedBudgetType === 'balanced' 
-                        ? 'border-[#7856ff] bg-[#7856ff]/5' 
-                        : 'border-[#e9e9e9] hover:border-[#7856ff]'
+                        ? 'border-[#9747FF] bg-[#9747FF]/5' 
+                        : 'border-[#e9e9e9] hover:border-[#9747FF]'
                     }`}
                     onClick={() => handleSuggestedBudget('balanced')}
                   >
@@ -615,8 +615,8 @@ export function PlatformBudgetContent() {
                   <div 
                     className={`border rounded-lg p-4 transition-colors cursor-pointer ${
                       selectedBudgetType === 'aggressive' 
-                        ? 'border-[#7856ff] bg-[#7856ff]/5' 
-                        : 'border-[#e9e9e9] hover:border-[#7856ff]'
+                        ? 'border-[#9747FF] bg-[#9747FF]/5' 
+                        : 'border-[#e9e9e9] hover:border-[#9747FF]'
                     }`}
                     onClick={() => handleSuggestedBudget('aggressive')}
                   >
@@ -663,9 +663,9 @@ export function PlatformBudgetContent() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-[#7856ff]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-[#9747FF]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#7856ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#9747FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
                     <div>
@@ -705,7 +705,7 @@ export function PlatformBudgetContent() {
                     <h3 className="text-[14px] font-medium text-[#2a2a2f]">Custom Budget</h3>
                     <button 
                       onClick={() => handleSuggestedBudget('balanced')}
-                      className="text-[12px] text-[#7856ff] font-medium hover:underline"
+                      className="text-[12px] text-[#9747FF] font-medium hover:underline"
                     >
                       Use suggested budget
                     </button>
@@ -722,7 +722,7 @@ export function PlatformBudgetContent() {
                         value={budgetInputs.total}
                         onChange={(e) => handleBudgetChange('total', Number(e.target.value))}
                         placeholder="5000" 
-                        className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7856ff] focus:border-transparent ${
+                        className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                           errors.total ? 'border-red-500' : 'border-[#e9e9e9]'
                         }`}
                       />
@@ -743,7 +743,7 @@ export function PlatformBudgetContent() {
                         value={budgetInputs.daily}
                         onChange={(e) => handleBudgetChange('daily', Number(e.target.value))}
                         placeholder="500" 
-                        className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7856ff] focus:border-transparent ${
+                        className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                           errors.daily ? 'border-red-500' : 'border-[#e9e9e9]'
                         }`}
                       />
@@ -763,7 +763,7 @@ export function PlatformBudgetContent() {
                         value={budgetInputs.expectedReach}
                         onChange={(e) => handleBudgetChange('expectedReach', Number(e.target.value))}
                         placeholder="100000" 
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#7856ff] focus:border-transparent ${
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#9747FF] focus:border-transparent ${
                           errors.expectedReach ? 'border-red-500' : 'border-[#e9e9e9]'
                         }`}
                       />
@@ -793,7 +793,7 @@ export function PlatformBudgetContent() {
                   {/* Container 1: Audience Overview */}
                   <div className="bg-[#f8f9fa] rounded-lg p-5">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-[#7856ff] rounded-lg flex items-center justify-center">
+                      <div className="w-10 h-10 bg-[#9747FF] rounded-lg flex items-center justify-center">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H6C4.93913 15 3.92172 15.4214 3.17157 16.1716C2.42143 16.9217 2 17.9391 2 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -929,7 +929,7 @@ export function PlatformBudgetContent() {
               </button>
               <button
                 onClick={handleProceed}
-                className="h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 bg-[#7856ff] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg"
+                className="h-9 px-3 sm:px-4 py-1 rounded font-medium text-[12px] sm:text-[14px] transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 bg-[#9747FF] text-white hover:bg-[#6a4fd8] shadow-md hover:shadow-lg"
               >
                 <span className="hidden sm:inline">Design Campaign</span>
                 <span className="sm:hidden">Next</span>

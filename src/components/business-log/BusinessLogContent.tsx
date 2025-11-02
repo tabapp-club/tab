@@ -107,7 +107,7 @@ export function BusinessLogContent() {
                 onClick={() => setActiveTab('entry')}
                 className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'entry'
-                    ? 'border-[#7856ff] text-[#7856ff]'
+                    ? 'border-[#9747FF] text-[#9747FF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -121,7 +121,7 @@ export function BusinessLogContent() {
                 onClick={() => setActiveTab('history')}
                 className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'history'
-                    ? 'border-[#7856ff] text-[#7856ff]'
+                    ? 'border-[#9747FF] text-[#9747FF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -135,7 +135,7 @@ export function BusinessLogContent() {
                 onClick={() => setActiveTab('fields')}
                 className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'fields'
-                    ? 'border-[#7856ff] text-[#7856ff]'
+                    ? 'border-[#9747FF] text-[#9747FF]'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >

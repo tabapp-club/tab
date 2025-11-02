@@ -118,7 +118,7 @@ export function BusinessGrowthCards() {
         return (
           <div
             key={tip.id}
-            className="relative min-w-[280px] sm:min-w-[300px] max-w-full bg-white border border-[#e9e9e9] rounded hover:shadow-lg transition-all duration-300 ease-out cursor-pointer group overflow-hidden flex-shrink-0 flex-grow-0"
+            className="relative min-w-[280px] sm:min-w-[300px] max-w-full bg-white border border-[#e9e9e9] rounded transition-all duration-300 ease-out cursor-pointer group overflow-hidden flex-shrink-0 flex-grow-0"
             onClick={() => !isLoading && handleGrowthTipClick(tip)}
           >
             {/* Loading Overlay */}

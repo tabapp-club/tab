@@ -139,7 +139,7 @@ export function BusinessLogList({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7856ff]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div>
         <span className="ml-3 text-gray-600">Loading entries...</span>
       </div>
     );
@@ -165,8 +165,8 @@ export function BusinessLogList({
       {/* Filters */}
       <div className="space-y-3">
         <div>
-          <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#6E4EFF] focus-within:ring-2 focus-within:ring-[#6E4EFF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full transition-all duration-200">
-            <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#6E4EFF] transition-colors duration-200">
+          <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#9747FF] focus-within:ring-2 focus-within:ring-[#9747FF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full transition-all duration-200">
+            <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#9747FF] transition-colors duration-200">
               <SearchIcon />
             </div>
             <div className="flex-1 flex items-center h-full min-w-0">
@@ -187,7 +187,7 @@ export function BusinessLogList({
             variant={statusFilter === undefined ? "default" : "outline"}
             size="sm"
             onClick={() => onStatusFilterChange(undefined)}
-            className={`${statusFilter === undefined ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            className={`${statusFilter === undefined ? "bg-[#9747FF] text-white" : ""} flex-1 sm:flex-none`}
           >
             All
           </Button>
@@ -195,7 +195,7 @@ export function BusinessLogList({
             variant={statusFilter === 'new' ? "default" : "outline"}
             size="sm"
             onClick={() => onStatusFilterChange('new')}
-            className={`${statusFilter === 'new' ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            className={`${statusFilter === 'new' ? "bg-[#9747FF] text-white" : ""} flex-1 sm:flex-none`}
           >
             <span className="hidden sm:inline">New Users</span>
             <span className="sm:hidden">New</span>
@@ -204,7 +204,7 @@ export function BusinessLogList({
             variant={statusFilter === 'returning' ? "default" : "outline"}
             size="sm"
             onClick={() => onStatusFilterChange('returning')}
-            className={`${statusFilter === 'returning' ? "bg-[#7856ff] text-white" : ""} flex-1 sm:flex-none`}
+            className={`${statusFilter === 'returning' ? "bg-[#9747FF] text-white" : ""} flex-1 sm:flex-none`}
           >
             <span className="hidden sm:inline">Returning</span>
             <span className="sm:hidden">Returning</span>
@@ -233,7 +233,7 @@ export function BusinessLogList({
             {!statusFilter && (
               <Button
                 onClick={() => window.location.reload()}
-                className="bg-[#7856ff] hover:bg-[#6d46e5]"
+                className="bg-[#9747FF] hover:bg-[#9747FF]"
               >
                 Create First Entry
               </Button>
@@ -251,14 +251,14 @@ export function BusinessLogList({
             <Button
               onClick={() => setSearchTerm('')}
               variant="outline"
-              className="border-[#7856ff] text-[#7856ff] hover:bg-[#7856ff] hover:text-white"
+              className="border-[#9747FF] text-[#9747FF] hover:bg-[#9747FF] hover:text-white"
             >
               Clear Search
             </Button>
           </div>
         ) : (
           filteredData.map((entry) => (
-          <Card key={entry.id} className="hover:border-[#7856ff]/30 transition-all duration-200 group overflow-hidden">
+          <Card key={entry.id} className="hover:border-[#9747FF]/30 transition-all duration-200 group overflow-hidden">
             <CardContent className="p-0 px-2">
               {/* Header Section - Customer Info & Amount */}
               <div className="p-2 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
@@ -266,7 +266,7 @@ export function BusinessLogList({
                   {/* Customer Information */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="w-7 h-7 bg-gradient-to-br from-[#7856ff] to-[#6d46e5] rounded-full flex items-center justify-center text-white font-semibold text-xs">
+                      <div className="w-7 h-7 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center text-white font-semibold text-xs">
                         {entry.customerName.charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -293,7 +293,7 @@ export function BusinessLogList({
 
                   {/* Amount Display */}
                   <div className="text-right">
-                    <div className="text-lg font-bold text-[#7856ff]">
+                    <div className="text-lg font-bold text-[#9747FF]">
                       ₹{entry.totalAmount.toFixed(2)}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -315,7 +315,7 @@ export function BusinessLogList({
                           type="text"
                           value={editForm.customerName || ''}
                           onChange={(e) => setEditForm({...editForm, customerName: e.target.value})}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:border-[#9747FF]"
                         />
                       </div>
                       <div>
@@ -324,7 +324,7 @@ export function BusinessLogList({
                           type="text"
                           value={editForm.customerPhone || ''}
                           onChange={(e) => setEditForm({...editForm, customerPhone: e.target.value})}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:border-[#9747FF]"
                         />
                       </div>
                     </div>
@@ -335,7 +335,7 @@ export function BusinessLogList({
                         <label className="block text-xs font-medium text-gray-700">Products/Services</label>
                         <button
                           onClick={addProduct}
-                          className="text-xs text-[#7856ff] hover:text-[#6d46e5] font-medium"
+                          className="text-xs text-[#9747FF] hover:text-[#9747FF] font-medium"
                         >
                           + Add Product
                         </button>
@@ -348,21 +348,21 @@ export function BusinessLogList({
                               placeholder="Product name"
                               value={product.name}
                               onChange={(e) => handleProductChange(index, 'name', e.target.value)}
-                              className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                              className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:border-[#9747FF]"
                             />
                             <input
                               type="number"
                               placeholder="Qty"
                               value={product.quantity}
                               onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 0)}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:border-[#9747FF]"
                             />
                             <input
                               type="number"
                               placeholder="Price"
                               value={product.price}
                               onChange={(e) => handleProductChange(index, 'price', parseFloat(e.target.value) || 0)}
-                              className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#7856ff] focus:border-[#7856ff]"
+                              className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#9747FF] focus:border-[#9747FF]"
                             />
                             {editForm.products && editForm.products.length > 1 && (
                               <button
@@ -387,7 +387,7 @@ export function BusinessLogList({
                           onClick={() => setEditForm({...editForm, isNewCustomer: true})}
                           className={`px-3 py-1 text-xs rounded ${
                             editForm.isNewCustomer
-                              ? 'bg-[#7856ff] text-white'
+                              ? 'bg-[#9747FF] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
@@ -397,7 +397,7 @@ export function BusinessLogList({
                           onClick={() => setEditForm({...editForm, isNewCustomer: false})}
                           className={`px-3 py-1 text-xs rounded ${
                             !editForm.isNewCustomer
-                              ? 'bg-[#7856ff] text-white'
+                              ? 'bg-[#9747FF] text-white'
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
                         >
@@ -410,7 +410,7 @@ export function BusinessLogList({
                     <div className="flex gap-2 pt-2">
                       <Button
                         onClick={() => handleSaveEdit(entry.id)}
-                        className="bg-[#7856ff] hover:bg-[#6d46e5] text-white text-xs px-3 py-1"
+                        className="bg-[#9747FF] hover:bg-[#9747FF] text-white text-xs px-3 py-1"
                       >
                         Save Changes
                       </Button>
@@ -431,7 +431,7 @@ export function BusinessLogList({
                 {/* Products/Services Section */}
                 <div className="mb-2">
                   <div className="flex items-center gap-1.5 mb-1.5">
-                    <svg className="w-3 h-3 text-[#7856ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 text-[#9747FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     <h4 className="text-xs font-semibold text-gray-800">Items</h4>
@@ -483,7 +483,7 @@ export function BusinessLogList({
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditEntry(entry)}
-                      className="h-6 px-2 text-xs hover:bg-[#7856ff]/5 hover:border-[#7856ff]/30 hover:text-[#7856ff] transition-colors group/edit"
+                      className="h-6 px-2 text-xs hover:bg-[#9747FF]/5 hover:border-[#9747FF]/30 hover:text-[#9747FF] transition-colors group/edit"
                     >
                       <svg className="w-2.5 h-2.5 mr-0.5 group-hover/edit:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

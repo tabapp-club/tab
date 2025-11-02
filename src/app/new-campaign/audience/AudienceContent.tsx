@@ -274,7 +274,7 @@ export function AudienceContent() {
           <div
             className={`bg-white border rounded-lg p-4 cursor-pointer ${
               audienceType === 'all'
-                ? 'border-[#6E4EFF]'
+                ? 'border-[#9747FF]'
                 : 'border-[#e9e9e9]'
             }`}
             onClick={() => setAudienceType('all')}
@@ -282,7 +282,7 @@ export function AudienceContent() {
             <div className="flex items-center gap-2 mb-2">
               <h3 className="text-[16px] font-bold text-[#2a2a2f]">All Customers</h3>
               <div className={`px-3 py-1 rounded-full text-[12px] font-medium ${
-                audienceType === 'all' ? 'bg-[#7856ff] text-white' : 'bg-gray-100 text-gray-600'
+                audienceType === 'all' ? 'bg-[#9747FF] text-white' : 'bg-gray-100 text-gray-600'
               }`}>
                 {totalUsers.toLocaleString()} customers
               </div>
@@ -311,7 +311,7 @@ export function AudienceContent() {
           <div
             className={`bg-white border rounded-lg p-4 cursor-pointer ${
               audienceType === 'custom'
-                ? 'border-[#6E4EFF]'
+                ? 'border-[#9747FF]'
                 : 'border-[#e9e9e9]'
             }`}
             onClick={() => setAudienceType('custom')}
@@ -319,7 +319,7 @@ export function AudienceContent() {
             <div className="flex items-center gap-2 mb-2">
               <h3 className="text-[16px] font-bold text-[#2a2a2f]">Custom Customers</h3>
               <div className={`px-3 py-1 rounded-full text-[12px] font-medium ${
-                audienceType === 'custom' ? 'bg-[#7856ff] text-white' : 'bg-gray-100 text-gray-600'
+                audienceType === 'custom' ? 'bg-[#9747FF] text-white' : 'bg-gray-100 text-gray-600'
               }`}>
                 Custom size
               </div>
@@ -391,7 +391,7 @@ export function AudienceContent() {
                           lifetimeValue: ''
                         }
                       })}
-                      className="text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium"
+                      className="text-[12px] text-[#9747FF] hover:text-[#6a4fd8] font-medium"
                     >
                       Clear all
                     </button>
@@ -405,8 +405,8 @@ export function AudienceContent() {
                     className="w-full flex items-center justify-between p-3 bg-white border border-[#e9e9e9] rounded hover:bg-gray-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 bg-[#7856ff]/10 rounded-lg flex items-center justify-center">
-                        <svg className="w-4 h-4 text-[#7856ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-7 h-7 bg-[#9747FF]/10 rounded-lg flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#9747FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                       </div>
@@ -414,7 +414,7 @@ export function AudienceContent() {
                         <div className="flex items-center gap-2">
                           <h4 className="text-[14px] font-semibold text-[#2a2a2f]">Customer Type</h4>
                           {getFilterSectionCount('customerType') > 0 && (
-                            <span className="px-2 py-0.5 bg-[#7856ff] text-white text-[10px] font-medium rounded-full">
+                            <span className="px-2 py-0.5 bg-[#9747FF] text-white text-[10px] font-medium rounded-full">
                               {getFilterSectionCount('customerType')}
                             </span>
                           )}
@@ -555,7 +555,7 @@ export function AudienceContent() {
                                 updateRangeFilter('numberOfVisits', 'min', range.min);
                                 updateRangeFilter('numberOfVisits', 'max', range.max);
                               }}
-                              className="w-4 h-4 text-[#6E4EFF] border-gray-300 focus:ring-[#6E4EFF] mt-0.5"
+                              className="w-4 h-4 text-[#9747FF] border-gray-300 focus:ring-[#9747FF] mt-0.5"
                             />
                             <div className="flex-1 flex items-center justify-between">
                               <div>
@@ -720,7 +720,7 @@ export function AudienceContent() {
                                   name="engagementLevel"
                                   checked={customFilters.customerBehaviour.engagementLevel === level.id}
                                   onChange={() => updateFilter('customerBehaviour', 'engagementLevel', level.id)}
-                                  className="w-4 h-4 text-[#6E4EFF] border-gray-300 focus:ring-[#6E4EFF] mt-0.5"
+                                  className="w-4 h-4 text-[#9747FF] border-gray-300 focus:ring-[#9747FF] mt-0.5"
                                 />
                                 <div className="flex-1 flex items-center justify-between">
                                   <div>
@@ -751,7 +751,7 @@ export function AudienceContent() {
                                   name="visitFrequency"
                                   checked={customFilters.customerBehaviour.visitFrequency === frequency.id}
                                   onChange={() => updateFilter('customerBehaviour', 'visitFrequency', frequency.id)}
-                                  className="w-4 h-4 text-[#6E4EFF] border-gray-300 focus:ring-[#6E4EFF] mt-0.5"
+                                  className="w-4 h-4 text-[#9747FF] border-gray-300 focus:ring-[#9747FF] mt-0.5"
                                 />
                                 <div className="flex-1 flex items-center justify-between">
                                   <div>
@@ -784,7 +784,7 @@ export function AudienceContent() {
                                   name="lastActivity"
                                   checked={customFilters.customerBehaviour.lastActivity === activity.id}
                                   onChange={() => updateFilter('customerBehaviour', 'lastActivity', activity.id)}
-                                  className="w-4 h-4 text-[#6E4EFF] border-gray-300 focus:ring-[#6E4EFF] mt-0.5"
+                                  className="w-4 h-4 text-[#9747FF] border-gray-300 focus:ring-[#9747FF] mt-0.5"
                                 />
                                 <div className="flex-1 flex items-center justify-between">
                                   <div>
@@ -817,7 +817,7 @@ export function AudienceContent() {
                                   name="lifetimeValue"
                                   checked={customFilters.customerBehaviour.lifetimeValue === value.id}
                                   onChange={() => updateFilter('customerBehaviour', 'lifetimeValue', value.id)}
-                                  className="w-4 h-4 text-[#6E4EFF] border-gray-300 focus:ring-[#6E4EFF] mt-0.5"
+                                  className="w-4 h-4 text-[#9747FF] border-gray-300 focus:ring-[#9747FF] mt-0.5"
                                 />
                                 <div className="flex-1 flex items-center justify-between">
                                   <div>
@@ -857,7 +857,7 @@ export function AudienceContent() {
                         <h3 className="text-[14px] font-semibold text-[#2a2a2f]">Filters Applied</h3>
                         <button
                           onClick={() => setFiltersExpanded(!filtersExpanded)}
-                          className="flex items-center gap-1 text-[12px] text-[#7856ff] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
+                          className="flex items-center gap-1 text-[12px] text-[#9747FF] hover:text-[#6a4fd8] font-medium transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-2"
                         >
                           <span>{filtersExpanded ? 'Collapse' : 'Expand'}</span>
                           <svg
@@ -1095,7 +1095,7 @@ export function AudienceContent() {
           <div className="bg-white border border-[#e9e9e9] rounded-lg p-6 mb-8">
           <div className="flex items-center gap-3 mb-2">
             <h3 className="text-[18px] font-semibold text-[#2a2a2f]">AI Suggested Audiences</h3>
-            <div className="px-3 py-1 bg-[#7856ff]/10 text-[#7856ff] text-[12px] font-medium rounded-full">
+            <div className="px-3 py-1 bg-[#9747FF]/10 text-[#9747FF] text-[12px] font-medium rounded-full">
               Recommended
             </div>
           </div>

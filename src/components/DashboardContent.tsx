@@ -2,14 +2,18 @@
 
 import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
-import { useState } from "react";
-import { DashboardHeader, BlogsSection, BusinessGrowthSection, AnalyticsSection, WorkflowInsights, DashboardFooter } from "./dashboard";
+import { useState, useCallback } from "react";
+import { DashboardHeader, BusinessGrowthSection, AnalyticsSection, DashboardFooter } from "./dashboard";
+import { RecommendedCampaigns, RecommendedCampaign } from "./campaigns/RecommendedCampaigns";
+import { CampaignDetailsSidepane } from "./campaigns/CampaignDetailsSidepane";
 
 export function DashboardContent() {
   const { isCollapsed, isMobile } = useSidebar();
   const [sidePaneOpen, setSidePaneOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] = useState<string>("");
   const [selectedCardData, setSelectedCardData] = useState<any>(null);
+  const [campaignSidePaneOpen, setCampaignSidePaneOpen] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
 
   // Handle Ask Reason button click
   const handleAskReason = (cardType: string, cardData: any) => {
@@ -25,6 +29,18 @@ export function DashboardContent() {
     setSelectedCardData(null);
   };
 
+  // Handle campaign send now
+  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
+    setSelectedCampaign(campaign);
+    setCampaignSidePaneOpen(true);
+  }, []);
+
+  // Handle campaign sidepane close
+  const handleCampaignSidePaneClose = useCallback(() => {
+    setCampaignSidePaneOpen(false);
+    setSelectedCampaign(null);
+  }, []);
+
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
@@ -35,10 +51,11 @@ export function DashboardContent() {
       <DashboardHeader />
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8">
-        <BusinessGrowthSection />
+        <div style={{ marginTop: '-40px', marginBottom: '56px' }}>
+          <RecommendedCampaigns onSendNow={handleSendNow} />
+        </div>
         <AnalyticsSection onAskReason={handleAskReason} />
-        <BlogsSection />
-        <WorkflowInsights />
+        <BusinessGrowthSection />
         <DashboardFooter />
       </div>
 
@@ -48,8 +65,13 @@ export function DashboardContent() {
         onClose={handleSidePaneClose}
         cardType={selectedCardType}
         cardData={selectedCardData}
-        filterDays={undefined}
-        dateRange={{ from: null, to: null }}
+      />
+
+      {/* Campaign Details Sidepane */}
+      <CampaignDetailsSidepane
+        isOpen={campaignSidePaneOpen}
+        onClose={handleCampaignSidePaneClose}
+        campaign={selectedCampaign}
       />
     </main>
   );

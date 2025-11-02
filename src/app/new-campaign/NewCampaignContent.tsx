@@ -59,10 +59,10 @@ const AdvertiseIcon = () => (
 const RetentionIcon = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="44" height="44" fill="white"/>
-    <path d="M17.5 2.59808C20.2846 0.990381 23.7154 0.990381 26.5 2.59808L36.5526 8.40192C39.3372 10.0096 41.0526 12.9808 41.0526 16.1962V27.8038C41.0526 31.0192 39.3372 33.9904 36.5526 35.5981L26.5 41.4019C23.7154 43.0096 20.2846 43.0096 17.5 41.4019L7.44744 35.5981C4.66283 33.9904 2.94744 31.0192 2.94744 27.8038V16.1962C2.94744 12.9808 4.66283 10.0096 7.44744 8.40192L17.5 2.59808Z" fill="#7856FF" fillOpacity="0.1"/>
-    <path d="M17.75 3.03125C20.3799 1.51287 23.6201 1.51287 26.25 3.03125L36.3027 8.83496C38.9326 10.3534 40.5527 13.1596 40.5527 16.1963V27.8037C40.5527 30.8404 38.9326 33.6466 36.3027 35.165L26.25 40.9688C23.6201 42.4871 20.3799 42.4871 17.75 40.9688L7.69727 35.165C5.06744 33.6466 3.44727 30.8404 3.44727 27.8037V16.1963C3.44727 13.1596 5.06744 10.3534 7.69727 8.83496L17.75 3.03125Z" stroke="#6E4EFF" strokeOpacity="0.2"/>
-    <path opacity="0.3" d="M30.8089 11.0238L26.9191 11.7271C24.949 12.2533 23.1573 13.301 21.7326 14.7598C19.4581 17.1333 16.9198 22.2208 15.9089 24.3415C15.7794 24.6216 15.7405 24.9352 15.7976 25.2385C15.8547 25.5419 16.005 25.8198 16.2276 26.0337L18.4911 28.2313C18.7113 28.4456 18.9937 28.5845 19.2978 28.6279C19.602 28.6714 19.912 28.6171 20.1833 28.473C23.4644 26.8145 26.5431 24.7829 29.3584 22.4186C30.8437 20.9147 31.8461 19.0016 32.2373 16.9245L32.9406 13.2215C32.9974 12.9264 32.9823 12.622 32.8964 12.334C32.8105 12.0461 32.6564 11.7831 32.4472 11.5674C32.2379 11.3517 31.9798 11.1897 31.6946 11.095C31.4094 11.0004 31.1055 10.976 30.8089 11.0238ZM28.2157 18.9243C27.9161 19.2409 27.5292 19.4612 27.1041 19.5574C26.679 19.6535 26.235 19.6211 25.8283 19.4642C25.4217 19.3073 25.0709 19.0331 24.8206 18.6764C24.5702 18.3196 24.4316 17.8965 24.4223 17.4608C24.4129 17.0251 24.5334 16.5964 24.7683 16.2293C25.0032 15.8622 25.342 15.5733 25.7415 15.3992C26.1411 15.2251 26.5834 15.1737 27.0122 15.2516C27.441 15.3295 27.8369 15.5332 28.1497 15.8366C28.5646 16.2392 28.8042 16.789 28.8165 17.367C28.8289 17.9449 28.613 18.5044 28.2157 18.9243Z" fill="#6E4EFF"/>
-    <path d="M19.1171 18.3421L16.0624 24.0669L11.0298 23.946C11.0298 23.946 15.2382 17.518 19.1171 18.3421ZM26.5011 24.6493L21.007 28.0116L21.3477 33.0003C21.3477 33.0003 27.512 28.4731 26.5011 24.6493ZM26.611 15.2324C26.1763 15.2324 25.7514 15.3613 25.39 15.6028C25.0287 15.8443 24.747 16.1875 24.5806 16.5891C24.4143 16.9906 24.3708 17.4325 24.4556 17.8588C24.5404 18.2851 24.7497 18.6767 25.057 18.984C25.3644 19.2914 25.756 19.5007 26.1823 19.5855C26.6086 19.6703 27.0504 19.6267 27.452 19.4604C27.8535 19.2941 28.1968 19.0124 28.4383 18.651C28.6797 18.2896 28.8086 17.8647 28.8086 17.4301C28.8086 16.8472 28.5771 16.2882 28.1649 15.8761C27.7528 15.464 27.1938 15.2324 26.611 15.2324Z" fill="#6E4EFF"/>
+    <path d="M17.5 2.59808C20.2846 0.990381 23.7154 0.990381 26.5 2.59808L36.5526 8.40192C39.3372 10.0096 41.0526 12.9808 41.0526 16.1962V27.8038C41.0526 31.0192 39.3372 33.9904 36.5526 35.5981L26.5 41.4019C23.7154 43.0096 20.2846 43.0096 17.5 41.4019L7.44744 35.5981C4.66283 33.9904 2.94744 31.0192 2.94744 27.8038V16.1962C2.94744 12.9808 4.66283 10.0096 7.44744 8.40192L17.5 2.59808Z" fill="#9747FF" fillOpacity="0.1"/>
+    <path d="M17.75 3.03125C20.3799 1.51287 23.6201 1.51287 26.25 3.03125L36.3027 8.83496C38.9326 10.3534 40.5527 13.1596 40.5527 16.1963V27.8037C40.5527 30.8404 38.9326 33.6466 36.3027 35.165L26.25 40.9688C23.6201 42.4871 20.3799 42.4871 17.75 40.9688L7.69727 35.165C5.06744 33.6466 3.44727 30.8404 3.44727 27.8037V16.1963C3.44727 13.1596 5.06744 10.3534 7.69727 8.83496L17.75 3.03125Z" stroke="#9747FF" strokeOpacity="0.2"/>
+    <path opacity="0.3" d="M30.8089 11.0238L26.9191 11.7271C24.949 12.2533 23.1573 13.301 21.7326 14.7598C19.4581 17.1333 16.9198 22.2208 15.9089 24.3415C15.7794 24.6216 15.7405 24.9352 15.7976 25.2385C15.8547 25.5419 16.005 25.8198 16.2276 26.0337L18.4911 28.2313C18.7113 28.4456 18.9937 28.5845 19.2978 28.6279C19.602 28.6714 19.912 28.6171 20.1833 28.473C23.4644 26.8145 26.5431 24.7829 29.3584 22.4186C30.8437 20.9147 31.8461 19.0016 32.2373 16.9245L32.9406 13.2215C32.9974 12.9264 32.9823 12.622 32.8964 12.334C32.8105 12.0461 32.6564 11.7831 32.4472 11.5674C32.2379 11.3517 31.9798 11.1897 31.6946 11.095C31.4094 11.0004 31.1055 10.976 30.8089 11.0238ZM28.2157 18.9243C27.9161 19.2409 27.5292 19.4612 27.1041 19.5574C26.679 19.6535 26.235 19.6211 25.8283 19.4642C25.4217 19.3073 25.0709 19.0331 24.8206 18.6764C24.5702 18.3196 24.4316 17.8965 24.4223 17.4608C24.4129 17.0251 24.5334 16.5964 24.7683 16.2293C25.0032 15.8622 25.342 15.5733 25.7415 15.3992C26.1411 15.2251 26.5834 15.1737 27.0122 15.2516C27.441 15.3295 27.8369 15.5332 28.1497 15.8366C28.5646 16.2392 28.8042 16.789 28.8165 17.367C28.8289 17.9449 28.613 18.5044 28.2157 18.9243Z" fill="#9747FF"/>
+    <path d="M19.1171 18.3421L16.0624 24.0669L11.0298 23.946C11.0298 23.946 15.2382 17.518 19.1171 18.3421ZM26.5011 24.6493L21.007 28.0116L21.3477 33.0003C21.3477 33.0003 27.512 28.4731 26.5011 24.6493ZM26.611 15.2324C26.1763 15.2324 25.7514 15.3613 25.39 15.6028C25.0287 15.8443 24.747 16.1875 24.5806 16.5891C24.4143 16.9906 24.3708 17.4325 24.4556 17.8588C24.5404 18.2851 24.7497 18.6767 25.057 18.984C25.3644 19.2914 25.756 19.5007 26.1823 19.5855C26.6086 19.6703 27.0504 19.6267 27.452 19.4604C27.8535 19.2941 28.1968 19.0124 28.4383 18.651C28.6797 18.2896 28.8086 17.8647 28.8086 17.4301C28.8086 16.8472 28.5771 16.2882 28.1649 15.8761C27.7528 15.464 27.1938 15.2324 26.611 15.2324Z" fill="#9747FF"/>
   </svg>
 );
 
@@ -192,7 +192,7 @@ const campaignTypes: CampaignType[] = [
     type: 'advertise',
     benefits: ['Market expansion', 'Lead generation', 'Brand visibility', 'Sales growth', 'Competitive advantage'],
     category: 'Advertising',
-    color: '#7856ff',
+    color: '#9747FF',
     gradient: 'from-[#ffffff] to-[#f0ecff]',
     badgeColor: 'bg-[rgba(213,92,32,0.1)] border-[rgba(213,92,32,0.2)]',
     badgeText: 'trending',
@@ -301,7 +301,7 @@ const StepperStep = ({
 }) => {
   const getStepStyles = () => {
     if (isCurrent) {
-      return "bg-[rgba(120,86,255,0.1)] text-[#7856ff]";
+      return "bg-[rgba(120,86,255,0.1)] text-[#9747FF]";
     }
     if (isCompleted) {
       return "bg-[rgba(4,180,64,0.1)] text-[#04b440]";
@@ -311,7 +311,7 @@ const StepperStep = ({
 
   const getTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]";
+      return "text-[#9747FF]";
     }
     if (isCompleted) {
       return "text-[#04b440]";
@@ -321,7 +321,7 @@ const StepperStep = ({
 
   const getSubTextColor = () => {
     if (isCurrent) {
-      return "text-[#7856ff]/70";
+      return "text-[#9747FF]/70";
     }
     if (isCompleted) {
       return "text-[#04b440]/70";
@@ -363,7 +363,7 @@ const StepperProgressBar = ({ currentStep = 1, totalSteps = 5 }: { currentStep?:
   return (
     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-md overflow-hidden">
       <div 
-        className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500 ease-out"
+        className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500 ease-out"
         style={{ width: `${progressPercentage}%` }}
       />
     </div>
@@ -478,7 +478,7 @@ export function NewCampaignContent() {
                   disabled={!selectedCampaignType || isNavigating}
                   className={`flex-[2] h-9 px-6 rounded font-medium text-[16px] transition-all duration-200 touch-manipulation ${
                     selectedCampaignType && !isNavigating
-                      ? 'bg-gradient-to-r from-[#6e4eff] to-[#8B6AFF] text-white hover:from-[#5a3de8] hover:to-[#7856ff] '
+                      ? 'bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white hover:from-[#5a3de8] hover:to-[#9747FF] '
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
@@ -523,7 +523,7 @@ export function NewCampaignContent() {
                 disabled={!selectedCampaignType || isNavigating}
                   className={`h-9 px-4 py-1 rounded font-medium text-[14px] transition-all duration-200 ${
                     selectedCampaignType && !isNavigating
-                      ? 'bg-[#6e4eff] text-white hover:bg-[#5a3de8]'
+                      ? 'bg-[#9747FF] text-white hover:bg-[#5a3de8]'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
               >
@@ -550,9 +550,9 @@ export function NewCampaignContent() {
           <div className="mb-6 lg:mb-8 bg-white border border-[#e9e9e9] rounded-md overflow-hidden relative">
             {/* Mobile Stepper - Simplified */}
             <div className="lg:hidden">
-              <div className="flex items-center p-4 bg-gradient-to-r from-[#7856ff]/5 to-[#8B6AFF]/5">
+              <div className="flex items-center p-4 bg-gradient-to-r from-[#9747FF]/5 to-[#9747FF]/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] flex items-center justify-center text-white font-bold text-sm">
                     1
                   </div>
                   <div>
@@ -566,7 +566,7 @@ export function NewCampaignContent() {
                 </div>
               </div>
               <div className="h-1 bg-gray-200">
-                <div className="h-full bg-gradient-to-r from-[#7856ff] to-[#8B6AFF] transition-all duration-500" style={{ width: '20%' }}></div>
+                <div className="h-full bg-gradient-to-r from-[#9747FF] to-[#9747FF] transition-all duration-500" style={{ width: '20%' }}></div>
               </div>
             </div>
 
@@ -631,8 +631,8 @@ export function NewCampaignContent() {
                     <div 
                       className={`bg-[#ffffff] relative rounded w-full cursor-pointer transition-all duration-200 border touch-manipulation ${
                         selectedCampaignType?.id === campaignType.id
-                          ? 'ring-2 ring-[#7856ff]/20 border-[#7856ff]'
-                          : 'border-[#e9e9e9] hover:border-[#7856ff]/50 active:border-[#7856ff]/70'
+                          ? 'ring-2 ring-[#9747FF]/20 border-[#9747FF]'
+                          : 'border-[#e9e9e9] hover:border-[#9747FF]/50 active:border-[#9747FF]/70'
                       }`}
                       onClick={() => handleCampaignTypeSelect(campaignType)}
                     >
@@ -653,7 +653,7 @@ export function NewCampaignContent() {
                           </div>
                           <div className="flex-shrink-0">
                             {selectedCampaignType?.id === campaignType.id ? (
-                              <div className="w-6 h-6 rounded-full bg-[#7856ff] flex items-center justify-center text-white">
+                              <div className="w-6 h-6 rounded-full bg-[#9747FF] flex items-center justify-center text-white">
                                 <CheckIcon />
                               </div>
                             ) : (
@@ -740,8 +740,8 @@ export function NewCampaignContent() {
                     key={campaignType.id}
                     className={`bg-[#ffffff] relative rounded w-full cursor-pointer transition-all duration-200 border ${
                       selectedCampaignType?.id === campaignType.id
-                        ? 'ring-2 ring-[#7856ff]/20 border-[#7856ff]'
-                        : 'border-[#e9e9e9] hover:border-[#7856ff]/50'
+                        ? 'ring-2 ring-[#9747FF]/20 border-[#9747FF]'
+                        : 'border-[#e9e9e9] hover:border-[#9747FF]/50'
                     }`}
                     onClick={() => handleCampaignTypeSelect(campaignType)}
                     onMouseEnter={() => setHoveredCampaignType(campaignType)}

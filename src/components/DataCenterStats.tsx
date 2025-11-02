@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Metrics {
   total_users?: { count: number; change: number };
@@ -12,6 +15,7 @@ interface DataCenterStatsProps {
   metrics?: Metrics;
   onCardClick?: (cardType: string) => void;
   selectedCard?: string;
+  onSendCampaign?: (filterType: string, stat: any) => void;
 }
 
 const statConfig = [
@@ -20,6 +24,7 @@ const statConfig = [
     label: 'Total users',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'total',
+    advantage: 'Reach your entire audience at once',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -31,6 +36,7 @@ const statConfig = [
     label: 'New users',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'new',
+    advantage: 'Welcome and onboard new customers',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -42,6 +48,7 @@ const statConfig = [
     label: 'Retained users',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'retained',
+    advantage: 'Reward loyal customers and boost retention',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -53,6 +60,7 @@ const statConfig = [
     label: 'Active users',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'active',
+    advantage: 'Engage your most responsive audience',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -64,6 +72,7 @@ const statConfig = [
     label: 'InActive users',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'inactive',
+    advantage: 'Re-engage dormant customers with offers',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -72,7 +81,19 @@ const statConfig = [
   },
 ];
 
-const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStatsProps) => {
+const DataCenterStats = ({ metrics, onCardClick, selectedCard, onSendCampaign }: DataCenterStatsProps) => {
+  const router = useRouter();
+
+  const handleSendCampaign = (e: React.MouseEvent, filterType: string, stat: any) => {
+    e.stopPropagation();
+    if (onSendCampaign) {
+      onSendCampaign(filterType, stat);
+    } else {
+      // Fallback to navigation if no handler provided
+      router.push('/new-campaign');
+    }
+  };
+
   return (
     <div className="w-full min-w-0">
       {/* Mobile: Horizontal scroll */}
@@ -94,32 +115,39 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStats
           return (
           <div
             key={stat.label}
-            className={`bg-white p-4 rounded-lg border min-w-[140px] flex-shrink-0 cursor-pointer transition-all duration-200 ${
+            className={`bg-white p-4 rounded-lg border min-w-[160px] flex-shrink-0 cursor-pointer transition-all duration-200 ${
               isSelected
-                ? 'border-[#7856ff] bg-blue-50'
+                ? 'border-[#9747FF] bg-blue-50'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
             onClick={() => onCardClick?.(stat.filterType)}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="min-w-0 flex-1">
-                <h3 className={`text-xs font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor} truncate`}>
+                <h3 className={`text-xs font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} truncate`}>
                   {stat.label}
                 </h3>
                 <p className="text-lg font-bold text-gray-900 mt-1 truncate">{value}</p>
               </div>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                isSelected ? 'bg-[#7856ff]' : 'bg-blue-100'
+                isSelected ? 'bg-[#9747FF]' : 'bg-blue-100'
               }`}>
                 <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
                   {stat.icon}
                 </div>
               </div>
             </div>
-            <div className="flex items-center min-w-0">
+            <div className="flex items-center min-w-0 mb-2">
                 <span className={`text-xs font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
               <span className="text-gray-500 text-xs ml-2 truncate">from last month</span>
             </div>
+            <p className="text-[10px] text-gray-600 mb-2 leading-tight">{stat.advantage}</p>
+            <button
+              onClick={(e) => handleSendCampaign(e, stat.filterType, stat)}
+              className="w-full text-xs font-medium text-[#9747FF] bg-white border border-[#9747FF] hover:bg-[#9747FF] hover:text-white rounded px-3 py-1.5 transition-colors"
+            >
+              Send Campaign
+            </button>
           </div>
           );
         })}
@@ -138,22 +166,22 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStats
           return (
           <div
             key={stat.label}
-            className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 ${
+            className={`bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 cursor-pointer transition-all duration-200 flex flex-col ${
               isSelected
-                ? 'border-[#7856ff] bg-blue-50'
+                ? 'border-[#9747FF] bg-blue-50'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
             onClick={() => onCardClick?.(stat.filterType)}
           >
             <div className="flex items-center justify-between">
               <div className="min-w-0 flex-1">
-                <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#7856ff]' : stat.labelColor} truncate`}>
+                <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} truncate`}>
                   {stat.label}
                 </h3>
                   <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{value}</p>
               </div>
               <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                isSelected ? 'bg-[#7856ff]' : 'bg-blue-100'
+                isSelected ? 'bg-[#9747FF]' : 'bg-blue-100'
               }`}>
                 <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
                   {stat.icon}
@@ -164,6 +192,13 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard }: DataCenterStats
                 <span className={`text-xs sm:text-sm font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
               <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
             </div>
+            <p className="text-[10px] sm:text-xs text-gray-600 mt-3 mb-3 leading-tight">{stat.advantage}</p>
+            <button
+              onClick={(e) => handleSendCampaign(e, stat.filterType, stat)}
+              className="mt-auto text-xs sm:text-sm font-medium text-[#9747FF] bg-white border border-[#9747FF] hover:bg-[#9747FF] hover:text-white rounded px-3 py-2 transition-colors"
+            >
+              Send Campaign
+            </button>
           </div>
           );
         })}

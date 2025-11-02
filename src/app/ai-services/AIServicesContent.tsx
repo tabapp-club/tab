@@ -542,7 +542,7 @@ export function AIServicesContent() {
 
                 {/* Separator */}
                 <div className="w-full max-w-4xl px-4 mb-8">
-                  <div className="h-px bg-gradient-to-r from-transparent via-[#6E4EFF]/20 via-[#8B6AFF]/20 to-transparent"></div>
+                  <div className="h-px bg-gradient-to-r from-transparent via-[#9747FF]/20 via-[#9747FF]/20 to-transparent"></div>
                 </div>
 
                 {/* Enhanced Suggested Questions */}
@@ -553,7 +553,7 @@ export function AIServicesContent() {
                       <button
                         key={index}
                         onClick={() => handleQuestionClick(question.text)}
-                        className="group py-2.5 sm:py-3 px-3 sm:px-4 text-left bg-transparent border border-gray-200 rounded-[100px] hover:border-[#6E4EFF] transition-all duration-300 transform  focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-transparent w-fit flex-shrink-0"
+                        className="group py-2.5 sm:py-3 px-3 sm:px-4 text-left bg-transparent border border-gray-200 rounded-[100px] hover:border-[#9747FF] transition-all duration-300 transform  focus:outline-none focus:ring-2 focus:ring-[#9747FF]/50 focus:border-transparent w-fit flex-shrink-0"
                         aria-label={`Ask: ${question.text}`}
                       >
                         <div className="flex items-center justify-between w-full">
@@ -562,7 +562,7 @@ export function AIServicesContent() {
                               {question.text}
                             </p>
                           </div>
-                          <div className="text-[#6E4EFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-3">
+                          <div className="text-[#9747FF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-3">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -575,10 +575,10 @@ export function AIServicesContent() {
 
                 {/* Modern Input Field - Hidden on mobile, shown as fixed below */}
                 <div className="hidden lg:block w-full max-w-5xl px-2 sm:px-4">
-                  <div className="relative bg-white border border-gray-200 rounded-[8px] p-3 sm:p-4 transition-all duration-300 focus-within:border-[#6E4EFF]/30 min-h-[80px] sm:min-h-0">
+                  <div className="relative bg-white border border-gray-200 rounded-[8px] p-3 sm:p-4 transition-all duration-300 focus-within:border-[#9747FF]/30 min-h-[80px] sm:min-h-0">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="flex-shrink-0">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center">
                           <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                           </svg>
@@ -600,7 +600,7 @@ export function AIServicesContent() {
                         <button
                           onClick={() => handleSendMessage()}
                           disabled={!message.trim()}
-                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
+                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#9747FF] to-[#9747FF] text-white rounded-full flex items-center justify-center hover:from-[#9747FF] hover:to-[#9747FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#9747FF]/50 transform "
                           aria-label="Send message"
                         >
                           <svg
@@ -656,12 +656,12 @@ export function AIServicesContent() {
                       >
                         {!msg.isUser && (
                           <div className="flex items-center gap-2 mb-2">
-                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center">
                               <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                               </svg>
                             </div>
-                            <span className="text-[10px] sm:text-xs font-normal text-[#6E4EFF]">tribly AI</span>
+                            <span className="text-[10px] sm:text-xs font-normal text-[#9747FF]">tribly AI</span>
                           </div>
                         )}
                         <div
@@ -677,15 +677,15 @@ export function AIServicesContent() {
                     <div className="flex justify-start animate-in fade-in duration-300">
                       <div className="bg-white border border-gray-100 p-4 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center">
                             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                             </svg>
                           </div>
                           <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                            <div className="w-2 h-2 bg-[#6E4EFF] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-2 h-2 bg-[#9747FF] rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-[#9747FF] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                            <div className="w-2 h-2 bg-[#9747FF] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                           </div>
                           <span className="text-sm text-[#2a2a2f]">tribly AI is thinking...</span>
                         </div>
@@ -703,10 +703,10 @@ export function AIServicesContent() {
               currentSessionId && currentSession && currentSession.messages.length > 0 ? 'block' : 'block'
             }`}>
               <div className="max-w-full mx-auto px-2">
-                <div className="bg-white border border-gray-200 rounded-[8px] p-3 transition-all duration-300 focus-within:border-[#6E4EFF]/30 min-h-[80px] flex items-center">
+                <div className="bg-white border border-gray-200 rounded-[8px] p-3 transition-all duration-300 focus-within:border-[#9747FF]/30 min-h-[80px] flex items-center">
                   <div className="flex items-center gap-2 w-full">
                     <div className="flex-shrink-0">
-                      <div className="w-7 h-7 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                      <div className="w-7 h-7 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center">
                         <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
@@ -729,7 +729,7 @@ export function AIServicesContent() {
                       <button
                         onClick={() => handleSendMessage()}
                         disabled={!message.trim() || isLoading}
-                        className="w-9 h-9 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
+                        className="w-9 h-9 bg-gradient-to-br from-[#9747FF] to-[#9747FF] text-white rounded-full flex items-center justify-center hover:from-[#9747FF] hover:to-[#9747FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#9747FF]/50 transform "
                         aria-label="Send message"
                       >
                         {isLoading ? (
@@ -769,10 +769,10 @@ export function AIServicesContent() {
                 actualIsCollapsed ? 'lg:left-[64px] lg:right-[280px]' : 'lg:left-[232px] lg:right-[280px]'
               } left-0`}>
                 <div className="max-w-6xl mx-auto px-2 sm:px-4">
-                  <div className="bg-white border border-gray-200 rounded-[8px] p-3 sm:p-4 transition-all duration-300 focus-within:border-[#6E4EFF]/30 min-h-[80px] sm:min-h-0">
+                  <div className="bg-white border border-gray-200 rounded-[8px] p-3 sm:p-4 transition-all duration-300 focus-within:border-[#9747FF]/30 min-h-[80px] sm:min-h-0">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="flex-shrink-0">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] rounded-full flex items-center justify-center">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#9747FF] to-[#9747FF] rounded-full flex items-center justify-center">
                           <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                           </svg>
@@ -795,7 +795,7 @@ export function AIServicesContent() {
                         <button
                           onClick={() => handleSendMessage()}
                           disabled={!message.trim() || isLoading}
-                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#6E4EFF] to-[#8B6AFF] text-white rounded-full flex items-center justify-center hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 transform "
+                          className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#9747FF] to-[#9747FF] text-white rounded-full flex items-center justify-center hover:from-[#9747FF] hover:to-[#9747FF] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#9747FF]/50 transform "
                           aria-label="Send message"
                         >
                           {isLoading ? (
@@ -860,7 +860,7 @@ export function AIServicesContent() {
                         onClick={() => selectChatSession(session.id)}
                         className={`p-3 rounded-lg cursor-pointer transition-colors ${
                           currentSessionId === session.id
-                            ? 'bg-[#6E4EFF] text-white'
+                            ? 'bg-[#9747FF] text-white'
                             : 'bg-gray-50 hover:bg-gray-100'
                         }`}
                       >
@@ -893,7 +893,7 @@ export function AIServicesContent() {
               <h3 className="text-lg font-semibold text-gray-900">Chat History</h3>
                <button
                  onClick={createNewChat}
-                 className="p-2 bg-[#6E4EFF] text-white rounded-full hover:bg-[#5D3EE8] transition-colors duration-200"
+                 className="p-2 bg-[#9747FF] text-white rounded-full hover:bg-[#9747FF] transition-colors duration-200"
                  aria-label="New Chat"
                >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -912,7 +912,7 @@ export function AIServicesContent() {
               <input
                 type="text"
                 placeholder="Search conversations..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder:text-sm placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-[#6E4EFF]/50 focus:border-[#6E4EFF]"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm placeholder:text-sm placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-[#9747FF]/50 focus:border-[#9747FF]"
               />
             </div>
           </div>
@@ -921,8 +921,8 @@ export function AIServicesContent() {
           <div className="flex-1 overflow-y-auto">
             {chatSessions.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full px-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#6E4EFF]/10 to-[#8B6AFF]/10 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-[#6E4EFF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#9747FF]/10 to-[#9747FF]/10 rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-[#9747FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
@@ -930,7 +930,7 @@ export function AIServicesContent() {
                 <p className="text-sm text-gray-500 mb-4">Start your first conversation to see it here</p>
                  <button
                    onClick={createNewChat}
-                   className="px-4 py-2 bg-[#6E4EFF] text-white rounded-[4px] hover:bg-[#5D3EE8] transition-colors duration-200 text-sm font-medium"
+                   className="px-4 py-2 bg-[#9747FF] text-white rounded-[4px] hover:bg-[#9747FF] transition-colors duration-200 text-sm font-medium"
                  >
                   Start New Chat
                 </button>
@@ -942,7 +942,7 @@ export function AIServicesContent() {
                     key={session.id}
                                           className={`group relative p-4 rounded-xl cursor-pointer transition-all duration-200 border ${
                         currentSessionId === session.id
-                          ? 'bg-gradient-to-r from-[#6E4EFF]/5 to-[#8B6AFF]/5 border-[#6E4EFF]/20'
+                          ? 'bg-gradient-to-r from-[#9747FF]/5 to-[#9747FF]/5 border-[#9747FF]/20'
                           : 'bg-white border-gray-100 hover:bg-gray-50 hover:border-gray-200'
                       }`}
                     onClick={() => selectChatSession(session.id)}
@@ -951,10 +951,10 @@ export function AIServicesContent() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-2 h-2 rounded-full ${
-                            currentSessionId === session.id ? 'bg-[#6E4EFF]' : 'bg-gray-300'
+                            currentSessionId === session.id ? 'bg-[#9747FF]' : 'bg-gray-300'
                           }`}></div>
                           <p className={`text-sm font-medium truncate ${
-                            currentSessionId === session.id ? 'text-[#6E4EFF]' : 'text-gray-900'
+                            currentSessionId === session.id ? 'text-[#9747FF]' : 'text-gray-900'
                           }`}>
                             {session.title}
                           </p>

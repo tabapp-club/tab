@@ -123,8 +123,8 @@ export function TimeFilter({ onFilterChange }: TimeFilterProps = {}) {
                 flex items-center justify-center gap-2
                   transition-colors whitespace-nowrap
                 ${isActive
-                  ? 'bg-[#6E4EFF] text-white'
-                  : 'bg-white text-[#8f8f91] hover:bg-[#6E4EFF]/5 hover:text-[#6E4EFF]'
+                  ? 'bg-[#9747FF] text-white'
+                  : 'bg-white text-[#8f8f91] hover:bg-[#9747FF]/5 hover:text-[#9747FF]'
                 }
                 ${isFirst ? 'rounded-l-[4px]' : ''}
                 ${isLast ? 'rounded-r-[4px]' : ''}

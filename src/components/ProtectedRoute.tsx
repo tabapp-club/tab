@@ -23,7 +23,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-[#7856ff] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <div className="w-8 h-8 border-4 border-[#9747FF] border-t-transparent rounded-full animate-spin mb-4"></div>
           <p className="text-[#a1a1a1] text-sm">Loading...</p>
         </div>
       </div>

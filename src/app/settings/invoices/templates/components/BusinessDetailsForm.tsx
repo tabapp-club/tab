@@ -148,7 +148,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onChange={(e) => handleInputChange('businessName', e.target.value)}
               onBlur={() => handleBlur('businessName')}
               className={classNames(
-                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                 errors.businessName ? "border-red-300" : "border-gray-300"
               )}
               placeholder="Enter business name"
@@ -215,7 +215,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onBlur={() => handleBlur('address')}
               rows={3}
               className={classNames(
-                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF] resize-none",
+                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF] resize-none",
                 errors.address ? "border-red-300" : "border-gray-300"
               )}
               placeholder="Enter complete address"
@@ -238,7 +238,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onChange={(e) => handleInputChange('city', e.target.value)}
               onBlur={() => handleBlur('city')}
               className={classNames(
-                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                 errors.city ? "border-red-300" : "border-gray-300"
               )}
               placeholder="City"
@@ -258,7 +258,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onChange={(e) => handleInputChange('state', e.target.value)}
               onBlur={() => handleBlur('state')}
               className={classNames(
-                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                 errors.state ? "border-red-300" : "border-gray-300"
               )}
               placeholder="State"
@@ -278,7 +278,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onChange={(e) => handleInputChange('pin', e.target.value)}
               onBlur={() => handleBlur('pin')}
               className={classNames(
-                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                 errors.pin ? "border-red-300" : "border-gray-300"
               )}
               placeholder="PIN Code"
@@ -304,7 +304,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 onBlur={() => handleBlur('phone')}
                 className={classNames(
-                  "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                  "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                   errors.phone ? "border-red-300" : "border-gray-300"
                 )}
                 placeholder="Phone number"
@@ -327,7 +327,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 onBlur={() => handleBlur('email')}
                 className={classNames(
-                  "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                  "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                   errors.email ? "border-red-300" : "border-gray-300"
                 )}
                 placeholder="Email address"
@@ -356,7 +356,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               onChange={(e) => handleInputChange('gstin', e.target.value.toUpperCase())}
               onBlur={() => handleBlur('gstin')}
               className={classNames(
-                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+                "w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
                 errors.gstin ? "border-red-300" : "border-gray-300"
               )}
               placeholder="22AAAAA0000A1Z5"
@@ -380,7 +380,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
             onChange={(e) => handleInputChange('pan', e.target.value.toUpperCase())}
             onBlur={() => handleBlur('pan')}
             className={classNames(
-              "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+              "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
               errors.pan ? "border-red-300" : "border-gray-300"
             )}
             placeholder="ABCDE1234F"
@@ -400,7 +400,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
             type="text"
             value={businessDetails.cin}
             onChange={(e) => handleInputChange('cin', e.target.value.toUpperCase())}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]"
             placeholder="U12345AB1234ABC123456"
           />
         </div>
@@ -416,7 +416,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
             onChange={(e) => handleInputChange('placeOfSupply', e.target.value)}
             onBlur={() => handleBlur('placeOfSupply')}
             className={classNames(
-              "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]",
+              "w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]",
               errors.placeOfSupply ? "border-red-300" : "border-gray-300"
             )}
             placeholder="State where supply is made"
@@ -490,7 +490,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
             value={businessDetails.termsConditions}
             onChange={(e) => handleInputChange('termsConditions', e.target.value)}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]"
             placeholder="Enter your terms and conditions (e.g., Payment due within 30 days, Late payment charges may apply, etc.)"
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -507,7 +507,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
             value={businessDetails.declaration}
             onChange={(e) => handleInputChange('declaration', e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6E4EFF] focus:border-[#6E4EFF]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#9747FF] focus:border-[#9747FF]"
             placeholder="Enter your declaration statement (e.g., We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.)"
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -540,7 +540,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showPhone', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -560,7 +560,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showEmail', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -580,7 +580,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showGSTIN', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -600,7 +600,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showPAN', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -620,7 +620,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showCIN', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -640,7 +640,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showSignature', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -660,7 +660,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showTermsConditions', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
 
@@ -680,7 +680,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
                 onChange={(e) => handleInputChange('showDeclaration', e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#6E4EFF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6E4EFF]"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#9747FF]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#9747FF]"></div>
             </label>
           </div>
         </div>
@@ -690,7 +690,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
       <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
         <button
           onClick={handleSave}
-          className="flex-1 bg-gradient-to-r from-[#6E4EFF] to-[#8B6AFF] text-white px-6 py-3 rounded-md font-semibold hover:from-[#5D3EE8] hover:to-[#7A59FF] transition-all duration-300"
+          className="flex-1 bg-gradient-to-r from-[#9747FF] to-[#9747FF] text-white px-6 py-3 rounded-md font-semibold hover:from-[#9747FF] hover:to-[#9747FF] transition-all duration-300"
         >
           Save Settings
         </button>

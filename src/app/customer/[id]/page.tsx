@@ -65,7 +65,7 @@ export default async function CustomerPage({ params }: CustomerPageProps) {
 
   return (
     <ProtectedRoute>
-      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6E4EFF]"></div></div>}>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div></div>}>
         <CustomerDetailsClient customerId={id} />
       </Suspense>
     </ProtectedRoute>
