@@ -181,10 +181,6 @@ const RecommendedCampaigns = ({ onSendNow }: RecommendedCampaignsProps) => {
                     <span className="text-xs text-gray-600">Expected Conversion</span>
                     <span className="text-sm font-semibold text-purple-600">{campaign.expectedConversion}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-600">Expected Revenue</span>
-                    <span className="text-sm font-bold text-green-600">{campaign.expectedRevenue}</span>
-                  </div>
                 </div>
                 
                 {/* Impact Badge */}
@@ -253,18 +249,14 @@ const RecommendedCampaigns = ({ onSendNow }: RecommendedCampaignsProps) => {
               <div className="min-w-0">
                 
                 {/* Key Metrics Grid */}
-                <div className="grid grid-cols-3 gap-2 mb-4 pb-4 border-b border-gray-100">
+                <div className="grid grid-cols-2 gap-2 mb-4 pb-4 border-b border-gray-100">
                   <div className="text-center">
                     <p className="text-xs text-gray-600 mb-0.5">Expected Cost</p>
                     <p className="text-sm font-bold text-orange-600">{campaign.expectedCampaignCost}</p>
                   </div>
-                  <div className="text-center border-x border-gray-100">
+                  <div className="text-center border-l border-gray-100">
                     <p className="text-xs text-gray-600 mb-0.5">Expected Conversion</p>
                     <p className="text-sm font-bold text-purple-600">{campaign.expectedConversion}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-0.5">Expected Revenue</p>
-                    <p className="text-sm font-bold text-green-600">{campaign.expectedRevenue}</p>
                   </div>
                 </div>
                 

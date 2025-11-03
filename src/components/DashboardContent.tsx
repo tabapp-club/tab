@@ -51,7 +51,7 @@ export function DashboardContent() {
       <DashboardHeader />
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8">
-        <div style={{ marginTop: '-40px', marginBottom: '56px' }}>
+        <div className="mt-6 lg:mt-[-40px]" style={{ marginBottom: '56px' }}>
           <RecommendedCampaigns onSendNow={handleSendNow} />
         </div>
         <AnalyticsSection onAskReason={handleAskReason} />

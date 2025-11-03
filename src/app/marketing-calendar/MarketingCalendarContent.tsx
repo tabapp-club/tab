@@ -10,6 +10,7 @@ import AddCalendarSidepane from './components/AddCalendarSidepane';
 import { mockEvents, eventFilters, myCalendars } from './mockData';
 import { Menu, X } from 'lucide-react';
 import { useSidebar } from '@/components/SidebarContext';
+import { MobileHeaderButton } from '@/components/MobileHeaderButton';
 
 export default function MarketingCalendarContent() {
   const { isCollapsed, isMobile } = useSidebar();
@@ -21,6 +22,9 @@ export default function MarketingCalendarContent() {
   
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
+  
+  // Force list view on mobile
+  const effectiveView = isMobile ? 'list' : currentView;
 
   // Event filters state
   const [eventFiltersState, setEventFiltersState] = useState(
@@ -117,7 +121,12 @@ export default function MarketingCalendarContent() {
 
   return (
     <main className={mainClasses}>
-      <div className="flex h-screen">
+      {/* Mobile Header with Back Button */}
+      <header className="lg:hidden flex items-center justify-start p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
+        <MobileHeaderButton />
+      </header>
+      
+      <div className="flex h-screen lg:pt-0 pt-14">
         {/* Mobile Menu Button */}
         <button
           onClick={() => setShowMobileSidebar(true)}
@@ -185,7 +194,7 @@ export default function MarketingCalendarContent() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden bg-white w-full">
           <CalendarHeader
-            currentView={currentView}
+            currentView={effectiveView}
             onViewChange={setCurrentView}
             onCreateNew={handleCreateNew}
             currentDate={selectedDate}
@@ -195,7 +204,7 @@ export default function MarketingCalendarContent() {
           />
 
           <div className="flex-1 overflow-auto px-4 py-0 lg:px-4 lg:py-0 bg-white w-full">
-            {currentView === 'week' ? (
+            {effectiveView === 'week' ? (
               <WeekView
                 startDate={weekStart}
                 events={filteredEvents}

@@ -208,13 +208,13 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     featureKey: "data_center" as const
   },
   {
-    id: "marketing-calendar",
-    label: "Marketing Calendar",
-    description: "Events & appointments",
-    icon: CalendarIcon,
-    href: "/marketing-calendar",
-    notificationCount: 0,
-    featureKey: "marketing_calendar" as const
+    id: "campaigns",
+    label: "Campaigns",
+    description: "Marketing campaigns",
+    icon: CampaignsIcon,
+    href: "/campaigns",
+    notificationCount: 25,
+    featureKey: "campaigns" as const
   },
   {
     id: "achievements",
@@ -224,6 +224,15 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     href: "/achievements",
     notificationCount: 0,
     featureKey: "achievements" as const
+  },
+  {
+    id: "marketing-calendar",
+    label: "Marketing Calendar",
+    description: "Events & appointments",
+    icon: CalendarIcon,
+    href: "/marketing-calendar",
+    notificationCount: 0,
+    featureKey: "marketing_calendar" as const
   },
   {
     id: "ai-services",
@@ -251,15 +260,6 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     href: "/workflow-automation",
     notificationCount: 7,
     featureKey: "automation" as const
-  },
-  {
-    id: "campaigns",
-    label: "Campaigns",
-    description: "Marketing campaigns",
-    icon: CampaignsIcon,
-    href: "/campaigns",
-    notificationCount: 25,
-    featureKey: "campaigns" as const
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   // {

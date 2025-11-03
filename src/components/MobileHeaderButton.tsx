@@ -40,6 +40,7 @@ export function MobileHeaderButton({ onClick }: MobileHeaderButtonProps) {
       '/settings': '/dashboard',
       '/achievements': '/dashboard',
       '/report-bug': '/dashboard',
+      '/marketing-calendar': '/dashboard',
     };
 
     const backRoute = backRoutes[pathname];

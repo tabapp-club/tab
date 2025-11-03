@@ -49,18 +49,18 @@ export default function CalendarHeader({
 
       {/* View Toggle and Create Button */}
       <div className="flex items-center gap-4 flex-wrap">
-        {/* Today Button */}
+        {/* Today Button - Hidden on mobile */}
         <button
           onClick={onToday}
-          className={`flex items-center gap-1 px-6 py-2 rounded-[99px] border transition-all font-medium text-[14px] font-manrope leading-[1.4] bg-white border-[#e9e9e9] text-[#2a2a2f] hover:bg-gray-50`}
+          className={`hidden lg:flex items-center gap-1 px-6 py-2 rounded-[99px] border transition-all font-medium text-[14px] font-manrope leading-[1.4] bg-white border-[#e9e9e9] text-[#2a2a2f] hover:bg-gray-50`}
         >
           <span className="whitespace-nowrap">Today</span>
         </button>
 
-        {/* Week View Button */}
+        {/* Week View Button - Hidden on mobile */}
         <button
           onClick={() => onViewChange('week')}
-          className={`flex items-center gap-1 px-6 py-2 rounded-[99px] border transition-all font-medium text-[14px] font-manrope leading-[1.4]
+          className={`hidden lg:flex items-center gap-1 px-6 py-2 rounded-[99px] border transition-all font-medium text-[14px] font-manrope leading-[1.4]
             ${currentView === 'week' 
               ? 'bg-[#e9e9e9] border-[#e9e9e9] text-[#2a2a2f]' 
               : 'bg-white border-[#e9e9e9] text-[#2a2a2f] hover:bg-gray-50'

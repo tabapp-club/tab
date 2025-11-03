@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileHeaderButton } from "@/components/MobileHeaderButton";
 import { useSidebar } from "@/components/SidebarContext";
-import { Button } from "@/components/ui/Button";
 import { useAchievementsData } from "@/hooks/useAchievementsData";
 import { CreateTargetModal } from "@/components/CreateTargetModal";
 
@@ -20,7 +19,7 @@ export function AchievementsContent() {
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [openKebabMenu, setOpenKebabMenu] = useState<string | null>(null);
 
-  const { milestones, aiTargets, aiMetrics, loading, createMilestone } = useAchievementsData();
+  const { milestones, aiTargets, loading, createMilestone } = useAchievementsData();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -49,7 +48,7 @@ export function AchievementsContent() {
     const status = searchParams.get('status');
     const createTarget = searchParams.get('createTarget');
     
-    const validCategories = ['all', 'sales', 'engagement', 'retention'];
+    const validCategories = ['all', 'sales', 'customers', 'engagement', 'retention'];
     const validStatuses = ['all', 'active', 'completed', 'overdue'];
     
     if (category && validCategories.includes(category)) {
@@ -129,19 +128,13 @@ export function AchievementsContent() {
     }
   };
 
-  const getTrendColor = (trend: string) => {
-    switch (trend) {
-      case 'up': return 'text-green-600';
-      case 'down': return 'text-red-600';
-      default: return 'text-gray-600';
-    }
-  };
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'up': return '↗️';
-      case 'down': return '↘️';
-      default: return '→';
+  const getProgressBarColor = (progress: number) => {
+    if (progress < 25) {
+      return 'bg-red-300'; // Soft red for under 25%
+    } else if (progress < 75) {
+      return 'bg-orange-500'; // Orange for under 75%
+    } else {
+      return 'bg-green-500'; // Green for above 75%
     }
   };
 
@@ -159,7 +152,7 @@ export function AchievementsContent() {
         <div className="pt-12 lg:pt-0 space-y-8">
 
                                 {/* 1. Top Section - Cover Page with Summary */}
-          <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-8 border border-slate-300 mb-20">
+          <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-8 border border-gray-200 mb-20">
                          <div className="flex flex-col items-center gap-8">
                <div className="flex-1 text-center">
                                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
@@ -169,19 +162,19 @@ export function AchievementsContent() {
                     Track your progress, celebrate successes, and discover AI-powered insights to accelerate your business growth
                   </p>
                                   <div className="flex flex-wrap gap-4 justify-center">
-                   <div className="bg-white rounded-lg px-4 py-3 border border-purple-600">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-gray-200">
                      <div className="text-2xl font-bold text-purple-600">
                        {loading ? '...' : milestones.length}
                      </div>
                      <div className="text-sm text-gray-600">Active Targets</div>
                    </div>
-                   <div className="bg-white rounded-lg px-4 py-3 border border-green-600">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-gray-200">
                      <div className="text-2xl font-bold text-green-600">
                        {loading ? '...' : milestones.length > 0 ? Math.round(milestones.reduce((acc, m) => acc + m.progress, 0) / milestones.length) : 0}%
                      </div>
                      <div className="text-sm text-gray-600">Avg Progress</div>
                    </div>
-                   <div className="bg-white rounded-lg px-4 py-3 border border-blue-600">
+                   <div className="bg-white rounded-lg px-4 py-3 border border-gray-200">
                      <div className="text-2xl font-bold text-blue-600">
                        {loading ? '...' : aiTargets.length}
                      </div>
@@ -200,22 +193,26 @@ export function AchievementsContent() {
               <div>
                 <div className="flex gap-2 overflow-x-auto pb-2 px-1 py-1 lg:flex-wrap lg:overflow-x-visible lg:pb-0 lg:px-0 lg:py-0 scrollbar-hide">
                   {[
-                    { value: 'all', label: 'All Categories', icon: '📊', color: 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200', selectedColor: 'bg-gray-100 text-gray-900 border border-gray-400' },
-                    { value: 'sales', label: 'Sales', icon: '💰', color: 'bg-white text-green-700 hover:bg-green-50 border border-green-200', selectedColor: 'bg-green-100 text-green-800 border border-green-400' },
-                    { value: 'customers', label: 'Customers', icon: '👥', color: 'bg-white text-blue-700 hover:bg-blue-50 border border-blue-200', selectedColor: 'bg-blue-100 text-blue-800 border border-blue-400' },
-                    { value: 'engagement', label: 'Engagement', icon: '📈', color: 'bg-white text-purple-700 hover:bg-purple-50 border border-purple-200', selectedColor: 'bg-purple-100 text-purple-800 border border-purple-400' },
-                    { value: 'retention', label: 'Retention', icon: '🔄', color: 'bg-white text-orange-700 hover:bg-orange-50 border border-orange-200', selectedColor: 'bg-orange-100 text-orange-800 border border-orange-400' }
+                    { value: 'all', label: 'All Categories' },
+                    { value: 'sales', label: 'Sales' },
+                    { value: 'customers', label: 'Customers' },
+                    { value: 'engagement', label: 'Engagement' },
+                    { value: 'retention', label: 'Retention' }
                   ].map((category) => (
                     <button
                       key={category.value}
                       onClick={() => setSelectedCategory(category.value)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 flex-shrink-0 ${
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 flex-shrink-0 bg-white ${
                         selectedCategory === category.value
-                          ? category.selectedColor
-                          : category.color
+                          ? 'text-[#9747FF] hover:border-[#8636ee]'
+                          : 'text-gray-600 hover:border-gray-400'
                       }`}
+                      style={{
+                        borderWidth: '0.5px',
+                        borderColor: selectedCategory === category.value ? '#9747FF' : '#d1d5db',
+                        borderStyle: 'solid'
+                      }}
                     >
-                      <span className="text-base">{category.icon}</span>
                       <span>{category.label}</span>
                     </button>
                   ))}
@@ -228,22 +225,29 @@ export function AchievementsContent() {
               <div className="relative status-dropdown">
             <button
                   onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                  className={`bg-white h-10 px-3 py-2 border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors relative w-28 sm:w-32 ${
+                  className={`bg-white h-10 px-3 py-2 rounded-[4px] flex items-center justify-between overflow-hidden transition-colors relative w-28 sm:w-32 ${
                     selectedStatus !== 'all'
-                      ? 'border-[#9747FF] bg-[#9747FF]/5'
-                      : 'border-[#e9e9e9]'
+                      ? 'text-[#9747FF] hover:border-[#8636ee]'
+                      : 'text-gray-600 hover:border-gray-400'
                   }`}
+                  style={{
+                    borderWidth: '0.5px',
+                    borderColor: selectedStatus !== 'all' ? '#9747FF' : '#d1d5db',
+                    borderStyle: 'solid'
+                  }}
                 >
                   <div className="flex items-center gap-1 min-w-0">
-                    <span className="text-[13.453px] font-normal text-[#2a2a2f] truncate">
+                    <span className={`text-[13.453px] font-normal truncate ${
+                      selectedStatus !== 'all' ? 'text-[#9747FF]' : 'text-gray-600'
+                    }`}>
                       {selectedStatus === 'all' ? 'All Status' :
-                       selectedStatus === 'active' ? '🟢 Active' :
-                       selectedStatus === 'completed' ? '✅ Completed' :
-                       selectedStatus === 'overdue' ? '⚠️ Overdue' : 'All Status'}
+                       selectedStatus === 'active' ? 'Active' :
+                       selectedStatus === 'completed' ? 'Completed' :
+                       selectedStatus === 'overdue' ? 'Overdue' : 'All Status'}
                     </span>
                     {selectedStatus !== 'all' && (
-                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-[#9747FF] rounded-full flex-shrink-0">
-                        1
+                      <span className="inline-flex items-center justify-center min-w-[20px] px-1.5 h-5 text-xs font-medium text-white bg-[#9747FF] rounded-full flex-shrink-0">
+                        {milestones.filter(m => m.status === selectedStatus).length}
                       </span>
                     )}
                   </div>
@@ -254,18 +258,18 @@ export function AchievementsContent() {
                       viewBox="0 0 7.5 4.518"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                      className={`transition-transform duration-200 ${isStatusDropdownOpen ? 'rotate-180' : ''}`}
+                      className={`transition-transform duration-200 ${isStatusDropdownOpen ? 'rotate-180' : ''} ${selectedStatus !== 'all' ? 'text-[#9747FF]' : 'text-gray-500'}`}
                     >
-                      <path d="M1 1L3.75 3.518L6.5 1" stroke="#2A2A2F" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M1 1L3.75 3.518L6.5 1" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
                 </button>
 
                 {/* Dropdown Panel */}
                 {isStatusDropdownOpen && (
-                  <div className="absolute top-full mt-1 left-0 bg-white border border-[#e9e9e9] rounded-md z-50 w-full min-w-[180px] shadow-lg">
+                  <div className="absolute top-full mt-1 left-0 bg-white rounded-[4px] z-50 w-full min-w-[180px] shadow-lg" style={{ borderWidth: '0.5px', borderColor: '#e5e7eb', borderStyle: 'solid' }}>
                     {/* Header */}
-                    <div className="px-4 py-2 bg-white border-b border-gray-100">
+                    <div className="px-4 py-2 bg-white" style={{ borderBottomWidth: '0.5px', borderBottomColor: '#f3f4f6', borderBottomStyle: 'solid' }}>
                       <div className="flex justify-between items-center">
                         <span className="text-[12px] text-[#626266]">Filter by Status</span>
                         <button
@@ -283,10 +287,10 @@ export function AchievementsContent() {
                     {/* Options */}
                     <div className="py-2">
                       {[
-                        { value: 'all', label: 'All Status', icon: '📋' },
-                        { value: 'active', label: 'Active', icon: '🟢' },
-                        { value: 'completed', label: 'Completed', icon: '✅' },
-                        { value: 'overdue', label: 'Overdue', icon: '⚠️' }
+                        { value: 'all', label: 'All Status' },
+                        { value: 'active', label: 'Active' },
+                        { value: 'completed', label: 'Completed' },
+                        { value: 'overdue', label: 'Overdue' }
                       ].map((option) => (
                         <button
                           key={option.value}
@@ -294,19 +298,19 @@ export function AchievementsContent() {
                             setSelectedStatus(option.value);
                             setIsStatusDropdownOpen(false);
                           }}
-                          className={`w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer text-left ${
-                            selectedStatus === option.value ? 'bg-[#9747FF]/5' : ''
-                          }`}
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer text-left bg-white"
                         >
                           <div className="w-[18px] h-[18px] flex items-center justify-center">
                             {selectedStatus === option.value && (
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M3 8L7 12L13 4" stroke="#9747FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M3 8L7 12L13 4" stroke="#9747FF" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
                             )}
                           </div>
-                          <span className="text-[14px] text-[#2a2a2f] tracking-[0.15px]">
-                            {option.icon} {option.label}
+                          <span className={`text-[14px] tracking-[0.15px] ${
+                            selectedStatus === option.value ? 'text-[#9747FF] font-medium' : 'text-gray-600'
+                          }`}>
+                            {option.label}
                           </span>
                         </button>
                       ))}
@@ -320,7 +324,7 @@ export function AchievementsContent() {
                 className="px-4 py-2 bg-[#9747FF] text-white rounded font-medium text-sm hover:bg-[#9747FF]/90 transition-all duration-200 flex items-center gap-2"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 Create New Target
               </button>
@@ -362,7 +366,7 @@ export function AchievementsContent() {
                    <div className="absolute top-4 right-4 kebab-menu">
                                            <button
                         onClick={() => setOpenKebabMenu(openKebabMenu === milestone.id ? null : milestone.id)}
-                        className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+                        className="p-1 hover:bg-gray-100 rounded-[4px] transition-colors"
                       >
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M9.00049 12.6377C9.70434 12.6379 10.2747 13.2083 10.2749 13.9121C10.2749 14.6161 9.70447 15.1873 9.00049 15.1875C8.29633 15.1875 7.7251 14.6163 7.7251 13.9121C7.72531 13.2081 8.29646 12.6377 9.00049 12.6377ZM9.00049 7.72461C9.70447 7.72482 10.2749 8.29597 10.2749 9C10.2747 9.7039 9.70437 10.2742 9.00049 10.2744C8.29642 10.2744 7.72526 9.70403 7.7251 9C7.7251 8.29584 8.29633 7.72461 9.00049 7.72461ZM9.00049 2.8125C9.70447 2.81271 10.2749 3.38386 10.2749 4.08789C10.2747 4.79174 9.70434 5.36209 9.00049 5.3623C8.29646 5.3623 7.72531 4.79187 7.7251 4.08789C7.7251 3.38373 8.29633 2.8125 9.00049 2.8125Z" fill="#A1A1A1"/>
@@ -371,7 +375,7 @@ export function AchievementsContent() {
 
                      {/* Dropdown Menu */}
                      {openKebabMenu === milestone.id && (
-                       <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[160px]">
+                       <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-[4px] shadow-lg z-50 min-w-[160px]">
                          <div className="py-1">
                            <button
                              onClick={() => {
@@ -381,8 +385,8 @@ export function AchievementsContent() {
                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                            >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                               <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                               <path d="M18.5 2.50023C18.8978 2.1025 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1025 21.5 2.50023C21.8978 2.89795 22.1214 3.43762 22.1214 4.00023C22.1214 4.56285 21.8978 5.10252 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M18.5 2.50023C18.8978 2.1025 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.1025 21.5 2.50023C21.8978 2.89795 22.1214 3.43762 22.1214 4.00023C22.1214 4.56285 21.8978 5.10252 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                              </svg>
                              Edit Target
                            </button>
@@ -394,8 +398,8 @@ export function AchievementsContent() {
                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                            >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                               <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                               <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2"/>
+                               <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="0.5"/>
                              </svg>
                              Update Progress
                            </button>
@@ -407,7 +411,7 @@ export function AchievementsContent() {
                              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                            >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                               <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                              </svg>
                              Mark Complete
                            </button>
@@ -420,8 +424,8 @@ export function AchievementsContent() {
                              className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
                            >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                               <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                               <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M3 6H5H21" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
+                               <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
                              </svg>
                              Delete Target
                            </button>
@@ -447,7 +451,7 @@ export function AchievementsContent() {
                      </div>
                      <div className="w-full bg-gray-200 rounded-full h-1">
                        <div
-                         className={`h-1 rounded-full transition-all duration-500 ${milestone.color}`}
+                         className={`h-1 rounded-full transition-all duration-500 ${getProgressBarColor(milestone.progress)}`}
                          style={{ width: `${milestone.progress}%` }}
                        ></div>
                      </div>
@@ -542,7 +546,7 @@ export function AchievementsContent() {
                       <p className="text-sm text-gray-600 mb-4">{target.description}</p>
 
                       {/* Target Details */}
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100">
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm font-medium text-gray-700">Target</span>
                           <span className="text-lg font-bold text-gray-900">
@@ -576,69 +580,12 @@ export function AchievementsContent() {
                         ))}
                       </div>
 
-                      <Button variant="outline" className="w-full mt-4">
+                      <button
+                        onClick={() => setShowCreateTarget(true)}
+                        className="w-full mt-4 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                      >
                         Create Target
-                      </Button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent mb-8"></div>
-
-            {/* AI Business Insights Section */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-lg">📊</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900">Business Insights</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {loading ? (
-                  // Loading skeleton for AI metrics
-                  Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="w-8 h-8 bg-gray-200 rounded"></div>
-                        <div className="w-16 h-6 bg-gray-200 rounded"></div>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="h-6 bg-gray-200 rounded"></div>
-                        <div className="h-10 bg-gray-200 rounded"></div>
-                        <div className="h-16 bg-gray-200 rounded"></div>
-                        <div className="h-16 bg-gray-200 rounded"></div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  aiMetrics.map((metric) => (
-                    <div key={metric.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="text-2xl">📊</div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-lg">{getTrendIcon(metric.trend)}</span>
-                          <span className={`text-sm font-medium ${getTrendColor(metric.trend)}`}>
-                            {metric.trendValue}
-                          </span>
-                        </div>
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{metric.title}</h3>
-                      <div className="text-3xl font-bold text-gray-900 mb-4">{metric.value}</div>
-
-                      {/* Insight */}
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100">
-                        <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Insight</h4>
-                        <p className="text-sm text-blue-800">{metric.insight}</p>
-                      </div>
-
-                      {/* Recommendation */}
-                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                        <h4 className="text-sm font-medium text-green-900 mb-2">🎯 Recommendation</h4>
-                        <p className="text-sm text-green-800">{metric.recommendation}</p>
-                      </div>
+                      </button>
                     </div>
                   ))
                 )}
