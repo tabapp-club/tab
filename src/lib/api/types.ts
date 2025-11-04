@@ -120,6 +120,7 @@ export interface BusinessFeatures {
   automation: boolean;
   campaigns: boolean;
   marketing_calendar: boolean;
+  customer_funnel: boolean;
 }
 
 export interface BusinessDetails {

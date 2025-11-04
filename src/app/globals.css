@@ -1257,6 +1257,32 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
   animation: shimmer 2s infinite;
 }
 
+/* Funnel width animation */
+@keyframes funnelWidth {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--target-width, 100%);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Custom checkbox styling for platform selection */
 .platform-checkbox {
   accent-color: #6E4EFF !important;

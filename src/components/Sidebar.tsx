@@ -9,7 +9,7 @@ import { useBusiness } from "@/contexts/BusinessContext";
 import { BusinessFeatures } from "@/lib/api/types";
 import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
-import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock } from "lucide-react";
+import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock, Filter } from "lucide-react";
 
 // Add custom styles for animations
 const styles = `
@@ -156,6 +156,10 @@ const WorkflowAutomationIcon = ({colorCode}: {colorCode: string}) => (
   <Zap size={16} color={colorCode} />
 );
 
+const CustomerFunnelIcon = ({colorCode}: {colorCode: string}) => (
+  <Filter size={16} color={colorCode} />
+);
+
 
 
 const SettingsIcon = ({colorCode}: {colorCode: string}) => (
@@ -208,6 +212,15 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     featureKey: "data_center" as const
   },
   {
+    id: "customer-funnel",
+    label: "Customer Funnel",
+    description: "Analyze customer journeys",
+    icon: CustomerFunnelIcon,
+    href: "/customer-funnel",
+    notificationCount: 0,
+    featureKey: "customer_funnel" as const
+  },
+  {
     id: "campaigns",
     label: "Campaigns",
     description: "Marketing campaigns",
@@ -224,33 +237,6 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     href: "/achievements",
     notificationCount: 0,
     featureKey: "achievements" as const
-  },
-  {
-    id: "marketing-calendar",
-    label: "Marketing Calendar",
-    description: "Events & appointments",
-    icon: CalendarIcon,
-    href: "/marketing-calendar",
-    notificationCount: 0,
-    featureKey: "marketing_calendar" as const
-  },
-  {
-    id: "ai-services",
-    label: "tribly AI for business",
-    description: "AI-powered insights & chat",
-    icon: AIServicesIcon,
-    href: "/ai-services",
-    notificationCount: 12,
-    featureKey: "tribly_ai" as const
-  },
-  {
-    id: "cohorts",
-    label: "Cohorts",
-    description: "User segmentation",
-    icon: CohortsIcon,
-    href: "/cohorts",
-    notificationCount: 0,
-    featureKey: "cohorts" as const
   },
   {
     id: "workflow-automation",
@@ -384,12 +370,10 @@ export function Sidebar() {
             const isActive =
               (item.id === "dashboard" && pathname === "/dashboard") ||
               (item.id === "data-center" && pathname === "/data-center") ||
-              (item.id === "ai-services" && pathname === "/ai-services") ||
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
-              (item.id === "cohorts" && pathname === "/cohorts") ||
-              (item.id === "marketing-calendar" && pathname === "/marketing-calendar") ||
-              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "cohorts" && item.id !== "marketing-calendar" && pathname === item.href);
+              (item.id === "customer-funnel" && pathname === "/customer-funnel") ||
+              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "customer-funnel" && pathname === item.href);
 
             const isDisabled = !hasFeature(item.featureKey);
             const effectiveIsActive = isActive && !isDisabled;

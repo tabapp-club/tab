@@ -68,11 +68,6 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
     return (
       <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
         <div className="flex items-start gap-3">
-          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-300">
-            <div className="text-gray-600">
-              {campaign.icon}
-            </div>
-          </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
               <h3 className="text-lg font-bold text-[#2a2a2f]">{campaign.title}</h3>
