@@ -9,12 +9,16 @@ import { InvoicePreview } from './components/InvoicePreview';
 import { useToast } from '@/hooks/useToast';
 
 interface InvoiceTemplatesContentProps {
-  activeTab: string;
+  activeTab?: string;
 }
 
-export function InvoiceTemplatesContent({ activeTab }: InvoiceTemplatesContentProps) {
-  const { toast } = useToast();
-  
+export function InvoiceTemplatesContent({ activeTab: externalActiveTab }: InvoiceTemplatesContentProps) {
+  const { success } = useToast();
+  const [internalActiveTab, setInternalActiveTab] = useState<'template-preview' | 'business-details'>('template-preview');
+
+  // Use external activeTab if provided, otherwise use internal state
+  const activeTab = externalActiveTab || internalActiveTab;
+
   // Business details state
   const [businessDetails, setBusinessDetails] = useState({
     businessName: '',
@@ -49,10 +53,7 @@ export function InvoiceTemplatesContent({ activeTab }: InvoiceTemplatesContentPr
   const [selectedFormat, setSelectedFormat] = useState<'regular' | 'mobile'>('mobile');
 
   const handleSave = () => {
-    toast({
-      title: "Settings Saved",
-      description: "Your invoice template settings have been saved successfully.",
-    });
+    success('Your invoice template settings have been saved successfully.');
   };
 
   const handleReset = () => {
@@ -84,14 +85,37 @@ export function InvoiceTemplatesContent({ activeTab }: InvoiceTemplatesContentPr
       showDeclaration: true,
     });
     setSelectedTemplate('basic');
-    toast({
-      title: "Settings Reset",
-      description: "All invoice template settings have been reset to default values.",
-    });
+    success('All invoice template settings have been reset to default values.');
   };
 
   return (
     <>
+      {/* Tab Navigation - Only show when used standalone */}
+      {!externalActiveTab && (
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => setInternalActiveTab('template-preview')}
+            className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
+              activeTab === 'template-preview'
+                ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
+            }`}
+          >
+            Template & Preview
+          </button>
+          <button
+            onClick={() => setInternalActiveTab('business-details')}
+            className={`h-8 px-3 py-1 rounded-[4px] text-[13.563px] leading-[19.6px] tracking-[-0.1px] font-medium transition-colors border ${
+              activeTab === 'business-details'
+                ? 'bg-[rgba(151,71,255,0.05)] text-[#9747FF] border-[#9747FF]'
+                : 'bg-white text-gray-700 border-[#e9e9e9] hover:bg-[#9747FF0D] hover:text-[#9747FF] hover:border-[#9747FF]'
+            }`}
+          >
+            Business Details
+          </button>
+        </div>
+      )}
+
       {/* Tab Content */}
       <div className="space-y-6">
         {activeTab === 'template-preview' && (
@@ -122,7 +146,7 @@ export function InvoiceTemplatesContent({ activeTab }: InvoiceTemplatesContentPr
               See how your invoice will look in {selectedFormat === 'mobile' ? 'mobile devices' : 'regular format'}
             </p>
           </div>
-          
+
           <InvoicePreview
             businessDetails={businessDetails}
             selectedTemplate={selectedTemplate}

@@ -40,13 +40,13 @@ interface BusinessDetailsFormProps {
 }
 
 export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSave, onReset }: BusinessDetailsFormProps) {
-  const [errors, setErrors] = useState<Partial<BusinessDetails>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof BusinessDetails, string>>>({});
   const logoRef = useRef<HTMLInputElement>(null);
   const signatureRef = useRef<HTMLInputElement>(null);
 
-  const handleInputChange = (field: keyof BusinessDetails, value: string | File | null) => {
+  const handleInputChange = (field: keyof BusinessDetails, value: string | File | null | boolean) => {
     setBusinessDetails({ ...businessDetails, [field]: value });
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors({ ...errors, [field]: '' });
@@ -92,41 +92,41 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
       // Validate file type and size
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       const maxSize = 2 * 1024 * 1024; // 2MB
-      
+
       if (!allowedTypes.includes(file.type)) {
         setErrors({ ...errors, [field]: 'Please upload a valid image file (JPEG, PNG)' });
         return;
       }
-      
+
       if (file.size > maxSize) {
         setErrors({ ...errors, [field]: 'File size must be less than 2MB' });
         return;
       }
     }
-    
+
     handleInputChange(field, file);
   };
 
   const handleSave = () => {
-    const newErrors: Partial<BusinessDetails> = {};
-    
+    const newErrors: Partial<Record<keyof BusinessDetails, string>> = {};
+
     // Validate required fields
     const requiredFields: (keyof BusinessDetails)[] = [
       'businessName', 'address', 'city', 'state', 'pin', 'phone', 'email', 'gstin', 'placeOfSupply'
     ];
-    
+
     requiredFields.forEach(field => {
       const error = validateField(field, businessDetails[field] as string);
       if (error) {
         newErrors[field] = error;
       }
     });
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     onSave();
   };
 
@@ -134,7 +134,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Information</h3>
-        
+
         {/* Business Name */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -247,7 +247,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               <p className="mt-1 text-sm text-red-600">{errors.city}</p>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               State *
@@ -267,7 +267,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               <p className="mt-1 text-sm text-red-600">{errors.state}</p>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               PIN Code *
@@ -314,7 +314,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
               <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email Address *
@@ -342,7 +342,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
 
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Tax Information</h3>
-        
+
         {/* GSTIN */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -429,7 +429,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
 
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Signature & Seal</h3>
-        
+
         {/* Signature Upload */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -480,7 +480,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
         <p className="text-sm text-gray-600 mb-4">
           Customize the terms, conditions, and declaration text for your invoices
         </p>
-        
+
         {/* Terms & Conditions */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -522,7 +522,7 @@ export function BusinessDetailsForm({ businessDetails, setBusinessDetails, onSav
         <p className="text-sm text-gray-600 mb-4">
           Choose which information to display in your invoice footer
         </p>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Phone Toggle */}
           <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">

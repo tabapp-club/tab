@@ -35,7 +35,7 @@ export function useWalletBalance() {
           data: mockWalletBalance,
         };
       }
-      
+
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
@@ -69,7 +69,7 @@ export function useWalletTransactions(filters?: WalletFilters) {
           }),
         };
       }
-      
+
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
@@ -94,7 +94,7 @@ export function useWalletSpendingBreakdown(startDate?: string, endDate?: string)
           data: getMockSpendingBreakdown(startDate, endDate),
         };
       }
-      
+
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
@@ -119,7 +119,7 @@ export function useCreatePayment() {
           data: getMockPaymentResponse(data.amount, data.payment_method),
         };
       }
-      
+
       if (!user?.accessToken) {
         throw new Error('No access token available');
       }
@@ -143,16 +143,16 @@ export function usePaymentStatus(paymentId: string | null) {
         if (!paymentId) {
           throw new Error('Payment ID is required');
         }
-        
+
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         return {
           message: 'Payment status retrieved successfully',
           data: getMockPaymentStatus(paymentId),
         };
       }
-      
+
       if (!user?.accessToken || !paymentId) {
         throw new Error('No access token or payment ID available');
       }
@@ -162,8 +162,7 @@ export function usePaymentStatus(paymentId: string | null) {
     refetchInterval: (query) => {
       const status = query.state.data?.data.status;
       // Poll every 2 seconds if pending, otherwise stop
-      return status === 'pending' || status === 'processing' ? 2000 : false;
+      return status === 'pending' ? 2000 : false;
     },
   });
 }
-

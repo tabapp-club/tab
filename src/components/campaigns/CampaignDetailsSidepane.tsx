@@ -4,13 +4,13 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Sidepane, SidepaneSection } from '@/components/Sidepane';
 import { RecommendedCampaign } from './RecommendedCampaigns';
 import { CampaignData } from './CampaignsClient';
-import { 
-  Users, 
-  Zap, 
-  MessageSquare, 
-  Calendar, 
-  TrendingUp, 
-  Target, 
+import {
+  Users,
+  Zap,
+  MessageSquare,
+  Calendar,
+  TrendingUp,
+  Target,
   DollarSign,
   AlertCircle,
   CheckCircle2,
@@ -47,9 +47,9 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
   const [isSuccess, setIsSuccess] = useState(false);
 
   const toggleMedium = useCallback((mediumId: string) => {
-    setSelectedMediums(prev => 
-      prev.includes(mediumId) 
-        ? prev.filter(id => id !== mediumId) 
+    setSelectedMediums(prev =>
+      prev.includes(mediumId)
+        ? prev.filter(id => id !== mediumId)
         : [...prev, mediumId]
     );
   }, []);
@@ -78,7 +78,7 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
   // Header Content - Enhanced with insights
   const headerContent = useMemo(() => {
     if (!campaign || !campaignInsights) return null;
-    
+
     return (
       <div className="space-y-4">
         {/* Campaign Header Card */}
@@ -136,8 +136,8 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
             <div className="flex-1 min-w-0">
               <h4 className="text-[11px] font-bold text-gray-900 mb-1">Why This Campaign?</h4>
               <p className="text-[10px] text-gray-700 leading-relaxed">
-                {campaign.estimatedImpact}. Expected to reach {campaignInsights.estimatedReach.toLocaleString()} users 
-                with {campaignInsights.expectedEngagements.toLocaleString()} expected engagements. 
+                {campaign.estimatedImpact}. Expected to reach {campaignInsights.estimatedReach.toLocaleString()} users
+                with {campaignInsights.expectedEngagements.toLocaleString()} expected engagements.
                 Net profit projection: <span className="font-semibold text-green-600">₹{Math.round(campaignInsights.netProfit / 1000)}K</span>
               </p>
             </div>
@@ -288,14 +288,14 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
         }
       ]
     };
-    
+
     return offerMap[campaignId] || [];
   }, []);
 
   // Build sections
   const sections = useMemo<SidepaneSection[]>(() => {
     if (!campaign || !campaignInsights) return [];
-    
+
     const mediums = [
       {
         id: 'whatsapp',
@@ -314,7 +314,7 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
         color: '#6366F1'
       }
     ];
-    
+
     return [
     {
       id: 'channels',
@@ -328,8 +328,8 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
               <div
                 key={medium.id}
                 className={`p-3 rounded-lg transition-all flex items-center justify-between gap-2 border ${
-                  isSelected 
-                    ? 'bg-gray-50 border-[#9747FF]' 
+                  isSelected
+                    ? 'bg-gray-50 border-[#9747FF]'
                     : 'bg-gray-50 border-gray-200'
                 }`}
                 style={{ borderWidth: '1px' }}
@@ -439,14 +439,14 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
               <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {getOffersForCampaign(campaign.id).map((offer) => {
                   const isSelected = selectedOffer === offer.id;
-                  
+
                   return (
                     <button
                       key={offer.id}
                       onClick={() => setSelectedOffer(offer.id)}
                       className={`w-[300px] min-w-[300px] p-4 rounded-xl transition-all text-left flex flex-col ${
-                        isSelected 
-                          ? 'bg-white border border-[#9747FF]' 
+                        isSelected
+                          ? 'bg-white border border-[#9747FF]'
                           : 'bg-white border border-gray-200 hover:border-gray-300'
                       }`}
                       style={{ borderWidth: '1px' }}
@@ -567,8 +567,8 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
                 key={template.id}
                 onClick={() => setSelectedTemplate(template.id)}
                 className={`w-[240px] aspect-square flex-shrink-0 p-4 rounded-xl transition-all text-left flex flex-col ${
-                  isSelected 
-                    ? 'bg-white border border-[#9747FF]' 
+                  isSelected
+                    ? 'bg-white border border-[#9747FF]'
                     : 'bg-white border border-gray-200 hover:border-gray-300'
                 }`}
                 style={{ borderWidth: '1px' }}
@@ -691,7 +691,7 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
 
   // Check if all required options are selected
   const isFormValid = useMemo(() => {
-    const baseValid = selectedMediums.length > 0 && selectedTemplate !== '' && selectedSchedule !== '' && selectedMessageType !== '';
+    const baseValid = selectedMediums.length > 0 && selectedTemplate !== '' && selectedMessageType !== '';
     const offerValid = selectedMessageType === 'without-offer' || (selectedMessageType === 'with-offer' && selectedOffer !== '');
     const scheduleValid = selectedSchedule === 'now' || (selectedSchedule === 'later' && scheduleDate !== '' && scheduleTime !== '');
     return baseValid && offerValid && scheduleValid;
@@ -700,7 +700,7 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
   // Footer Content - Enhanced Action Button
   const footerContent = useMemo(() => {
     if (!campaign) return null;
-    
+
     return (
     <div className="flex justify-end">
         <button
@@ -729,23 +729,23 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
                   endDate: '',
                   description: campaign.description
                 };
-                
+
                 // Store in both keys for compatibility
                 const existingCampaigns = JSON.parse(localStorage.getItem('sentCampaigns') || '[]');
                 existingCampaigns.push(newCampaign);
                 localStorage.setItem('sentCampaigns', JSON.stringify(existingCampaigns));
-                
+
                 // Also store in pendingCampaigns for backward compatibility
                 const pendingCampaigns = JSON.parse(localStorage.getItem('pendingCampaigns') || '[]');
                 pendingCampaigns.push(newCampaign);
                 localStorage.setItem('pendingCampaigns', JSON.stringify(pendingCampaigns));
-                
+
                 // Dispatch custom event to update campaigns list
                 window.dispatchEvent(new Event('campaignsUpdated'));
               }, 3000);
             } else {
-              console.log('Scheduling campaign:', campaign, { 
-                mediums: selectedMediums, 
+              console.log('Scheduling campaign:', campaign, {
+                mediums: selectedMediums,
                 schedule: selectedSchedule,
                 scheduleDate: scheduleDate,
                 scheduleTime: scheduleTime,
@@ -757,8 +757,8 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
           }}
           disabled={!isFormValid}
           className={`font-bold py-3 px-5 text-sm transition-all flex items-center justify-center gap-2 ${
-            isFormValid 
-              ? 'bg-[#9747FF] text-white hover:scale-[1.02] cursor-pointer' 
+            isFormValid
+              ? 'bg-[#9747FF] text-white hover:scale-[1.02] cursor-pointer'
               : 'bg-[#9747FF]/30 text-[#9747FF]/50 cursor-not-allowed'
           }`}
           style={{ borderRadius: '4px' }}
@@ -834,7 +834,7 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
           </div>
           <h3 className="text-xl font-bold text-[#2a2a2f] mb-2">Campaign Sent!</h3>
           <p className="text-sm text-[#626266] text-center max-w-sm mb-8">
-            Your campaign "{campaign.title}" has been successfully sent to {campaign.count.toLocaleString()} users.
+            Your campaign &quot;{campaign.title}&quot; has been successfully sent to {campaign.count.toLocaleString()} users.
           </p>
           <button
             onClick={() => {
@@ -863,4 +863,3 @@ export function CampaignDetailsSidepane({ isOpen, onClose, campaign }: CampaignD
     />
   );
 }
-

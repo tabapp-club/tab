@@ -6,6 +6,7 @@ import {
   CategorySpending,
   PaymentResponse,
   PaymentStatusResponse,
+  TransactionCategory,
 } from '@/lib/api/types';
 
 // Mock wallet balance
@@ -266,10 +267,10 @@ export const mockTransactions: WalletTransaction[] = [
 
 // Mock transactions response
 export function getMockTransactionsResponse(
-  filters?: { 
-    type?: 'credit' | 'debit'; 
-    category?: string; 
-    page?: number; 
+  filters?: {
+    type?: 'credit' | 'debit';
+    category?: string;
+    page?: number;
     page_size?: number;
     start_date?: string;
     end_date?: string;
@@ -293,7 +294,7 @@ export function getMockTransactionsResponse(
     const startDate = new Date(filters.start_date);
     const endDate = new Date(filters.end_date);
     endDate.setHours(23, 59, 59, 999); // Include entire end date
-    
+
     filtered = filtered.filter((t) => {
       const transactionDate = new Date(t.created_at);
       return transactionDate >= startDate && transactionDate <= endDate;
@@ -303,7 +304,7 @@ export function getMockTransactionsResponse(
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - (filters.filter_days || 0));
     cutoffDate.setHours(0, 0, 0, 0);
-    
+
     filtered = filtered.filter((t) => {
       const transactionDate = new Date(t.created_at);
       return transactionDate >= cutoffDate;
@@ -340,7 +341,7 @@ export function getMockSpendingBreakdown(
     const start = new Date(startDate);
     const end = new Date(endDate);
     end.setHours(23, 59, 59, 999);
-    
+
     filtered = filtered.filter((t) => {
       const transactionDate = new Date(t.created_at);
       return transactionDate >= start && transactionDate <= end;
@@ -351,14 +352,14 @@ export function getMockSpendingBreakdown(
   const totalSpent = filtered
     .filter((t) => t.type === 'debit')
     .reduce((sum, t) => sum + t.amount, 0);
-  
+
   const totalCredited = filtered
     .filter((t) => t.type === 'credit')
     .reduce((sum, t) => sum + t.amount, 0);
 
   // Calculate category-wise spending
   const categoryMap = new Map<TransactionCategory, { spent: number; count: number }>();
-  
+
   filtered.forEach((t) => {
     if (t.type === 'debit') {
       const existing = categoryMap.get(t.category) || { spent: 0, count: 0 };
@@ -379,45 +380,45 @@ export function getMockSpendingBreakdown(
   // Build categories array
   const categories: CategorySpending[] = [
     {
-      category: 'targeted_campaign',
+      category: 'targeted_campaign' as TransactionCategory,
       category_label: 'Targeted Campaign',
-      total_spent: categoryMap.get('targeted_campaign')?.spent || 0,
-      transaction_count: categoryMap.get('targeted_campaign')?.count || 0,
-      percentage: totalSpent > 0 ? ((categoryMap.get('targeted_campaign')?.spent || 0) / totalSpent) * 100 : 0,
+      total_spent: categoryMap.get('targeted_campaign' as TransactionCategory)?.spent || 0,
+      transaction_count: categoryMap.get('targeted_campaign' as TransactionCategory)?.count || 0,
+      percentage: totalSpent > 0 ? ((categoryMap.get('targeted_campaign' as TransactionCategory)?.spent || 0) / totalSpent) * 100 : 0,
     },
     {
-      category: 'digital_invoice',
+      category: 'digital_invoice' as TransactionCategory,
       category_label: 'Digital Invoice',
-      total_spent: categoryMap.get('digital_invoice')?.spent || 0,
-      transaction_count: categoryMap.get('digital_invoice')?.count || 0,
-      percentage: totalSpent > 0 ? ((categoryMap.get('digital_invoice')?.spent || 0) / totalSpent) * 100 : 0,
+      total_spent: categoryMap.get('digital_invoice' as TransactionCategory)?.spent || 0,
+      transaction_count: categoryMap.get('digital_invoice' as TransactionCategory)?.count || 0,
+      percentage: totalSpent > 0 ? ((categoryMap.get('digital_invoice' as TransactionCategory)?.spent || 0) / totalSpent) * 100 : 0,
     },
     {
-      category: 'event_campaign',
+      category: 'event_campaign' as TransactionCategory,
       category_label: 'Event Campaign',
-      total_spent: categoryMap.get('event_campaign')?.spent || 0,
-      transaction_count: categoryMap.get('event_campaign')?.count || 0,
-      percentage: totalSpent > 0 ? ((categoryMap.get('event_campaign')?.spent || 0) / totalSpent) * 100 : 0,
+      total_spent: categoryMap.get('event_campaign' as TransactionCategory)?.spent || 0,
+      transaction_count: categoryMap.get('event_campaign' as TransactionCategory)?.count || 0,
+      percentage: totalSpent > 0 ? ((categoryMap.get('event_campaign' as TransactionCategory)?.spent || 0) / totalSpent) * 100 : 0,
     },
     {
-      category: 'followup_reminder',
+      category: 'followup_reminder' as TransactionCategory,
       category_label: 'Follow-up Reminder',
-      total_spent: categoryMap.get('followup_reminder')?.spent || 0,
-      transaction_count: categoryMap.get('followup_reminder')?.count || 0,
-      percentage: totalSpent > 0 ? ((categoryMap.get('followup_reminder')?.spent || 0) / totalSpent) * 100 : 0,
+      total_spent: categoryMap.get('followup_reminder' as TransactionCategory)?.spent || 0,
+      transaction_count: categoryMap.get('followup_reminder' as TransactionCategory)?.count || 0,
+      percentage: totalSpent > 0 ? ((categoryMap.get('followup_reminder' as TransactionCategory)?.spent || 0) / totalSpent) * 100 : 0,
     },
     {
-      category: 'recharge',
+      category: 'recharge' as TransactionCategory,
       category_label: 'Recharge',
       total_spent: 0,
-      transaction_count: categoryMap.get('recharge')?.count || 0,
+      transaction_count: categoryMap.get('recharge' as TransactionCategory)?.count || 0,
       percentage: 0,
     },
     {
-      category: 'refund',
+      category: 'refund' as TransactionCategory,
       category_label: 'Refund',
       total_spent: 0,
-      transaction_count: categoryMap.get('refund')?.count || 0,
+      transaction_count: categoryMap.get('refund' as TransactionCategory)?.count || 0,
       percentage: 0,
     },
   ].filter((cat) => cat.transaction_count > 0); // Only show categories with transactions
@@ -443,10 +444,10 @@ const paymentAmounts = new Map<string, number>();
 // Mock payment response
 export function getMockPaymentResponse(amount: number, paymentMethod: string): PaymentResponse {
   const paymentId = `pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  
+
   // Store the amount for later status checks
   paymentAmounts.set(paymentId, amount);
-  
+
   return {
     payment_id: paymentId,
     qr_code_url: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(`upi://pay?pa=merchant@upi&pn=Merchant%20Name&am=${amount}&cu=INR&tn=Wallet%20Recharge`)}`,
@@ -461,13 +462,13 @@ export function getMockPaymentResponse(amount: number, paymentMethod: string): P
 export function getMockPaymentStatus(paymentId: string, amount?: number): PaymentStatusResponse {
   // Get stored amount or use provided amount
   const paymentAmount = amount || paymentAmounts.get(paymentId) || 0;
-  
+
   // For demo purposes, let's make it more likely to be completed after a delay
   // Check if payment was created more than 8 seconds ago
   const paymentCreated = parseInt(paymentId.split('_')[1] || '0');
   const timeSinceCreation = Date.now() - paymentCreated;
   const shouldComplete = timeSinceCreation > 8000; // Complete after 8 seconds
-  
+
   if (shouldComplete) {
     // Clean up stored amount
     paymentAmounts.delete(paymentId);
@@ -478,11 +479,10 @@ export function getMockPaymentStatus(paymentId: string, amount?: number): Paymen
       transaction_id: `txn_${Date.now()}`,
     };
   }
-  
+
   return {
     payment_id: paymentId,
     status: 'pending',
     amount: paymentAmount,
   };
 }
-

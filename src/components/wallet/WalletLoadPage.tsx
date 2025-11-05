@@ -109,10 +109,10 @@ export function WalletLoadPage({ onViewTransactions }: WalletLoadPageProps) {
 
   const currentPayment = paymentStatusData?.data;
 
-  const qrCodeUrl = showQR && paymentResponse?.qr_code_url 
-    ? paymentResponse.qr_code_url 
-    : paymentId && showQR 
-      ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(`payment://${paymentId}`)}` 
+  const qrCodeUrl = showQR && paymentResponse?.qr_code_url
+    ? paymentResponse.qr_code_url
+    : paymentId && showQR
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(`payment://${paymentId}`)}`
       : null;
 
   return (
@@ -309,9 +309,9 @@ export function WalletLoadPage({ onViewTransactions }: WalletLoadPageProps) {
                 >
                   Cancel
                 </button>
-                {(paymentResponse?.payment_url || currentPayment?.payment_url) && (
+                {paymentResponse?.payment_url && (
                   <a
-                    href={paymentResponse?.payment_url || currentPayment?.payment_url}
+                    href={paymentResponse.payment_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 h-12 bg-[#9747FF] hover:bg-[#8545dd] text-white font-medium rounded-full transition-colors flex items-center justify-center"
@@ -331,4 +331,3 @@ export function WalletLoadPage({ onViewTransactions }: WalletLoadPageProps) {
     </div>
   );
 }
-

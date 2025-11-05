@@ -18,9 +18,13 @@ export default function InvoiceTemplatesPage() {
     <ProtectedRoute>
       <div className="flex h-screen bg-white">
         <Sidebar />
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div></div>}>
-          <InvoiceTemplatesContent />
-        </Suspense>
+        <main className="flex-1 flex flex-col h-full overflow-hidden">
+          <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9747FF]"></div></div>}>
+            <div className="flex-1 overflow-y-auto px-2 py-3">
+              <InvoiceTemplatesContent />
+            </div>
+          </Suspense>
+        </main>
       </div>
     </ProtectedRoute>
   );
