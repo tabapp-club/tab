@@ -14,7 +14,7 @@ export interface CampaignData {
   id: string;
   name: string;
   type: 'feedback' | 'retention' | 'engagement' | 'advertise';
-  status: 'active' | 'paused' | 'draft' | 'completed';
+  status: 'active' | 'paused' | 'draft' | 'completed' | 'pending';
   audience: number;
   sent: number;
   opened: number;

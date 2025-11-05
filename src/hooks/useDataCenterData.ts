@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { api, DataCenterFilters } from '@/lib/api';
 
@@ -29,15 +30,30 @@ interface UseDataCenterDataProps {
   page: number;
   pageSize: number;
   filters: DataCenterFilters;
+  refreshTrigger?: number;
 }
 
-export function useDataCenterData({ page, pageSize, filters }: UseDataCenterDataProps) {
+export function useDataCenterData({ page, pageSize, filters, refreshTrigger = 0 }: UseDataCenterDataProps) {
   const { user } = useAuth();
 
   const isEnabled = !!user?.accessToken;
 
+  // Create stable query key to prevent unnecessary re-renders
+  const queryKey = useMemo(() => [
+    'data-center-data',
+    page,
+    pageSize,
+    filters.search || '',
+    Array.isArray(filters.category) ? filters.category.join(',') : (filters.category || ''),
+    filters.userType || '',
+    filters.status || '',
+    filters.no_of_visits_from || '',
+    filters.no_of_visits_to || '',
+    refreshTrigger
+  ], [page, pageSize, filters.search, filters.category, filters.userType, filters.status, filters.no_of_visits_from, filters.no_of_visits_to, refreshTrigger]);
+
   return useQuery<DataCenterApiResponse, Error>({
-    queryKey: ['data-center-data', page, pageSize, filters],
+    queryKey,
     queryFn: async () => {
       if (!user?.accessToken) {
         throw new Error('No access token available');
@@ -62,13 +78,14 @@ export function useDataCenterData({ page, pageSize, filters }: UseDataCenterData
     gcTime: 10 * 60 * 1000, // 10 minutes in cache
     // Keep previous data while fetching new data to avoid loading states during search
     placeholderData: (previousData) => previousData,
+    // Reduce retries for faster failure feedback
     retry: (failureCount, error) => {
       // Don't retry if there's no access token
       if (error.message === 'No access token available') {
         return false;
       }
-      // Retry up to 2 times for network errors
-      return failureCount < 2;
+      // Retry only once for network errors
+      return failureCount < 1;
     },
     // Return default data structure when query is disabled
     initialData: isEnabled ? undefined : {

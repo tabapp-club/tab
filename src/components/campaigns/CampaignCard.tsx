@@ -138,6 +138,8 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
         return 'bg-gray-100 text-gray-700 border-gray-200';
       case 'completed':
         return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'pending':
+        return 'bg-[#9747FF]/10 text-[#9747FF] border-[#9747FF]/20';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }

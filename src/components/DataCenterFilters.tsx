@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 import FilterDropdown from './FilterDropdown';
 
 interface FilterOption {
@@ -274,7 +275,7 @@ const DataCenterFilters = ({
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
-            } as React.CSSProperties}
+            } as CSSProperties}
           >
             {/* Filter by label with vertical border - hidden on mobile */}
             <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
@@ -292,7 +293,7 @@ const DataCenterFilters = ({
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
                 minWidth: 'max-content',
-              } as React.CSSProperties}
+              } as CSSProperties}
             >
               <FilterDropdown
                 title="Category"

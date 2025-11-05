@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect, memo, useCallback } from 'react';
+import { useState, useMemo, memo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
 
 interface SortConfig {
   key: string | null;
@@ -20,11 +19,10 @@ interface UserData {
 }
 
 interface DataTableProps {
-  searchTerm?: string;
   data?: UserData[];
 }
 
-const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
+const DataTable = memo(({ data = [] }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
@@ -40,30 +38,16 @@ const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
     }
   }, [router]);
 
+  // Sort data only (API handles filtering)
   const processedData = useMemo(() => {
-    // Early return if no data
     if (!data || data.length === 0) return [];
     
-    // Filter data
-    let filtered = data;
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = data.filter(user => {
-        // Optimize search by checking most common fields first
-        return user.mobile.toLowerCase().includes(searchLower) ||
-               user.id.toLowerCase().includes(searchLower) ||
-               user.userType.toLowerCase().includes(searchLower) ||
-               user.categories.some(cat => cat.toLowerCase().includes(searchLower));
-      });
-    }
-    
-    // Sort data
+    // Only sort data, no filtering (API handles search/filtering)
     if (sortConfig.key) {
-      filtered = [...filtered].sort((a, b) => {
+      return [...data].sort((a, b) => {
         const aValue = a[sortConfig.key as keyof UserData];
         const bValue = b[sortConfig.key as keyof UserData];
         
-        // Handle different data types
         if (typeof aValue === 'number' && typeof bValue === 'number') {
           return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
         }
@@ -77,8 +61,8 @@ const DataTable = memo(({ searchTerm = '', data = [] }: DataTableProps) => {
       });
     }
     
-    return filtered;
-  }, [data, searchTerm, sortConfig]);
+    return data;
+  }, [data, sortConfig]);
 
   const getSortIcon = useCallback((columnKey: string) => {
     if (sortConfig.key !== columnKey) return <SortIcon />;

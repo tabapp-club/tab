@@ -137,6 +137,94 @@ export interface ApiError {
   code?: string;
 }
 
+// Wallet types
+export type TransactionType = 'credit' | 'debit';
+export type TransactionCategory = 'digital_invoice' | 'targeted_campaign' | 'event_campaign' | 'followup_reminder' | 'recharge' | 'refund';
+
+export interface WalletBalance {
+  balance: number;
+  currency: string;
+  last_updated: string;
+}
+
+export interface WalletTransaction {
+  _id: string;
+  amount: number;
+  type: TransactionType;
+  category: TransactionCategory;
+  description: string;
+  campaign_id?: string;
+  campaign_name?: string;
+  invoice_id?: string;
+  customer_id?: string;
+  customer_name?: string;
+  created_at: string;
+  status: 'completed' | 'pending' | 'failed';
+  message_type?: string;
+  communication_channel?: string | string[];
+  metadata?: Record<string, any>;
+}
+
+export interface WalletTransactionsResponse {
+  transactions: WalletTransaction[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_next: boolean;
+}
+
+export interface CategorySpending {
+  category: TransactionCategory;
+  category_label: string;
+  total_spent: number;
+  transaction_count: number;
+  percentage: number;
+}
+
+export interface WalletSpendingBreakdown {
+  total_spent: number;
+  total_credited: number;
+  current_balance: number;
+  categories: CategorySpending[];
+  period: {
+    start_date: string;
+    end_date: string;
+  };
+}
+
+export interface CreatePaymentRequest {
+  amount: number;
+  payment_method: 'upi' | 'card' | 'netbanking';
+  return_url?: string;
+}
+
+export interface PaymentResponse {
+  payment_id: string;
+  qr_code_url: string;
+  payment_url: string;
+  amount: number;
+  status: 'pending' | 'processing';
+  expires_at: string;
+}
+
+export interface PaymentStatusResponse {
+  payment_id: string;
+  status: 'pending' | 'completed' | 'failed' | 'cancelled';
+  amount: number;
+  transaction_id?: string;
+  failure_reason?: string;
+}
+
+export interface WalletFilters {
+  page?: number;
+  page_size?: number;
+  type?: TransactionType;
+  category?: TransactionCategory;
+  start_date?: string;
+  end_date?: string;
+  filter_days?: number;
+}
+
 // Request configuration
 export interface RequestConfig {
   headers?: Record<string, string>;

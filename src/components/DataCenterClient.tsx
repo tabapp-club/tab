@@ -13,12 +13,10 @@ import ImportModal from './ImportModal';
 import { useSidebar } from './SidebarContext';
 import DataCenterHeader from './data-center/DataCenterHeader';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDataCenterData, mapApiDataToTable, UserData } from '@/hooks/useDataCenterData';
-import { CampaignDetailsSidepane } from './campaigns/CampaignDetailsSidepane';
-import { RecommendedCampaign } from './campaigns/RecommendedCampaigns';
+import { useDataCenterData, mapApiDataToTable } from '@/hooks/useDataCenterData';
 
 // CSV Export Utility Function
-const exportToCSV = (data: UserData[], filename: string = 'data-center-export.csv') => {
+const exportToCSV = (data: Array<{id: string; mobile: string; categories: string[]; addedOn: string}>, filename: string = 'data-center-export.csv') => {
   if (!data || data.length === 0) {
     alert('No data to export');
     return;
@@ -73,19 +71,17 @@ export default function DataCenterClient() {
   const [filters, setFilters] = useState<any>({});
   const [selectedCard, setSelectedCard] = useState<string>('total');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [campaignSidePaneOpen, setCampaignSidePaneOpen] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
 
-  // Load filters and search from URL parameters
+  // Load filters and search from URL parameters - only on mount
   useEffect(() => {
     const urlSearch = searchParams.get('search');
     const urlPage = searchParams.get('page');
     const urlPageSize = searchParams.get('pageSize');
     const urlCard = searchParams.get('card');
 
-    if (urlSearch) {
+    if (urlSearch !== null) {
       setSearchTerm(urlSearch);
       setDebouncedSearchTerm(urlSearch);
     }
@@ -125,14 +121,14 @@ export default function DataCenterClient() {
     if (Object.keys(urlFilters).length > 0) {
       setFilters(urlFilters);
     }
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
 
-  // Function to update URL with current state
+  // Function to update URL with current state - memoized
   const updateURL = useCallback(() => {
-    const currentParams = new URLSearchParams(searchParams.toString());
     const newParams = new URLSearchParams();
 
-    if (searchTerm) newParams.set('search', searchTerm);
+    if (debouncedSearchTerm) newParams.set('search', debouncedSearchTerm);
     if (page > 1) newParams.set('page', page.toString());
     if (pageSize !== 10) newParams.set('pageSize', pageSize.toString());
     if (selectedCard !== 'total') newParams.set('card', selectedCard);
@@ -143,34 +139,27 @@ export default function DataCenterClient() {
     if (filters.no_of_visits_from) newParams.set('visitsFrom', filters.no_of_visits_from.toString());
     if (filters.no_of_visits_to) newParams.set('visitsTo', filters.no_of_visits_to.toString());
 
-    // Only update URL if parameters have actually changed
-    if (currentParams.toString() !== newParams.toString()) {
-      const queryString = newParams.toString();
-      const newUrl = queryString ? `/data-center?${queryString}` : '/data-center';
-      router.push(newUrl, { scroll: false });
-    }
-  }, [searchTerm, page, pageSize, selectedCard, filters, router, searchParams]);
+    const queryString = newParams.toString();
+    const newUrl = queryString ? `/data-center?${queryString}` : '/data-center';
+    router.replace(newUrl, { scroll: false });
+  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, router]);
 
   // Debounce timer ref
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounce search term to avoid excessive API calls while keeping UI responsive
+  // Debounce search term to avoid excessive API calls
   useEffect(() => {
-    // Clear existing timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
-    // Set new timer for debounced search
     debounceTimerRef.current = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-      // Reset to first page when search changes
       if (searchTerm !== debouncedSearchTerm) {
         setPage(1);
       }
-    }, 500); // Optimized to 500ms to reduce API calls while maintaining responsiveness
+    }, 500);
 
-    // Cleanup function
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -178,54 +167,61 @@ export default function DataCenterClient() {
     };
   }, [searchTerm, debouncedSearchTerm]);
 
-  // Update URL when state changes (debounced to avoid excessive updates)
+  // Update URL when state changes - debounced
+  const urlUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
-    // Skip URL updates during initial load from URL parameters
-    const isInitialLoad = !searchTerm && !debouncedSearchTerm && page === 1 && pageSize === 10 && selectedCard === 'total' && Object.keys(filters).length === 0;
-    if (isInitialLoad) return;
+    if (urlUpdateTimerRef.current) {
+      clearTimeout(urlUpdateTimerRef.current);
+    }
 
-    const urlUpdateTimer = setTimeout(() => {
+    urlUpdateTimerRef.current = setTimeout(() => {
       updateURL();
-    }, 100); // Reduced debounce to prevent history conflicts
+    }, 300);
 
-    return () => clearTimeout(urlUpdateTimer);
-  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, updateURL, searchTerm]);
+    return () => {
+      if (urlUpdateTimerRef.current) {
+        clearTimeout(urlUpdateTimerRef.current);
+      }
+    };
+  }, [debouncedSearchTerm, page, pageSize, selectedCard, filters, updateURL]);
+
+  // Memoize filters to prevent unnecessary re-renders
+  const apiFilters = useMemo(() => ({
+    ...filters,
+    search: debouncedSearchTerm
+  }), [filters, debouncedSearchTerm]);
 
   // Use React Query to fetch data center data
   const { data: dataCenterResponse, isLoading: loading, error } = useDataCenterData({
     page,
     pageSize,
-    filters: { ...filters, search: debouncedSearchTerm, refreshTrigger }
+    filters: apiFilters,
+    refreshTrigger
   });
 
-  // Process the API response data
+  // Process the API response data - optimized
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
 
-    // Handle nested data structure (data.data) or flat structure (data)
-    let dataArray = [];
     const responseData = dataCenterResponse.data as any;
+    const dataArray = Array.isArray(responseData) 
+      ? responseData 
+      : (responseData?.data && Array.isArray(responseData.data) ? responseData.data : []);
 
-    if (Array.isArray(responseData)) {
-      // Flat structure: data is directly an array
-      dataArray = responseData;
-    } else if (responseData && Array.isArray(responseData.data)) {
-      // Nested structure: data.data is the array
-      dataArray = responseData.data;
-    } else {
-      console.warn('DataCenter API response data is not in expected format:', dataCenterResponse);
-      return [];
-    }
+    if (dataArray.length === 0) return [];
 
-    const mappedData = mapApiDataToTable(dataArray);
-    return mappedData;
+    return mapApiDataToTable(dataArray);
   }, [dataCenterResponse]);
 
-  // Handle both nested and flat response structures for total, metrics, and categories
-  const responseData = dataCenterResponse?.data as any;
-  const total = responseData?.total || dataCenterResponse?.total || 0;
-  const metrics = responseData?.metrics || dataCenterResponse?.metrics || null;
-  const categories = responseData?.categories || dataCenterResponse?.categories || [];
+  // Extract total, metrics, and categories from response - memoized
+  const { total, metrics, categories } = useMemo(() => {
+    const responseData = dataCenterResponse?.data as any;
+    return {
+      total: responseData?.total || dataCenterResponse?.total || 0,
+      metrics: responseData?.metrics || dataCenterResponse?.metrics || null,
+      categories: responseData?.categories || dataCenterResponse?.categories || []
+    };
+  }, [dataCenterResponse]);
 
   // Handle stats card click
   const handleCardClick = (cardType: string) => {
@@ -264,11 +260,22 @@ export default function DataCenterClient() {
 
 
 
-  // Handle filter/search changes
-  const handleFiltersChange = (newFilters: any) => {
-    setFilters((prev: any) => ({ ...prev, ...newFilters }));
+  // Handle filter/search changes - memoized to prevent unnecessary re-renders
+  const handleFiltersChange = useCallback((newFilters: any) => {
+    setFilters((prev: any) => {
+      // Only update if filters actually changed
+      const hasChanges = Object.keys(newFilters).some(key => {
+        if (Array.isArray(newFilters[key]) && Array.isArray(prev[key])) {
+          return newFilters[key].join(',') !== prev[key].join(',');
+        }
+        return newFilters[key] !== prev[key];
+      });
+      
+      if (!hasChanges) return prev;
+      return { ...prev, ...newFilters };
+    });
     setPage(1); // Reset to first page on filter change
-  };
+  }, []);
 
   // Handle pagination
   const handlePageChange = (newPage: number) => {
@@ -287,111 +294,6 @@ export default function DataCenterClient() {
     exportToCSV(currentTableData);
   }, [currentTableData]);
 
-  // Map data center stat to RecommendedCampaign format
-  const mapStatToCampaign = useCallback((filterType: string, stat: any, metrics: any): RecommendedCampaign => {
-    const metric = metrics?.[stat.key as keyof typeof metrics];
-    const count = metric?.count || 0;
-    
-    // Map filter types to campaign data
-    const campaignMap: Record<string, Partial<RecommendedCampaign>> = {
-      'total': {
-        id: 'total-users',
-        title: 'Total Users',
-        description: 'Reach your entire audience at once with a comprehensive campaign',
-        bgColor: 'bg-gray-100',
-        iconColor: 'text-gray-600',
-        expectedCampaignCost: '₹15K',
-        expectedConversion: '25%',
-        expectedRevenue: '₹75K',
-        urgency: 'medium' as const,
-        priority: false,
-        estimatedImpact: 'Broad reach campaign'
-      },
-      'new': {
-        id: 'new-users',
-        title: 'New Users',
-        description: 'Welcome and onboard new customers with personalized messages',
-        bgColor: 'bg-blue-100',
-        iconColor: 'text-blue-600',
-        expectedCampaignCost: '₹8K',
-        expectedConversion: '35%',
-        expectedRevenue: '₹45K',
-        urgency: 'high' as const,
-        priority: true,
-        estimatedImpact: 'Strong onboarding impact'
-      },
-      'retained': {
-        id: 'retained-users',
-        title: 'Retained Users',
-        description: 'Reward loyal customers and boost retention with exclusive offers',
-        bgColor: 'bg-green-100',
-        iconColor: 'text-green-600',
-        expectedCampaignCost: '₹10K',
-        expectedConversion: '40%',
-        expectedRevenue: '₹85K',
-        urgency: 'medium' as const,
-        priority: false,
-        estimatedImpact: 'High retention value'
-      },
-      'active': {
-        id: 'active-users',
-        title: 'Active Users',
-        description: 'Engage your most responsive audience with targeted promotions',
-        bgColor: 'bg-purple-100',
-        iconColor: 'text-purple-600',
-        expectedCampaignCost: '₹12K',
-        expectedConversion: '30%',
-        expectedRevenue: '₹65K',
-        urgency: 'high' as const,
-        priority: true,
-        estimatedImpact: 'Maximum engagement potential'
-      },
-      'inactive': {
-        id: 'inactive-users',
-        title: 'Inactive Users',
-        description: 'Re-engage dormant customers with offers and personalized content',
-        bgColor: 'bg-orange-100',
-        iconColor: 'text-orange-600',
-        expectedCampaignCost: '₹9K',
-        expectedConversion: '20%',
-        expectedRevenue: '₹35K',
-        urgency: 'high' as const,
-        priority: true,
-        estimatedImpact: 'Revenue recovery opportunity'
-      }
-    };
-
-    const baseCampaign = campaignMap[filterType] || campaignMap['total'];
-    
-    return {
-      id: baseCampaign.id!,
-      title: baseCampaign.title!,
-      count,
-      description: baseCampaign.description!,
-      icon: stat.icon,
-      bgColor: baseCampaign.bgColor!,
-      iconColor: baseCampaign.iconColor!,
-      expectedCampaignCost: baseCampaign.expectedCampaignCost!,
-      expectedConversion: baseCampaign.expectedConversion!,
-      expectedRevenue: baseCampaign.expectedRevenue!,
-      urgency: baseCampaign.urgency!,
-      priority: baseCampaign.priority!,
-      estimatedImpact: baseCampaign.estimatedImpact!
-    };
-  }, []);
-
-  // Handle send campaign from data center
-  const handleSendCampaign = useCallback((filterType: string, stat: any) => {
-    const campaign = mapStatToCampaign(filterType, stat, metrics);
-    setSelectedCampaign(campaign);
-    setCampaignSidePaneOpen(true);
-  }, [metrics, mapStatToCampaign]);
-
-  // Handle campaign sidepane close
-  const handleCampaignSidePaneClose = useCallback(() => {
-    setCampaignSidePaneOpen(false);
-    setSelectedCampaign(null);
-  }, []);
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -416,7 +318,7 @@ export default function DataCenterClient() {
               metrics={metrics}
               onCardClick={handleCardClick}
               selectedCard={selectedCard}
-              onSendCampaign={handleSendCampaign}
+              isLoading={loading && !dataCenterResponse}
             />
               <div className="lg:bg-white lg:rounded-lg flex-1 flex flex-col min-h-0 min-w-0">
             <div className="mb-4">
@@ -437,8 +339,7 @@ export default function DataCenterClient() {
               <div className="text-center py-10 text-red-500">{error.message}</div>
             ) : (
             <DataTable
-              searchTerm={searchTerm}
-                data={currentTableData}
+              data={currentTableData}
             />
             )}
                 </div>
@@ -466,13 +367,6 @@ export default function DataCenterClient() {
             onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)}
           />
         )}
-
-      {/* Campaign Details Sidepane */}
-      <CampaignDetailsSidepane
-        isOpen={campaignSidePaneOpen}
-        onClose={handleCampaignSidePaneClose}
-        campaign={selectedCampaign}
-      />
       </div>
   );
 }

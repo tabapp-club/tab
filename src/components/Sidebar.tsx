@@ -9,7 +9,7 @@ import { useBusiness } from "@/contexts/BusinessContext";
 import { BusinessFeatures } from "@/lib/api/types";
 import { useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
-import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock, Filter } from "lucide-react";
+import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock, Filter, Pencil } from "lucide-react";
 
 // Add custom styles for animations
 const styles = `
@@ -160,7 +160,9 @@ const CustomerFunnelIcon = ({colorCode}: {colorCode: string}) => (
   <Filter size={16} color={colorCode} />
 );
 
-
+const BusinessRecordsIcon = ({colorCode}: {colorCode: string}) => (
+  <Pencil size={16} color={colorCode} />
+);
 
 const SettingsIcon = ({colorCode}: {colorCode: string}) => (
   <Settings size={20} color={colorCode} />
@@ -246,6 +248,15 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     href: "/workflow-automation",
     notificationCount: 7,
     featureKey: "automation" as const
+  },
+  {
+    id: "business-records",
+    label: "Business Records",
+    description: "Add & manage records",
+    icon: BusinessRecordsIcon,
+    href: "/business-log",
+    notificationCount: 0,
+    featureKey: "dashboard" as const
   },
   // { id: "templates", label: "Templates", icon: TemplatesIcon, href: "/templates" },
   // {
@@ -373,7 +384,8 @@ export function Sidebar() {
               (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "customer-funnel" && pathname === "/customer-funnel") ||
-              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "customer-funnel" && pathname === item.href);
+              (item.id === "business-records" && pathname === "/business-log") ||
+              (item.id !== "dashboard" && item.id !== "campaigns" && item.id !== "workflow-automation" && item.id !== "customer-funnel" && item.id !== "business-records" && pathname === item.href);
 
             const isDisabled = !hasFeature(item.featureKey);
             const effectiveIsActive = isActive && !isDisabled;

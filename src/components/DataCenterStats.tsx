@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import type { CSSProperties } from 'react';
 
 interface Metrics {
   total_users?: { count: number; change: number };
@@ -15,7 +14,7 @@ interface DataCenterStatsProps {
   metrics?: Metrics;
   onCardClick?: (cardType: string) => void;
   selectedCard?: string;
-  onSendCampaign?: (filterType: string, stat: any) => void;
+  isLoading?: boolean;
 }
 
 const statConfig = [
@@ -81,19 +80,32 @@ const statConfig = [
   },
 ];
 
-const DataCenterStats = ({ metrics, onCardClick, selectedCard, onSendCampaign }: DataCenterStatsProps) => {
-  const router = useRouter();
-
-  const handleSendCampaign = (e: React.MouseEvent, filterType: string, stat: any) => {
-    e.stopPropagation();
-    if (onSendCampaign) {
-      onSendCampaign(filterType, stat);
-    } else {
-      // Fallback to navigation if no handler provided
-      router.push('/new-campaign');
-    }
-  };
-
+const DataCenterStats = ({ metrics, onCardClick, selectedCard, isLoading = false }: DataCenterStatsProps) => {
+  // Show loading skeleton if data is loading
+  if (isLoading && !metrics) {
+    return (
+      <div className="w-full min-w-0">
+        <div className="flex gap-3 overflow-x-auto sm:hidden scrollbar-hide">
+          {statConfig.map((stat) => (
+            <div key={stat.label} className="bg-white p-4 rounded-lg border min-w-[160px] flex-shrink-0 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded mb-2"></div>
+              <div className="h-6 bg-gray-200 rounded mb-3"></div>
+              <div className="h-3 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 w-full min-w-0">
+          {statConfig.map((stat) => (
+            <div key={stat.label} className="bg-white p-3 sm:p-4 lg:p-5 xl:p-6 rounded-lg border min-w-0 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded mb-2"></div>
+              <div className="h-8 bg-gray-200 rounded mb-3"></div>
+              <div className="h-3 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-full min-w-0">
       {/* Mobile: Horizontal scroll */}
@@ -102,7 +114,7 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard, onSendCampaign }:
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-        } as React.CSSProperties}
+        } as CSSProperties}
       >
         {statConfig.map((stat) => {
           const metric = metrics?.[stat.key as keyof Metrics];
@@ -141,13 +153,6 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard, onSendCampaign }:
                 <span className={`text-xs font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
               <span className="text-gray-500 text-xs ml-2 truncate">from last month</span>
             </div>
-            <p className="text-[10px] text-gray-600 mb-2 leading-tight">{stat.advantage}</p>
-            <button
-              onClick={(e) => handleSendCampaign(e, stat.filterType, stat)}
-              className="w-full text-xs font-medium text-[#9747FF] bg-white border border-[#9747FF] hover:bg-[#9747FF] hover:text-white rounded px-3 py-1.5 transition-colors"
-            >
-              Send Campaign
-            </button>
           </div>
           );
         })}
@@ -192,13 +197,6 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard, onSendCampaign }:
                 <span className={`text-xs sm:text-sm font-medium flex-shrink-0 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>{insights}</span>
               <span className="text-gray-500 text-xs sm:text-sm ml-2 truncate">from last month</span>
             </div>
-            <p className="text-[10px] sm:text-xs text-gray-600 mt-3 mb-3 leading-tight">{stat.advantage}</p>
-            <button
-              onClick={(e) => handleSendCampaign(e, stat.filterType, stat)}
-              className="mt-auto text-xs sm:text-sm font-medium text-[#9747FF] bg-white border border-[#9747FF] hover:bg-[#9747FF] hover:text-white rounded px-3 py-2 transition-colors"
-            >
-              Send Campaign
-            </button>
           </div>
           );
         })}

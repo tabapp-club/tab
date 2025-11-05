@@ -4,6 +4,7 @@ import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
 import { useState, useCallback } from "react";
 import { DashboardHeader, BusinessGrowthSection, AnalyticsSection, DashboardFooter } from "./dashboard";
+import { DashboardNotifications } from "./dashboard/DashboardNotifications";
 import { RecommendedCampaigns, RecommendedCampaign } from "./campaigns/RecommendedCampaigns";
 import { CampaignDetailsSidepane } from "./campaigns/CampaignDetailsSidepane";
 
@@ -52,6 +53,7 @@ export function DashboardContent() {
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8">
         <div className="mt-6 lg:mt-[-40px]" style={{ marginBottom: '56px' }}>
+          <DashboardNotifications />
           <RecommendedCampaigns onSendNow={handleSendNow} />
         </div>
         <AnalyticsSection onAskReason={handleAskReason} />

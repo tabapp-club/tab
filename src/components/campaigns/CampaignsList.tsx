@@ -5,138 +5,6 @@ import { CampaignCard } from './CampaignCard';
 import { CampaignData } from './CampaignsClient';
 import Pagination from '../Pagination';
 
-// Mock campaign data
-const campaignsMockData: CampaignData[] = [
-  {
-    id: '1',
-    name: 'Welcome Email Series',
-    type: 'engagement',
-    status: 'active',
-    audience: 12500,
-    sent: 11200,
-    opened: 8960,
-    clicked: 1344,
-    conversion: 12.5,
-    budget: 5000,
-    spent: 3250,
-    createdDate: '15 Jul, 2024',
-    endDate: '30 Aug, 2024',
-    description: 'Onboarding email sequence for new customers'
-  },
-  {
-    id: '2',
-    name: 'Customer Feedback Survey',
-    type: 'feedback',
-    status: 'active',
-    audience: 8500,
-    sent: 8100,
-    opened: 6480,
-    clicked: 972,
-    conversion: 15.2,
-    budget: 2000,
-    spent: 1200,
-    createdDate: '10 Jul, 2024',
-    endDate: '25 Jul, 2024',
-    description: 'Post-purchase satisfaction survey campaign'
-  },
-  {
-    id: '3',
-    name: 'Win-Back Campaign',
-    type: 'retention',
-    status: 'paused',
-    audience: 6200,
-    sent: 5800,
-    opened: 2320,
-    clicked: 464,
-    conversion: 8.7,
-    budget: 3500,
-    spent: 2100,
-    createdDate: '5 Jul, 2024',
-    endDate: '20 Jul, 2024',
-    description: 'Re-engage inactive customers with special offers'
-  },
-  {
-    id: '4',
-    name: 'Summer Sale Promo',
-    type: 'advertise',
-    status: 'completed',
-    audience: 15000,
-    sent: 14500,
-    opened: 11600,
-    clicked: 2320,
-    conversion: 16.8,
-    budget: 8000,
-    spent: 7200,
-    createdDate: '1 Jun, 2024',
-    endDate: '30 Jun, 2024',
-    description: 'Promotional campaign for summer sale event'
-  },
-  {
-    id: '5',
-    name: 'Product Launch Announcement',
-    type: 'engagement',
-    status: 'draft',
-    audience: 20000,
-    sent: 0,
-    opened: 0,
-    clicked: 0,
-    conversion: 0,
-    budget: 10000,
-    spent: 0,
-    createdDate: '20 Jul, 2024',
-    endDate: '5 Aug, 2024',
-    description: 'Announce new product line to customer base'
-  },
-  {
-    id: '6',
-    name: 'Loyalty Program Enrollment',
-    type: 'retention',
-    status: 'active',
-    audience: 9500,
-    sent: 9200,
-    opened: 6440,
-    clicked: 1288,
-    conversion: 13.6,
-    budget: 4000,
-    spent: 2800,
-    createdDate: '12 Jul, 2024',
-    endDate: '12 Aug, 2024',
-    description: 'Drive enrollment in customer loyalty program'
-  },
-  {
-    id: '7',
-    name: 'Cart Abandonment Recovery',
-    type: 'retention',
-    status: 'active',
-    audience: 7800,
-    sent: 7500,
-    opened: 5250,
-    clicked: 1050,
-    conversion: 14.2,
-    budget: 3000,
-    spent: 1800,
-    createdDate: '8 Jul, 2024',
-    endDate: '22 Jul, 2024',
-    description: 'Recover abandoned shopping carts with incentives'
-  },
-  {
-    id: '8',
-    name: 'Brand Awareness Survey',
-    type: 'feedback',
-    status: 'completed',
-    audience: 5500,
-    sent: 5200,
-    opened: 3640,
-    clicked: 520,
-    conversion: 10.4,
-    budget: 1500,
-    spent: 1500,
-    createdDate: '25 Jun, 2024',
-    endDate: '10 Jul, 2024',
-    description: 'Measure brand perception and awareness metrics'
-  }
-];
-
 interface CampaignsListProps {
   searchTerm?: string;
   onCampaignsUpdate?: (campaigns: CampaignData[]) => void;
@@ -148,9 +16,67 @@ export function CampaignsList({
 }: CampaignsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [allCampaigns, setAllCampaigns] = useState<CampaignData[]>([]);
+
+  // Load all sent campaigns from localStorage
+  useEffect(() => {
+    const loadCampaigns = () => {
+      // Load all campaigns (pending, active, completed, etc.)
+      const storedCampaigns = JSON.parse(localStorage.getItem('sentCampaigns') || '[]');
+      
+      // Also check for pending campaigns (for backward compatibility)
+      const pendingCampaigns = JSON.parse(localStorage.getItem('pendingCampaigns') || '[]');
+      
+      // Merge and deduplicate by ID
+      const allStoredCampaigns = [...storedCampaigns, ...pendingCampaigns];
+      const uniqueCampaigns = allStoredCampaigns.filter((campaign, index, self) =>
+        index === self.findIndex((c) => c.id === campaign.id)
+      );
+      
+      // Sort by creation date (newest first), with pending campaigns at the top
+      const sortedCampaigns = uniqueCampaigns.sort((a, b) => {
+        // Pending campaigns first
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (a.status !== 'pending' && b.status === 'pending') return 1;
+        // Then by date (newest first) - handle date parsing safely
+        try {
+          const dateA = new Date(a.createdDate).getTime();
+          const dateB = new Date(b.createdDate).getTime();
+          if (isNaN(dateA) || isNaN(dateB)) {
+            // If dates can't be parsed, sort by ID (newer IDs first)
+            return b.id.localeCompare(a.id);
+          }
+          return dateB - dateA;
+        } catch {
+          // Fallback to ID sorting if date parsing fails
+          return b.id.localeCompare(a.id);
+        }
+      });
+      
+      setAllCampaigns(sortedCampaigns);
+    };
+
+    loadCampaigns();
+
+    // Listen for storage changes (in case campaigns are added from another tab/window)
+    const handleStorageChange = () => {
+      loadCampaigns();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for custom event for same-tab updates
+    window.addEventListener('campaignsUpdated', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('campaignsUpdated', handleStorageChange);
+    };
+  }, []);
+
   // Filter campaigns based on search term
   const filteredCampaigns = useMemo(() => {
-    return campaignsMockData.filter(campaign => {
+    return allCampaigns.filter(campaign => {
       if (!searchTerm) return true;
       const searchLower = searchTerm.toLowerCase();
       return (
@@ -160,7 +86,7 @@ export function CampaignsList({
         campaign.description.toLowerCase().includes(searchLower)
       );
     });
-  }, [searchTerm]);
+  }, [searchTerm, allCampaigns]);
 
   // Paginate the filtered campaigns
   const paginatedCampaigns = useMemo(() => {

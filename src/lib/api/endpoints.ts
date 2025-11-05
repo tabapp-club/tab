@@ -10,6 +10,13 @@ import {
   DataCenterFilters,
   CreateCustomFieldRequest,
   BusinessDetails,
+  WalletBalance,
+  WalletTransactionsResponse,
+  WalletSpendingBreakdown,
+  CreatePaymentRequest,
+  PaymentResponse,
+  PaymentStatusResponse,
+  WalletFilters,
 } from './types';
 
 // Authentication endpoints
@@ -122,9 +129,54 @@ export const dataCenter = {
   },
 };
 
+// Wallet endpoints
+export const wallet = {
+  getBalance: (token: string): Promise<{ message: string; data: WalletBalance }> =>
+    apiClient.get('/dashboard/v1/wallet/balance', { headers: apiClient.withAuth(token) }),
+
+  getTransactions: (
+    token: string,
+    filters?: WalletFilters
+  ): Promise<{ message: string; data: WalletTransactionsResponse }> => {
+    const queryString = filters ? apiClient.buildQueryString(filters) : '';
+    return apiClient.get(`/dashboard/v1/wallet/transactions${queryString}`, {
+      headers: apiClient.withAuth(token)
+    });
+  },
+
+  getSpendingBreakdown: (
+    token: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<{ message: string; data: WalletSpendingBreakdown }> => {
+    const params: Record<string, string> = {};
+    if (startDate) params.start_date = startDate;
+    if (endDate) params.end_date = endDate;
+    const queryString = apiClient.buildQueryString(params);
+    return apiClient.get(`/dashboard/v1/wallet/spending-breakdown${queryString}`, {
+      headers: apiClient.withAuth(token)
+    });
+  },
+
+  createPayment: (
+    token: string,
+    data: CreatePaymentRequest
+  ): Promise<{ message: string; data: PaymentResponse }> =>
+    apiClient.post('/dashboard/v1/wallet/payments', data, { headers: apiClient.withAuth(token) }),
+
+  getPaymentStatus: (
+    token: string,
+    paymentId: string
+  ): Promise<{ message: string; data: PaymentStatusResponse }> =>
+    apiClient.get(`/dashboard/v1/wallet/payments/${paymentId}/status`, {
+      headers: apiClient.withAuth(token)
+    }),
+};
+
 // Export all endpoints
 export const api = {
   auth,
   business,
   dataCenter,
+  wallet,
 };
