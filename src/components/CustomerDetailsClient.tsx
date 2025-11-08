@@ -37,6 +37,28 @@ const calculateCustomerLifetimeValue = (avgOrderValue: number, visits: number, d
   return avgOrderValue * purchaseFrequency * customerLifespan;
 };
 
+// Convert API user type to display format
+const getUserTypeDisplay = (userType: string | undefined) => {
+  if (!userType) {
+    return { label: 'Customer', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: '👤' };
+  }
+
+  const normalizedType = userType.toLowerCase();
+  if (normalizedType === 'new') {
+    return { label: 'New', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: '🆕' };
+  } else if (normalizedType === 'returning') {
+    return { label: 'Returning', color: 'bg-green-100 text-green-800 border-green-200', icon: '🔄' };
+  }
+
+  // Fallback: capitalize first letter
+  return {
+    label: userType.charAt(0).toUpperCase() + userType.slice(1),
+    color: 'bg-gray-100 text-gray-800 border-gray-200',
+    icon: '👤'
+  };
+};
+
+// Keep customer segment for other uses (like analytics)
 const getCustomerSegment = (totalSpent: number, visits: number) => {
   if (totalSpent > 2000 && visits > 15) return { segment: 'VIP', color: 'bg-purple-100 text-purple-800 border-purple-200', icon: '👑' };
   if (totalSpent > 1000 && visits > 10) return { segment: 'Premium', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: '⭐' };
@@ -44,10 +66,22 @@ const getCustomerSegment = (totalSpent: number, visits: number) => {
   return { segment: 'New', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: '🆕' };
 };
 
-const getRiskLevel = (visits: number, daysSinceLastPurchase: number) => {
-  if (visits < 2) return { level: 'High Risk', color: 'bg-red-100 text-red-800 border-red-200' };
-  if (daysSinceLastPurchase > 90) return { level: 'Medium Risk', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
-  return { level: 'Low Risk', color: 'bg-green-100 text-green-800 border-green-200' };
+// Convert API risk level to display format
+const getRiskLevelDisplay = (riskLevel: 'low' | 'moderate' | 'high' | undefined) => {
+  if (!riskLevel) {
+    return { level: 'Unknown', color: 'bg-gray-100 text-gray-800 border-gray-200' };
+  }
+
+  switch (riskLevel) {
+    case 'low':
+      return { level: 'Low Risk', color: 'bg-green-100 text-green-800 border-green-200' };
+    case 'moderate':
+      return { level: 'Medium Risk', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
+    case 'high':
+      return { level: 'High Risk', color: 'bg-red-100 text-red-800 border-red-200' };
+    default:
+      return { level: 'Unknown', color: 'bg-gray-100 text-gray-800 border-gray-200' };
+  }
 };
 
 export default function CustomerDetailsClient({ customerId }: { customerId: string }) {
@@ -55,13 +89,13 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('purchases');
 
   // Handle URL parameters for tab navigation
   useEffect(() => {
     const tab = searchParams.get('tab');
-    const validTabs = ['overview', 'analytics', 'history', 'insights'];
-    
+    const validTabs = ['purchases', 'engagement', 'analytics'];
+
     if (tab && validTabs.includes(tab)) {
       setActiveTab(tab);
     }
@@ -88,7 +122,8 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
   const retentionScore = customerData ? calculateRetentionScore(customerData.visits, customerData.totalSpent, customerData.averageOrderValue, customerData.categories) : 0;
   const customerLifetimeValue = customerData ? calculateCustomerLifetimeValue(customerData.averageOrderValue, customerData.visits, daysSinceJoin) : 0;
   const customerSegment = customerData ? getCustomerSegment(customerData.totalSpent, customerData.visits) : { segment: 'Unknown', color: '', icon: '❓' };
-  const riskLevel = customerData ? getRiskLevel(customerData.visits, daysSinceLastPurchase) : { level: 'Unknown', color: '' };
+  const userTypeDisplay = customerData ? getUserTypeDisplay(customerData.userType) : { label: 'Unknown', color: '', icon: '❓' };
+  const riskLevel = customerData ? getRiskLevelDisplay(customerData.riskLevel) : { level: 'Unknown', color: '' };
 
   // Calculate purchase trend
   const purchaseTrend = customerData && customerData.purchaseHistory.length >= 2 ?
@@ -118,7 +153,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                   <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
                   <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
                 </div>
-                
+
                 {/* Loading Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
@@ -150,7 +185,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                   <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
                   <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
                 </div>
-                
+
                 {/* Error Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
@@ -189,7 +224,7 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                   <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
                   <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
                 </div>
-                
+
                 {/* Not Found Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
@@ -239,13 +274,13 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     </div>
                     <div>
                       <h2 className="text-[16px] font-bold text-[#2a2a2f] mb-1">{customerData.name}</h2>
-                      <p className="text-[#626266] text-[14px] font-normal mb-2">ID: {customerData.id} • {customerData.mobile}</p>
+                      <p className="text-[#626266] text-[14px] font-normal mb-2">Phone: {customerData.mobile}</p>
                       <div className="flex gap-2 overflow-x-auto sm:flex-wrap scrollbar-hide pb-1 sm:pb-0">
                         <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${customerData.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200'}`}>
                           {customerData.status === 'active' ? '🟢 Active' : '🔴 Inactive'}
                         </span>
-                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${customerSegment.color}`}>
-                          {customerSegment.icon} {customerSegment.segment}
+                        <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${userTypeDisplay.color}`}>
+                          {userTypeDisplay.icon} {userTypeDisplay.label}
                         </span>
                         <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${riskLevel.color}`}>
                           {riskLevel.level}
@@ -357,11 +392,11 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               <div className="bg-white rounded border border-[#e9e9e9]">
                 <div className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
                   {[
-                    { id: 'overview', label: 'Overview', icon: '📊' },
-                    { id: 'engagement', label: 'Engagement', icon: '🎯' },
+                    // { id: 'overview', label: 'Overview', icon: '📊' },
                     { id: 'purchases', label: 'Purchases', icon: '🛒' },
+                    { id: 'engagement', label: 'Engagement', icon: '🎯' },
                     { id: 'analytics', label: 'Analytics', icon: '📈' },
-                    { id: 'insights', label: 'Insights', icon: '💡' }
+                    // { id: 'insights', label: 'Insights', icon: '💡' }
                   ].map((tab) => (
                     <button
                       key={tab.id}
@@ -442,21 +477,37 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <div className="flex-1">
                             <p className="font-medium text-[14px] font-normal">Customer joined</p>
-                            <p className="text-[12px] font-normal text-[#626266]">{new Date(customerData.joinDate).toLocaleDateString()}</p>
+                            <p className="text-[12px] font-normal text-[#626266]">
+                              {customerData.engagementTimeline?.customerJoinedAt
+                                ? new Date(customerData.engagementTimeline.customerJoinedAt).toLocaleDateString()
+                                : new Date(customerData.joinDate).toLocaleDateString()}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                           <div className="flex-1">
                             <p className="font-medium text-[14px] font-normal">First purchase</p>
-                            <p className="text-[12px] font-normal text-[#626266]">{customerData.purchaseHistory.length > 0 ? new Date(customerData.purchaseHistory[customerData.purchaseHistory.length - 1].date).toLocaleDateString() : 'No purchases yet'}</p>
+                            <p className="text-[12px] font-normal text-[#626266]">
+                              {customerData.engagementTimeline?.firstPurchaseAt
+                                ? new Date(customerData.engagementTimeline.firstPurchaseAt).toLocaleDateString()
+                                : customerData.purchaseHistory.length > 0
+                                  ? new Date(customerData.purchaseHistory[customerData.purchaseHistory.length - 1].date).toLocaleDateString()
+                                  : 'No purchases yet'}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                           <div className="flex-1">
                             <p className="font-medium text-[14px] font-normal">Latest activity</p>
-                            <p className="text-[12px] font-normal text-[#626266]">{customerData.purchaseHistory.length > 0 ? new Date(customerData.purchaseHistory[0].date).toLocaleDateString() : 'No recent activity'}</p>
+                            <p className="text-[12px] font-normal text-[#626266]">
+                              {customerData.engagementTimeline?.lastPurchaseAt
+                                ? new Date(customerData.engagementTimeline.lastPurchaseAt).toLocaleDateString()
+                                : customerData.purchaseHistory.length > 0
+                                  ? new Date(customerData.purchaseHistory[0].date).toLocaleDateString()
+                                  : 'No recent activity'}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -590,7 +641,11 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
                           <span className="text-[14px] font-normal text-[#626266]">Member for:</span>
-                          <span className="font-semibold">{Math.floor(daysSinceJoin / 30)} months</span>
+                          <span className="font-semibold">
+                            {customerData.membershipDuration !== undefined
+                              ? `${Math.round(customerData.membershipDuration)} months`
+                              : `${Math.floor(daysSinceJoin / 30)} months`}
+                          </span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
                           <span className="text-[14px] font-normal text-[#626266]">Engagement score:</span>

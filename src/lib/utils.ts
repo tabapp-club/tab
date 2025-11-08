@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number, currency: string = "INR"): string {
+function formatCurrency(amount: number, currency: string = "INR"): string {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: currency,
@@ -14,7 +14,7 @@ export function formatCurrency(amount: number, currency: string = "INR"): string
   }).format(amount);
 }
 
-export function formatCurrencyWithDecimals(amount: number, currency: string = "INR"): string {
+function formatCurrencyWithDecimals(amount: number, currency: string = "INR"): string {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: currency,
@@ -22,3 +22,5 @@ export function formatCurrencyWithDecimals(amount: number, currency: string = "I
     maximumFractionDigits: 2,
   }).format(amount);
 }
+
+export { formatCurrency, formatCurrencyWithDecimals };

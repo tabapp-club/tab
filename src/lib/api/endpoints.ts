@@ -114,6 +114,57 @@ export const business = {
   // Get business details with features
   getBusinessDetails: (token: string): Promise<{ message: string; data: BusinessDetails }> =>
     apiClient.get('/dashboard/v1/business/me', { headers: apiClient.withAuth(token) }),
+
+  // Get customer data
+  getCustomer: (
+    token: string,
+    businessId: string,
+    customerId: string
+  ): Promise<{
+    message: string;
+    data: {
+      _id: string;
+      total_purchase_value: number;
+      purchase_dates: string[];
+      total_visits: number;
+      item_categories_purchased: string[];
+      item_names_purchased: string[];
+      items_purchased: number;
+      orders: Array<{
+        number_of_items: number;
+        total_amount: number;
+        date: string;
+        name: string;
+      }>;
+      analytics: {
+        lifetime_value: number;
+        average_order_value: number;
+        purchase_frequency: number;
+        days_since_last_purchase: number;
+        membership_duration: number;
+        categories_explored: number;
+      };
+      details: {
+        name: string;
+        phone_number: string;
+        status: string;
+        user_type: string;
+        risk_status?: string;
+      };
+      engagement_timeline?: {
+        customer_joined_at: string;
+        first_purchase_at: string;
+        last_purchase_at: string;
+      };
+    };
+  }> => {
+    const params = new URLSearchParams();
+    params.append('customer_id', customerId);
+    return apiClient.get(
+      `/dashboard/v1/business/${businessId}/customer?${params.toString()}`,
+      { headers: apiClient.withAuth(token) }
+    );
+  },
 };
 
 // Data center endpoints

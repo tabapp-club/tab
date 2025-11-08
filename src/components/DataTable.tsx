@@ -25,6 +25,7 @@ interface DataTableProps {
 const DataTable = memo(({ data = [] }: DataTableProps) => {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<string | null>(null);
 
   const handleSort = useCallback((key: keyof UserData) => {
     setSortConfig(prev => ({ key, direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc' }));
@@ -41,26 +42,26 @@ const DataTable = memo(({ data = [] }: DataTableProps) => {
   // Sort data only (API handles filtering)
   const processedData = useMemo(() => {
     if (!data || data.length === 0) return [];
-    
+
     // Only sort data, no filtering (API handles search/filtering)
     if (sortConfig.key) {
       return [...data].sort((a, b) => {
         const aValue = a[sortConfig.key as keyof UserData];
         const bValue = b[sortConfig.key as keyof UserData];
-        
+
         if (typeof aValue === 'number' && typeof bValue === 'number') {
           return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
         }
-        
+
         const aStr = String(aValue).toLowerCase();
         const bStr = String(bValue).toLowerCase();
-        
+
         if (aStr < bStr) return sortConfig.direction === 'asc' ? -1 : 1;
         if (aStr > bStr) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
       });
     }
-    
+
     return data;
   }, [data, sortConfig]);
 
@@ -89,8 +90,8 @@ const DataTable = memo(({ data = [] }: DataTableProps) => {
         ) : (
           <div className="space-y-3 p-4">
             {processedData.map((user, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="bg-white border border-[#e9e9e9] rounded-lg p-4 hover:bg-[#f9fafb] cursor-pointer transition-colors duration-150"
                 onClick={() => handleAction('view', user)}
               >
@@ -101,8 +102,8 @@ const DataTable = memo(({ data = [] }: DataTableProps) => {
                     <p className="text-xs text-[#6b7280] mt-1">Mobile: {user.mobile}</p>
                   </div>
                   <span className={`px-2 py-1 text-xs font-medium rounded whitespace-nowrap ${
-                    user.status === 'Active' 
-                      ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]' 
+                    user.status === 'Active'
+                      ? 'bg-[#eafff1] text-[#04b440] border border-[rgba(23,198,83,0.2)]'
                       : 'bg-[rgba(213,32,32,0.15)] text-[#f04646] border border-[#ffc9c9]'
                   }`}>
                     {user.status}
@@ -111,16 +112,23 @@ const DataTable = memo(({ data = [] }: DataTableProps) => {
 
                 {/* Categories */}
                 <div className="mb-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    {user.categories.slice(0, 3).map((cat, idx) => (
+                  <div className="flex flex-wrap gap-1.5 relative">
+                    {(expandedCategories === user.id ? user.categories : user.categories.slice(0, 3)).map((cat, idx) => (
                       <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-2 py-1 text-xs font-medium whitespace-nowrap">
                         {cat}
                       </span>
                     ))}
                     {user.categories.length > 3 && (
-                      <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-2 py-1 text-xs font-medium whitespace-nowrap">
-                        +{user.categories.length - 3}
-                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedCategories(expandedCategories === user.id ? null : user.id);
+                        }}
+                        className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-2 py-1 text-xs font-medium whitespace-nowrap hover:bg-[#e0e0e0] transition-colors cursor-pointer"
+                        title={`Click to ${expandedCategories === user.id ? 'collapse' : 'expand'} all categories`}
+                      >
+                        {expandedCategories === user.id ? '−' : '+'}{user.categories.length - 3}
+                      </button>
                     )}
                   </div>
                 </div>
@@ -197,18 +205,25 @@ const DataTable = memo(({ data = [] }: DataTableProps) => {
                         <ViewIcon />
                       </button>
                     ) : col.key === 'categories' ? (
-                      <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full">
+                      <div className="flex flex-wrap gap-1 sm:gap-1.5 max-w-full relative">
                         {/* Desktop: Show up to 2 categories + count */}
                         <div className="flex flex-wrap gap-1.5">
-                          {user.categories.slice(0, 2).map((cat, idx) => (
+                          {(expandedCategories === user.id ? user.categories : user.categories.slice(0, 2)).map((cat, idx) => (
                             <span key={cat + '-' + idx} className="bg-[#fcfcfc] border border-[#e9e9e9] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap">
                               {cat}
                             </span>
                           ))}
                           {user.categories.length > 2 && (
-                            <span className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap">
-                              +{user.categories.length - 2}
-                            </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedCategories(expandedCategories === user.id ? null : user.id);
+                              }}
+                              className="bg-[#f0f0f0] border border-[#d0d0d0] rounded px-1.5 py-1 text-xs font-medium whitespace-nowrap hover:bg-[#e0e0e0] transition-colors cursor-pointer"
+                              title={`Click to ${expandedCategories === user.id ? 'collapse' : 'expand'} all categories`}
+                            >
+                              {expandedCategories === user.id ? '−' : '+'}{user.categories.length - 2}
+                            </button>
                           )}
                         </div>
                       </div>

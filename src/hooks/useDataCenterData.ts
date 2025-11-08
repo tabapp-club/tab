@@ -110,10 +110,28 @@ export const mapApiDataToTable = (apiData: any[]): UserData[] => {
   return apiData.map((r: any) => {
     let status: 'Active' | 'In Active' = 'In Active';
     if (typeof r.status === 'string' && r.status.toLowerCase() === 'active') status = 'Active';
+
+    // Process categories: flatten array of arrays and remove duplicates
+    let categories: string[] = [];
+    if (Array.isArray(r.category)) {
+      // Check if it's an array of arrays (from multiple visits)
+      if (r.category.length > 0 && Array.isArray(r.category[0])) {
+        // Flatten the array of arrays and remove duplicates
+        const flattened = r.category.flat();
+        categories = [...new Set(flattened.filter((cat: any) => cat && typeof cat === 'string'))];
+      } else {
+        // It's already a flat array of strings
+        categories = [...new Set(r.category.filter((cat: any) => cat && typeof cat === 'string'))];
+      }
+    } else if (r.category) {
+      // Single category value
+      categories = [String(r.category)];
+    }
+
     return {
       id: r.user_id || r.id || '',
       mobile: r.mobile_number || r.mobile || '',
-      categories: Array.isArray(r.category) ? r.category : [r.category || ''],
+      categories,
       userType: r.user_type || r.userType || '',
       visits: r.no_of_visits || r.visits || 0,
       status,
