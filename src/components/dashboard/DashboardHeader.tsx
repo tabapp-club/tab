@@ -19,7 +19,7 @@ export function DashboardHeader() {
       {/* Mobile Header with Menu Toggle */}
       <header className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-[#F6F6F6] fixed top-0 left-0 right-0 z-50">
         <MobileHeaderButton />
-        <WalletButtonWithSidepane showSidepane={false} />
+        <WalletButtonWithSidepane />
       </header>
 
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">

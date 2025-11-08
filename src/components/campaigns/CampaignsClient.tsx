@@ -8,7 +8,6 @@ import { CampaignsHeader } from './CampaignsHeader';
 import { RecommendedCampaigns, RecommendedCampaign } from './RecommendedCampaigns';
 import { CampaignsFilters } from './CampaignsFilters';
 import { CampaignsList } from './CampaignsList';
-import { CampaignDetailsSidepane } from './CampaignDetailsSidepane';
 
 export interface CampaignData {
   id: string;
@@ -22,6 +21,7 @@ export interface CampaignData {
   conversion: number;
   budget: number;
   spent: number;
+  createdAt?: number;
   createdDate: string;
   endDate: string;
   description: string;
@@ -33,8 +33,6 @@ export function CampaignsClient() {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignData[]>([]);
-  const [sidePaneOpen, setSidePaneOpen] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
   const { isCollapsed, isMobile } = useSidebar();
 
   // Load search term from URL parameters
@@ -82,14 +80,8 @@ export function CampaignsClient() {
   }, []);
 
   const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
-    setSelectedCampaign(campaign);
-    setSidePaneOpen(true);
-  }, []);
-
-  const handleSidePaneClose = useCallback(() => {
-    setSidePaneOpen(false);
-    setSelectedCampaign(null);
-  }, []);
+    router.push(`/send-campaign?id=${campaign.id}`);
+  }, [router]);
 
   return (
     <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
@@ -124,13 +116,6 @@ export function CampaignsClient() {
           />
         </div>
       </div>
-
-      {/* Campaign Details Sidepane */}
-      <CampaignDetailsSidepane
-        isOpen={sidePaneOpen}
-        onClose={handleSidePaneClose}
-        campaign={selectedCampaign}
-      />
     </main>
   );
 }

@@ -7,10 +7,9 @@ import { FunnelHeader } from './FunnelHeader';
 import { FunnelVisualization } from './FunnelVisualization';
 import { FunnelTypeSelector } from './FunnelTypeSelector';
 import { TimeFilter } from '../TimeFilter';
-import { FunnelCharts } from './FunnelCharts';
 import { FunnelTypeSelectorVertical } from './FunnelTypeSelectorVertical';
 import { FunnelCampaignCards } from './FunnelCampaignCards';
-import { CampaignDetailsSidepane } from '../campaigns/CampaignDetailsSidepane';
+import { useRouter } from 'next/navigation';
 import { RecommendedCampaign } from '../campaigns/RecommendedCampaigns';
 
 export type FunnelType = 
@@ -29,35 +28,15 @@ export interface FunnelData {
   change?: number;
 }
 
-export interface FunnelMetrics {
-  totalCustomers: number;
-  conversionRate: number;
-  dropOffRate: number;
-  avgTimeInStage: number;
-}
-
 export function CustomerFunnelClient() {
+  const router = useRouter();
   const [selectedFunnelType, setSelectedFunnelType] = useState<FunnelType>('status');
   const { isCollapsed, isMobile } = useSidebar();
-  const [campaignSidePaneOpen, setCampaignSidePaneOpen] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
 
   // Handle filter change from TimeFilter
   const handleFilterChange = useCallback((filter: { type: string; days?: number; dateRange?: { from: Date | null; to: Date | null } }) => {
     // Handle the filter change - you can map this to your existing logic if needed
     console.log('Filter changed:', filter);
-  }, []);
-
-  // Handle campaign send now - opens sidepane
-  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
-    setSelectedCampaign(campaign);
-    setCampaignSidePaneOpen(true);
-  }, []);
-
-  // Handle campaign sidepane close
-  const handleCampaignSidePaneClose = useCallback(() => {
-    setCampaignSidePaneOpen(false);
-    setSelectedCampaign(null);
   }, []);
 
   // Mock funnel data based on type - using brand color shades (#9747FF)
@@ -87,31 +66,38 @@ export function CustomerFunnelClient() {
       { stage: 'Churned', count: 3400, percentage: 26.6, color: '#C9A8FF', value: 3400, change: -6.8 },
     ],
     purchase_behavior: [
-      { stage: 'Frequent Buyers', count: 2450, percentage: 19.2, color: '#9747FF', value: 2450, change: 14.3 },
-      { stage: 'Regular Buyers', count: 3850, percentage: 30.2, color: '#A877FF', value: 3850, change: 7.2 },
-      { stage: 'Occasional Buyers', count: 4280, percentage: 33.5, color: '#B891FF', value: 4280, change: -1.8 },
-      { stage: 'One-time Buyers', count: 2190, percentage: 17.2, color: '#C9A8FF', value: 2190, change: -5.2 },
+      { stage: 'First Customers', count: 2450, percentage: 19.2, color: '#9747FF', value: 2450, change: 14.3 },
+      { stage: 'Regular Customers', count: 3850, percentage: 30.2, color: '#A877FF', value: 3850, change: 7.2 },
+      { stage: 'Occasional Customers', count: 4280, percentage: 33.5, color: '#B891FF', value: 4280, change: -1.8 },
+      { stage: 'One-time Customers', count: 2190, percentage: 17.2, color: '#C9A8FF', value: 2190, change: -5.2 },
     ],
   }), []);
 
   const currentFunnelData = funnelData[selectedFunnelType];
 
-  const funnelMetrics: FunnelMetrics = useMemo(() => {
-    const total = currentFunnelData.reduce((sum, stage) => sum + stage.count, 0);
-    const firstStage = currentFunnelData[0];
-    const lastStage = currentFunnelData[currentFunnelData.length - 1];
-    const conversionRate = firstStage && lastStage 
-      ? ((lastStage.count / firstStage.count) * 100) 
-      : 0;
-    const dropOffRate = 100 - conversionRate;
-    
-    return {
-      totalCustomers: total,
-      conversionRate: conversionRate,
-      dropOffRate: dropOffRate,
-      avgTimeInStage: 12.5, // Mock data
-    };
-  }, [currentFunnelData]);
+  const storeCampaignInLookup = useCallback((campaign: RecommendedCampaign) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = JSON.parse(localStorage.getItem('funnelCampaignLookup') || '{}');
+      stored[campaign.id] = {
+        id: campaign.id,
+        title: campaign.title,
+        count: campaign.count,
+        description: campaign.description,
+        expectedCampaignCost: campaign.expectedCampaignCost,
+        expectedConversion: campaign.expectedConversion,
+        expectedRevenue: campaign.expectedRevenue,
+        urgency: campaign.urgency,
+        priority: campaign.priority,
+        iconColor: campaign.iconColor,
+        bgColor: campaign.bgColor,
+        estimatedImpact: campaign.estimatedImpact,
+      };
+      localStorage.setItem('funnelCampaignLookup', JSON.stringify(stored));
+    } catch (error) {
+      console.error('Failed to store funnel campaign lookup', error);
+    }
+  }, []);
 
   const handleFunnelTypeChange = useCallback((type: FunnelType) => {
     setSelectedFunnelType(type);
@@ -119,6 +105,11 @@ export function CustomerFunnelClient() {
 
 
   const actualIsCollapsed = isMobile ? false : isCollapsed;
+
+  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
+    storeCampaignInLookup(campaign);
+    router.push(`/send-campaign?id=${campaign.id}`, { scroll: false });
+  }, [router, storeCampaignInLookup]);
 
   return (
     <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
@@ -138,7 +129,7 @@ export function CustomerFunnelClient() {
 
       {/* Main Content */}
       <div className="w-full max-w-full overflow-x-hidden">
-        <div className="px-4 pt-20 pb-40 py-4 lg:px-8 lg:py-8 lg:pb-20 lg:pt-8 lg:pt-24">
+        <div className="px-4 pt-20 pb-24 lg:px-8 lg:pt-24 lg:pb-20">
           {/* Mobile Header Section */}
           <div className="mb-4 lg:hidden">
             <FunnelHeader />
@@ -171,16 +162,11 @@ export function CustomerFunnelClient() {
               onSendNow={handleSendNow}
             />
 
-            {/* Distribution Analysis */}
-            <FunnelCharts
-              data={currentFunnelData}
-              type={selectedFunnelType}
-            />
           </div>
 
           {/* Desktop Layout - Row View (like new-campaign) */}
           <div className="hidden lg:block">
-            <div className="flex gap-0 items-start justify-start w-full">
+            <div className="flex items-start justify-start w-full">
               {/* Left Sidebar - Funnel Type Selector (Vertical) - Fixed */}
               <div className={`flex flex-col gap-2 items-start justify-start w-full max-w-[420px] shrink-0 fixed top-24 bottom-0 overflow-y-auto bg-[#f6f6f6] pl-10 ${
                 actualIsCollapsed ? 'left-[64px]' : 'left-[232px]'
@@ -192,11 +178,11 @@ export function CustomerFunnelClient() {
               </div>
 
               {/* Right Side - Main Content - Scrollable */}
-              <div className={`flex-1 min-w-0 space-y-6 ${
+              <div className={`flex-1 min-w-0 space-y-6 pb-10 ${
                 actualIsCollapsed ? 'ml-[420px]' : 'ml-[588px]'
               }`}>
               {/* Filters */}
-              <div className="mb-0 flex justify-end">
+              <div className="flex justify-end">
                 <TimeFilter onFilterChange={handleFilterChange} />
               </div>
 
@@ -212,24 +198,11 @@ export function CustomerFunnelClient() {
                 type={selectedFunnelType}
                 onSendNow={handleSendNow}
               />
-
-              {/* Distribution Analysis */}
-              <FunnelCharts
-                data={currentFunnelData}
-                type={selectedFunnelType}
-              />
-              </div>
+            </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Campaign Details Sidepane */}
-      <CampaignDetailsSidepane
-        isOpen={campaignSidePaneOpen}
-        onClose={handleCampaignSidePaneClose}
-        campaign={selectedCampaign}
-      />
     </main>
   );
 }

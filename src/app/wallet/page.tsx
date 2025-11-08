@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { WalletPageClient } from "@/components/wallet/WalletPageClient";
-import { Sidebar } from "@/components/Sidebar";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Wallet - Recharge & Transactions",
@@ -9,17 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default function WalletPage() {
-  return (
-    <ProtectedRoute>
-      <div className="bg-[#f6f6f6]">
-        <div className="flex relative">
-          <Sidebar />
-          <main className="flex-1 transition-sidebar main-content">
-            <WalletPageClient />
-          </main>
-        </div>
-      </div>
-    </ProtectedRoute>
-  );
+  // Redirect to recharge tab by default (first tab)
+  redirect("/wallet/recharge");
 }
 

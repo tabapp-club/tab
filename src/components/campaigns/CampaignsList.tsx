@@ -1,9 +1,15 @@
 'use client';
 
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useState, useRef } from 'react';
 import { CampaignCard } from './CampaignCard';
 import { CampaignData } from './CampaignsClient';
 import Pagination from '../Pagination';
+
+const extractCampaignIdFromHash = () => {
+  if (typeof window === 'undefined') return null;
+  const hash = window.location.hash;
+  return hash.startsWith('#campaign-') ? hash.replace('#campaign-', '') : null;
+};
 
 interface CampaignsListProps {
   searchTerm?: string;
@@ -17,6 +23,17 @@ export function CampaignsList({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [allCampaigns, setAllCampaigns] = useState<CampaignData[]>([]);
+  const [pendingScrollId, setPendingScrollId] = useState<string | null>(() => extractCampaignIdFromHash());
+  const [activeHighlightId, setActiveHighlightId] = useState<string | null>(null);
+  const listContainerRef = useRef<HTMLDivElement>(null);
+
+  const getCampaignTimestamp = (campaign: CampaignData) => {
+    if (typeof campaign.createdAt === 'number') {
+      return campaign.createdAt;
+    }
+    const parsed = Date.parse(campaign.createdDate ?? '');
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
 
   // Load all sent campaigns from localStorage
   useEffect(() => {
@@ -38,41 +55,46 @@ export function CampaignsList({
         // Pending campaigns first
         if (a.status === 'pending' && b.status !== 'pending') return -1;
         if (a.status !== 'pending' && b.status === 'pending') return 1;
-        // Then by date (newest first) - handle date parsing safely
-        try {
-          const dateA = new Date(a.createdDate).getTime();
-          const dateB = new Date(b.createdDate).getTime();
-          if (isNaN(dateA) || isNaN(dateB)) {
-            // If dates can't be parsed, sort by ID (newer IDs first)
-            return b.id.localeCompare(a.id);
-          }
-          return dateB - dateA;
-        } catch {
-          // Fallback to ID sorting if date parsing fails
-          return b.id.localeCompare(a.id);
+
+        const timeDiff = getCampaignTimestamp(b) - getCampaignTimestamp(a);
+        if (timeDiff !== 0) {
+          return timeDiff;
         }
+
+        // Fallback to ID ordering if timestamps are identical
+        return b.id.localeCompare(a.id);
       });
       
       setAllCampaigns(sortedCampaigns);
     };
 
     loadCampaigns();
+ 
+     // Listen for storage changes (in case campaigns are added from another tab/window)
+     const handleStorageChange = () => {
+       loadCampaigns();
+     };
 
-    // Listen for storage changes (in case campaigns are added from another tab/window)
-    const handleStorageChange = () => {
-      loadCampaigns();
+    const handleHashChange = () => {
+      const targetId = extractCampaignIdFromHash();
+      if (targetId) {
+        setPendingScrollId(targetId);
+        setActiveHighlightId(null);
+      }
     };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom event for same-tab updates
-    window.addEventListener('campaignsUpdated', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('campaignsUpdated', handleStorageChange);
-    };
-  }, []);
+ 
+     window.addEventListener('storage', handleStorageChange);
+     
+     // Also listen for custom event for same-tab updates
+     window.addEventListener('campaignsUpdated', handleStorageChange);
+    window.addEventListener('hashchange', handleHashChange);
+ 
+     return () => {
+       window.removeEventListener('storage', handleStorageChange);
+       window.removeEventListener('campaignsUpdated', handleStorageChange);
+       window.removeEventListener('hashchange', handleHashChange);
+     };
+   }, []);
 
   // Filter campaigns based on search term
   const filteredCampaigns = useMemo(() => {
@@ -87,6 +109,38 @@ export function CampaignsList({
       );
     });
   }, [searchTerm, allCampaigns]);
+
+  useEffect(() => {
+     if (!pendingScrollId) return;
+ 
+     const index = filteredCampaigns.findIndex((campaign) => campaign.id === pendingScrollId);
+     if (index === -1) return;
+ 
+     const targetPage = Math.max(1, Math.floor(index / itemsPerPage) + 1);
+     if (currentPage !== targetPage) {
+       setCurrentPage(targetPage);
+       return;
+     }
+ 
+    if (listContainerRef.current) {
+      listContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+     setActiveHighlightId(pendingScrollId);
+     const element = document.getElementById(`campaign-${pendingScrollId}`);
+     if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+     }
+     setPendingScrollId(null);
+  }, [pendingScrollId, filteredCampaigns, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    if (!activeHighlightId) return;
+    const timeout = window.setTimeout(() => {
+      setActiveHighlightId(null);
+    }, 3000);
+    return () => window.clearTimeout(timeout);
+  }, [activeHighlightId]);
 
   // Paginate the filtered campaigns
   const paginatedCampaigns = useMemo(() => {
@@ -108,7 +162,7 @@ export function CampaignsList({
   }, [filteredCampaigns, onCampaignsUpdate]);
 
   return (
-    <div className="flex flex-col h-full min-h-0">
+    <div ref={listContainerRef} className="flex flex-col h-full min-h-0">
       {/* Campaigns Grid */}
       <div className="flex-1 min-h-0">
         {paginatedCampaigns.length === 0 ? (
@@ -129,7 +183,11 @@ export function CampaignsList({
         ) : (
           <div className="space-y-4 w-full min-w-0">
             {paginatedCampaigns.map((campaign) => (
-              <CampaignCard key={campaign.id} campaign={campaign} />
+              <CampaignCard
+                key={campaign.id}
+                campaign={campaign}
+                isHighlighted={campaign.id === activeHighlightId}
+              />
             ))}
           </div>
         )}

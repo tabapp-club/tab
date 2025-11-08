@@ -7,9 +7,9 @@ import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBusiness } from "@/contexts/BusinessContext";
 import { BusinessFeatures } from "@/lib/api/types";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ConfirmationDialog from "./ui/ConfirmationDialog";
-import { ShoppingCart, Zap, Settings, Bug, LogOut, ChevronLeft, Lock, Filter, Pencil } from "lucide-react";
+import { ShoppingCart, Zap, Settings, Bug, LogOut, Lock, Filter, Pencil } from "lucide-react";
 
 // Add custom styles for animations
 const styles = `
@@ -183,10 +183,6 @@ const PlusIcon = ({colorCode}: {colorCode: string}) => (
 
 );
 
-const CollapseIcon = () => (
-  <ChevronLeft size={22} color="#2A2A2F" />
-);
-
 const LockIcon = ({colorCode}: {colorCode: string}) => (
   <Lock size={12} color={colorCode} />
 );
@@ -279,18 +275,30 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed, toggleSidebar, isMobile, isMobileOpen, setIsMobileOpen, closeMobileSidebar } = useSidebar();
+  const { isMobile, isMobileOpen, closeMobileSidebar } = useSidebar();
   const { logout, user } = useAuth();
   const { hasFeature, isLoading: featuresLoading, features } = useBusiness();
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{
+    id: string;
+    label: string;
+    description: string;
+    top: number;
+    left: number;
+  } | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showServiceDialog, setShowServiceDialog] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  // Force collapsed state on desktop, expanded on mobile
+  const actualIsCollapsed = isMobile ? false : true;
 
-  // Force uncollapsed state on mobile
-  const actualIsCollapsed = isMobile ? false : isCollapsed;
+  useEffect(() => {
+    if (!actualIsCollapsed) {
+      setTooltip(null);
+    }
+  }, [actualIsCollapsed]);
 
   // Close mobile sidebar using context
 
@@ -324,9 +332,9 @@ export function Sidebar() {
 
   return (
     <>
-    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto overflow-hidden transition-all duration-300 ease-in-out border-r border-gray-200 ${
+    <div className={`sidebar-mobile fixed left-0 top-0 h-full bg-[#f6f6f6] lg:bg-white flex flex-col z-50 lg:z-auto transition-all duration-300 ease-in-out border-r border-gray-200 ${
       actualIsCollapsed ? 'w-16' : isMobile ? 'w-[197px]' : 'w-[232px]'
-    } ${isMobile && isMobileOpen ? 'open' : ''}`}>
+    } ${actualIsCollapsed ? 'overflow-visible' : 'overflow-hidden'} ${isMobile && isMobileOpen ? 'open' : ''}`}>
       {/* User Profile Section */}
       <div className={`p-3 pt-4 pb-3 sm:p-4 sm:pt-6 sm:pb-3 lg:pt-8 lg:pb-3 border-b border-[#f1f3f4] transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'px-2' : ''}`}>
         <div className={`transition-all duration-300 ease-in-out ${actualIsCollapsed ? 'w-10 flex justify-center' : 'w-full'}`}>
@@ -394,8 +402,8 @@ export function Sidebar() {
               <Link
                 key={item.id}
                 href={isDisabled ? "#" : item.href}
-                className={`group rounded flex items-center overflow-hidden relative ${
-                  actualIsCollapsed ? 'w-10 h-10 justify-center px-0 py-0' : 'w-full h-[40px] justify-start gap-3 px-2 py-2'
+                className={`group rounded flex items-center relative ${
+                  actualIsCollapsed ? 'overflow-visible w-10 h-10 justify-center px-0 py-0' : 'overflow-hidden w-full h-[40px] justify-start gap-3 px-2 py-2'
                 } ${
                   isDisabled
                     ? 'cursor-not-allowed opacity-50 text-[#6b7280]'
@@ -403,9 +411,24 @@ export function Sidebar() {
                       ? "cursor-pointer bg-gradient-to-r from-[#9747FF]/10 to-[#9747FF]/10 text-[#9747FF] border border-[#9747FF]/20"
                       : "cursor-pointer text-[#2a2a2f] hover:bg-gradient-to-r hover:from-[#9747FF]/8 hover:to-[#9747FF]/8 hover:text-[#9747FF] hover:border hover:border-[#9747FF]/15"
                 }`}
-                title={actualIsCollapsed ? `${item.label} - ${item.description}${isDisabled ? ' (Work in progress)' : ''}` : undefined}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
+                aria-label={item.label}
+                onMouseEnter={(event) => {
+                  setHoveredItem(item.id);
+                  if (actualIsCollapsed) {
+                    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+                    setTooltip({
+                      id: item.id,
+                      label: item.label,
+                      description: item.description,
+                      top: rect.top + rect.height / 2,
+                      left: rect.right + 12,
+                    });
+                  }
+                }}
+                onMouseLeave={() => {
+                  setHoveredItem(null);
+                  setTooltip((current) => (current?.id === item.id ? null : current));
+                }}
                 onClick={(e) => {
                   if (isDisabled) {
                     e.preventDefault();
@@ -505,18 +528,6 @@ export function Sidebar() {
               <LogoutIcon />
             </button>
           </div>
-          {/* Hide collapse button on mobile */}
-          {!isMobile && (
-          <button
-            onClick={toggleSidebar}
-            className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition-all duration-300 flex-shrink-0 ${
-                actualIsCollapsed ? 'rotate-180' : ''
-            }`}
-              title={actualIsCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <CollapseIcon />
-          </button>
-          )}
         </div>
       </div>
 
@@ -688,6 +699,24 @@ export function Sidebar() {
           </div>
         </div>
       )}
+
+    {actualIsCollapsed && tooltip && (
+        <div
+          className="pointer-events-none fixed z-[9999]"
+          style={{ top: tooltip.top, left: tooltip.left, transform: "translateY(-50%)" }}
+        >
+          <div className="rounded bg-[#2A2A2F] px-3 py-1 shadow-lg border border-black/40">
+            <div className="text-xs font-semibold text-white font-manrope whitespace-nowrap">
+              {tooltip.label}
+            </div>
+            {!!tooltip.description && (
+              <div className="text-[10px] text-gray-300 font-manrope whitespace-nowrap">
+                {tooltip.description}
+              </div>
+            )}
+          </div>
+        </div>
+    )}
     </>
   );
 }

@@ -10,7 +10,7 @@ const FeedbackIcon = () => (
     <path d="M17.5 2.59808C20.2846 0.990381 23.7154 0.990381 26.5 2.59808L36.5526 8.40192C39.3372 10.0096 41.0526 12.9808 41.0526 16.1962V27.8038C41.0526 31.0192 39.3372 33.9904 36.5526 35.5981L26.5 41.4019C23.7154 43.0096 20.2846 43.0096 17.5 41.4019L7.44744 35.5981C4.66283 33.9904 2.94744 31.0192 2.94744 27.8038V16.1962C2.94744 12.9808 4.66283 10.0096 7.44744 8.40192L17.5 2.59808Z" fill="#EFF6FF"/>
     <path d="M17.75 3.03125C20.3799 1.51287 23.6201 1.51287 26.25 3.03125L36.3027 8.83496C38.9326 10.3534 40.5527 13.1596 40.5527 16.1963V27.8037C40.5527 30.8404 38.9326 33.6466 36.3027 35.165L26.25 40.9688C23.6201 42.4871 20.3799 42.4871 17.75 40.9688L7.69727 35.165C5.06744 33.6466 3.44727 30.8404 3.44727 27.8037V16.1963C3.44727 13.1596 5.06744 10.3534 7.69727 8.83496L17.75 3.03125Z" stroke="#1B84FF" strokeOpacity="0.2"/>
     <path opacity="0.3" d="M26.7192 13.4004C27.3768 13.3967 28.0256 13.5528 28.6089 13.8564C29.1922 14.1601 29.6928 14.6017 30.0669 15.1426C30.441 15.6835 30.6771 16.308 30.7554 16.9609C30.8336 17.614 30.7518 18.2766 30.5161 18.8906C30.2805 19.5046 29.8979 20.0514 29.4028 20.4844C28.9078 20.9174 28.3143 21.2232 27.6743 21.375C27.0346 21.5266 26.3675 21.5199 25.731 21.3555C25.0943 21.1909 24.5072 20.8734 24.021 20.4307C24.7705 19.5159 25.258 18.4148 25.4321 17.2451C25.6062 16.0755 25.4598 14.8805 25.0093 13.7871C25.5433 13.533 26.1278 13.4011 26.7192 13.4004ZM18.8071 11.25C21.6212 11.2501 23.9028 13.5124 23.9028 16.3027C23.9027 19.0929 21.6211 21.3544 18.8071 21.3545C15.9931 21.3545 13.7116 19.093 13.7114 16.3027C13.7114 13.5123 15.993 11.25 18.8071 11.25Z" fill="#2270D0"/>
-    <path d="M18.8076 22.6445C22.9812 22.6447 26.3643 24.907 26.3643 27.6973C26.3639 30.4874 22.981 32.7489 18.8076 32.749C14.6341 32.749 11.2503 30.4875 11.25 27.6973C11.25 24.9069 14.6339 22.6445 18.8076 22.6445ZM26.7188 22.5371C30.0512 22.5371 32.75 24.4291 32.75 26.5791C32.7498 28.7289 30.2345 30.4813 27.0742 30.5996C27.6512 29.7413 27.961 28.7314 27.9658 27.6973C27.9231 26.6777 27.622 25.6852 27.0898 24.8145C26.5576 23.9437 25.8118 23.2227 24.9238 22.7197C25.5143 22.5977 26.1158 22.5366 26.7188 22.5371Z" fill="#2270D0"/>
+    <path d="M18.8076 22.6445C22.9812 22.6447 26.3643 24.907 26.3643 27.6973C26.3639 30.4874 22.9810 32.7489 18.8076 32.749C14.6341 32.749 11.2503 30.4875 11.25 27.6973C11.25 24.9069 14.6339 22.6445 18.8076 22.6445ZM26.7188 22.5371C30.0512 22.5371 32.75 24.4291 32.75 26.5791C32.7498 28.7289 30.2345 30.4813 27.0742 30.5996C27.6512 29.7413 27.961 28.7314 27.9658 27.6973C27.9231 26.6777 27.622 25.6852 27.0898 24.8145C26.5576 23.9437 25.8118 23.2227 24.9238 22.7197C25.5143 22.5977 26.1158 22.5366 26.7188 22.5371Z" fill="#2270D0"/>
   </svg>
 );
 
@@ -43,62 +43,12 @@ const AdvertiseIcon = () => (
   </svg>
 );
 
-const MoreIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 6C10.69 6 11.25 5.44 11.25 4.75C11.25 4.06 10.69 3.5 10 3.5C9.31 3.5 8.75 4.06 8.75 4.75C8.75 5.44 9.31 6 10 6Z" fill="#a1a1a1"/>
-    <path d="M10 11.25C10.69 11.25 11.25 10.69 11.25 10C11.25 9.31 10.69 8.75 10 8.75C9.31 8.75 8.75 9.31 8.75 10C8.75 10.69 9.31 11.25 10 11.25Z" fill="#a1a1a1"/>
-    <path d="M10 16.5C10.69 16.5 11.25 15.94 11.25 15.25C11.25 14.56 10.69 14 10 14C9.31 14 8.75 14.56 8.75 15.25C8.75 15.94 9.31 16.5 10 16.5Z" fill="#a1a1a1"/>
-  </svg>
-);
-
 interface CampaignCardProps {
   campaign: CampaignData;
+  isHighlighted?: boolean;
 }
 
-export function CampaignCard({ campaign }: CampaignCardProps) {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const moreButtonRef = useRef<HTMLButtonElement>(null);
-
-  const handleMoreClick = () => {
-    setShowDropdown(!showDropdown);
-  };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
-          moreButtonRef.current && !moreButtonRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-
-    if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showDropdown]);
-
-  // Close dropdown on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (showDropdown) {
-        setShowDropdown(false);
-      }
-    };
-
-    if (showDropdown) {
-      window.addEventListener('scroll', handleScroll, true);
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [showDropdown]);
-
+export function CampaignCard({ campaign, isHighlighted = false }: CampaignCardProps) {
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
@@ -163,7 +113,13 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all duration-200 min-w-0 relative">
+      <div
+        id={`campaign-${campaign.id}`}
+        className={`bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all duration-200 min-w-0 relative scroll-mt-24 ${
+          isHighlighted ? 'ring-2 ring-[#9747FF] ring-offset-2' : ''
+        }`}
+        tabIndex={-1}
+      >
         {/* Mobile Layout */}
         <div className="block lg:hidden">
           <div className="p-4">
@@ -188,40 +144,6 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                     </span>
                   </div>
                 </div>
-              </div>
-              <div className="relative">
-                <button
-                  ref={moreButtonRef}
-                  onClick={handleMoreClick}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0 -mt-1 -mr-1"
-                >
-                  <MoreIcon />
-                </button>
-                {/* Mobile Dropdown Menu */}
-                {showDropdown && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 py-1 w-[161px] z-50 lg:hidden"
-                  >
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <ViewIcon />
-                      View Details
-                    </button>
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <EditIcon />
-                      Edit Campaign
-                    </button>
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <DuplicateIcon />
-                      Duplicate
-                    </button>
-                    <hr className="my-1" />
-                    <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
-                      <DeleteIcon />
-                      Delete
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -359,42 +281,6 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                   <div className="text-base text-purple-900">{formatNumber(campaign.clicked)}</div>
                   <div className="text-xs text-purple-600">Clicked</div>
                 </div>
-              </div>
-
-              {/* Kebab Menu - Fixed Position */}
-              <div className="flex-shrink-0 relative">
-                <button
-                  ref={moreButtonRef}
-                  onClick={handleMoreClick}
-                  className="p-0.5 hover:bg-gray-100 rounded transition-colors"
-                >
-                  <MoreIcon />
-                </button>
-                {/* Desktop Dropdown Menu */}
-                {showDropdown && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute top-8 right-0 bg-white rounded-lg shadow-xl border border-gray-200 py-1 w-[161px] z-50 hidden lg:block"
-                  >
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <ViewIcon />
-                      View Details
-                    </button>
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <EditIcon />
-                      Edit Campaign
-                    </button>
-                    <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                      <DuplicateIcon />
-                      Duplicate
-                    </button>
-                    <hr className="my-1" />
-                    <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
-                      <DeleteIcon />
-                      Delete
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>

@@ -41,6 +41,10 @@ export function MobileHeaderButton({ onClick }: MobileHeaderButtonProps) {
       '/achievements': '/dashboard',
       '/report-bug': '/dashboard',
       '/marketing-calendar': '/dashboard',
+      '/wallet/platform': '/dashboard',
+      '/wallet/recharge': '/wallet/platform',
+      '/wallet/breakdown': '/wallet/platform',
+      '/wallet/payment': '/wallet/platform',
     };
 
     const backRoute = backRoutes[pathname];

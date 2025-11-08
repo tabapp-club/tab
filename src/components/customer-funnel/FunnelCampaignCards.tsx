@@ -16,7 +16,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
   
   // Customer metrics advantages - Growth focused
   if (stageLower.includes('new customers')) {
-    return ['Act now: Convert 15% more to repeat buyers', 'Lock in lifetime value from day one', 'Build brand loyalty before competitors'];
+    return ['Act now: Convert 15% more to repeat customers', 'Lock in lifetime value from day one', 'Build brand loyalty before competitors'];
   } else if (stageLower.includes('retained customers')) {
     return ['Maximize growth: 3x revenue from loyal customers', 'Prevent churn risk - act before it\'s too late', 'Upsell premium products to boost ARPU'];
   }
@@ -75,14 +75,14 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
   
   // Purchase behavior type advantages - Growth focused
   if (type === 'purchase_behavior') {
-    if (stageLower.includes('frequent')) {
-      return ['Growth multiplier: Upsell premium products - 55% conversion', 'Increase order value by 2x with bundle offers', 'Leverage frequent buyers for 4x referral growth'];
+    if (stageLower.includes('first customers')) {
+      return ['Accelerate onboarding: convert 50% to loyal customers', 'Build repeat purchase habits in the first 30 days', 'Deliver high-impact welcome journeys for long-term value'];
     } else if (stageLower.includes('regular')) {
-      return ['Growth opportunity: Convert 35% to frequent buyers', 'Boost purchase frequency - double revenue potential', 'Increase order size - 2.5x lifetime value'];
+      return ['Growth opportunity: Convert 35% to loyal customers', 'Boost purchase frequency - double revenue potential', 'Increase order size - 2.5x lifetime value'];
     } else if (stageLower.includes('occasional')) {
-      return ['Growth potential: Convert 40% to regular buyers', 'Increase frequency - 3x revenue in next quarter', 'Upgrade purchase behavior - 2x customer value'];
+      return ['Growth potential: Convert 40% to regular customers', 'Increase frequency - 3x revenue in next quarter', 'Upgrade purchase behavior - 2x customer value'];
     } else if (stageLower.includes('one-time')) {
-      return ['Critical: Convert to repeat buyers or lose forever', 'Growth opportunity: 30% will buy again with offer', 'Build purchase habit - 4x lifetime value potential'];
+      return ['Critical: Convert to repeat customers or lose forever', 'Growth opportunity: 30% will buy again with offer', 'Build purchase habit - 4x lifetime value potential'];
     }
   }
   
@@ -150,73 +150,292 @@ const createRecommendedCampaign = (stage: FunnelData, type: FunnelType): Recomme
   };
 };
 
+const formatCurrency = (value: number): string => {
+  if (value >= 1_00_000) {
+    return `₹${(value / 1_00_000).toFixed(1).replace(/\.0$/, '')}L`;
+  }
+  if (value >= 1_000) {
+    return `₹${(value / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+  }
+  return `₹${value.toLocaleString('en-IN')}`;
+};
+
 export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCardsProps) {
   const handleSendMessages = (stage: FunnelData, e?: React.MouseEvent) => {
     if (e) {
       e.stopPropagation();
     }
+    const campaign = createRecommendedCampaign(stage, type);
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = JSON.parse(localStorage.getItem('funnelCampaignLookup') || '{}');
+        stored[campaign.id] = {
+          id: campaign.id,
+          title: campaign.title,
+          count: campaign.count,
+          description: campaign.description,
+          expectedCampaignCost: campaign.expectedCampaignCost,
+          expectedConversion: campaign.expectedConversion,
+          expectedRevenue: campaign.expectedRevenue,
+          urgency: campaign.urgency,
+          priority: campaign.priority,
+          iconColor: campaign.iconColor,
+          bgColor: campaign.bgColor,
+          estimatedImpact: campaign.estimatedImpact,
+        };
+        localStorage.setItem('funnelCampaignLookup', JSON.stringify(stored));
+      }
+    } catch (error) {
+      console.error('Failed to store funnel campaign lookup', error);
+    }
+
     if (onSendNow) {
-      const campaign = createRecommendedCampaign(stage, type);
       onSendNow(campaign);
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.location.href = `/send-campaign?id=${campaign.id}`;
     }
   };
 
   // Calculate customer metrics for status tab
-  const customerMetrics = (() => {
-    if (!data || data.length === 0 || type !== 'status') {
-      return null;
-    }
-
-    const allCustomers = data.reduce((sum, stage) => sum + (stage.count || 0), 0);
-    const newCustomers = Math.round(allCustomers * 0.15);
-    
-    // Retained customers - active customers for status type
-    const retainedCustomers = data.find(s => s.stage.toLowerCase().includes('active'))?.count || 0;
-
-    return {
-      allCustomers,
-      newCustomers,
-      retainedCustomers,
-    };
-  })();
-
   if (!data || data.length === 0) {
     return null;
   }
 
-  // Create customer metric cards for status tab
-  const customerMetricCards: FunnelData[] = type === 'status' && customerMetrics ? [
-    {
-      stage: 'New Customers',
-      count: customerMetrics.newCustomers,
-      percentage: customerMetrics.allCustomers > 0 ? (customerMetrics.newCustomers / customerMetrics.allCustomers) * 100 : 0,
-      color: '#A877FF',
-      value: customerMetrics.newCustomers,
-      change: 15.0, // Growth opportunity
-    },
-    {
-      stage: 'Retained Customers',
-      count: customerMetrics.retainedCustomers,
-      percentage: customerMetrics.allCustomers > 0 ? (customerMetrics.retainedCustomers / customerMetrics.allCustomers) * 100 : 0,
-      color: '#B891FF',
-      value: customerMetrics.retainedCustomers,
-      change: 12.0, // Growth opportunity
-    },
-  ] : [];
+  const displayData = data;
 
-  // Combine customer metric cards with funnel stages for status tab
-  const displayData = type === 'status' ? [...customerMetricCards, ...data] : data;
+  const masterTotalCount = displayData.reduce((sum, stage) => sum + (stage.count || 0), 0);
+  const masterAverageChange = displayData.length
+    ? displayData.reduce((sum, stage) => sum + (stage.change ?? 0), 0) / displayData.length
+    : 0;
+  const masterStage: FunnelData = {
+    stage: 'All Segments',
+    count: masterTotalCount,
+    percentage: 100,
+    color: '#9747FF',
+    change: masterAverageChange,
+  };
+
+  const combinedHighlights = displayData
+    .flatMap((stage) => getCampaignAdvantages(stage.stage, type))
+    .filter(Boolean);
+  const uniqueHighlights = Array.from(new Set(combinedHighlights)).slice(0, 3);
+
+  const totalExpectedCost = displayData.reduce(
+    (sum, stage) => sum + Math.round((stage.count || 0) * 0.02),
+    0
+  );
+  const averageExpectedConversion = displayData.length
+    ? Math.round(
+        displayData.reduce((sum, stage) => {
+          if (stage.change && stage.change > 0) {
+            return sum + stage.change * 0.8;
+          }
+          return sum + 8;
+        }, 0) / displayData.length
+      )
+    : 10;
+
+  const masterCampaign: RecommendedCampaign = {
+    id: `funnel-${type}-master`,
+    title: 'Master Campaign',
+    count: masterTotalCount,
+    description: 'Coordinate a single high-impact campaign across every segment in this funnel.',
+    icon: <div />,
+    bgColor: '#9747FF15',
+    iconColor: '#9747FF',
+    expectedCampaignCost: formatCurrency(totalExpectedCost),
+    expectedConversion: `${Math.max(5, Math.min(averageExpectedConversion, 95))}%`,
+    urgency: 'high',
+    priority: true,
+    estimatedImpact: uniqueHighlights[0] || 'Drive growth across all segments simultaneously',
+  };
+
+  const findStageCount = (keywords: string[]): number => {
+    const stageMatch = displayData.find((stage) =>
+      keywords.some((keyword) => stage.stage.toLowerCase().includes(keyword))
+    );
+    return stageMatch?.count || 0;
+  };
+
+  const summaryCards = [
+    {
+      label: 'Status',
+      value:
+        type === 'status'
+          ? masterTotalCount
+          : findStageCount(['active', 'inactive', 'dormant', 'status']) || masterTotalCount,
+      description: 'Active • Inactive • Dormant • At Risk',
+    },
+    {
+      label: 'Customer Value',
+      value:
+        type === 'value'
+          ? masterTotalCount
+          : findStageCount(['value', 'premium', 'high value', 'regular', 'low value']) || Math.round(masterTotalCount * 0.75),
+      description: 'Premium • High • Regular • Low',
+    },
+    {
+      label: 'Engagement',
+      value:
+        type === 'engagement'
+          ? masterTotalCount
+          : findStageCount(['engaged', 'engagement', 'moderately', 'no engagement']) || Math.round(masterTotalCount * 0.62),
+      description: 'Highly • Moderately • Low • None',
+    },
+    {
+      label: 'Retention',
+      value:
+        type === 'retention'
+          ? masterTotalCount
+          : findStageCount(['retained', 'churned', 'at risk']) || Math.round(masterTotalCount * 0.58),
+      description: 'Highly Retained • Retained • At Risk • Churned',
+    },
+    {
+      label: 'Purchase Value',
+      value:
+        type === 'purchase_behavior'
+          ? masterTotalCount
+          : findStageCount(['purchase', 'customers', 'one-time', 'occasional']) || Math.round(masterTotalCount * 0.47),
+      description: 'First • Regular • Occasional • One-time',
+    },
+    {
+      label: 'Total Customers',
+      value: masterTotalCount,
+      description: 'All segments combined',
+    },
+  ];
 
   return (
-    <div className="bg-white rounded-lg border border-[#e9e9e9] p-4 sm:p-6" style={{ borderRadius: '4px' }}>
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg border border-[#e9e9e9] p-4 sm:p-6" style={{ borderRadius: '4px' }}>
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-[#2a2a2f] font-manrope">Send a Master Campaign</h3>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#9747FF] bg-[#F3EBFF] border border-[#E1D5FF] px-2 py-1 rounded-full uppercase tracking-wide">
+              Recommended
+            </span>
+          </div>
+          <p className="text-sm text-[#626266] font-manrope">
+            Launch one orchestrated campaign to reach every customer segment in this funnel.
+          </p>
+        </div>
+
+        <div
+          onClick={() => handleSendMessages(masterStage)}
+          className="bg-white p-4 cursor-pointer transition-all duration-200 group relative overflow-hidden"
+          style={{
+            border: '0.5px solid #9747FF',
+            borderRadius: '16px',
+            boxShadow: '0 4px 0 0 #9747FF',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#A88CFF';
+            e.currentTarget.style.borderWidth = '1px';
+            e.currentTarget.style.boxShadow = '0 4px 0 0 #A88CFF, 0 2px 8px rgba(151, 71, 255, 0.05)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#9747FF';
+            e.currentTarget.style.borderWidth = '0.5px';
+            e.currentTarget.style.boxShadow = '0 4px 0 0 #9747FF';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+        >
+          <div className="bg-gradient-to-br from-gray-50 to-purple-50/30 rounded-lg -m-4 p-4 sm:-m-5 sm:p-5 mb-4 border-b border-gray-100">
+            <p className="text-sm text-[#626266] font-manrope mb-4">
+              Reach {displayData.length} segments • Impact {masterCampaign.count.toLocaleString()} customers
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3 mb-10">
+              {summaryCards.map((card) => {
+                const isTotal = card.label === 'Total Customers';
+                return (
+                  <div
+                    key={card.label}
+                    className={`rounded-lg px-3 py-3 sm:px-4 flex flex-col gap-1 ${
+                      isTotal
+                        ? 'bg-[#F5F0FF] border border-[#E1D5FF] text-[#2a2a2f]'
+                        : 'bg-white border border-[#E1D5FF] text-[#2a2a2f]'
+                    }`}
+                  >
+                    <span
+                      className={`text-[11px] font-semibold uppercase tracking-wide ${
+                        isTotal ? 'text-[#7C3AED]' : 'text-[#7C3AED]'
+                      }`}
+                    >
+                      {card.label}
+                    </span>
+                    <span
+                      className={`text-base sm:text-lg font-bold ${
+                        isTotal ? 'text-[#2a2a2f]' : 'text-[#2a2a2f]'
+                      }`}
+                    >
+                      {card.value.toLocaleString()}
+                    </span>
+                    <span
+                      className={`text-[10px] leading-tight ${
+                        isTotal ? 'text-[#7C3AED]' : 'text-[#626266]'
+                      }`}
+                    >
+                      {card.description}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-10">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="bg-white rounded-md border border-[#EDEBFF] px-3 py-2 flex items-center gap-2">
+                  <span className="uppercase tracking-wide text-[11px] text-[#626266]">
+                    Expected Cost
+                  </span>
+                  <span className="text-sm font-semibold text-[#EA580C]">
+                    {masterCampaign.expectedCampaignCost}
+                  </span>
+                </div>
+                <div className="bg-white rounded-md border border-[#EDEBFF] px-3 py-2 flex items-center gap-2">
+                  <span className="uppercase tracking-wide text-[11px] text-[#626266]">
+                    Expected Conversion
+                  </span>
+                  <span className="text-sm font-semibold text-[#7C3AED]">
+                    {masterCampaign.expectedConversion}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={(e) => handleSendMessages(masterStage, e)}
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold border border-[#9747FF] text-white bg-[#9747FF] hover:bg-[#7C3AED] rounded px-3 py-2 transition-all whitespace-nowrap"
+                style={{ borderRadius: '6px' }}
+              >
+                Send All Campaigns
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-[#9747FF]/0 to-[#9747FF]/0 group-hover:from-[#9747FF]/3 group-hover:to-[#9747FF]/8 pointer-events-none transition-all duration-200"
+            style={{ borderRadius: '16px' }}
+          ></div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-[#e9e9e9] p-4 sm:p-6" style={{ borderRadius: '4px' }}>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-[#2a2a2f] font-manrope">Create Campaigns</h3>
+        <h3 className="text-lg font-semibold text-[#2a2a2f] font-manrope">Send Individual Campaigns</h3>
         <p className="text-sm text-[#626266] font-manrope mt-1">Act now: Turn customer segments into revenue growth with targeted campaigns</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {displayData.map((stage) => {
           const campaign = createRecommendedCampaign(stage, type);
+          const displayStageName = stage.stage.toLowerCase().includes('customer')
+            ? stage.stage
+            : `${stage.stage} Customers`;
           
           return (
             <div
@@ -244,7 +463,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
               {/* Top Section with Background */}
               <div className="bg-gradient-to-br from-gray-50 to-purple-50/30 rounded-lg -m-4 p-4 mb-3 pb-3 border-b border-gray-100">
                 <div className="flex items-start justify-between mb-3 mt-0 relative">
-                  <h3 className="text-sm font-semibold text-[#2a2a2f]">{stage.stage} Customers</h3>
+                  <h3 className="text-sm font-semibold text-[#2a2a2f]">{displayStageName}</h3>
                   <div className="flex items-center gap-1.5 shrink-0">
                     {/* Urgency Indicator */}
                     {campaign.urgency === 'high' && (
@@ -298,6 +517,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

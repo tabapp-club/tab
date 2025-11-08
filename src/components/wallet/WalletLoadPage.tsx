@@ -36,7 +36,7 @@ export function WalletLoadPage({ onViewTransactions }: WalletLoadPageProps) {
       if (status === "completed") {
         // Payment successful - close modal and refresh
         setTimeout(() => {
-          router.push("/wallet?success=true");
+          router.push("/wallet/recharge?success=true");
         }, 2000);
       } else if (status === "failed" || status === "cancelled") {
         setError(paymentStatusData.data.failure_reason || "Payment failed. Please try again.");

@@ -12,7 +12,7 @@ export function WalletButton() {
   const currency = balanceData?.data.currency ?? "INR";
 
   const handleClick = () => {
-    router.push("/wallet");
+    router.push("/wallet/platform");
   };
 
   return (

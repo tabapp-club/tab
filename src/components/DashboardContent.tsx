@@ -2,19 +2,18 @@
 
 import { AIAnalysisSidepane } from "./AIAnalysisSidepane";
 import { useSidebar } from "./SidebarContext";
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardHeader, BusinessGrowthSection, AnalyticsSection, DashboardFooter } from "./dashboard";
 import { DashboardNotifications } from "./dashboard/DashboardNotifications";
 import { RecommendedCampaigns, RecommendedCampaign } from "./campaigns/RecommendedCampaigns";
-import { CampaignDetailsSidepane } from "./campaigns/CampaignDetailsSidepane";
 
 export function DashboardContent() {
   const { isCollapsed, isMobile } = useSidebar();
+  const router = useRouter();
   const [sidePaneOpen, setSidePaneOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] = useState<string>("");
   const [selectedCardData, setSelectedCardData] = useState<any>(null);
-  const [campaignSidePaneOpen, setCampaignSidePaneOpen] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState<RecommendedCampaign | null>(null);
 
   // Handle Ask Reason button click
   const handleAskReason = (cardType: string, cardData: any) => {
@@ -30,17 +29,10 @@ export function DashboardContent() {
     setSelectedCardData(null);
   };
 
-  // Handle campaign send now
-  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
-    setSelectedCampaign(campaign);
-    setCampaignSidePaneOpen(true);
-  }, []);
-
-  // Handle campaign sidepane close
-  const handleCampaignSidePaneClose = useCallback(() => {
-    setCampaignSidePaneOpen(false);
-    setSelectedCampaign(null);
-  }, []);
+  // Handle campaign send now - navigate to dedicated page
+  const handleSendNow = (campaign: RecommendedCampaign) => {
+    router.push(`/send-campaign?id=${campaign.id}`);
+  };
 
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
@@ -67,13 +59,6 @@ export function DashboardContent() {
         onClose={handleSidePaneClose}
         cardType={selectedCardType}
         cardData={selectedCardData}
-      />
-
-      {/* Campaign Details Sidepane */}
-      <CampaignDetailsSidepane
-        isOpen={campaignSidePaneOpen}
-        onClose={handleCampaignSidePaneClose}
-        campaign={selectedCampaign}
       />
     </main>
   );

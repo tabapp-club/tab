@@ -90,22 +90,17 @@ const RecommendedCampaigns = ({ onSendNow }: RecommendedCampaignsProps) => {
   ];
 
   const handleCampaignClick = (campaign: RecommendedCampaign) => {
-    // If onSendNow is provided, open the sidepane, otherwise navigate
-    if (onSendNow) {
-      onSendNow(campaign);
-    } else {
-      // Navigate to create campaign page as fallback
-      router.push('/new-campaign', { scroll: false });
-    }
+    // Navigate to send campaign page
+    router.push(`/send-campaign?id=${campaign.id}`);
   };
 
   const handleSendNowClick = (e: React.MouseEvent, campaign: RecommendedCampaign) => {
     e.stopPropagation(); // Prevent card click from firing
+    // Navigate to send campaign page
     if (onSendNow) {
       onSendNow(campaign);
     } else {
-      // Fallback to default behavior if no handler provided
-      handleCampaignClick(campaign);
+      router.push(`/send-campaign?id=${campaign.id}`);
     }
   };
 

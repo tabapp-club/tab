@@ -1,33 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { WalletLoadPage } from "./WalletLoadPage";
-import { WalletSidepane } from "./WalletSidepane";
+import { WalletContent } from "./WalletContent";
 
-export function WalletPageClient() {
-  const [sidepaneOpen, setSidepaneOpen] = useState(false);
+interface WalletPageClientProps {
+  defaultTab?: "platform" | "addfunds" | "breakdown";
+}
+
+export function WalletPageClient({ defaultTab = "addfunds" }: WalletPageClientProps) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Open sidepane if there's a success parameter or if user wants to view transactions
+    // Handle success parameter if needed for future use
     const success = searchParams.get("success");
     const view = searchParams.get("view");
     
+    // Success and view parameters can be used for future enhancements
+    // Currently, the wallet content is displayed directly as a full page
     if (success === "true" || view === "transactions") {
-      setSidepaneOpen(true);
+      // Could scroll to breakdown tab or show success message in the future
     }
   }, [searchParams]);
 
-  const handleViewTransactions = () => {
-    setSidepaneOpen(true);
-  };
-
-  return (
-    <>
-      <WalletLoadPage onViewTransactions={handleViewTransactions} />
-      <WalletSidepane isOpen={sidepaneOpen} onClose={() => setSidepaneOpen(false)} />
-    </>
-  );
+  return <WalletContent defaultTab={defaultTab} />;
 }
 

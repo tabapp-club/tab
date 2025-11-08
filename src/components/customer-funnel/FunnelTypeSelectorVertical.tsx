@@ -41,7 +41,7 @@ const funnelTypes: Array<{
   {
     type: 'purchase_behavior',
     label: 'Purchase Behavior',
-    description: 'Frequent, Regular, Occasional, One-time',
+    description: 'First, Regular, Occasional, One-time Customers',
     icon: ShoppingBag,
     color: '#ef4444',
   },

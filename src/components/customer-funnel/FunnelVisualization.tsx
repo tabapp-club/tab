@@ -65,43 +65,23 @@ export function FunnelVisualization({ data, type }: FunnelVisualizationProps) {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    const { allCustomers, newCustomers, retainedCustomers } = customerMetrics;
-    
-    // Add the three customer metric bars at the beginning only for status type
-    const customerBars = type === 'status' ? [
-      {
-        name: 'All Customers',
-        count: allCustomers,
-        percentage: 100,
-        color: '#9747FF',
-        change: 0,
-        pct: 100,
-      },
-      {
-        name: 'New Customers',
-        count: newCustomers,
-        percentage: allCustomers > 0 ? (newCustomers / allCustomers) * 100 : 0,
-        color: '#A877FF',
-        change: 12.5,
-        pct: allCustomers > 0 ? (newCustomers / allCustomers) * 100 : 0,
-      },
-      {
-        name: 'Retained Customers',
-        count: retainedCustomers,
-        percentage: allCustomers > 0 ? (retainedCustomers / allCustomers) * 100 : 0,
-        color: '#B891FF',
-        change: 8.3,
-        pct: allCustomers > 0 ? (retainedCustomers / allCustomers) * 100 : 0,
-      },
-    ] : [];
-    
+    const { allCustomers } = customerMetrics;
+
+    const baseStages = [{
+      name: 'All Customers',
+      count: allCustomers,
+      percentage: 100,
+      color: '#9747FF',
+      change: 0,
+      pct: 100,
+    }];
+
     const maxVal = Math.max(
       ...(type === 'status' ? [allCustomers] : []),
       ...data.map((stage) => stage.count || 0),
       1
     );
-    
-    // Map funnel stages
+
     const funnelStages = data.map((stage) => ({
       name: stage.stage,
       count: stage.count || 0,
@@ -110,9 +90,8 @@ export function FunnelVisualization({ data, type }: FunnelVisualizationProps) {
       change: stage.change,
       pct: Math.round((stage.count / maxVal) * 10000) / 100,
     }));
-    
-    // Combine customer bars with funnel stages (only include customer bars for status type)
-    return [...customerBars, ...funnelStages];
+
+    return [...baseStages, ...funnelStages];
   }, [data, customerMetrics, type]);
 
   // Generate gradient IDs for each stage
