@@ -16,8 +16,8 @@ export function WalletPaymentPage({ amount, title = "Payment", onBack, paymentId
   const currency = "INR";
   const qrAmount = amount ? amount.toString() : "";
   const [paymentCompleted, setPaymentCompleted] = useState(false);
-  
-  const { data: paymentStatusData } = usePaymentStatus(paymentId);
+
+  const { data: paymentStatusData } = usePaymentStatus(paymentId ?? null);
 
   useEffect(() => {
     if (paymentId && paymentStatusData?.data) {
@@ -128,4 +128,3 @@ export function WalletPaymentPage({ amount, title = "Payment", onBack, paymentId
     </div>
   );
 }
-

@@ -117,11 +117,13 @@ export const mapApiDataToTable = (apiData: any[]): UserData[] => {
       // Check if it's an array of arrays (from multiple visits)
       if (r.category.length > 0 && Array.isArray(r.category[0])) {
         // Flatten the array of arrays and remove duplicates
-        const flattened = r.category.flat();
-        categories = [...new Set(flattened.filter((cat: any) => cat && typeof cat === 'string'))];
+        const flattened = r.category.flat() as unknown[];
+        const filtered = flattened.filter((cat: any): cat is string => cat && typeof cat === 'string') as string[];
+        categories = [...new Set(filtered)];
       } else {
         // It's already a flat array of strings
-        categories = [...new Set(r.category.filter((cat: any) => cat && typeof cat === 'string'))];
+        const filtered = r.category.filter((cat: any): cat is string => cat && typeof cat === 'string') as string[];
+        categories = [...new Set(filtered)];
       }
     } else if (r.category) {
       // Single category value

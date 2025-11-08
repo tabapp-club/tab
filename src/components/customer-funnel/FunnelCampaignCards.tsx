@@ -13,14 +13,14 @@ interface FunnelCampaignCardsProps {
 // Get advantages/benefits for each funnel stage based on type
 const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
   const stageLower = stage.toLowerCase();
-  
+
   // Customer metrics advantages - Growth focused
   if (stageLower.includes('new customers')) {
     return ['Act now: Convert 15% more to repeat customers', 'Lock in lifetime value from day one', 'Build brand loyalty before competitors'];
   } else if (stageLower.includes('retained customers')) {
     return ['Maximize growth: 3x revenue from loyal customers', 'Prevent churn risk - act before it\'s too late', 'Upsell premium products to boost ARPU'];
   }
-  
+
   // Status type advantages - Urgency focused
   if (type === 'status') {
     if (stageLower.includes('active')) {
@@ -33,7 +33,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
       return ['URGENT: 50% will churn in 15 days - act immediately', 'Save ₹3L+ at risk with targeted retention campaign', 'Prevent customer loss before it\'s irreversible'];
     }
   }
-  
+
   // Value type advantages - Growth focused
   if (type === 'value') {
     if (stageLower.includes('premium')) {
@@ -46,7 +46,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
       return ['Growth opportunity: Convert 40% to regular spenders', 'Increase average order size by 2x with targeted offers', 'Boost engagement - 3x revenue potential'];
     }
   }
-  
+
   // Engagement type advantages - Urgency focused
   if (type === 'engagement') {
     if (stageLower.includes('highly')) {
@@ -59,7 +59,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
       return ['Critical: Zero engagement = 70% churn risk', 'Act now: Re-engage before they forget your brand', 'Recover lost customers - last chance to convert'];
     }
   }
-  
+
   // Retention type advantages - High urgency
   if (type === 'retention') {
     if (stageLower.includes('highly retained')) {
@@ -72,7 +72,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
       return ['Revenue recovery: 20% will return with right offer', 'Reclaim lost customers - ₹2.5L+ recoverable revenue', 'Win back before they switch permanently'];
     }
   }
-  
+
   // Purchase behavior type advantages - Growth focused
   if (type === 'purchase_behavior') {
     if (stageLower.includes('first customers')) {
@@ -85,7 +85,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
       return ['Critical: Convert to repeat customers or lose forever', 'Growth opportunity: 30% will buy again with offer', 'Build purchase habit - 4x lifetime value potential'];
     }
   }
-  
+
   // Default advantages
   return ['Growth opportunity: Act now to maximize revenue', 'Targeted campaigns for 3x conversion', 'Optimize customer lifetime value'];
 };
@@ -93,7 +93,7 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
 // Get campaign type based on funnel type and stage
 const getCampaignType = (stage: string, type: FunnelType): string => {
   const stageLower = stage.toLowerCase();
-  
+
   if (type === 'status' && (stageLower.includes('inactive') || stageLower.includes('dormant') || stageLower.includes('risk'))) {
     return 'retention';
   }
@@ -106,25 +106,25 @@ const getCampaignType = (stage: string, type: FunnelType): string => {
   if (type === 'value' && stageLower.includes('low')) {
     return 'advertise';
   }
-  
+
   return 'engagement';
 };
 
 // Create a RecommendedCampaign object from funnel stage data
 const createRecommendedCampaign = (stage: FunnelData, type: FunnelType): RecommendedCampaign => {
   const stageLower = stage.stage.toLowerCase();
-  
+
   // Calculate expected metrics based on stage
   const expectedCost = Math.round(stage.count * 0.02);
   const expectedConversion = stage.change && stage.change > 0 ? `${Math.round(stage.change * 0.8)}%` : '8%';
   const expectedRevenue = Math.round(stage.count * 0.15);
-  
+
   // Determine urgency based on change and stage type
   let urgency: 'high' | 'medium' | 'low' = 'medium';
-  
+
   // High urgency for at-risk, inactive, dormant, low engagement, churned
-  if (stageLower.includes('risk') || stageLower.includes('inactive') || 
-      stageLower.includes('dormant') || stageLower.includes('low') || 
+  if (stageLower.includes('risk') || stageLower.includes('inactive') ||
+      stageLower.includes('dormant') || stageLower.includes('low') ||
       stageLower.includes('churned') || stageLower.includes('no engagement')) {
     urgency = 'high';
   } else if (stage.change && stage.change < -3) {
@@ -132,7 +132,7 @@ const createRecommendedCampaign = (stage: FunnelData, type: FunnelType): Recomme
   } else if (stage.change && stage.change > 10) {
     urgency = 'low';
   }
-  
+
   return {
     id: `funnel-${type}-${stage.stage.replace(/\s+/g, '-').toLowerCase()}`,
     title: stage.stage,
@@ -227,6 +227,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
     (sum, stage) => sum + Math.round((stage.count || 0) * 0.02),
     0
   );
+  const totalExpectedRevenue = Math.round(masterTotalCount * 0.15);
   const averageExpectedConversion = displayData.length
     ? Math.round(
         displayData.reduce((sum, stage) => {
@@ -248,6 +249,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
     iconColor: '#9747FF',
     expectedCampaignCost: formatCurrency(totalExpectedCost),
     expectedConversion: `${Math.max(5, Math.min(averageExpectedConversion, 95))}%`,
+    expectedRevenue: formatCurrency(totalExpectedRevenue),
     urgency: 'high',
     priority: true,
     estimatedImpact: uniqueHighlights[0] || 'Drive growth across all segments simultaneously',
@@ -436,13 +438,13 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
           const displayStageName = stage.stage.toLowerCase().includes('customer')
             ? stage.stage
             : `${stage.stage} Customers`;
-          
+
           return (
             <div
               key={stage.stage}
               onClick={() => handleSendMessages(stage)}
               className="bg-white p-4 cursor-pointer transition-all duration-200 group relative overflow-hidden"
-              style={{ 
+              style={{
                 border: '0.5px solid #9747FF',
                 borderRadius: '16px',
                 boxShadow: '0 4px 0 0 #9747FF'
@@ -474,7 +476,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
                     )}
                   </div>
                 </div>
-                
+
                 <div className="min-w-0">
                   <div className="flex items-baseline justify-between mb-1.5">
                     <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stage.count.toLocaleString()}</p>
@@ -482,7 +484,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
                   <p className="text-xs text-[#626266] line-clamp-2 min-h-[32px]">{campaign.description}</p>
                 </div>
               </div>
-              
+
               <div className="min-w-0">
                 {/* Key Metrics Grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3 pb-3 border-b border-gray-100">
@@ -495,13 +497,13 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
                     <p className="text-xs font-bold text-purple-600">{campaign.expectedConversion}</p>
                   </div>
                 </div>
-                
+
                 {/* Impact & CTA */}
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-medium text-purple-600 line-clamp-1">
                     {campaign.estimatedImpact}
                   </span>
-                  <button 
+                  <button
                     onClick={(e) => handleSendMessages(stage, e)}
                     className="flex items-center gap-1 text-xs font-semibold border border-[#9747FF] text-[#9747FF] bg-white hover:bg-[#9747FF]/10 rounded px-2.5 py-2 group-hover:gap-1.5 transition-all whitespace-nowrap"
                     style={{ borderRadius: '4px' }}
@@ -511,7 +513,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
                   </button>
                 </div>
               </div>
-              
+
               {/* Hover Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#9747FF]/0 to-[#9747FF]/0 group-hover:from-[#9747FF]/5 group-hover:to-[#9747FF]/2 pointer-events-none transition-all duration-200" style={{ borderRadius: '16px' }}></div>
             </div>
@@ -522,4 +524,3 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
     </div>
   );
 }
-

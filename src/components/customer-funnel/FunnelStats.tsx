@@ -1,7 +1,13 @@
 'use client';
 
-import { FunnelMetrics } from './CustomerFunnelClient';
 import { Users, TrendingUp, TrendingDown, Clock } from 'lucide-react';
+
+export interface FunnelMetrics {
+  totalCustomers: number;
+  conversionRate: number;
+  dropOffRate: number;
+  avgTimeInStage: number;
+}
 
 interface FunnelStatsProps {
   metrics: FunnelMetrics;
@@ -65,4 +71,3 @@ export function FunnelStats({ metrics }: FunnelStatsProps) {
     </div>
   );
 }
-

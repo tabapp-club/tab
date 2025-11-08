@@ -244,18 +244,18 @@ export function SendCampaignContent() {
     setActiveTabState(tab);
     updateUrlParams({ tab });
   };
-  
+
   // Initialize with one default message
   const defaultMessageId = useMemo(() => `msg-${Date.now()}`, []);
   const defaultMessageContent = 'Hi {{name}}, we miss you! Get 20% off your next purchase. Use code WELCOME20.';
-  
+
   // Message structure with version support
   type MessageWithVersions = {
     id: string;
     versions: string[];
     currentVersionIndex: number;
   };
-  
+
   const [generatedMessages, setGeneratedMessages] = useState<MessageWithVersions[]>(() => [
     { id: defaultMessageId, versions: [defaultMessageContent], currentVersionIndex: 0 }
   ]);
@@ -484,7 +484,7 @@ export function SendCampaignContent() {
           </div>
           <h3 className="text-xl font-bold text-[#2a2a2f] mb-2">Sending Campaign</h3>
           <p className="text-sm text-[#626266] text-center max-w-sm">
-            Your campaign is being sent to {campaign.count.toLocaleString()} users. This may take a few moments...
+            Your campaign is being sent to {campaign?.count?.toLocaleString() || 0} users. This may take a few moments...
           </p>
         </div>
       </main>
@@ -505,7 +505,7 @@ export function SendCampaignContent() {
             </div>
           <h3 className="text-xl font-bold text-[#2a2a2f] mb-2">Campaign Sent for Review</h3>
           <p className="text-sm text-[#626266] text-center max-w-sm mb-8">
-            Your campaign &quot;{campaign.title}&quot; has been submitted for review. We&apos;ll notify you once the review is complete.
+            Your campaign &quot;{campaign?.title || ''}&quot; has been submitted for review. We&apos;ll notify you once the review is complete.
           </p>
           <button
             onClick={() => {
@@ -553,19 +553,19 @@ export function SendCampaignContent() {
             <div className="flex items-start justify-between gap-4 mb-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl font-bold text-[#2a2a2f]">{campaign.title}</h3>
-                  {campaign.urgency === 'high' && (
+                  <h3 className="text-xl font-bold text-[#2a2a2f]">{campaign?.title || ''}</h3>
+                  {campaign?.urgency === 'high' && (
                     <div className="flex items-center gap-1 bg-red-50 border border-red-200 text-red-600 text-xs font-semibold px-2 py-1 rounded-full">
                       <span className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse"></span>
                       URGENT
                     </div>
                   )}
                 </div>
-                <p className="text-sm text-[#626266] leading-relaxed">{campaign.description}</p>
+                <p className="text-sm text-[#626266] leading-relaxed">{campaign?.description || ''}</p>
               </div>
               <div className="p-4 bg-white/80 rounded backdrop-blur-sm border border-white/50">
-                <div className={campaign.iconColor}>
-                  {campaign.icon}
+                <div className={campaign?.iconColor || ''}>
+                  {campaign?.icon || ''}
                 </div>
               </div>
             </div>
@@ -577,21 +577,21 @@ export function SendCampaignContent() {
                   <Users className="w-4 h-4 text-[#9747FF]" />
                   <span className="text-xs font-semibold text-gray-600">Target Customers</span>
                 </div>
-                <p className="text-lg font-bold text-[#9747FF]">{campaign.count.toLocaleString()}</p>
+                <p className="text-lg font-bold text-[#9747FF]">{campaign?.count?.toLocaleString() || 0}</p>
               </div>
               <div className="text-center border-x border-[#9747FF]/10">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Wallet className="w-4 h-4 text-[#9747FF]" />
                   <span className="text-xs font-semibold text-gray-600">Expected Cost</span>
                 </div>
-                <p className="text-lg font-bold text-[#9747FF]">{campaign.expectedCampaignCost}</p>
+                <p className="text-lg font-bold text-[#9747FF]">{campaign?.expectedCampaignCost || ''}</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Target className="w-4 h-4 text-[#9747FF]" />
                   <span className="text-xs font-semibold text-gray-600">Conversion</span>
                 </div>
-                <p className="text-lg font-bold text-[#9747FF]">{campaign.expectedConversion}</p>
+                <p className="text-lg font-bold text-[#9747FF]">{campaign?.expectedConversion || ''}</p>
               </div>
             </div>
           </div>
@@ -605,9 +605,9 @@ export function SendCampaignContent() {
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-bold text-gray-900 mb-1">Why This Campaign?</h4>
                 <p className="text-xs text-gray-700 leading-relaxed">
-                  {campaign.estimatedImpact}. Expected to reach {campaignInsights.estimatedReach.toLocaleString()} users
-                  with {campaignInsights.expectedEngagements.toLocaleString()} expected engagements.
-                  Net profit projection: <span className="font-semibold text-green-600">₹{Math.round(campaignInsights.netProfit / 1000)}K</span>
+                  {campaign?.estimatedImpact || ''}. Expected to reach {campaignInsights?.estimatedReach?.toLocaleString() || 0} users
+                  with {campaignInsights?.expectedEngagements?.toLocaleString() || 0} expected engagements.
+                  Net profit projection: <span className="font-semibold text-green-600">₹{Math.round(campaignInsights?.netProfit / 1000) || 0}K</span>
                 </p>
               </div>
             </div>
@@ -752,7 +752,7 @@ export function SendCampaignContent() {
                     <span className="text-xs text-gray-500">Select to see impact</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {getOffersForCampaign(campaign.id).map((offer) => {
+                    {getOffersForCampaign(campaign?.id || '')?.map((offer) => {
                       const isSelected = selectedOffer === offer.id;
 
                       return (
@@ -810,7 +810,7 @@ export function SendCampaignContent() {
     // Generate a new version for the selected message (or first message if none selected)
     const targetMessageId = selectedTemplate || generatedMessages[0]?.id;
     if (!targetMessageId) return;
-    
+
     const sampleMessages = [
       'Hi {{name}}, we miss you! Get 20% off your next purchase. Use code WELCOME20.',
       'Hello {{name}}, exclusive offer for you! Visit us and save up to 50% on selected services.',
@@ -823,19 +823,19 @@ export function SendCampaignContent() {
       'Hi {{name}}, seasonal special alert! Save 40% on premium services this month.',
       'Hey {{name}}, loyalty rewards await! Redeem your points and get exclusive discounts.'
     ];
-    
+
     // Get a random message that's different from current versions
     const currentMessage = generatedMessages.find(msg => msg.id === targetMessageId);
     const existingVersions = currentMessage?.versions || [];
     let newContent = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
-    
+
     // Try to get a different message if it already exists
     let attempts = 0;
     while (existingVersions.includes(newContent) && attempts < 10) {
       newContent = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
       attempts++;
     }
-    
+
     setGeneratedMessages(prev => prev.map(msg => {
       if (msg.id === targetMessageId) {
         const newVersions = [...msg.versions, newContent];
@@ -847,7 +847,7 @@ export function SendCampaignContent() {
       }
       return msg;
     }));
-    
+
     // Update preview to show the new version
     setPreviewMessage(newContent);
   };
@@ -856,7 +856,7 @@ export function SendCampaignContent() {
     // Prevent deleting if it's the last message (always keep at least one)
     setGeneratedMessages(prev => {
       if (prev.length <= 1) return prev; // Don't allow deleting the last message
-      
+
       const filtered = prev.filter(msg => msg.id !== id);
       if (selectedTemplate === id && filtered.length > 0) {
         const firstMessage = filtered[0];
@@ -1021,7 +1021,7 @@ export function SendCampaignContent() {
             const hasMultipleVersions = message.versions.length > 1;
             const canGoPrevious = message.currentVersionIndex > 0;
             const canGoNext = message.currentVersionIndex < message.versions.length - 1;
-            
+
                       return (
               <div
                 key={message.id}
@@ -1039,7 +1039,7 @@ export function SendCampaignContent() {
                   className="w-full min-h-[100px] px-3 py-2 text-sm text-gray-900 bg-white border border-gray-200 rounded resize-none focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent"
                   rows={4}
                 />
-                
+
                 {/* Version Navigation */}
                 {hasMultipleVersions && (
                   <div className="flex items-center justify-center gap-2 mt-3">
@@ -1127,8 +1127,8 @@ export function SendCampaignContent() {
 
         {previewMessage ? (
           <div className={`border border-gray-200 rounded-lg p-6 min-h-[300px] ${
-            previewTab === 'whatsapp' 
-              ? 'bg-gradient-to-br from-green-50 to-green-100' 
+            previewTab === 'whatsapp'
+              ? 'bg-gradient-to-br from-green-50 to-green-100'
               : 'bg-gradient-to-br from-blue-50 to-indigo-50'
           }`}>
             {previewTab === 'whatsapp' ? (
@@ -1194,20 +1194,20 @@ export function SendCampaignContent() {
                     // Store campaign in localStorage to show in campaigns list
                     const newCampaign: CampaignData = {
                       id: `campaign-${Date.now()}`,
-                      name: campaign.title,
+                      name: campaign?.title || '',
                       type: 'engagement' as const,
                       status: 'pending' as const,
-                      audience: campaign.count,
+                      audience: campaign?.count || 0,
                       sent: 0,
                       opened: 0,
                       clicked: 0,
                       conversion: 0,
-                      budget: parseFloat(campaign.expectedCampaignCost.replace(/[₹,K]/g, '')) * 1000,
+                      budget: parseFloat(campaign?.expectedCampaignCost?.replace(/[₹,K]/g, '') || '0') * 1000,
                       spent: 0,
                       createdAt: Date.now(),
                       createdDate: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
                       endDate: '',
-                      description: campaign.description
+                      description: campaign?.description || ''
                     };
 
                     setLastSentCampaignId(newCampaign.id);
@@ -1250,7 +1250,7 @@ export function SendCampaignContent() {
         actualIsCollapsed ? 'left-[64px] right-0' : 'left-[232px] right-0'
       }`}>
         <div>
-          <h1 className="text-[20px] font-semibold text-[#2a2a2f] leading-snug">{campaign.title}</h1>
+          <h1 className="text-[20px] font-semibold text-[#2a2a2f] leading-snug">{campaign?.title || ''}</h1>
           <p className="text-[14px] text-[#626266] mt-1 leading-relaxed">Configure and send your campaign</p>
         </div>
       </div>
@@ -1260,7 +1260,7 @@ export function SendCampaignContent() {
         <div className="px-4 pt-20 pb-40 py-4 lg:px-8 lg:py-8 lg:pb-20 lg:pt-8 lg:pt-24">
           {/* Mobile Header Section */}
           <div className="mb-4 lg:hidden pt-10">
-            <h1 className="text-[20px] font-semibold text-[#2a2a2f] leading-snug">{campaign.title}</h1>
+            <h1 className="text-[20px] font-semibold text-[#2a2a2f] leading-snug">{campaign?.title || ''}</h1>
             <p className="text-[14px] text-[#626266] mt-1 leading-relaxed">Configure and send your campaign</p>
           </div>
 
