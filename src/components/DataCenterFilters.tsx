@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import FilterDropdown from './FilterDropdown';
 
@@ -34,6 +34,9 @@ interface DataCenterFiltersProps {
   clearFilters?: boolean;
   showUserCount?: boolean;
   showSearchBar?: boolean;
+  showFilterByLabel?: boolean;
+  showImportButton?: boolean;
+  onImportClick?: () => void;
   alignRight?: boolean;
   isLoading?: boolean;
 }
@@ -48,6 +51,9 @@ const DataCenterFilters = ({
   clearFilters = false,
   showUserCount = true,
   showSearchBar = true,
+  showFilterByLabel = true,
+  showImportButton = false,
+  onImportClick,
   alignRight = false,
   isLoading = false
 }: DataCenterFiltersProps = {}) => {
@@ -86,15 +92,19 @@ const DataCenterFilters = ({
     }
   }, [filters.category, filters.status, filters.userType, filters.visits, onFiltersChange]);
 
+  // Track previous clearFilters value to prevent infinite loops
+  const prevClearFiltersRef = useRef(clearFilters);
+
   // Clear filters when clearFilters prop is true
   useEffect(() => {
-    if (clearFilters) {
-      setFilters({
-        category: filters.category.map(option => ({ ...option, checked: false })),
-        userType: filters.userType.map(option => ({ ...option, checked: false })),
-        visits: filters.visits.map(option => ({ ...option, checked: false })),
-        status: filters.status.map(option => ({ ...option, checked: false })),
-      });
+    // Only run if clearFilters changed from false to true
+    if (clearFilters && !prevClearFiltersRef.current) {
+      setFilters(prev => ({
+        category: prev.category.map(option => ({ ...option, checked: false })),
+        userType: prev.userType.map(option => ({ ...option, checked: false })),
+        visits: prev.visits.map(option => ({ ...option, checked: false })),
+        status: prev.status.map(option => ({ ...option, checked: false })),
+      }));
       setInternalSearchTerm('');
       setOpenFilter(null);
 
@@ -113,12 +123,28 @@ const DataCenterFilters = ({
         onSearchChange('');
       }
     }
-  }, [clearFilters, onFiltersChange, onSearchChange, filters.category, filters.status, filters.userType, filters.visits]);
+    // Update ref to track current value
+    prevClearFiltersRef.current = clearFilters;
+  }, [clearFilters, onFiltersChange, onSearchChange]);
+
+  // Memoize categories to prevent unnecessary re-renders
+  const categoriesString = useMemo(() => {
+    return categories ? JSON.stringify(categories.map(c => ({ name: c.name, label: c.label }))) : '';
+  }, [categories]);
 
   // Update category filter options when categories prop changes
   useEffect(() => {
     if (categories && categories.length > 0) {
       setFilters(prev => {
+        // Check if categories actually changed by comparing IDs
+        const currentCategoryIds = prev.category.map(c => c.id).sort().join(',');
+        const newCategoryIds = categories.map(c => c.name).sort().join(',');
+        
+        // Only update if categories actually changed
+        if (currentCategoryIds === newCategoryIds) {
+          return prev;
+        }
+
         // Try to preserve checked state for all selected options
         const prevCheckedIds = prev.category.filter(option => option.checked).map(option => option.id);
         const categoryOptions = categories.map(cat => ({
@@ -132,19 +158,31 @@ const DataCenterFilters = ({
         };
       });
     } else {
-      setFilters(prev => ({
-        ...prev,
-        category: [
+      setFilters(prev => {
+        // Only update if category structure is different
+        const defaultCategories = [
           { id: 'mobile', label: 'Mobile', checked: false },
           { id: 'electronics', label: 'Electronics', checked: false },
           { id: 'fashion', label: 'Fashion', checked: false },
           { id: 'appliances', label: 'Appliances', checked: false },
           { id: 'grocery', label: 'Grocery', checked: false },
           { id: 'other', label: 'Other', checked: false },
-        ]
-      }));
+        ];
+        
+        const currentCategoryIds = prev.category.map(c => c.id).sort().join(',');
+        const defaultCategoryIds = defaultCategories.map(c => c.id).sort().join(',');
+        
+        if (currentCategoryIds === defaultCategoryIds) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          category: defaultCategories
+        };
+      });
     }
-  }, [categories]);
+  }, [categoriesString]);
 
   // Cleanup search debounce timer on unmount
   useEffect(() => {
@@ -255,20 +293,67 @@ const DataCenterFilters = ({
 
   return (
     <div className="bg-transparent min-w-0 data-center-filters py-3 px-3 sm:py-4 sm:px-4">
-      <div className={`flex flex-col lg:flex-row items-start lg:items-center gap-4 min-w-0 ${alignRight ? 'justify-end' : 'justify-between'}`}>
-        {/* Left side - User count */}
-        {showUserCount && (
-          <div className="flex flex-row items-center gap-2 min-w-0 user-count">
-            <div className="flex flex-col font-normal justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap">
-              <p className="block leading-[14px] whitespace-pre">
-                Showing {visibleUsers} of {totalUsers.toLocaleString()} users
-              </p>
+      <div className="flex flex-col gap-6">
+        {/* Top row - User count and Search */}
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 ${alignRight ? 'justify-end' : 'justify-between'}`}>
+          {/* Left side - User count */}
+          {showUserCount && (
+            <div className="flex flex-row items-center gap-2 min-w-0 user-count">
+              <div className="flex flex-col font-normal justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[14px] text-left text-nowrap">
+                <p className="block leading-[14px] whitespace-pre">
+                  Showing {visibleUsers} of {totalUsers.toLocaleString()} users
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Right side - Filters and Search */}
-        <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-4 lg:gap-6 min-w-0 w-full md:w-auto ${alignRight ? 'justify-end' : ''}`}>
+          {/* Search and Import - Left aligned */}
+          <div className="flex flex-row items-center gap-3 w-full sm:w-auto">
+            {/* Search input */}
+            {showSearchBar && (
+              <div className="flex flex-row items-center justify-start w-full sm:w-auto sm:min-w-[336px] relative shrink-0 search-input">
+                <div className="flex flex-col items-start justify-start relative w-full sm:w-auto">
+                  <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#9747FF] focus-within:ring-2 focus-within:ring-[#9747FF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full sm:w-[336px] sm:min-w-[336px] transition-all duration-200">
+                    <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#9747FF] transition-colors duration-200">
+                      {isLoading ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#9747FF] border-t-transparent"></div>
+                      ) : (
+                        <SearchIcon />
+                      )}
+                    </div>
+                    <div className="flex-1 flex items-center h-full min-w-0">
+                      <div className="flex-1 flex items-center h-full px-1 py-0">
+                        <input
+                          type="text"
+                          placeholder="Search customers"
+                          value={currentSearchTerm}
+                          onChange={(e) => handleSearchChange(e.target.value)}
+                          className="w-full h-full bg-transparent border-none outline-none text-[#2a2a2f] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px] focus:text-[#2a2a2f] transition-colors duration-200"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Import CSV Button - Secondary button */}
+            {showImportButton && (
+              <button
+                onClick={onImportClick}
+                className="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-[#e9e9e9] rounded-md hover:bg-gray-50 hover:border-[#d1d5db] transition-colors flex-shrink-0"
+              >
+                <ImportIcon />
+                <span className="text-sm font-medium text-[#2a2a2f] whitespace-nowrap">
+                  Import CSV
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom row - Filters */}
+        <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-4 lg:gap-6 min-w-0 w-full ${alignRight ? 'justify-end' : ''}`}>
           {/* Filter section */}
           <div 
             className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 min-w-0 filter-section w-full md:w-auto overflow-x-auto sm:overflow-x-visible scrollbar-hide"
@@ -278,13 +363,15 @@ const DataCenterFilters = ({
             } as CSSProperties}
           >
             {/* Filter by label with vertical border - hidden on mobile */}
-            <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
-              <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.891px] text-left text-nowrap tracking-[-0.1px]">
-                <p className="adjustLetterSpacing block leading-[19.6px] whitespace-pre">
-                  Filter by
-                </p>
+            {showFilterByLabel && (
+              <div className="hidden sm:flex flex-row items-start justify-start pl-4 pr-[15px] py-0 relative shrink-0 filter-by-label">
+                <div className="flex flex-col font-medium justify-center leading-[0] relative shrink-0 text-[#2a2a2f] text-[13.891px] text-left text-nowrap tracking-[-0.1px]">
+                  <p className="adjustLetterSpacing block leading-[19.6px] whitespace-pre">
+                    Filter by
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Filter buttons */}
             <div 
@@ -359,7 +446,7 @@ const DataCenterFilters = ({
                     onSearchChange('');
                   }
                 }}
-                className="bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button flex-shrink-0"
+                className="bg-white h-10 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-center overflow-clip hover:bg-gray-50 transition-colors filter-button flex-shrink-0"
               >
                 <span className="text-[13.453px] font-normal text-[#2a2a2f]">
                   Clear filters
@@ -367,34 +454,6 @@ const DataCenterFilters = ({
               </button>
             </div>
           </div>
-
-          {/* Search input */}
-          {showSearchBar && (
-            <div className="flex flex-row items-center justify-start w-full sm:w-auto sm:min-w-[168px] relative shrink-0 search-input">
-              <div className="flex flex-col items-start justify-start relative w-full sm:w-auto">
-                <div className="group bg-[#f6f6f6] border border-[#e9e9e9] hover:border-[#d1d5db] focus-within:border-[#9747FF] focus-within:ring-2 focus-within:ring-[#9747FF]/20 flex flex-row h-10 items-center justify-start p-px relative rounded shrink-0 w-full sm:w-[168px] sm:min-w-[168px] transition-all duration-200">
-                  <div className="flex items-center justify-center h-full w-7 shrink-0 mt-1 ml-1 text-[#757575] group-focus-within:text-[#9747FF] transition-colors duration-200">
-                    {isLoading ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#9747FF] border-t-transparent"></div>
-                    ) : (
-                      <SearchIcon />
-                    )}
-                  </div>
-                  <div className="flex-1 flex items-center h-full min-w-0">
-                    <div className="flex-1 flex items-center h-full px-1 py-0">
-                      <input
-                        type="text"
-                        placeholder="Search customers"
-                        value={currentSearchTerm}
-                        onChange={(e) => handleSearchChange(e.target.value)}
-                        className="w-full h-full bg-transparent border-none outline-none text-[#2a2a2f] text-[13.344px] placeholder:text-[#757575] font-normal placeholder:text-[12px] sm:placeholder:text-[13.344px] focus:text-[#2a2a2f] transition-colors duration-200"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -424,6 +483,14 @@ const SearchIcon = ({ className }: { className?: string }) => (
       stroke="currentColor"
       strokeWidth="1.5"
     />
+  </svg>
+);
+
+const ImportIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 2V7.25M8 7.25L5.75 5M8 7.25L10.25 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2.75 8.75V12.25C2.75 12.6642 3.08579 13 3.5 13H12.5C12.9142 13 13.25 12.6642 13.25 12.25V8.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M1.75 11.25H2.5M13.5 11.25H14.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 

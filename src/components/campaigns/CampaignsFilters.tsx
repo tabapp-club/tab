@@ -12,47 +12,55 @@ interface FilterOption {
 interface FilterState {
   type: FilterOption[];
   status: FilterOption[];
-  budget: FilterOption[];
-  performance: FilterOption[];
 }
+
+import { CampaignData } from './CampaignsClient';
 
 interface CampaignsFiltersProps {
   searchTerm?: string;
   onSearchChange?: (value: string) => void;
+  totalCampaigns?: number;
+  visibleCampaigns?: number;
+  allCampaigns?: CampaignData[];
 }
 
 const CampaignsFilters = ({
   searchTerm: externalSearchTerm,
-  onSearchChange
+  onSearchChange,
+  totalCampaigns: externalTotalCampaigns,
+  visibleCampaigns: externalVisibleCampaigns,
+  allCampaigns = []
 }: CampaignsFiltersProps = {}) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
   const [filters, setFilters] = useState<FilterState>({
-    type: [
-      { id: 'feedback', label: 'Feedback & Survey', checked: false },
-      { id: 'retention', label: 'Retention', checked: false },
-      { id: 'engagement', label: 'Engagement', checked: false },
-      { id: 'advertise', label: 'Advertise', checked: false },
-    ],
+    type: [],
     status: [
+      { id: 'pending', label: 'Pending', checked: false },
       { id: 'active', label: 'Active', checked: false },
-      { id: 'paused', label: 'Paused', checked: false },
-      { id: 'draft', label: 'Draft', checked: false },
       { id: 'completed', label: 'Completed', checked: false },
-    ],
-    budget: [
-      { id: 'low', label: 'Under $1,000', checked: false },
-      { id: 'medium', label: '$1,000 - $5,000', checked: false },
-      { id: 'high', label: 'Over $5,000', checked: false },
-    ],
-    performance: [
-      { id: 'excellent', label: 'Excellent (>10%)', checked: false },
-      { id: 'good', label: 'Good (5-10%)', checked: false },
-      { id: 'average', label: 'Average (2-5%)', checked: false },
-      { id: 'poor', label: 'Poor (<2%)', checked: false },
+      { id: 'rejected', label: 'Rejected', checked: false },
+      { id: 'draft', label: 'Draft', checked: false },
     ],
   });
+
+  // Update type filters when campaigns change - generate unique campaign titles
+  useEffect(() => {
+    const uniqueTitles = Array.from(new Set(allCampaigns.map(campaign => campaign.name)))
+      .sort()
+      .map(title => ({
+        id: title.toLowerCase().replace(/\s+/g, '-'),
+        label: title,
+        checked: false
+      }));
+    
+    setFilters(prev => ({
+      ...prev,
+      type: uniqueTitles
+    }));
+  }, [allCampaigns]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -93,9 +101,9 @@ const CampaignsFilters = ({
     }
   };
 
-  // Calculate total campaigns for display (mock data)
-  const totalCampaigns = 48;
-  const visibleCampaigns = 12;
+  // Use dynamic campaign counts or default to 0
+  const totalCampaigns = externalTotalCampaigns ?? 0;
+  const visibleCampaigns = externalVisibleCampaigns ?? 0;
 
   return (
     <div className="bg-white sticky top-0 z-10 border border-gray-200 rounded-lg min-w-0">
@@ -128,7 +136,7 @@ const CampaignsFilters = ({
               Filters:
             </span>
             <FilterDropdown
-              title="Type"
+              title="Campaign"
               options={filters.type}
               onSelectionChange={(selectedIds) => handleFilterChange('type', selectedIds)}
               isOpen={openFilter === 'type'}
@@ -142,22 +150,6 @@ const CampaignsFilters = ({
               isOpen={openFilter === 'status'}
               onToggle={() => handleFilterToggle('status')}
               selectedCount={getSelectedCount('status')}
-            />
-            <FilterDropdown
-              title="Budget"
-              options={filters.budget}
-              onSelectionChange={(selectedIds) => handleFilterChange('budget', selectedIds)}
-              isOpen={openFilter === 'budget'}
-              onToggle={() => handleFilterToggle('budget')}
-              selectedCount={getSelectedCount('budget')}
-            />
-            <FilterDropdown
-              title="Performance"
-              options={filters.performance}
-              onSelectionChange={(selectedIds) => handleFilterChange('performance', selectedIds)}
-              isOpen={openFilter === 'performance'}
-              onToggle={() => handleFilterToggle('performance')}
-              selectedCount={getSelectedCount('performance')}
             />
           </div>
 
@@ -182,7 +174,7 @@ const CampaignsFilters = ({
               </span>
               <div className="flex flex-wrap items-center gap-1 sm:gap-2 min-w-0">
                 <FilterDropdown
-                  title="Type"
+                  title="Campaign"
                   options={filters.type}
                   onSelectionChange={(selectedIds) => handleFilterChange('type', selectedIds)}
                   isOpen={openFilter === 'type'}
@@ -196,22 +188,6 @@ const CampaignsFilters = ({
                   isOpen={openFilter === 'status'}
                   onToggle={() => handleFilterToggle('status')}
                   selectedCount={getSelectedCount('status')}
-                />
-                <FilterDropdown
-                  title="Budget"
-                  options={filters.budget}
-                  onSelectionChange={(selectedIds) => handleFilterChange('budget', selectedIds)}
-                  isOpen={openFilter === 'budget'}
-                  onToggle={() => handleFilterToggle('budget')}
-                  selectedCount={getSelectedCount('budget')}
-                />
-                <FilterDropdown
-                  title="Performance"
-                  options={filters.performance}
-                  onSelectionChange={(selectedIds) => handleFilterChange('performance', selectedIds)}
-                  isOpen={openFilter === 'performance'}
-                  onToggle={() => handleFilterToggle('performance')}
-                  selectedCount={getSelectedCount('performance')}
                 />
               </div>
             </div>

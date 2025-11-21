@@ -158,7 +158,7 @@ const FilterDropdown = ({
           e.stopPropagation();
           onToggle();
         }}
-        className={`bg-white h-8 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 flex-shrink-0 ${
+        className={`bg-white h-10 px-3 py-px border border-[#e9e9e9] rounded-md flex items-center justify-between overflow-hidden hover:bg-gray-50 transition-colors filter-button relative w-28 sm:w-32 flex-shrink-0 ${
           selectedCount > 0
             ? 'border-[#9747FF] bg-[#9747FF]/5'
             : 'border-[#e9e9e9]'

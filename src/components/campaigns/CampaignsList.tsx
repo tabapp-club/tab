@@ -14,11 +14,15 @@ const extractCampaignIdFromHash = () => {
 interface CampaignsListProps {
   searchTerm?: string;
   onCampaignsUpdate?: (campaigns: CampaignData[]) => void;
+  onCountsUpdate?: (total: number, visible: number) => void;
+  onAllCampaignsUpdate?: (campaigns: CampaignData[]) => void;
 }
 
 export function CampaignsList({
   searchTerm = '',
-  onCampaignsUpdate
+  onCampaignsUpdate,
+  onCountsUpdate,
+  onAllCampaignsUpdate
 }: CampaignsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
@@ -66,6 +70,9 @@ export function CampaignsList({
       });
       
       setAllCampaigns(sortedCampaigns);
+      if (onAllCampaignsUpdate) {
+        onAllCampaignsUpdate(sortedCampaigns);
+      }
     };
 
     loadCampaigns();
@@ -160,6 +167,13 @@ export function CampaignsList({
       onCampaignsUpdate(filteredCampaigns);
     }
   }, [filteredCampaigns, onCampaignsUpdate]);
+
+  // Update parent component with counts
+  useEffect(() => {
+    if (onCountsUpdate) {
+      onCountsUpdate(filteredCampaigns.length, paginatedCampaigns.length);
+    }
+  }, [filteredCampaigns.length, paginatedCampaigns.length, onCountsUpdate]);
 
   return (
     <div ref={listContainerRef} className="flex flex-col h-full min-h-0">

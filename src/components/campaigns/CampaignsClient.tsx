@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { MobileHeaderButton } from '../MobileHeaderButton';
 import { useSidebar } from '../SidebarContext';
 import { CampaignsHeader } from './CampaignsHeader';
-import { RecommendedCampaigns, RecommendedCampaign } from './RecommendedCampaigns';
 import { CampaignsFilters } from './CampaignsFilters';
 import { CampaignsList } from './CampaignsList';
 
@@ -13,7 +12,7 @@ export interface CampaignData {
   id: string;
   name: string;
   type: 'feedback' | 'retention' | 'engagement' | 'advertise';
-  status: 'active' | 'paused' | 'draft' | 'completed' | 'pending';
+  status: 'active' | 'paused' | 'draft' | 'completed' | 'pending' | 'rejected';
   audience: number;
   sent: number;
   opened: number;
@@ -33,6 +32,9 @@ export function CampaignsClient() {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCampaigns, setFilteredCampaigns] = useState<CampaignData[]>([]);
+  const [allCampaigns, setAllCampaigns] = useState<CampaignData[]>([]);
+  const [totalCampaigns, setTotalCampaigns] = useState(0);
+  const [visibleCampaigns, setVisibleCampaigns] = useState(0);
   const { isCollapsed, isMobile } = useSidebar();
 
   // Load search term from URL parameters
@@ -70,18 +72,18 @@ export function CampaignsClient() {
   // Force uncollapsed state on mobile
   const actualIsCollapsed = isMobile ? false : isCollapsed;
 
-  const handleCreateCampaign = useCallback(() => {
-    router.push('/new-campaign', { scroll: false });
-  }, [router]);
-
-
   const handleCampaignsUpdate = useCallback((campaigns: CampaignData[]) => {
     setFilteredCampaigns(campaigns);
   }, []);
 
-  const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
-    router.push(`/send-campaign?id=${campaign.id}`);
-  }, [router]);
+  const handleAllCampaignsUpdate = useCallback((campaigns: CampaignData[]) => {
+    setAllCampaigns(campaigns);
+  }, []);
+
+  const handleCountsUpdate = useCallback((total: number, visible: number) => {
+    setTotalCampaigns(total);
+    setVisibleCampaigns(visible);
+  }, []);
 
   return (
     <main className={`flex-1 transition-sidebar bg-[#f6f6f6] ${
@@ -96,23 +98,23 @@ export function CampaignsClient() {
       <div className="w-full max-w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-8 lg:py-8 overflow-x-hidden">
         <div className="pt-12 lg:pt-0 space-y-6">
           {/* Header */}
-          <CampaignsHeader
-            onCreateCampaign={handleCreateCampaign}
-          />
-
-          {/* Recommended Campaigns */}
-          <RecommendedCampaigns onSendNow={handleSendNow} />
+          <CampaignsHeader />
 
           {/* Filters */}
           <CampaignsFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
+            totalCampaigns={totalCampaigns}
+            visibleCampaigns={visibleCampaigns}
+            allCampaigns={allCampaigns}
           />
 
           {/* Campaigns List */}
           <CampaignsList
             searchTerm={searchTerm}
             onCampaignsUpdate={handleCampaignsUpdate}
+            onCountsUpdate={handleCountsUpdate}
+            onAllCampaignsUpdate={handleAllCampaignsUpdate}
           />
         </div>
       </div>

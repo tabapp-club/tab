@@ -1427,12 +1427,6 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
 
 /* Mobile campaign page specific improvements */
 @media (max-width: 640px) {
-  /* Ensure proper mobile spacing */
-  .new-campaign-mobile {
-    padding-top: 72px; /* Account for fixed header */
-    padding-bottom: 160px; /* Account for enhanced bottom nav */
-  }
-
   /* Mobile campaign card improvements */
   .campaign-type-card {
     min-height: 80px;
@@ -1485,11 +1479,6 @@ h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
 
 /* Ultra-small mobile devices */
 @media (max-width: 375px) {
-  .new-campaign-mobile {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
   .mobile-campaign-title {
     font-size: 18px;
   }

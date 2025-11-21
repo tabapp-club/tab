@@ -6,7 +6,6 @@ import { useSidebar } from '../SidebarContext';
 import { FunnelHeader } from './FunnelHeader';
 import { FunnelVisualization } from './FunnelVisualization';
 import { FunnelTypeSelector } from './FunnelTypeSelector';
-import { TimeFilter } from '../TimeFilter';
 import { FunnelTypeSelectorVertical } from './FunnelTypeSelectorVertical';
 import { FunnelCampaignCards } from './FunnelCampaignCards';
 import { useRouter } from 'next/navigation';
@@ -33,12 +32,6 @@ export function CustomerFunnelClient() {
   const [selectedFunnelType, setSelectedFunnelType] = useState<FunnelType>('status');
   const { isCollapsed, isMobile } = useSidebar();
 
-  // Handle filter change from TimeFilter
-  const handleFilterChange = useCallback((filter: { type: string; days?: number; dateRange?: { from: Date | null; to: Date | null } }) => {
-    // Handle the filter change - you can map this to your existing logic if needed
-    console.log('Filter changed:', filter);
-  }, []);
-
   // Mock funnel data based on type - using brand color shades (#9747FF)
   const funnelData: Record<FunnelType, FunnelData[]> = useMemo(() => ({
     status: [
@@ -60,10 +53,10 @@ export function CustomerFunnelClient() {
       { stage: 'No Engagement', count: 1380, percentage: 10.8, color: '#C9A8FF', value: 1380, change: -12.5 },
     ],
     retention: [
-      { stage: 'Highly Retained', count: 2100, percentage: 16.5, color: '#9747FF', value: 2100, change: 18.2 },
-      { stage: 'Retained', count: 3850, percentage: 30.2, color: '#A877FF', value: 3850, change: 8.5 },
-      { stage: 'At Risk', count: 3420, percentage: 26.8, color: '#B891FF', value: 3420, change: -2.1 },
-      { stage: 'Churned', count: 3400, percentage: 26.6, color: '#C9A8FF', value: 3400, change: -6.8 },
+      { stage: 'Highly', count: 2100, percentage: 16.5, color: '#9747FF', value: 2100, change: 18.2 },
+      { stage: 'Moderately', count: 3850, percentage: 30.2, color: '#A877FF', value: 3850, change: 8.5 },
+      { stage: 'Low', count: 3420, percentage: 26.8, color: '#B891FF', value: 3420, change: -2.1 },
+      { stage: 'No Retention', count: 3400, percentage: 26.6, color: '#C9A8FF', value: 3400, change: -6.8 },
     ],
     purchase_behavior: [
       { stage: 'First Customers', count: 2450, percentage: 19.2, color: '#9747FF', value: 2450, change: 14.3 },
@@ -108,7 +101,7 @@ export function CustomerFunnelClient() {
 
   const handleSendNow = useCallback((campaign: RecommendedCampaign) => {
     storeCampaignInLookup(campaign);
-    router.push(`/send-campaign?id=${campaign.id}`, { scroll: false });
+    router.push(`/send-campaign?id=${campaign.id}`);
   }, [router, storeCampaignInLookup]);
 
   return (
@@ -144,11 +137,6 @@ export function CustomerFunnelClient() {
               onTypeChange={handleFunnelTypeChange}
             />
 
-            {/* Filters */}
-            <div className="mb-0 flex justify-end">
-              <TimeFilter onFilterChange={handleFilterChange} />
-            </div>
-
             {/* Main Funnel Visualization */}
             <FunnelVisualization
               data={currentFunnelData}
@@ -164,7 +152,7 @@ export function CustomerFunnelClient() {
 
           </div>
 
-          {/* Desktop Layout - Row View (like new-campaign) */}
+          {/* Desktop Layout - Row View */}
           <div className="hidden lg:block">
             <div className="flex items-start justify-start w-full">
               {/* Left Sidebar - Funnel Type Selector (Vertical) - Fixed */}
@@ -181,11 +169,6 @@ export function CustomerFunnelClient() {
               <div className={`flex-1 min-w-0 space-y-6 pb-10 ${
                 actualIsCollapsed ? 'ml-[420px]' : 'ml-[588px]'
               }`}>
-              {/* Filters */}
-              <div className="flex justify-end">
-                <TimeFilter onFilterChange={handleFilterChange} />
-              </div>
-
               {/* Main Funnel Visualization */}
               <FunnelVisualization
                 data={currentFunnelData}

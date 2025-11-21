@@ -3,6 +3,7 @@
 import { FunnelData, FunnelType } from './CustomerFunnelClient';
 import { ArrowRight } from 'lucide-react';
 import { RecommendedCampaign } from '../campaigns/RecommendedCampaigns';
+import { useRouter } from 'next/navigation';
 
 interface FunnelCampaignCardsProps {
   data: FunnelData[];
@@ -62,13 +63,13 @@ const getCampaignAdvantages = (stage: string, type: FunnelType): string[] => {
 
   // Retention type advantages - High urgency
   if (type === 'retention') {
-    if (stageLower.includes('highly retained')) {
+    if (stageLower === 'highly') {
       return ['Growth engine: Maximize referrals - 5x customer acquisition', 'Upsell premium tier - 60% conversion opportunity', 'Increase lifetime value - 4x revenue potential'];
-    } else if (stageLower.includes('retained')) {
+    } else if (stageLower === 'moderately') {
       return ['Prevent churn risk: Strengthen before they reconsider', 'Growth opportunity: Upgrade to premium - 40% will convert', 'Boost satisfaction - prevent 30% churn risk'];
-    } else if (stageLower.includes('risk')) {
+    } else if (stageLower === 'low') {
       return ['URGENT: 60% will churn in 20 days without intervention', 'Save ₹4L+ revenue at critical risk - act today', 'Win back at-risk customers before permanent loss'];
-    } else if (stageLower.includes('churned')) {
+    } else if (stageLower.includes('no retention')) {
       return ['Revenue recovery: 20% will return with right offer', 'Reclaim lost customers - ₹2.5L+ recoverable revenue', 'Win back before they switch permanently'];
     }
   }
@@ -97,7 +98,7 @@ const getCampaignType = (stage: string, type: FunnelType): string => {
   if (type === 'status' && (stageLower.includes('inactive') || stageLower.includes('dormant') || stageLower.includes('risk'))) {
     return 'retention';
   }
-  if (type === 'retention' && stageLower.includes('churned')) {
+  if (type === 'retention' && stageLower.includes('no retention')) {
     return 'retention';
   }
   if (type === 'engagement' && (stageLower.includes('low') || stageLower.includes('no'))) {
@@ -122,10 +123,10 @@ const createRecommendedCampaign = (stage: FunnelData, type: FunnelType): Recomme
   // Determine urgency based on change and stage type
   let urgency: 'high' | 'medium' | 'low' = 'medium';
 
-  // High urgency for at-risk, inactive, dormant, low engagement, churned
+  // High urgency for at-risk, inactive, dormant, low engagement, no retention
   if (stageLower.includes('risk') || stageLower.includes('inactive') ||
-      stageLower.includes('dormant') || stageLower.includes('low') ||
-      stageLower.includes('churned') || stageLower.includes('no engagement')) {
+      stageLower.includes('dormant') || stageLower === 'low' ||
+      stageLower.includes('no retention') || stageLower.includes('no engagement')) {
     urgency = 'high';
   } else if (stage.change && stage.change < -3) {
     urgency = 'high';
@@ -161,6 +162,8 @@ const formatCurrency = (value: number): string => {
 };
 
 export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCardsProps) {
+  const router = useRouter();
+
   const handleSendMessages = (stage: FunnelData, e?: React.MouseEvent) => {
     if (e) {
       e.stopPropagation();
@@ -194,9 +197,8 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      window.location.href = `/send-campaign?id=${campaign.id}`;
-    }
+    // Use router.push for client-side navigation instead of window.location.href
+    router.push(`/send-campaign?id=${campaign.id}`);
   };
 
   // Calculate customer metrics for status tab
@@ -292,8 +294,8 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
       value:
         type === 'retention'
           ? masterTotalCount
-          : findStageCount(['retained', 'churned', 'at risk']) || Math.round(masterTotalCount * 0.58),
-      description: 'Highly Retained • Retained • At Risk • Churned',
+          : findStageCount(['highly', 'moderately', 'low', 'no retention']) || Math.round(masterTotalCount * 0.58),
+      description: 'Highly • Moderately • Low • No Retention',
     },
     {
       label: 'Purchase Value',

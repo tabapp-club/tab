@@ -102,19 +102,6 @@
           "type": "image/svg+xml"
         }
       ]
-    },
-    {
-      "name": "New Campaign",
-      "short_name": "New Campaign",
-      "description": "Create new campaign",
-      "url": "/new-campaign",
-      "icons": [
-        {
-          "src": "/icons/icon-96x96.svg",
-          "sizes": "96x96",
-          "type": "image/svg+xml"
-        }
-      ]
     }
   ]
 }

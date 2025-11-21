@@ -1,4 +1,3 @@
-import { Sidebar } from '@/components/Sidebar';
 import { SendCampaignContent } from './SendCampaignContent';
 import { Metadata } from 'next';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -28,14 +27,9 @@ export const metadata: Metadata = {
 export default function SendCampaignPage() {
   return (
     <ProtectedRoute>
-      <div className="bg-[#f6f6f6]">
-        <div className="flex relative">
-          <Sidebar />
-          <Suspense fallback={<div className="flex-1 flex items-center justify-center">Loading...</div>}>
-            <SendCampaignContent />
-          </Suspense>
-        </div>
-      </div>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-[#f6f6f6]">Loading...</div>}>
+        <SendCampaignContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }

@@ -43,9 +43,9 @@ export function FunnelVisualization({ data, type }: FunnelVisualizationProps) {
     // Retained customers - active/engaged customers
     let retainedCustomers = 0;
     if (type === 'retention') {
-      const highlyRetained = data.find(s => s.stage.toLowerCase().includes('highly retained'))?.count || 0;
-      const retained = data.find(s => s.stage.toLowerCase() === 'retained' || (s.stage.toLowerCase().includes('retained') && !s.stage.toLowerCase().includes('highly')))?.count || 0;
-      retainedCustomers = highlyRetained + retained;
+      const highly = data.find(s => s.stage.toLowerCase() === 'highly')?.count || 0;
+      const moderately = data.find(s => s.stage.toLowerCase() === 'moderately')?.count || 0;
+      retainedCustomers = highly + moderately;
     } else if (type === 'status') {
       retainedCustomers = data.find(s => s.stage.toLowerCase().includes('active'))?.count || 0;
     } else {

@@ -34,7 +34,7 @@ const funnelTypes: Array<{
   {
     type: 'retention',
     label: 'Retention',
-    description: 'Highly Retained, Retained, At Risk, Churned',
+    description: 'Highly, Moderately, Low, No Retention',
     icon: RefreshCw,
     color: '#f59e0b',
   },

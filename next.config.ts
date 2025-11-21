@@ -1,7 +1,6 @@
-/**
- * @type {import('next').NextConfig}
- */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   // Removed static export to allow dynamic customer pages
   // output: 'export',
 
@@ -72,6 +71,33 @@ const nextConfig = {
 
   // Optional: Change the output directory `out` -> `dist`
   // distDir: 'dist',
+
+  // Custom webpack configuration (for webpack builds)
+  webpack: (config: any, { buildId, dev, isServer, defaultLoaders, webpack }: any) => {
+    // Example: Add custom webpack plugins
+    // config.plugins.push(new webpack.DefinePlugin({
+    //   'process.env.CUSTOM_VAR': JSON.stringify('value'),
+    // }));
+
+    // Example: Modify webpack rules
+    // config.module.rules.push({
+    //   test: /\.custom$/,
+    //   use: ['custom-loader'],
+    // });
+
+    // Example: Add alias
+    // config.resolve.alias = {
+    //   ...config.resolve.alias,
+    //   '@custom': path.resolve(__dirname, 'src/custom'),
+    // };
+
+    // Important: Always return the modified config
+    return config;
+  },
+
+  // Turbopack configuration (Next.js 16+ uses Turbopack by default)
+  // Add empty config to allow builds with webpack config present
+  turbopack: {},
 }
 
-module.exports = nextConfig
+export default nextConfig;

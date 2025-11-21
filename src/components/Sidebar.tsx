@@ -236,15 +236,15 @@ const getMenuItems = (hasFeature: (feature: keyof BusinessFeatures) => boolean) 
     notificationCount: 0,
     featureKey: "achievements" as const
   },
-  {
-    id: "workflow-automation",
-    label: "Automation",
-    description: "Automate communications",
-    icon: WorkflowAutomationIcon,
-    href: "/workflow-automation",
-    notificationCount: 7,
-    featureKey: "automation" as const
-  },
+  // {
+  //   id: "workflow-automation",
+  //   label: "Automation",
+  //   description: "Automate communications",
+  //   icon: WorkflowAutomationIcon,
+  //   href: "/workflow-automation",
+  //   notificationCount: 7,
+  //   featureKey: "automation" as const
+  // },
   {
     id: "business-records",
     label: "Business Records",
@@ -389,7 +389,7 @@ export function Sidebar() {
             const isActive =
               (item.id === "dashboard" && pathname === "/dashboard") ||
               (item.id === "data-center" && pathname === "/data-center") ||
-              (item.id === "campaigns" && (pathname.startsWith("/new-campaign") || pathname.startsWith("/campaigns"))) ||
+              (item.id === "campaigns" && pathname.startsWith("/campaigns")) ||
               (item.id === "workflow-automation" && pathname.startsWith("/workflow-automation")) ||
               (item.id === "customer-funnel" && pathname === "/customer-funnel") ||
               (item.id === "business-records" && pathname === "/business-log") ||
