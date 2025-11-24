@@ -4,13 +4,13 @@ import CustomerDetailsClient from '../../../components/CustomerDetailsClient';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 export const metadata: Metadata = {
-  title: 'Customer Details | Business Dashboard',
-  description: 'Comprehensive customer profile with purchase patterns, insights, and risk assessment.',
-  keywords: ['customer details', 'profile', 'purchase patterns', 'risk assessment', 'business dashboard'],
+  title: 'Patient Details | Business Dashboard',
+  description: 'Comprehensive patient profile with purchase patterns, insights, and risk assessment.',
+  keywords: ['patient details', 'client details', 'profile', 'purchase patterns', 'risk assessment', 'business dashboard'],
   authors: [{ name: 'Business Dashboard' }],
   openGraph: {
-    title: 'Customer Details | Business Dashboard',
-    description: 'Comprehensive customer profile with purchase patterns, insights, and risk assessment.',
+    title: 'Patient Details | Business Dashboard',
+    description: 'Comprehensive patient profile with purchase patterns, insights, and risk assessment.',
     url: '/customer',
     siteName: 'Business Dashboard',
     images: [
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Customer Details Dashboard',
+        alt: 'Patient Details Dashboard',
       },
     ],
     locale: 'en_US',
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Customer Details | Business Dashboard',
-    description: 'Comprehensive customer profile with purchase patterns, insights, and risk assessment.',
+    title: 'Patient Details | Business Dashboard',
+    description: 'Comprehensive patient profile with purchase patterns, insights, and risk assessment.',
     images: ['/og-image.png'],
   },
   robots: {
@@ -56,7 +56,7 @@ interface CustomerPageProps {
 // This is now optional since we removed static export
 export async function generateStaticParams() {
   // Return empty array to allow dynamic generation
-  // In production, you could pre-generate popular customer pages here
+  // In production, you could pre-generate popular patient pages here
   return [];
 }
 

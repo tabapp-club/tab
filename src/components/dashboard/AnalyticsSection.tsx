@@ -91,37 +91,37 @@ export function AnalyticsSection({ onAskReason }: AnalyticsSectionProps) {
         let trendValue = "0%";
 
         switch (card.title) {
-          case "Total Sales":
+          case "Total Patients/Clients":
             value = apiData.all_customers?.toLocaleString() ?? "-";
             previousValue = apiData.all_customers_prev?.toLocaleString() ?? "-";
             trend = apiData.all_customers_change >= 0 ? "up" : "down";
             trendValue = Math.abs(apiData.all_customers_change ?? 0).toFixed(2) + "%";
             break;
-          case "Purchase Value":
+          case "Total Business":
             value = (apiData.total_revenue?.toLocaleString() ?? "-");
             previousValue = (apiData.total_revenue_prev?.toLocaleString() ?? "-");
             trend = apiData.total_revenue_change >= 0 ? "up" : "down";
             trendValue = Math.abs(apiData.total_revenue_change ?? 0).toFixed(2) + "%";
             break;
-          case "New customers":
+          case "New patients/clients":
             value = apiData.new_customers?.toLocaleString() ?? "-";
             previousValue = apiData.new_customers_prev?.toLocaleString() ?? "-";
             trend = apiData.new_customers_change >= 0 ? "up" : "down";
             trendValue = Math.abs(apiData.new_customers_change ?? 0).toFixed(2) + "%";
             break;
-          case "Retained customers":
+          case "Retained patients/clients":
             value = apiData.retained_customers?.toLocaleString() ?? "-";
             previousValue = apiData.retained_customers_prev?.toLocaleString() ?? "-";
             trend = apiData.retained_customers_change >= 0 ? "up" : "down";
             trendValue = Math.abs(apiData.retained_customers_change ?? 0).toFixed(2) + "%";
             break;
-          case "Active customers":
+          case "Active patients/clients":
             value = apiData.active_customers?.toLocaleString() ?? "-";
             previousValue = apiData.active_customers_prev?.toLocaleString() ?? "-";
             trend = apiData.active_customers_change >= 0 ? "up" : "down";
             trendValue = Math.abs(apiData.active_customers_change ?? 0).toFixed(2) + "%";
             break;
-          case "Inactive customers":
+          case "Inactive patients/clients":
             value = apiData.inactive_customers?.toLocaleString() ?? "-";
             previousValue = apiData.inactive_customers_prev?.toLocaleString() ?? "-";
             trend = apiData.inactive_customers_change >= 0 ? "up" : "down";

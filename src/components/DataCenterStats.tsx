@@ -20,7 +20,7 @@ interface DataCenterStatsProps {
 const statConfig = [
   {
     key: 'total_users',
-    label: 'Total users',
+    label: 'Total Patients/Clients',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'total',
     advantage: 'Reach your entire audience at once',
@@ -32,10 +32,10 @@ const statConfig = [
   },
   {
     key: 'new_users',
-    label: 'New users',
+    label: 'New patients/clients',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'new',
-    advantage: 'Welcome and onboard new customers',
+    advantage: 'Welcome and onboard new patients/clients',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -44,10 +44,10 @@ const statConfig = [
   },
   {
     key: 'retained_users',
-    label: 'Retained users',
+    label: 'Retained patients/clients',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'retained',
-    advantage: 'Reward loyal customers and boost retention',
+    advantage: 'Reward loyal patients/clients and boost retention',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -56,7 +56,7 @@ const statConfig = [
   },
   {
     key: 'active_users',
-    label: 'Active users',
+    label: 'Active patients/clients',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'active',
     advantage: 'Engage your most responsive audience',
@@ -68,10 +68,10 @@ const statConfig = [
   },
   {
     key: 'inactive_users',
-    label: 'InActive users',
+    label: 'Inactive patients/clients',
     labelColor: 'text-[#a1a1a1]',
     filterType: 'inactive',
-    advantage: 'Re-engage dormant customers with offers',
+    advantage: 'Re-engage dormant patients/clients with offers',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -134,19 +134,19 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard, isLoading = false
             }`}
             onClick={() => onCardClick?.(stat.filterType)}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="min-w-0 flex-1">
-                <h3 className={`text-xs font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} truncate`}>
-                  {stat.label}
-                </h3>
-                <p className="text-lg font-bold text-gray-900 mt-1 truncate">{value}</p>
-              </div>
+            <div className="flex items-start gap-3 mb-3">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
                 isSelected ? 'bg-[#9747FF]' : 'bg-blue-100'
               }`}>
                 <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
                   {stat.icon}
                 </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className={`text-xs font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} break-words leading-tight`}>
+                  {stat.label}
+                </h3>
+                <p className="text-lg font-bold text-gray-900 mt-1 truncate">{value}</p>
               </div>
             </div>
             <div className="flex items-center min-w-0 mb-2">
@@ -178,19 +178,19 @@ const DataCenterStats = ({ metrics, onCardClick, selectedCard, isLoading = false
             }`}
             onClick={() => onCardClick?.(stat.filterType)}
           >
-            <div className="flex items-center justify-between">
-              <div className="min-w-0 flex-1">
-                <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} truncate`}>
-                  {stat.label}
-                </h3>
-                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{value}</p>
-              </div>
+            <div className="flex items-start gap-3 sm:gap-4">
               <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
                 isSelected ? 'bg-[#9747FF]' : 'bg-blue-100'
               }`}>
                 <div className={`${isSelected ? 'text-white' : 'text-blue-600'}`}>
                   {stat.icon}
                 </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#9747FF]' : stat.labelColor} break-words leading-tight`}>
+                  {stat.label}
+                </h3>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mt-1 truncate">{value}</p>
               </div>
             </div>
             <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center min-w-0">

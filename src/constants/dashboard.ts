@@ -9,43 +9,43 @@ export interface StaticCardStructure {
 export const STATIC_CARD_STRUCTURE: StaticCardStructure[] = [
   {
     id: 1,
-    title: "Total Sales",
-    legendLabel: "Sales",
+    title: "Total Patients/Clients",
+    legendLabel: "Patients/Clients",
     unit: "Users",
     bgColor: "bg-[#17c653]"
   },
   {
     id: 2,
-    title: "Purchase Value",
-    legendLabel: "Purchase value",
+    title: "Total Business",
+    legendLabel: "Total Business",
     unit: "Rupees",
     bgColor: "bg-[#17c653]"
   },
   {
     id: 3,
-    title: "New customers",
-    legendLabel: "New customers",
+    title: "New patients/clients",
+    legendLabel: "New patients/clients",
     unit: "Users",
     bgColor: "bg-[#9747FF]"
   },
   {
     id: 4,
-    title: "Retained customers",
-    legendLabel: "Retained customers",
+    title: "Retained patients/clients",
+    legendLabel: "Retained patients/clients",
     unit: "Users",
     bgColor: "bg-[#9747FF]"
   },
   {
     id: 5,
-    title: "Active customers",
-    legendLabel: "Active customers",
+    title: "Active patients/clients",
+    legendLabel: "Active patients/clients",
     unit: "Users",
     bgColor: "bg-[#9747FF]"
   },
   {
     id: 6,
-    title: "Inactive customers",
-    legendLabel: "Inactive customers",
+    title: "Inactive patients/clients",
+    legendLabel: "Inactive patients/clients",
     unit: "Users",
     bgColor: "bg-[#ff6b6b]"
   },

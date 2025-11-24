@@ -298,7 +298,7 @@ export function FunnelCampaignCards({ data, type, onSendNow }: FunnelCampaignCar
       description: 'Highly • Moderately • Low • No Retention',
     },
     {
-      label: 'Purchase Value',
+      label: 'Total Business',
       value:
         type === 'purchase_behavior'
           ? masterTotalCount

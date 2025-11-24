@@ -225,6 +225,15 @@ export function useCustomerData({ customerId }: UseCustomerDataProps) {
         riskLevel = getRiskLevel(userDataLike);
       }
 
+      // Generate demographics, using API data if available
+      const generatedDemographics = generateDemographics(userDataLike);
+      const demographics: Demographics = {
+        age: apiData.details?.age ?? generatedDemographics.age,
+        gender: apiData.details?.gender ?? generatedDemographics.gender,
+        location: generatedDemographics.location,
+        incomeLevel: generatedDemographics.incomeLevel,
+      };
+
       // Transform to customer details format
       const transformedData: CustomerData = {
         id: customerId,
@@ -243,7 +252,7 @@ export function useCustomerData({ customerId }: UseCustomerDataProps) {
         categories: categories,
         purchaseHistory: purchaseHistory,
         insights: generateInsights(userDataLike),
-        demographics: generateDemographics(userDataLike),
+        demographics: demographics,
         preferences: generatePreferences(userDataLike),
         userType: userType,
         visits: visits,

@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { MobileHeaderButton } from './MobileHeaderButton';
 import { useSidebar } from './SidebarContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCustomerData } from '@/hooks/useCustomerData';
+import PatientTimeline from './PatientTimeline';
 
 // Analytics calculation functions
 const calculateEngagementScore = (visits: number, daysSinceJoin: number) => {
@@ -31,16 +31,16 @@ const calculateRetentionScore = (visits: number, totalSpent: number, avgOrderVal
   return Math.max(0, Math.min(100, score));
 };
 
-const calculateCustomerLifetimeValue = (avgOrderValue: number, visits: number, daysSinceJoin: number) => {
+const calculatePatientLifetimeValue = (avgOrderValue: number, visits: number, daysSinceJoin: number) => {
   const purchaseFrequency = visits / Math.max(daysSinceJoin / 365, 1);
-  const customerLifespan = 3; // years
-  return avgOrderValue * purchaseFrequency * customerLifespan;
+  const patientLifespan = 3; // years
+  return avgOrderValue * purchaseFrequency * patientLifespan;
 };
 
 // Convert API user type to display format
 const getUserTypeDisplay = (userType: string | undefined) => {
   if (!userType) {
-    return { label: 'Customer', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: '👤' };
+    return { label: 'Patient/Client', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: '👤' };
   }
 
   const normalizedType = userType.toLowerCase();
@@ -56,14 +56,6 @@ const getUserTypeDisplay = (userType: string | undefined) => {
     color: 'bg-gray-100 text-gray-800 border-gray-200',
     icon: '👤'
   };
-};
-
-// Keep customer segment for other uses (like analytics)
-const getCustomerSegment = (totalSpent: number, visits: number) => {
-  if (totalSpent > 2000 && visits > 15) return { segment: 'VIP', color: 'bg-purple-100 text-purple-800 border-purple-200', icon: '👑' };
-  if (totalSpent > 1000 && visits > 10) return { segment: 'Premium', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: '⭐' };
-  if (totalSpent > 500 && visits > 5) return { segment: 'Regular', color: 'bg-green-100 text-green-800 border-green-200', icon: '✅' };
-  return { segment: 'New', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: '🆕' };
 };
 
 // Convert API risk level to display format
@@ -86,15 +78,14 @@ const getRiskLevelDisplay = (riskLevel: 'low' | 'moderate' | 'high' | undefined)
 
 export default function CustomerDetailsClient({ customerId }: { customerId: string }) {
   const { isCollapsed, isMobile } = useSidebar();
-  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState('purchases');
+  const [activeTab, setActiveTab] = useState('timeline');
 
   // Handle URL parameters for tab navigation
   useEffect(() => {
     const tab = searchParams.get('tab');
-    const validTabs = ['purchases', 'engagement', 'analytics'];
+    const validTabs = ['timeline', 'purchases', 'analytics'];
 
     if (tab && validTabs.includes(tab)) {
       setActiveTab(tab);
@@ -120,22 +111,9 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
 
   const engagementScore = customerData ? calculateEngagementScore(customerData.visits, daysSinceJoin) : { score: 0, level: 'Unknown', color: 'bg-gray-500' };
   const retentionScore = customerData ? calculateRetentionScore(customerData.visits, customerData.totalSpent, customerData.averageOrderValue, customerData.categories) : 0;
-  const customerLifetimeValue = customerData ? calculateCustomerLifetimeValue(customerData.averageOrderValue, customerData.visits, daysSinceJoin) : 0;
-  const customerSegment = customerData ? getCustomerSegment(customerData.totalSpent, customerData.visits) : { segment: 'Unknown', color: '', icon: '❓' };
+  const patientLifetimeValue = customerData ? calculatePatientLifetimeValue(customerData.averageOrderValue, customerData.visits, daysSinceJoin) : 0;
   const userTypeDisplay = customerData ? getUserTypeDisplay(customerData.userType) : { label: 'Unknown', color: '', icon: '❓' };
   const riskLevel = customerData ? getRiskLevelDisplay(customerData.riskLevel) : { level: 'Unknown', color: '' };
-
-  // Calculate purchase trend
-  const purchaseTrend = customerData && customerData.purchaseHistory.length >= 2 ?
-    (() => {
-      const recent = customerData.purchaseHistory.slice(0, 3);
-      const older = customerData.purchaseHistory.slice(-3);
-      const recentAvg = recent.reduce((sum, p) => sum + p.amount, 0) / recent.length;
-      const olderAvg = older.reduce((sum, p) => sum + p.amount, 0) / older.length;
-      if (recentAvg > olderAvg * 1.1) return 'up';
-      if (recentAvg < olderAvg * 0.9) return 'down';
-      return 'stable';
-    })() : 'stable';
 
   if (loading) {
     return (
@@ -150,15 +128,15 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
                 {/* Header */}
                 <div>
-                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Patient Report Card</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive patient analytics & health insights</p>
                 </div>
 
                 {/* Loading Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9747FF] mx-auto mb-4"></div>
-                    <p className="text-[#626266]">Loading customer data...</p>
+                    <p className="text-[#626266]">Loading patient data...</p>
                   </div>
                 </div>
               </div>
@@ -182,15 +160,15 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
                 {/* Header */}
                 <div>
-                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Patient Report Card</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive patient analytics & health insights</p>
                 </div>
 
                 {/* Error Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Error Loading Customer Data</h2>
+                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Error Loading Patient Data</h2>
                     <p className="text-[#626266] mb-4">{error.message}</p>
                     <button
                       onClick={() => window.location.reload()}
@@ -221,16 +199,16 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
               <div className="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 flex flex-col min-w-0 overflow-y-auto">
                 {/* Header */}
                 <div>
-                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                  <h1 className="text-[20px] font-bold text-[#2a2a2f]">Patient Report Card</h1>
+                  <p className="text-[#626266] text-[14px] font-normal">Comprehensive patient analytics & health insights</p>
                 </div>
 
                 {/* Not Found Content */}
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-gray-500 text-6xl mb-4">👤</div>
-                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Customer Not Found</h2>
-                    <p className="text-[#626266] mb-4">The customer you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+                    <h2 className="text-xl font-bold text-[#2a2a2f] mb-2">Patient Not Found</h2>
+                    <p className="text-[#626266] mb-4">The patient you&apos;re looking for doesn&apos;t exist or has been removed.</p>
                     <button
                       onClick={() => router.push('/data-center')}
                       className="px-4 py-2 bg-[#9747FF] text-white rounded hover:bg-[#9747FF]/90 transition-colors"
@@ -260,11 +238,11 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
 
               {/* Header */}
               <div>
-                <h1 className="text-[20px] font-bold text-[#2a2a2f]">Customer Intelligence</h1>
-                <p className="text-[#626266] text-[14px] font-normal">Comprehensive analytics & engagement insights</p>
+                <h1 className="text-[20px] font-bold text-[#2a2a2f]">Patient Report Card</h1>
+                <p className="text-[#626266] text-[14px] font-normal">Comprehensive patient analytics & health insights</p>
               </div>
 
-              {/* Customer Profile Card */}
+              {/* Patient Profile Card */}
               <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
                   {/* Avatar and Basic Info */}
@@ -274,7 +252,15 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                     </div>
                     <div>
                       <h2 className="text-[16px] font-bold text-[#2a2a2f] mb-1">{customerData.name}</h2>
-                      <p className="text-[#626266] text-[14px] font-normal mb-2">Phone: {customerData.mobile}</p>
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <p className="text-[#626266] text-[14px] font-normal">Phone: {customerData.mobile}</p>
+                        {customerData.demographics?.gender && (
+                          <p className="text-[#626266] text-[14px] font-normal">Gender: {customerData.demographics.gender}</p>
+                        )}
+                        {customerData.demographics?.age && (
+                          <p className="text-[#626266] text-[14px] font-normal">Age: {customerData.demographics.age}</p>
+                        )}
+                      </div>
                       <div className="flex gap-2 overflow-x-auto sm:flex-wrap scrollbar-hide pb-1 sm:pb-0">
                         <span className={`px-3 py-1 text-[12px] font-normal rounded-full border flex-shrink-0 ${customerData.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200'}`}>
                           {customerData.status === 'active' ? '🟢 Active' : '🔴 Inactive'}
@@ -307,96 +293,13 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 </div>
               </div>
 
-              {/* Engagement Metrics */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Engagement Score */}
-                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Engagement Score</h3>
-                    <span className="text-2xl">{engagementScore.score}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
-                    <div
-                      className={`${engagementScore.color} h-1 rounded-full transition-all duration-1000`}
-                      style={{ width: `${engagementScore.score}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-[12px] font-normal text-[#626266] mb-4">{engagementScore.level} engagement level</p>
-                  <div className="space-y-2 text-[14px] font-normal">
-                    <div className="flex justify-between">
-                      <span className="text-[#626266]">Visits per month:</span>
-                      <span className="font-medium">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#626266]">Last activity:</span>
-                      <span className="font-medium">{daysSinceLastPurchase} days ago</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Retention Score */}
-                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Retention Score</h3>
-                    <span className="text-2xl">{retentionScore}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
-                    <div
-                      className="bg-green-500 h-1 rounded-full transition-all duration-1000"
-                      style={{ width: `${retentionScore}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-[12px] font-normal text-[#626266] mb-4">
-                    {retentionScore >= 80 ? 'Excellent retention' :
-                     retentionScore >= 60 ? 'Good retention' :
-                     retentionScore >= 40 ? 'Moderate retention' : 'Needs attention'}
-                  </p>
-                  <div className="space-y-2 text-[14px] font-normal">
-                    <div className="flex justify-between">
-                      <span className="text-[#626266]">Customer lifetime:</span>
-                      <span className="font-medium">₹{customerLifetimeValue.toFixed(0)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#626266]">Avg order value:</span>
-                      <span className="font-medium">₹{customerData.averageOrderValue.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Risk Assessment */}
-                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Risk Assessment</h3>
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full border ${riskLevel.color}`}>
-                      {riskLevel.level}
-                    </span>
-                  </div>
-                  <div className="space-y-4 text-[14px] font-normal">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[#626266]">Churn Risk:</span>
-                      <span className="font-medium">{100 - retentionScore}%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-[#626266]">Days since last purchase:</span>
-                      <span className="font-medium">{daysSinceLastPurchase}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-[#626266]">Purchase frequency:</span>
-                      <span className="font-medium">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}/month</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* Tab Navigation */}
               <div className="bg-white rounded border border-[#e9e9e9]">
                 <div className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}>
                   {[
-                    // { id: 'overview', label: 'Overview', icon: '📊' },
+                    { id: 'timeline', label: 'Patient Timeline', icon: '📋' },
                     { id: 'purchases', label: 'Purchases', icon: '🛒' },
-                    { id: 'engagement', label: 'Engagement', icon: '🎯' },
                     { id: 'analytics', label: 'Analytics', icon: '📈' },
-                    // { id: 'insights', label: 'Insights', icon: '💡' }
                   ].map((tab) => (
                     <button
                       key={tab.id}
@@ -418,126 +321,6 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
 
               {/* Tab Content */}
               <div className="space-y-6">
-                {activeTab === 'overview' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0 overflow-x-auto scrollbar-hide">
-                    {/* Purchase History */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6 min-w-0">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-[16px] font-bold text-[#2a2a2f]">Recent Purchases</h3>
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                          {customerData.purchaseHistory.length} Orders
-                        </span>
-                      </div>
-                      <div className="space-y-3">
-                        {customerData.purchaseHistory.slice(0, 5).map((purchase) => (
-                          <div key={purchase.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-[#e9e9e9] min-w-0">
-                            <div className="flex items-center gap-3 min-w-0 flex-1">
-                              <div className="w-8 h-8 bg-[#9747FF] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                                {purchase.category.charAt(0)}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="font-medium text-[#2a2a2f] text-[14px] font-normal truncate">Order #{purchase.id}</p>
-                                <p className="text-[12px] font-normal text-[#626266] truncate">{purchase.category} • {purchase.items} items</p>
-                              </div>
-                            </div>
-                            <div className="text-right flex-shrink-0 ml-2">
-                              <p className="font-semibold text-[#2a2a2f] text-[14px] font-normal">₹{purchase.amount.toFixed(2)}</p>
-                              <p className="text-[12px] font-normal text-[#626266]">{new Date(purchase.date).toLocaleDateString()}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Customer Insights */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6 min-w-0">
-                      <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Quick Insights</h3>
-                      <div className="space-y-3">
-                        {customerData.insights.map((insight, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-[#e9e9e9] min-w-0">
-                            <span className="text-lg flex-shrink-0">{insight.type === 'positive' ? '🎯' : insight.type === 'negative' ? '⚠️' : 'ℹ️'}</span>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal break-words">{insight.title}</p>
-                              <p className="text-[12px] font-normal text-[#626266] mt-1 break-words">{insight.description}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'engagement' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Engagement Timeline */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                      <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Engagement Timeline</h3>
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                          <div className="flex-1">
-                            <p className="font-medium text-[14px] font-normal">Customer joined</p>
-                            <p className="text-[12px] font-normal text-[#626266]">
-                              {customerData.engagementTimeline?.customerJoinedAt
-                                ? new Date(customerData.engagementTimeline.customerJoinedAt).toLocaleDateString()
-                                : new Date(customerData.joinDate).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                          <div className="flex-1">
-                            <p className="font-medium text-[14px] font-normal">First purchase</p>
-                            <p className="text-[12px] font-normal text-[#626266]">
-                              {customerData.engagementTimeline?.firstPurchaseAt
-                                ? new Date(customerData.engagementTimeline.firstPurchaseAt).toLocaleDateString()
-                                : customerData.purchaseHistory.length > 0
-                                  ? new Date(customerData.purchaseHistory[customerData.purchaseHistory.length - 1].date).toLocaleDateString()
-                                  : 'No purchases yet'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                          <div className="flex-1">
-                            <p className="font-medium text-[14px] font-normal">Latest activity</p>
-                            <p className="text-[12px] font-normal text-[#626266]">
-                              {customerData.engagementTimeline?.lastPurchaseAt
-                                ? new Date(customerData.engagementTimeline.lastPurchaseAt).toLocaleDateString()
-                                : customerData.purchaseHistory.length > 0
-                                  ? new Date(customerData.purchaseHistory[0].date).toLocaleDateString()
-                                  : 'No recent activity'}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Engagement Metrics */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                      <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Engagement Metrics</h3>
-                      <div className="space-y-4 text-[14px] font-normal">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[#626266]">Total visits:</span>
-                          <span className="font-semibold">{customerData.visits}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-[#626266]">Visits per month:</span>
-                          <span className="font-semibold">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-[#626266]">Days since last visit:</span>
-                          <span className="font-semibold">{daysSinceLastPurchase}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-[#626266]">Engagement level:</span>
-                          <span className="font-semibold">{engagementScore.level}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {activeTab === 'purchases' && (
                   <div className="space-y-6">
                     {/* Purchase History */}
@@ -603,14 +386,167 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                 )}
 
                 {activeTab === 'analytics' && (
+                  <div className="space-y-6">
+                    {/* Engagement Timeline and Engagement Metrics */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Engagement Timeline */}
+                      <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                        <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Engagement Timeline</h3>
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <div className="flex-1">
+                              <p className="font-medium text-[14px] font-normal">Patient joined</p>
+                              <p className="text-[12px] font-normal text-[#626266]">
+                                {customerData.engagementTimeline?.customerJoinedAt
+                                  ? new Date(customerData.engagementTimeline.customerJoinedAt).toLocaleDateString()
+                                  : new Date(customerData.joinDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <div className="flex-1">
+                              <p className="font-medium text-[14px] font-normal">First purchase</p>
+                              <p className="text-[12px] font-normal text-[#626266]">
+                                {customerData.engagementTimeline?.firstPurchaseAt
+                                  ? new Date(customerData.engagementTimeline.firstPurchaseAt).toLocaleDateString()
+                                  : customerData.purchaseHistory.length > 0
+                                    ? new Date(customerData.purchaseHistory[customerData.purchaseHistory.length - 1].date).toLocaleDateString()
+                                    : 'No purchases yet'}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                            <div className="flex-1">
+                              <p className="font-medium text-[14px] font-normal">Latest activity</p>
+                              <p className="text-[12px] font-normal text-[#626266]">
+                                {customerData.engagementTimeline?.lastPurchaseAt
+                                  ? new Date(customerData.engagementTimeline.lastPurchaseAt).toLocaleDateString()
+                                  : customerData.purchaseHistory.length > 0
+                                    ? new Date(customerData.purchaseHistory[0].date).toLocaleDateString()
+                                    : 'No recent activity'}
+                              </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Engagement Metrics */}
+                      <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                        <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Engagement Metrics</h3>
+                        <div className="space-y-4 text-[14px] font-normal">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[#626266]">Total visits:</span>
+                            <span className="font-semibold">{customerData.visits}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-[#626266]">Visits per month:</span>
+                            <span className="font-semibold">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-[#626266]">Days since last visit:</span>
+                            <span className="font-semibold">{daysSinceLastPurchase}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-[#626266]">Engagement level:</span>
+                            <span className="font-semibold">{engagementScore.level}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Engagement, Retention, and Risk Assessment Cards */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Engagement Score */}
+                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Engagement Score</h3>
+                    <span className="text-2xl">{engagementScore.score}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
+                    <div
+                      className={`${engagementScore.color} h-1 rounded-full transition-all duration-1000`}
+                      style={{ width: `${engagementScore.score}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-[12px] font-normal text-[#626266] mb-4">{engagementScore.level} engagement level</p>
+                  <div className="space-y-2 text-[14px] font-normal">
+                    <div className="flex justify-between">
+                      <span className="text-[#626266]">Visits per month:</span>
+                      <span className="font-medium">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#626266]">Last activity:</span>
+                      <span className="font-medium">{daysSinceLastPurchase} days ago</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Retention Score */}
+                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Retention Score</h3>
+                    <span className="text-2xl">{retentionScore}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1 mb-3">
+                    <div
+                      className="bg-green-500 h-1 rounded-full transition-all duration-1000"
+                      style={{ width: `${retentionScore}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-[12px] font-normal text-[#626266] mb-4">
+                    {retentionScore >= 80 ? 'Excellent retention' :
+                     retentionScore >= 60 ? 'Good retention' :
+                     retentionScore >= 40 ? 'Moderate retention' : 'Needs attention'}
+                  </p>
+                  <div className="space-y-2 text-[14px] font-normal">
+                    <div className="flex justify-between">
+                      <span className="text-[#626266]">Patient lifetime:</span>
+                      <span className="font-medium">₹{patientLifetimeValue.toFixed(0)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#626266]">Avg order value:</span>
+                      <span className="font-medium">₹{customerData.averageOrderValue.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Risk Assessment */}
+                <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[16px] font-bold text-[#2a2a2f]">Risk Assessment</h3>
+                    <span className={`px-3 py-1 text-sm font-medium rounded-full border ${riskLevel.color}`}>
+                      {riskLevel.level}
+                    </span>
+                  </div>
+                  <div className="space-y-4 text-[14px] font-normal">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#626266]">Churn Risk:</span>
+                      <span className="font-medium">{100 - retentionScore}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#626266]">Days since last purchase:</span>
+                      <span className="font-medium">{daysSinceLastPurchase}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#626266]">Purchase frequency:</span>
+                      <span className="font-medium">{(customerData.visits / Math.max(daysSinceJoin / 30, 1)).toFixed(1)}/month</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                    {/* Financial and Behavioral Analytics */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Financial Analytics */}
                     <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
                       <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Financial Analytics</h3>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
-                          <span className="text-[14px] font-normal text-[#626266]">Customer Lifetime Value:</span>
-                          <span className="font-semibold text-lg">₹{customerLifetimeValue.toFixed(0)}</span>
+                          <span className="text-[14px] font-normal text-[#626266]">Patient Lifetime Value:</span>
+                          <span className="font-semibold text-lg">₹{patientLifetimeValue.toFixed(0)}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-[#e9e9e9]">
                           <span className="text-[14px] font-normal text-[#626266]">Average Order Value:</span>
@@ -652,100 +588,27 @@ export default function CustomerDetailsClient({ customerId }: { customerId: stri
                           <span className="font-semibold">{engagementScore.score}%</span>
                         </div>
                       </div>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {activeTab === 'insights' && (
-                  <div className="space-y-6">
-                    {/* AI Insights */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                      <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">AI-Powered Insights</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xl">🎯</span>
-                            <h4 className="font-medium text-[#2a2a2f] text-[14px] font-normal">Recommendation</h4>
-                          </div>
-                          <p className="text-[14px] font-normal text-[#626266]">
-                            {retentionScore >= 80 ? 'This customer is highly engaged. Consider VIP treatment and exclusive offers.' :
-                             retentionScore >= 60 ? 'Good engagement level. Focus on increasing purchase frequency with targeted campaigns.' :
-                             'Customer needs re-engagement. Send personalized offers and check-in messages.'}
-                          </p>
-                        </div>
-
-                        <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xl">📈</span>
-                            <h4 className="font-medium text-[#2a2a2f] text-[14px] font-normal">Growth Opportunity</h4>
-                          </div>
-                          <p className="text-[14px] font-normal text-[#626266]">
-                            {customerData.categories.length < 3 ? 'Expand category exploration with cross-selling campaigns.' :
-                             'Focus on increasing average order value with premium products.'}
-                          </p>
-                        </div>
-
-                        <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xl">⏰</span>
-                            <h4 className="font-medium text-[#2a2a2f] text-[14px] font-normal">Next Best Action</h4>
-                          </div>
-                          <p className="text-[14px] font-normal text-[#626266]">
-                            {daysSinceLastPurchase > 30 ? 'Send re-engagement email with personalized offer.' :
-                             'Create targeted campaign for new category exploration.'}
-                          </p>
-                        </div>
-
-                        <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xl">💡</span>
-                            <h4 className="font-medium text-[#2a2a2f] text-[14px] font-normal">Risk Alert</h4>
-                          </div>
-                          <p className="text-[14px] font-normal text-[#626266]">
-                            {riskLevel.level === 'High Risk' ? 'High churn risk detected. Immediate re-engagement needed.' :
-                             riskLevel.level === 'Medium Risk' ? 'Monitor engagement closely. Consider retention campaigns.' :
-                             'Low risk customer. Focus on growth and loyalty building.'}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Items */}
-                    <div className="bg-white rounded-xl border border-[#e9e9e9] p-6">
-                      <h3 className="text-[16px] font-bold text-[#2a2a2f] mb-4">Recommended Actions</h3>
-                      <div className="space-y-3">
-                        <button className="w-full p-4 text-left bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal">Send Personalized Email</p>
-                              <p className="text-[12px] font-normal text-[#626266]">Based on purchase history and preferences</p>
-                            </div>
-                            <span className="text-blue-600">→</span>
-                          </div>
-                        </button>
-
-                        <button className="w-full p-4 text-left bg-green-50 hover:bg-green-100 rounded border border-green-200 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal">Create Targeted Campaign</p>
-                              <p className="text-[12px] font-normal text-[#626266]">For category expansion or re-engagement</p>
-                            </div>
-                            <span className="text-green-600">→</span>
-                          </div>
-                        </button>
-
-                        <button className="w-full p-4 text-left bg-purple-50 hover:bg-purple-100 rounded border border-purple-200 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium text-[#2a2a2f] text-[14px] font-normal">Schedule Follow-up</p>
-                              <p className="text-[12px] font-normal text-[#626266]">Set reminder for next engagement touchpoint</p>
-                            </div>
-                            <span className="text-purple-600">→</span>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                {activeTab === 'timeline' && (
+                  <PatientTimeline
+                    customerId={customerId}
+                    onEventCreate={(event) => {
+                      // Handle event creation - can be wired to API later
+                      console.log('Event created:', event);
+                    }}
+                    onEventUpdate={(eventId, updates) => {
+                      // Handle event update - can be wired to API later
+                      console.log('Event updated:', eventId, updates);
+                    }}
+                    onAction={(eventId, actionType) => {
+                      // Handle action - can be wired to API later
+                      console.log('Action triggered:', eventId, actionType);
+                    }}
+                  />
                 )}
               </div>
             </div>

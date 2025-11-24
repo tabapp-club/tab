@@ -21,17 +21,17 @@ export function useAIAnalysis({ cardType, filterDays, dateRange, enabled = true 
 
   const getTypeParam = (cardType: string): string => {
     switch (cardType) {
-      case "Total Sales":
+      case "Total Patients/Clients":
         return "all_customers";
-      case "Purchase Value":
+      case "Total Business":
         return "total_revenue";
-      case "New customers":
+      case "New patients/clients":
         return "new_customers";
-      case "Retained customers":
+      case "Retained patients/clients":
         return "retained_customers";
-      case "Active customers":
+      case "Active patients/clients":
         return "active_customers";
-      case "Inactive customers":
+      case "Inactive patients/clients":
         return "inactive_customers";
       default:
         return "all_customers";

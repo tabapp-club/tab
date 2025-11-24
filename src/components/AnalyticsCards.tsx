@@ -445,9 +445,9 @@ const AnimatedPercentage = ({ value, loading = false }: { value: string; loading
 const analyticsData = [
   {
     id: 1,
-    title: "Total Sales",
+    title: "Total Patients/Clients",
     subtitle: "5 July, 2025",
-    legendLabel: "Sales",
+    legendLabel: "Patients/Clients",
     value: "₹1,25,000",
     previousValue: "₹1,11,000",
     unit: "Users",
@@ -457,9 +457,9 @@ const analyticsData = [
   },
   {
     id: 2,
-    title: "Purchase Value",
+    title: "Total Business",
     subtitle: "5 July, 2025",
-    legendLabel: "Purchase value",
+    legendLabel: "Total Business",
     value: "₹85,000",
     previousValue: "₹92,500",
     unit: "Rupees",
@@ -469,9 +469,9 @@ const analyticsData = [
   },
   {
     id: 3,
-    title: "All customers",
+    title: "All patients/clients",
     subtitle: "5 July, 2025",
-    legendLabel: "New + Retained customers",
+    legendLabel: "New + Retained patients/clients",
     value: "1,258",
     previousValue: "1,422",
     unit: "Users",
@@ -481,9 +481,9 @@ const analyticsData = [
   },
   {
     id: 4,
-    title: "New customers",
+    title: "New patients/clients",
     subtitle: "5 July, 2025",
-    legendLabel: "New customers",
+    legendLabel: "New patients/clients",
     value: "958",
     previousValue: "1,082",
     unit: "Users",
@@ -493,9 +493,9 @@ const analyticsData = [
   },
   {
     id: 5,
-    title: "Retained customers",
+    title: "Retained patients/clients",
     subtitle: "5 July, 2025",
-    legendLabel: "Retained customers",
+    legendLabel: "Retained patients/clients",
     value: "300",
     previousValue: "269",
     unit: "Users",
@@ -505,9 +505,9 @@ const analyticsData = [
   },
   {
     id: 6,
-    title: "Active customers",
+    title: "Active patients/clients",
     subtitle: "5 July, 2025",
-    legendLabel: "Active customers",
+    legendLabel: "Active patients/clients",
     value: "1,200",
     previousValue: "1,356",
     unit: "Users",
@@ -529,27 +529,27 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
 
   const getCardIcon = (cardTitle: string) => {
     switch (cardTitle) {
-      case "Total Sales":
+      case "Total Patients/Clients":
         return <SalesIcon />;
-      case "Purchase Value":
+      case "Total Business":
         return <PurchaseIcon />;
       default:
         return <UserIcon />;
     }
   };
 
-  // Separate data into business metrics and customer metrics
+  // Separate data into business metrics and patient/client metrics
   const businessMetrics = displayData.filter(card =>
-    card.title === "Total Sales" || card.title === "Purchase Value"
+    card.title === "Total Patients/Clients" || card.title === "Total Business"
   );
   const customerMetrics = displayData.filter(card =>
-    card.title !== "Total Sales" && card.title !== "Purchase Value"
+    card.title !== "Total Patients/Clients" && card.title !== "Total Business"
   );
 
-  // Derived: Overall Growth Rate (average of Total Sales and Purchase Value percentage changes)
+  // Derived: Overall Growth Rate (average of Total Patients/Clients and Total Business percentage changes)
   const growthRateCard = (() => {
-    const sales = businessMetrics.find(c => c.title === "Total Sales");
-    const purchase = businessMetrics.find(c => c.title === "Purchase Value");
+    const sales = businessMetrics.find(c => c.title === "Total Patients/Clients");
+    const purchase = businessMetrics.find(c => c.title === "Total Business");
     if (!sales || !purchase) return null;
 
     const parseTrend = (card: any) => {
@@ -640,7 +640,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                     <div className="w-full px-0 py-1 flex items-center justify-center">
                       <div className="w-full flex flex-col items-center">
                         <div className="text-2xl sm:text-3xl md:text-4xl lg:text-[63.2812px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">
-                          { card.title === "Purchase Value" ? (<div className="text-xl sm:text-2xl md:text-3xl lg:text-[48px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">₹</div>): null }<AnimatedNumber value={card.value} loading={loading} />
+                          { card.title === "Total Business" ? (<div className="text-xl sm:text-2xl md:text-3xl lg:text-[48px] font-bold text-[#2a2a2f] leading-tight sm:leading-[72px] tracking-[-2.88px] break-words flex items-center gap-1">₹</div>): null }<AnimatedNumber value={card.value} loading={loading} />
                         </div>
                       </div>
                     </div>
@@ -820,11 +820,11 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
                     <div className="h-6 w-full flex items-center justify-center rounded-[3px] mb-4">
                       <div className="flex items-center gap-[5px] max-w-full overflow-hidden" />
                     </div>
-                    {/* Bar Chart using average of Sales and Purchase values */}
+                    {/* Bar Chart using average of Total Patients/Clients and Total Business values */}
                     <div className="flex-1 flex items-center justify-center">
                       {(() => {
-                        const sales = businessMetrics.find(c => c.title === 'Total Sales');
-                        const purchase = businessMetrics.find(c => c.title === 'Purchase Value');
+                        const sales = businessMetrics.find(c => c.title === 'Total Patients/Clients');
+                        const purchase = businessMetrics.find(c => c.title === 'Total Business');
                         const currAvg = Math.round((extractNumericFromString(sales?.value || '0') + extractNumericFromString(purchase?.value || '0')) / 2);
                         const prevAvg = Math.round((extractNumericFromString(sales?.previousValue || '0') + extractNumericFromString(purchase?.previousValue || '0')) / 2);
                         return (
@@ -855,9 +855,9 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
         </div>
       </div>
 
-      {/* Customer Metrics Section */}
+      {/* Patient/Client Metrics Section */}
       <div className="bg-white rounded-lg border border-[#e9e9e9] p-6">
-        <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Customer Metrics</h2>
+        <h2 className="text-xl font-bold text-[#2a2a2f] mb-4">Patient/Client Metrics</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {customerMetrics.map((card) => {
             const isPositiveTrend = card.trend === "up";
@@ -865,7 +865,7 @@ export function AnalyticsCards({ data, onAskReason, loading = false }: { data?: 
             let trendTextColor = isPositiveTrend ? "text-[#17c653]" : "text-[#e34f2f]";
             let trendIndicatorColor = isPositiveTrend ? "bg-[#17c653]" : "bg-[#e34f2f]";
             let trendIconColor = isPositiveTrend ? "#17c653" : "#e34f2f";
-            if (card.title === "Inactive customers") {
+            if (card.title === "Inactive patients/clients") {
               trendIndicatorColor = isPositiveTrend ? "bg-[#e34f2f]" : "bg-[#17c653]";
               trendBgColor = isPositiveTrend ? "bg-[rgba(227,79,47,0.1)]" : "bg-[rgba(23,198,83,0.1)]";
               trendTextColor = isPositiveTrend ? "text-[#e34f2f]" : "text-[#17c653]";

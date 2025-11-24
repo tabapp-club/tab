@@ -150,6 +150,8 @@ export const business = {
         status: string;
         user_type: string;
         risk_status?: string;
+        gender?: string;
+        age?: number;
       };
       engagement_timeline?: {
         customer_joined_at: string;

@@ -118,14 +118,14 @@ export function BusinessGrowthCards() {
         return (
           <div
             key={tip.id}
-            className="relative min-w-[280px] sm:min-w-[300px] max-w-full bg-white border border-[#e9e9e9] rounded transition-all duration-300 ease-out cursor-pointer group overflow-hidden flex-shrink-0 flex-grow-0"
+            className="relative min-w-[280px] sm:min-w-[300px] max-w-full bg-white border border-[#e9e9e9] rounded-[8px] transition-all duration-300 ease-out cursor-pointer group overflow-hidden flex-shrink-0 flex-grow-0"
             onClick={() => !isLoading && handleGrowthTipClick(tip)}
           >
             {/* Loading Overlay */}
             {isLoading && <LoadingSpinner />}
 
             {/* Header with gradient background */}
-            <div className={`h-16 ${tip.bgColor} rounded-t relative overflow-hidden transition-transform duration-300`} style={{backgroundImage: `url(${tip.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
+            <div className={`h-20 ${tip.bgColor} rounded-t-[8px] relative overflow-hidden transition-transform duration-300`} style={{backgroundImage: `url(${tip.background})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
               <div className="absolute inset-0 bg-black/25"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-20"></div>
 
