@@ -983,8 +983,24 @@ function EventFormModal({ event, onClose, onSave }: EventFormModalProps) {
   };
 
   const addCustomTag = () => {
-    if (customTagInput.trim() && !allEventTags.includes(customTagInput.trim() as EventTag)) {
-      setFormData(prev => ({ ...prev, tag: customTagInput.trim() }));
+    const trimmedTag = customTagInput.trim();
+    if (trimmedTag && !allEventTags.includes(trimmedTag as EventTag)) {
+      // Save custom event type to localStorage
+      if (typeof window !== 'undefined') {
+        try {
+          const stored = localStorage.getItem('custom_event_types');
+          const customEventTypes: string[] = stored ? JSON.parse(stored) : [];
+          if (!customEventTypes.includes(trimmedTag)) {
+            customEventTypes.push(trimmedTag);
+            localStorage.setItem('custom_event_types', JSON.stringify(customEventTypes));
+            // Dispatch event to notify other components
+            window.dispatchEvent(new CustomEvent('eventTypesUpdated'));
+          }
+        } catch (error) {
+          console.error('Error saving custom event type:', error);
+        }
+      }
+      setFormData(prev => ({ ...prev, tag: trimmedTag }));
       setCustomTagInput('');
       setIsTagDropdownOpen(false);
     }

@@ -101,6 +101,7 @@ export interface DataCenterFilters {
   no_of_visits_from?: number;
   no_of_visits_to?: number;
   status?: string;
+  event_type?: string;
   search?: string;
 }
 

@@ -3,13 +3,16 @@
 import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { config } from '@/lib/config';
+import { Button } from '@/components/ui/Button';
+import { Upload, Loader2 } from 'lucide-react';
 
 interface ImportModalProps {
+  isOpen: boolean;
   onClose: () => void;
   onUploadSuccess?: () => void; // Callback to refetch data after successful upload
 }
 
-const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
+const ImportModal = ({ isOpen, onClose, onUploadSuccess }: ImportModalProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -126,39 +129,60 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-      {/* Transparent blur background overlay */}
-      <div className="fixed inset-0 backdrop-blur-sm bg-white/30 bg-opacity-10"></div>
+  if (!isOpen) return null;
 
-      <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-6 w-full max-w-md relative z-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-[20px] font-semibold text-[#2a2a2f]">Import Customers Data</h2>
-          <button
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-in fade-in-0">
+      <div className="bg-white rounded-xl border border-[#e9e9e9] max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e9e9e9] bg-gradient-to-r from-[#9747FF]/5 to-transparent">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#9747FF] flex items-center justify-center text-white text-lg">
+              <Upload className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-[18px] font-bold text-[#2a2a2f]">
+                Import Customers Data
+              </h3>
+              <p className="text-[12px] text-[#626266] mt-0.5">
+                Upload a CSV or Excel file to import customer data
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            disabled={isUploading}
+            className="text-[#626266] hover:text-[#2a2a2f] hover:bg-gray-100 rounded-lg"
           >
-            <CloseIcon />
-          </button>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </Button>
         </div>
 
-        {/* Upload Area */}
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-            isDragOver
-              ? 'border-[#9747FF] bg-purple-50'
-              : selectedFile
-                ? uploadSuccess
-                  ? 'border-green-400 bg-green-50'
-                  : isUploading
-                  ? 'border-blue-300 bg-blue-50'
-                  : 'border-green-300 bg-green-50'
-                : 'border-gray-300 bg-gray-50'
-          }`}
-        >
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto flex-1 px-6 py-6">
+
+          {/* Upload Area */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              isDragOver
+                ? 'border-[#9747FF] bg-purple-50'
+                : selectedFile
+                  ? uploadSuccess
+                    ? 'border-green-400 bg-green-50'
+                    : isUploading
+                    ? 'border-blue-300 bg-blue-50'
+                    : 'border-green-300 bg-green-50'
+                  : 'border-gray-300 bg-gray-50'
+            }`}
+          >
           {selectedFile ? (
             <div className="space-y-4">
               <div className="flex items-center justify-center">
@@ -172,7 +196,7 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
                 {isUploading && (
                   <div className="mt-3">
                     <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#9747FF]"></div>
+                      <Loader2 className="h-4 w-4 animate-spin text-[#9747FF]" />
                       <p className="text-[12px] text-[#9747FF] font-medium">Uploading...</p>
                     </div>
                   </div>
@@ -268,45 +292,54 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Error Message */}
-        {uploadError && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-[12px] text-red-600">{uploadError}</p>
           </div>
-        )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 mt-6">
-          {uploadSuccess ? (
-            <button
-              onClick={onClose}
-              className="w-full px-4 py-2 bg-[#9747FF] text-white rounded-md text-[14px] font-medium hover:bg-[#6B46E5] transition-colors"
-            >
-              Close
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-[14px] font-normal text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpload}
-                disabled={!selectedFile || isUploading}
-                className={`flex-1 px-4 py-2 rounded-md text-[14px] font-medium transition-colors ${
-                  selectedFile && !isUploading
-                    ? 'bg-[#9747FF] text-white hover:bg-[#6B46E5]'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                {isUploading ? 'Uploading...' : 'Import'}
-              </button>
-            </>
+          {/* Error Message */}
+          {uploadError && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-[12px] text-red-600">{uploadError}</p>
+            </div>
           )}
+
+          {/* Form Actions */}
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e9e9e9] mt-6">
+            {uploadSuccess ? (
+              <Button
+                type="button"
+                onClick={onClose}
+                className="bg-[#9747FF] hover:bg-[#9747FF]/90 text-white text-sm rounded"
+              >
+                Close
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  disabled={isUploading}
+                  className="text-sm"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleUpload}
+                  disabled={!selectedFile || isUploading}
+                  className="bg-[#9747FF] hover:bg-[#9747FF]/90 text-white text-sm rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    'Import'
+                  )}
+                </Button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Hidden File Input */}
@@ -321,13 +354,6 @@ const ImportModal = ({ onClose, onUploadSuccess }: ImportModalProps) => {
     </div>
   );
 };
-
-// Icon Components
-const CloseIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
 
 const UploadIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none">

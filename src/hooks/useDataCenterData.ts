@@ -47,10 +47,11 @@ export function useDataCenterData({ page, pageSize, filters, refreshTrigger = 0 
     Array.isArray(filters.category) ? filters.category.join(',') : (filters.category || ''),
     filters.user_type || '',
     filters.status || '',
+    filters.event_type || '',
     filters.no_of_visits_from || '',
     filters.no_of_visits_to || '',
     refreshTrigger
-  ], [page, pageSize, filters.search, filters.category, filters.user_type, filters.status, filters.no_of_visits_from, filters.no_of_visits_to, refreshTrigger]);
+  ], [page, pageSize, filters.search, filters.category, filters.user_type, filters.status, filters.event_type, filters.no_of_visits_from, filters.no_of_visits_to, refreshTrigger]);
 
   return useQuery<DataCenterApiResponse, Error>({
     queryKey,
@@ -67,6 +68,7 @@ export function useDataCenterData({ page, pageSize, filters, refreshTrigger = 0 
         no_of_visits_from: filters.no_of_visits_from,
         no_of_visits_to: filters.no_of_visits_to,
         status_filter: filters.status,
+        event_type: filters.event_type,
         search: filters.search,
       };
 

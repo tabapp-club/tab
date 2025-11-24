@@ -10,60 +10,18 @@ import DataTable from './DataTable';
 import DataTableSkeleton from './DataTableSkeleton';
 import Pagination from './Pagination';
 import ImportModal from './ImportModal';
+import AddPatientModal from './AddPatientModal';
 import { useSidebar } from './SidebarContext';
 import DataCenterHeader from './data-center/DataCenterHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDataCenterData, mapApiDataToTable } from '@/hooks/useDataCenterData';
-
-// CSV Export Utility Function
-const exportToCSV = (data: Array<{id: string; mobile: string; categories: string[]; addedOn: string}>, filename: string = 'data-center-export.csv') => {
-  if (!data || data.length === 0) {
-    alert('No data to export');
-    return;
-  }
-
-  // Define CSV headers
-  const headers = [
-    'User ID',
-    'Mobile Number',
-    'Category',
-    'User Type',
-    'No of Visits',
-    'Status',
-    'Added On'
-  ];
-
-  // Convert data to CSV format
-  const csvContent = [
-    headers.join(','),
-    ...data.map(row => [
-      `"${row.id}"`,
-      `"${row.mobile}"`,
-      `"${Array.isArray(row.categories) ? row.categories.join('; ') : row.categories}"`,
-      `"${row.addedOn}"`
-    ].join(','))
-  ].join('\n');
-
-  // Create and download file
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-
-  if (link.download !== undefined) {
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
-};
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function DataCenterClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(''); // For UI display (immediate)
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // For API calls (debounced)
   const [page, setPage] = useState(1);
@@ -73,6 +31,7 @@ export default function DataCenterClient() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { isCollapsed, isMobile } = useSidebar();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   // Load filters and search from URL parameters - only on mount
   useEffect(() => {
@@ -109,12 +68,14 @@ export default function DataCenterClient() {
     const category = searchParams.get('category');
     const userType = searchParams.get('userType');
     const status = searchParams.get('status');
+    const eventType = searchParams.get('eventType');
     const visitsFrom = searchParams.get('visitsFrom');
     const visitsTo = searchParams.get('visitsTo');
 
     if (category) urlFilters.category = category.split(',');
     if (userType) urlFilters.userType = userType;
     if (status) urlFilters.status = status;
+    if (eventType) urlFilters.event_type = eventType;
     if (visitsFrom) urlFilters.no_of_visits_from = parseInt(visitsFrom);
     if (visitsTo) urlFilters.no_of_visits_to = parseInt(visitsTo);
 
@@ -136,6 +97,7 @@ export default function DataCenterClient() {
     if (filters.category?.length) newParams.set('category', filters.category.join(','));
     if (filters.userType) newParams.set('userType', filters.userType);
     if (filters.status) newParams.set('status', filters.status);
+    if (filters.event_type) newParams.set('eventType', filters.event_type);
     if (filters.no_of_visits_from) newParams.set('visitsFrom', filters.no_of_visits_from.toString());
     if (filters.no_of_visits_to) newParams.set('visitsTo', filters.no_of_visits_to.toString());
 
@@ -199,7 +161,7 @@ export default function DataCenterClient() {
     refreshTrigger
   });
 
-  // Process the API response data - optimized
+  // Process the API response data - optimized and sorted by most recent first
   const currentTableData = useMemo(() => {
     if (!dataCenterResponse?.data) return [];
 
@@ -210,7 +172,18 @@ export default function DataCenterClient() {
 
     if (dataArray.length === 0) return [];
 
-    return mapApiDataToTable(dataArray);
+    const mappedData = mapApiDataToTable(dataArray);
+    
+    // Sort by added_on timestamp (most recent first) if available
+    return mappedData.sort((a, b) => {
+      if (!a.addedOn && !b.addedOn) return 0;
+      if (!a.addedOn) return 1; // Put items without date at the end
+      if (!b.addedOn) return -1; // Put items without date at the end
+      
+      const dateA = new Date(a.addedOn).getTime();
+      const dateB = new Date(b.addedOn).getTime();
+      return dateB - dateA; // Descending order (newest first)
+    });
   }, [dataCenterResponse]);
 
   // Extract total, metrics, and categories from response - memoized
@@ -290,9 +263,21 @@ export default function DataCenterClient() {
     setIsImportModalOpen(true);
   }, []);
 
-  const handleExportClick = useCallback(() => {
-    exportToCSV(currentTableData);
-  }, [currentTableData]);
+  const handleAddPatientClick = useCallback(() => {
+    setIsAddPatientModalOpen(true);
+  }, []);
+
+  const handlePatientCreated = useCallback(() => {
+    // Reset to page 1 to show the new patient at the top
+    setPage(1);
+    // Clear any filters that might hide the new patient
+    setFilters({});
+    setSelectedCard('total');
+    // Invalidate and refetch data center queries
+    queryClient.invalidateQueries({ queryKey: ['data-center-data'] });
+    // Trigger refresh
+    setRefreshTrigger(prev => prev + 1);
+  }, [queryClient]);
 
 
   // Force uncollapsed state on mobile
@@ -312,7 +297,7 @@ export default function DataCenterClient() {
         >
           <div className="h-full flex flex-col min-w-0">
             <div className="p-2 sm:p-3 lg:p-4 xl:p-6 space-y-6 flex-1 flex flex-col min-w-0">
-              <DataCenterHeader onImportClick={handleImportClick} onExportClick={handleExportClick} />
+              <DataCenterHeader onImportClick={handleImportClick} onAddPatientClick={handleAddPatientClick} />
 
             <DataCenterStats
               metrics={metrics}
@@ -357,16 +342,16 @@ export default function DataCenterClient() {
           </div>
         </main>
       </div>
-      {/* Blurred background overlay for ImportModal */}
-      {isImportModalOpen && (
-        <div className="fixed inset-0 z-40 backdrop-blur-sm bg-white/30 transition-all duration-300"></div>
-      )}
-        {isImportModalOpen && (
-          <ImportModal
-            onClose={() => setIsImportModalOpen(false)}
-            onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)}
-          />
-        )}
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)}
+      />
+      <AddPatientModal
+        isOpen={isAddPatientModalOpen}
+        onClose={() => setIsAddPatientModalOpen(false)}
+        onSuccess={handlePatientCreated}
+      />
       </div>
   );
 }

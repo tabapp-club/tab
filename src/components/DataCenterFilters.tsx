@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { CSSProperties } from 'react';
-import FilterDropdown from './FilterDropdown';
+import FilterDropdownShadcn from './FilterDropdownShadcn';
+import { getAllEventTypes, getEventTypeLabel } from '@/lib/eventTypes';
 
 interface FilterOption {
   id: string;
@@ -15,6 +16,7 @@ interface FilterState {
   userType: FilterOption[];
   visits: FilterOption[];
   status: FilterOption[];
+  eventType: FilterOption[];
 }
 
 interface DataCenterFiltersProps {
@@ -26,6 +28,7 @@ interface DataCenterFiltersProps {
     no_of_visits_from?: number;
     no_of_visits_to?: number;
     status?: string;
+    event_type?: string;
     search?: string;
   }) => void;
   totalUsers?: number;
@@ -58,7 +61,14 @@ const DataCenterFilters = ({
   isLoading = false
 }: DataCenterFiltersProps = {}) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
-  const [openFilter, setOpenFilter] = useState<string | null>(null);
+  // Initialize event types from storage
+  const [eventTypes, setEventTypes] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      return getAllEventTypes();
+    }
+    return [];
+  });
+
   const [filters, setFilters] = useState<FilterState>({
     category: [],
     userType: [
@@ -76,7 +86,64 @@ const DataCenterFilters = ({
       { id: 'active', label: 'Active', checked: false },
       { id: 'inactive', label: 'Inactive', checked: false },
     ],
+    eventType: [],
   });
+
+  // Listen for event type updates
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleEventTypesUpdate = () => {
+      const updatedTypes = getAllEventTypes();
+      setEventTypes(updatedTypes);
+      
+      // Update eventType filter options
+      setFilters(prev => {
+        const prevCheckedIds = prev.eventType.filter(option => option.checked).map(option => option.id);
+        const eventTypeOptions = updatedTypes.map(eventType => ({
+          id: eventType,
+          label: getEventTypeLabel(eventType),
+          checked: prevCheckedIds.includes(eventType)
+        }));
+        return {
+          ...prev,
+          eventType: eventTypeOptions
+        };
+      });
+    };
+
+    // Initial load
+    handleEventTypesUpdate();
+
+    // Listen for updates
+    window.addEventListener('eventTypesUpdated', handleEventTypesUpdate);
+    return () => {
+      window.removeEventListener('eventTypesUpdated', handleEventTypesUpdate);
+    };
+  }, []);
+
+  // Initialize eventType filter options
+  useEffect(() => {
+    if (eventTypes.length > 0) {
+      setFilters(prev => {
+        // Only update if eventType is empty or structure changed
+        if (prev.eventType.length === 0 || 
+            prev.eventType.map(e => e.id).sort().join(',') !== eventTypes.sort().join(',')) {
+          const prevCheckedIds = prev.eventType.filter(option => option.checked).map(option => option.id);
+          const eventTypeOptions = eventTypes.map(eventType => ({
+            id: eventType,
+            label: getEventTypeLabel(eventType),
+            checked: prevCheckedIds.includes(eventType)
+          }));
+          return {
+            ...prev,
+            eventType: eventTypeOptions
+          };
+        }
+        return prev;
+      });
+    }
+  }, [eventTypes]);
 
   // Use ref to store pending filter changes
   const pendingFilterChange = useRef<any>(null);
@@ -90,7 +157,7 @@ const DataCenterFilters = ({
       onFiltersChange(pendingFilterChange.current);
       pendingFilterChange.current = null;
     }
-  }, [filters.category, filters.status, filters.userType, filters.visits, onFiltersChange]);
+  }, [filters.category, filters.status, filters.userType, filters.visits, filters.eventType, onFiltersChange]);
 
   // Track previous clearFilters value to prevent infinite loops
   const prevClearFiltersRef = useRef(clearFilters);
@@ -104,9 +171,9 @@ const DataCenterFilters = ({
         userType: prev.userType.map(option => ({ ...option, checked: false })),
         visits: prev.visits.map(option => ({ ...option, checked: false })),
         status: prev.status.map(option => ({ ...option, checked: false })),
+        eventType: prev.eventType.map(option => ({ ...option, checked: false })),
       }));
       setInternalSearchTerm('');
-      setOpenFilter(null);
 
       // Notify parent about cleared filters
       if (onFiltersChange) {
@@ -116,6 +183,7 @@ const DataCenterFilters = ({
           no_of_visits_from: undefined,
           no_of_visits_to: undefined,
           status: undefined,
+          event_type: undefined,
           search: ''
         });
       }
@@ -204,9 +272,6 @@ const DataCenterFilters = ({
     return {};
   }
 
-  const handleFilterToggle = (filterType: string) => {
-    setOpenFilter(openFilter === filterType ? null : filterType);
-  };
 
     const handleFilterChange = (filterType: keyof FilterState, selectedIds: string[]) => {
     setFilters(prev => {
@@ -217,7 +282,7 @@ const DataCenterFilters = ({
           ...option,
           checked: selectedIds.includes(option.id)
         }));
-      } else if (filterType === 'userType' || filterType === 'visits') {
+      } else if (filterType === 'userType') {
         // Single-select toggle: if already selected, unselect; else select only the clicked one
         const prevChecked = prev[filterType].find(option => option.checked)?.id;
         const clickedId = selectedIds[0];
@@ -229,6 +294,12 @@ const DataCenterFilters = ({
             return { ...option, checked: false };
           }
         });
+      } else if (filterType === 'visits' || filterType === 'eventType') {
+        // Multi-select for visits and eventType
+        newOptions = prev[filterType].map(option => ({
+          ...option,
+          checked: selectedIds.includes(option.id)
+        }));
       } else {
         // Multi-select for other filters
         newOptions = prev[filterType].map(option => ({
@@ -249,9 +320,12 @@ const DataCenterFilters = ({
         filterObj.userType = selected ? selected.id : undefined;
       }
       if (filterType === 'visits') {
-        const selected = newOptions.find(option => option.checked);
-        if (selected) {
-          const range = parseVisitRange(selected.id);
+        const selected = newOptions.filter(option => option.checked);
+        if (selected.length > 0) {
+          // For multiple selections, use the first selected range
+          // In a real implementation, you might want to handle multiple ranges differently
+          const firstSelected = selected[0];
+          const range = parseVisitRange(firstSelected.id);
           if (range.from !== undefined) filterObj.no_of_visits_from = range.from;
           if (range.to !== undefined) filterObj.no_of_visits_to = range.to;
         } else {
@@ -261,6 +335,12 @@ const DataCenterFilters = ({
         }
       }
       if (filterType === 'status') filterObj.status = selectedIds[0] || undefined;
+      if (filterType === 'eventType') {
+        const selected = newOptions.filter(option => option.checked);
+        // For multiple selections, use the first selected event type
+        // In a real implementation, you might want to handle multiple event types differently
+        filterObj.event_type = selected.length > 0 ? selected[0].id : undefined;
+      }
 
       // Store in ref to be handled by useEffect
       pendingFilterChange.current = filterObj;
@@ -382,41 +462,126 @@ const DataCenterFilters = ({
                 minWidth: 'max-content',
               } as CSSProperties}
             >
-              <FilterDropdown
+              <FilterDropdownShadcn
                 title="Category"
                 options={filters.category}
+                sections={(() => {
+                  if (filters.category.length === 0) return undefined;
+                  // Group categories into sections
+                  const productCategories = filters.category.filter(cat => 
+                    ['mobile', 'electronics', 'appliances'].includes(cat.id.toLowerCase())
+                  );
+                  const serviceCategories = filters.category.filter(cat => 
+                    ['fashion', 'grocery', 'other'].includes(cat.id.toLowerCase())
+                  );
+                  const customCategories = filters.category.filter(cat => 
+                    !['mobile', 'electronics', 'appliances', 'fashion', 'grocery', 'other'].includes(cat.id.toLowerCase())
+                  );
+                  
+                  const sections = [];
+                  if (productCategories.length > 0) {
+                    sections.push({ title: 'Product Categories', options: productCategories });
+                  }
+                  if (serviceCategories.length > 0) {
+                    sections.push({ title: 'Service Categories', options: serviceCategories });
+                  }
+                  if (customCategories.length > 0) {
+                    sections.push({ title: 'Custom Categories', options: customCategories });
+                  }
+                  return sections.length > 0 ? sections : undefined;
+                })()}
                 onSelectionChange={(selectedIds) => handleFilterChange('category', selectedIds)}
-                isOpen={openFilter === 'category'}
-                onToggle={() => handleFilterToggle('category')}
                 selectedCount={getSelectedCount('category')}
                 singleSelect={false}
               />
-              <FilterDropdown
+              <FilterDropdownShadcn
                 title="User Type"
                 options={filters.userType}
                 onSelectionChange={(selectedIds) => handleFilterChange('userType', selectedIds)}
-                isOpen={openFilter === 'userType'}
-                onToggle={() => handleFilterToggle('userType')}
                 selectedCount={getSelectedCount('userType')}
                 singleSelect={true}
               />
-              <FilterDropdown
+              <FilterDropdownShadcn
                 title="No of visits"
                 options={filters.visits}
+                sections={[
+                  { 
+                    title: 'Low Visits', 
+                    options: filters.visits.filter(v => ['1', '2-5'].includes(v.id))
+                  },
+                  { 
+                    title: 'Medium Visits', 
+                    options: filters.visits.filter(v => ['6-10', '11-20'].includes(v.id))
+                  },
+                  { 
+                    title: 'High Visits', 
+                    options: filters.visits.filter(v => v.id === '21+')
+                  }
+                ]}
                 onSelectionChange={(selectedIds) => handleFilterChange('visits', selectedIds)}
-                isOpen={openFilter === 'visits'}
-                onToggle={() => handleFilterToggle('visits')}
                 selectedCount={getSelectedCount('visits')}
-                singleSelect={true}
+                singleSelect={false}
               />
-              <FilterDropdown
+              <FilterDropdownShadcn
                 title="Status"
                 options={filters.status}
                 onSelectionChange={(selectedIds) => handleFilterChange('status', selectedIds)}
-                isOpen={openFilter === 'status'}
-                onToggle={() => handleFilterToggle('status')}
                 selectedCount={getSelectedCount('status')}
                 singleSelect={true}
+              />
+              <FilterDropdownShadcn
+                title="Event Type"
+                options={filters.eventType}
+                sections={(() => {
+                  if (filters.eventType.length === 0) return undefined;
+                  
+                  // Group event types into sections
+                  const appointmentEvents = filters.eventType.filter(et => 
+                    et.id.includes('APPOINTMENT') || et.id.includes('appointment')
+                  );
+                  const treatmentEvents = filters.eventType.filter(et => 
+                    et.id.includes('TREATMENT') || et.id.includes('SESSION') || et.id.includes('CONSULTATION') || 
+                    et.id.includes('treatment') || et.id.includes('session') || et.id.includes('consultation')
+                  );
+                  const followupEvents = filters.eventType.filter(et => 
+                    et.id.includes('FOLLOWUP') || et.id.includes('FOLLOW_UP') || 
+                    et.id.includes('followup') || et.id.includes('follow_up')
+                  );
+                  const paymentEvents = filters.eventType.filter(et => 
+                    et.id.includes('PAYMENT') || et.id.includes('payment')
+                  );
+                  const otherEvents = filters.eventType.filter(et => 
+                    !et.id.includes('APPOINTMENT') && !et.id.includes('TREATMENT') && 
+                    !et.id.includes('SESSION') && !et.id.includes('CONSULTATION') &&
+                    !et.id.includes('FOLLOWUP') && !et.id.includes('FOLLOW_UP') &&
+                    !et.id.includes('PAYMENT') &&
+                    !et.id.includes('appointment') && !et.id.includes('treatment') && 
+                    !et.id.includes('session') && !et.id.includes('consultation') &&
+                    !et.id.includes('followup') && !et.id.includes('follow_up') &&
+                    !et.id.includes('payment')
+                  );
+                  
+                  const sections = [];
+                  if (appointmentEvents.length > 0) {
+                    sections.push({ title: 'Appointments', options: appointmentEvents });
+                  }
+                  if (treatmentEvents.length > 0) {
+                    sections.push({ title: 'Treatments', options: treatmentEvents });
+                  }
+                  if (followupEvents.length > 0) {
+                    sections.push({ title: 'Follow-ups', options: followupEvents });
+                  }
+                  if (paymentEvents.length > 0) {
+                    sections.push({ title: 'Payments', options: paymentEvents });
+                  }
+                  if (otherEvents.length > 0) {
+                    sections.push({ title: 'Other Events', options: otherEvents });
+                  }
+                  return sections.length > 0 ? sections : undefined;
+                })()}
+                onSelectionChange={(selectedIds) => handleFilterChange('eventType', selectedIds)}
+                selectedCount={getSelectedCount('eventType')}
+                singleSelect={false}
               />
 
               {/* Clear Filters Button */}
@@ -427,9 +592,9 @@ const DataCenterFilters = ({
                     userType: filters.userType.map(option => ({ ...option, checked: false })),
                     visits: filters.visits.map(option => ({ ...option, checked: false })),
                     status: filters.status.map(option => ({ ...option, checked: false })),
+                    eventType: filters.eventType.map(option => ({ ...option, checked: false })),
                   });
                   setInternalSearchTerm('');
-                  setOpenFilter(null);
 
                   // Notify parent about cleared filters
                   if (onFiltersChange) {
@@ -439,6 +604,7 @@ const DataCenterFilters = ({
                       no_of_visits_from: undefined,
                       no_of_visits_to: undefined,
                       status: undefined,
+                      event_type: undefined,
                       search: ''
                     });
                   }
